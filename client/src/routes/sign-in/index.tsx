@@ -5,7 +5,6 @@ import { numberValue } from "../../bindings";
 import Controller from "./Controller";
 import m from "./model";
 
-const anyProvider = expr(m.signin.providers, (p) => p.google || p.oneTimeCode);
 const noProvider = expr(m.signin.providers, (p) => !p.google && !p.oneTimeCode);
 const bothProviders = expr(m.signin.providers, (p) => p.google && p.oneTimeCode);
 const cannotRequest = expr(m.signin.invalid, m.signin.busy, (invalid, busy) => invalid || busy);
@@ -14,9 +13,11 @@ export default createFunctionalComponent(() => (
     <cx>
         <div class="page" controller={Controller}>
             <div class="card sign-in">
-                <h1 text="Inventory" />
+                <div class="brand-mark" />
 
-                <p visible={anyProvider} text="Please sign in to access your account." />
+                <h1 visible={falsy(m.signin.codeSent)} text="Sign in to Inventory" />
+
+                <h1 visible={m.signin.codeSent} text="Check your email" />
 
                 <p visible={noProvider} text="No sign-in method is configured on this server." />
 
@@ -32,7 +33,7 @@ export default createFunctionalComponent(() => (
                 */}
                 <a href="/auth/google/start" class="cxb-button" visible={m.signin.providers.google}>
                     <span class="google-logo" />
-                    <span text="Sign in with Google" />
+                    <span text="Continue with Google" />
                 </a>
 
                 <div class="separator" visible={bothProviders} text="or" />
@@ -40,8 +41,6 @@ export default createFunctionalComponent(() => (
                 {/* `ValidationGroup` renders no element, so the layout is this div's. */}
                 <div class="sign-in-form" visible={m.signin.providers.oneTimeCode}>
                     <ValidationGroup invalid={m.signin.invalid}>
-                        <p visible={falsy(m.signin.codeSent)} text="Sign in using your email." />
-
                         <p
                             visible={m.signin.codeSent}
                             text={tpl(m.signin.email, "We sent a six-digit code to {0}.")}
@@ -50,7 +49,8 @@ export default createFunctionalComponent(() => (
                         <TextField
                             value={m.signin.email}
                             inputType="email"
-                            placeholder="Enter your email"
+                            placeholder="Email address"
+                            inputAttrs={{ "aria-label": "Email address" }}
                             visible={falsy(m.signin.codeSent)}
                             style="width: 100%"
                             required
@@ -67,7 +67,8 @@ export default createFunctionalComponent(() => (
 
                         <NumberField
                             value={numberValue(m.signin.code)}
-                            placeholder="Enter the code"
+                            placeholder="Six-digit code"
+                            inputAttrs={{ "aria-label": "Six-digit code" }}
                             format="n;0"
                             visible={m.signin.codeSent}
                             style="width: 100%"
@@ -92,6 +93,11 @@ export default createFunctionalComponent(() => (
                     </ValidationGroup>
                 </div>
             </div>
+
+            <p class="sign-in-footer">
+                <span text="Built by " />
+                <a href="https://www.codaxy.com" target="_blank" rel="noopener" text="Codaxy" />
+            </p>
         </div>
     </cx>
 ));
