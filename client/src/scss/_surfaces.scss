@@ -1,0 +1,56 @@
+html,
+body {
+    margin: 0;
+    height: 100%;
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+}
+
+#app {
+    min-height: 100%;
+}
+
+// The phone is the case to get right, so every screen is a single column that stops growing on a
+// wide display rather than a wide layout that is squeezed on a narrow one.
+.page {
+    box-sizing: border-box;
+    min-height: 100dvh;
+    padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.card {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 380px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    h1 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    p {
+        margin: 0;
+        color: var(--color-ink-muted);
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    p.error {
+        color: var(--color-danger-text);
+    }
+}

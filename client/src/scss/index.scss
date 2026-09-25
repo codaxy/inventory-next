@@ -1,0 +1,8 @@
+// One partial per component. Two rules for anything added here:
+//
+// 1. **No `@apply`.** Sass compiles before Tailwind sees the file, so `@apply` reaches the browser
+//    verbatim and is ignored — silently. Write plain CSS against the tokens (`var(--color-…)`).
+// 2. **Prefer a theme variable.** Colours, sizes and spacing of CxJS widgets belong in `theme.ts`;
+//    a selector here is for what no variable expresses.
+@forward "surfaces";
+@forward "signin";

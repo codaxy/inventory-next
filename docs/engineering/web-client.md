@@ -44,8 +44,30 @@ on every load.
 ## The phone is the hard case
 
 Every screen is a single column that stops growing on a wide display, rather than a wide layout
-squeezed into a narrow one. Tap targets are at least 44px high, which the default widget sizing does
-not guarantee, and the page padding respects `env(safe-area-inset-bottom)`.
+squeezed into a narrow one. Tap targets are at least 44px high, and the page padding respects
+`env(safe-area-inset-bottom)`.
+
+## Theme
+
+**Dark only**, from Pulse (`cx-pulse`): its navy chrome extended into a full token set under its token
+names, its primary and Montserrat, self-hosted through `@fontsource` so no page load reaches a font CDN.
+A light mode would be a second value set for the same tokens.
+
+**Every colour and shadow is a token in `src/tailwind.css`**, in `@theme static`, and nothing else in the client
+writes one. Each text token clears AA (4.5:1) on both the card and the page; field and button borders
+clear 3:1. **A colour that fails as text on navy gets a `-text` sibling** rather than a darker page:
+`primary` is a fill that white reads on at 5.7:1 but is 2.9:1 as text, so links and focus use
+`primary-text`; `danger` likewise.
+
+**Two layers, in this order.** `src/theme.ts` maps CxJS's theme variables onto the tokens and is
+applied by `renderThemeVariables` at startup — colours, type and sizes of widgets belong there. The
+full list of variables is `cx-theme-variables/build/presets/default.js`; the docs do not have it. Then
+one partial per component in `src/scss/`, for what no variable expresses. The theme's SCSS and ours
+load inside `@layer components`, so a Tailwind utility in markup wins over both.
+
+**Controls are 44px by padding, not by a density preset.** The largest preset stops at 40px, so
+`theme.ts` takes `densityComfortable`'s 24px line and sets 9px vertical padding on inputs and buttons.
+Pulse's `densityCompact` (32px) is desktop sizing and wrong here.
 
 ## Build
 
@@ -102,8 +124,24 @@ anchor is what leaves.
 the browser, and throws `Invalid widget type` at render — the screen is simply blank. Anything this
 simple belongs in CSS anyway.
 
-**The theme ships plain `.css` as well as the `.scss` written here**, so the build needs a rule for
-both. With only the `.scss` rule the build still succeeds and the theme is quietly missing.
+**A token used only from SCSS needs `@theme static`.** A plain `@theme` emits only the variables some
+utility references, so `var(--color-…)` in a partial resolves to nothing — a transparent background,
+not an error.
+
+**No `@apply` in a `.scss` file.** Sass compiles before Tailwind sees it, so `@apply` reaches the
+browser verbatim and is ignored without a warning.
+
+**The theme's variable sheet is injected at runtime, so it wins specificity ties** with anything
+bundled, and its selectors are often two classes deep: `.cxb-button.cxm-hollow` beats
+`.my-button`. Set the variable; where a selector is unavoidable, read the real rule from
+`cx-theme-variables/dist/widgets.css` rather than guessing.
+
+**`padding` cannot resize a `Button`.** `.cxb-button` sets an explicit height from its own line height,
+padding and border variables; change those in `theme.ts`.
+
+**Tailwind's entry and the fonts are plain `.css`**, so the build has a `.css` rule beside the `.scss`
+one, both through `postcss-loader`. Without it the build still succeeds and the tokens and fonts are
+quietly missing.
 
 **Only `index.html` is written to `wwwroot` in development**, through `devMiddleware.writeToDisk`.
 Letting the whole build land there leaves bundles the server will serve in place of the watcher's,

@@ -1,12 +1,20 @@
+import "@fontsource/montserrat/400.css";
+import "@fontsource/montserrat/500.css";
+import "@fontsource/montserrat/600.css";
+import "@fontsource/montserrat/700.css";
+
 import { Store } from "cx/data";
 import { History, startHotAppLoop } from "cx/ui";
+import { renderThemeVariables } from "cx-theme-variables";
 
-import "cx-theme-aquamarine/dist/reset.css";
-import "cx-theme-aquamarine/dist/widgets.css";
+import "./tailwind.css";
 import "./index.scss";
 
 import $app from "./model";
 import Routes from "./routes";
+import { theme } from "./theme";
+
+renderThemeVariables(theme);
 
 const store = new Store();
 

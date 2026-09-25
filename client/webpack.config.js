@@ -46,13 +46,18 @@ module.exports = (_env, argv) => {
                     use: [
                         production ? MiniCssExtractPlugin.loader : "style-loader",
                         "css-loader",
+                        "postcss-loader",
                         "sass-loader",
                     ],
                 },
                 {
-                    // The theme ships plain CSS.
+                    // Tailwind's entry and the self-hosted font are plain CSS.
                     test: /\.css$/,
-                    use: [production ? MiniCssExtractPlugin.loader : "style-loader", "css-loader"],
+                    use: [
+                        production ? MiniCssExtractPlugin.loader : "style-loader",
+                        "css-loader",
+                        "postcss-loader",
+                    ],
                 },
             ],
         },

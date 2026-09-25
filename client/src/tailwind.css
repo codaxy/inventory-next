@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/* The design tokens: Pulse's navy chrome extended into a full dark set, under Pulse's names. Every
+   colour in the client comes from here, so a change is one line.
+
+   `static` because a plain `@theme` emits only the variables some utility references, and a token
+   used only from SCSS would then resolve to nothing — a transparent background, not an error.
+
+   A `-text` token sits beside a colour that fails AA as text on navy: the fill stays Pulse's, the
+   text is lighter. Ratios are against `surface`; field borders need 3:1, text 4.5:1. */
+@theme static {
+    --color-canvas: #0e1424;
+    --color-surface: #151d33;
+    /* A neutral control on a card: a step up from the surface it sits on. */
+    --color-raised: #232d4a;
+    --color-hover: rgb(255 255 255 / 6%);
+
+    --color-ink: #e8ecf4; /* 14.1 */
+    --color-ink-soft: #c9d1e0; /* 10.9 */
+    --color-ink-muted: #b4bdd0; /* 8.9 */
+    --color-ink-faint: #7f8aa3; /* 4.8 */
+
+    --color-primary: #2a60cf; /* a fill: white on it is 5.7, as text it is 2.9 */
+    --color-primary-strong: #1c4fb8;
+    --color-primary-text: #7ea3f2; /* 6.7 */
+
+    --color-line: #263049;
+    --color-line-soft: #1d2640;
+    --color-line-strong: #5e6b88; /* 3.1 — a field's edge */
+
+    --color-danger: #c8322b;
+    --color-danger-text: #f08a84; /* 6.9 */
+    --color-success: #157a48;
+    --color-success-text: #5fc998; /* 8.2 */
+    --color-warn: #c07d0a;
+    --color-warn-text: #e8b454; /* 8.8 */
+
+    --shadow-control: 0 1px 3px rgb(0 0 0 / 30%), 0 1px 2px rgb(0 0 0 / 40%);
+    --shadow-card: 0 8px 24px rgb(0 0 0 / 35%);
+    --shadow-overlay: 0 10px 25px rgb(0 0 0 / 40%);
+
+    --font-sans: "Montserrat", system-ui, sans-serif;
+}
+
+:root {
+    color-scheme: dark;
+}
