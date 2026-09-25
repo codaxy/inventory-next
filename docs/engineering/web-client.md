@@ -99,3 +99,7 @@ silent — the page loads from the server and asks for bundles nobody is serving
 **A shell written in development points at `https://localhost:8765`.** Running the server in
 Production against that same `wwwroot` serves a page asking for a watcher that is not there; build
 into `dist` and let the image copy it.
+
+**`webpack.config.js` is evaluated whole in both modes**, `devServer` included. The certificate is
+handed to the dev server as paths, which it reads when it starts; read in the config, it fails `npm
+run build` wherever `npm start` never exported it — CI and the image.
