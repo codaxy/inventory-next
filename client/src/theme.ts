@@ -14,7 +14,7 @@ export const theme = {
     primaryColor: "var(--color-primary)",
     accentTextColor: "var(--color-primary-text)",
     textColor: "var(--color-ink)",
-    backgroundColor: "var(--color-canvas)",
+    backgroundColor: "var(--color-surface)",
     surfaceColor: "var(--color-surface)",
     borderColor: "var(--color-line)",
     dangerColor: "var(--color-danger)",
@@ -36,7 +36,7 @@ export const theme = {
     placeholderColor: "var(--color-ink-faint)",
 
     inputColor: "var(--color-ink)",
-    inputBackgroundColor: "var(--color-canvas)",
+    inputBackgroundColor: "var(--color-surface)",
     inputBorderColor: "var(--color-line-strong)",
     inputPaddingX: "12px",
     inputPaddingY: "9px",
@@ -46,11 +46,6 @@ export const theme = {
     buttonBorderColor: "var(--color-line-strong)",
     buttonFontWeight: "600",
     buttonPaddingY: "9px",
-    // On navy a hover lightens; the default mixes towards the background, which darkens.
-    buttonHoverStateMixColor: "white",
-    buttonHoverStateMixAmount: "8%",
-    buttonActiveStateMixColor: "white",
-    buttonActiveStateMixAmount: "14%",
 
     itemHoverBackgroundColor: "var(--color-hover)",
     cursorBoxShadow: "none",

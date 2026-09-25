@@ -1,47 +1,49 @@
 @import "tailwindcss";
 
-/* The design tokens: Pulse's navy chrome extended into a full dark set, under Pulse's names. Every
-   colour in the client comes from here, so a change is one line.
+/* The design tokens: Codaxy's house palette, under its names. Every colour in the client comes
+   from here, so a change is one line.
 
    `static` because a plain `@theme` emits only the variables some utility references, and a token
    used only from SCSS would then resolve to nothing — a transparent background, not an error.
 
-   A `-text` token sits beside a colour that fails AA as text on navy: the fill stays Pulse's, the
-   text is lighter. Ratios are against `surface`; field borders need 3:1, text 4.5:1. */
+   Ratios are against `surface`, then `canvas`; text needs 4.5:1 on both, a field's edge 3:1 on
+   `surface`. The house `ink-faint`, `line-strong` and `warn` fail that and are darkened here. A `-text`
+   token is the colour to use as text; it equals its fill wherever the fill already passes. */
 @theme static {
-    --color-canvas: #0e1424;
-    --color-surface: #151d33;
-    /* A neutral control on a card: a step up from the surface it sits on. */
-    --color-raised: #232d4a;
-    --color-hover: rgb(255 255 255 / 6%);
+    --color-canvas: #eef1f6;
+    --color-surface: #ffffff;
+    /* A neutral control on a card: a step off the surface it sits on. */
+    --color-raised: #f6f8fb;
+    /* A blue cast, not a darker grey: grey dark enough to show drops `ink-muted` below AA. */
+    --color-hover: #eef3fd;
 
-    --color-ink: #e8ecf4; /* 14.1 */
-    --color-ink-soft: #c9d1e0; /* 10.9 */
-    --color-ink-muted: #b4bdd0; /* 8.9 */
-    --color-ink-faint: #7f8aa3; /* 4.8 */
+    --color-ink: #101a2b; /* 17.4, 15.4 */
+    --color-ink-soft: #35415a; /* 10.2, 9.0 */
+    --color-ink-muted: #5b6779; /* 5.7, 5.1 */
+    --color-ink-faint: #616d80; /* 5.2, 4.6 */
 
-    --color-primary: #2a60cf; /* a fill: white on it is 5.7, as text it is 2.9 */
+    --color-primary: #2a60cf; /* white on it is 5.7 */
     --color-primary-strong: #1c4fb8;
-    --color-primary-text: #7ea3f2; /* 6.7 */
+    --color-primary-text: #2a60cf; /* 5.7, 5.1 */
 
-    --color-line: #263049;
-    --color-line-soft: #1d2640;
-    --color-line-strong: #5e6b88; /* 3.1 — a field's edge */
+    --color-line: #dfe4ed;
+    --color-line-soft: #e9edf4;
+    --color-line-strong: #8492a6; /* 3.2 — a field's edge */
 
     --color-danger: #c8322b;
-    --color-danger-text: #f08a84; /* 6.9 */
+    --color-danger-text: #c8322b; /* 5.3, 4.7 */
     --color-success: #157a48;
-    --color-success-text: #5fc998; /* 8.2 */
+    --color-success-text: #157a48; /* 5.4, 4.7 */
     --color-warn: #c07d0a;
-    --color-warn-text: #e8b454; /* 8.8 */
+    --color-warn-text: #9a6200; /* 5.1, 4.5 */
 
-    --shadow-control: 0 1px 3px rgb(0 0 0 / 30%), 0 1px 2px rgb(0 0 0 / 40%);
-    --shadow-card: 0 8px 24px rgb(0 0 0 / 35%);
-    --shadow-overlay: 0 10px 25px rgb(0 0 0 / 40%);
+    --shadow-control: 0 1px 2px rgb(16 26 43 / 8%);
+    --shadow-card: 0 8px 24px rgb(16 26 43 / 8%);
+    --shadow-overlay: 0 10px 25px rgb(16 26 43 / 15%);
 
     --font-sans: "Montserrat", system-ui, sans-serif;
 }
 
 :root {
-    color-scheme: dark;
+    color-scheme: light;
 }

@@ -9,7 +9,7 @@ CxJS is Codaxy's TypeScript UI framework on React: widgets, forms, grids, routin
 Store. The client is `client/` — cx 26, Vite 8, Tailwind 4, `cx-theme-variables`.
 
 **Decisions live in `docs/engineering/web-client.md`; this skill is how to write the code.** Where the
-two disagree, the document wins and this file is corrected. Adapted from `cx-pulse`'s skill; claims
+two disagree, the document wins and this file is corrected. Adapted from another Codaxy CxJS application's skill; claims
 about cx internals were re-checked against the installed cx 26.9.3, and a claim that names a file and
 line was read there, not remembered.
 
@@ -206,8 +206,8 @@ prose keeps its whitespace.
 
 **Never put a calendar date through `toISOString()`.** cx's default date encoding is `toISOString()`
 of a local midnight, so picking 7 August east of UTC stores 6 August 22:00Z. With the first
-`DateField`, install a `YYYY-MM-DD` encoder at startup (`Culture.setDefaultDateEncoding`), as Pulse's
-`src/dates.ts` does; the server side is `DateOnly` — see `persistence.md`.
+`DateField`, install a `YYYY-MM-DD` encoder at startup (`Culture.setDefaultDateEncoding`), in a
+`src/dates.ts`; the server side is `DateOnly` — see `persistence.md`.
 
 ### Labels and layout
 

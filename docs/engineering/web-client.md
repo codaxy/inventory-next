@@ -57,15 +57,15 @@ squeezed into a narrow one. Tap targets are at least 44px high, and the page pad
 
 ## Theme
 
-**Dark only**, from Pulse (`cx-pulse`): its navy chrome extended into a full token set under its token
-names, its primary and Montserrat, self-hosted through `@fontsource` so no page load reaches a font CDN.
-A light mode would be a second value set for the same tokens.
+**Light only**, on Codaxy's house palette: its token names, its primary and Montserrat, self-hosted
+through `@fontsource` so no page load reaches a font CDN. A dark mode would be a second value set for
+the same tokens.
 
 **Every colour and shadow is a token in `src/tailwind.css`**, in `@theme static`, and nothing else in the client
 writes one. Each text token clears AA (4.5:1) on both the card and the page; field and button borders
-clear 3:1. **A colour that fails as text on navy gets a `-text` sibling** rather than a darker page:
-`primary` is a fill that white reads on at 5.7:1 but is 2.9:1 as text, so links and focus use
-`primary-text`; `danger` likewise.
+clear 3:1 on the card. The house values for `ink-faint`, `line-strong` and `warn` fail that, so those values are
+darker here. **Text in a status colour uses its `-text` token**, which equals the fill where the fill
+passes and is darker where it does not: `warn` is 3.4:1 as text, `warn-text` 5.1:1.
 
 **Two layers, in this order.** `src/theme.ts` maps CxJS's theme variables onto the tokens and is
 applied by `renderThemeVariables` at startup — colours, type and sizes of widgets belong there. The
@@ -75,7 +75,7 @@ load inside `@layer components`, so a Tailwind utility in markup wins over both.
 
 **Controls are 44px by padding, not by a density preset.** The largest preset stops at 40px, so
 `theme.ts` takes `densityComfortable`'s 24px line and sets 9px vertical padding on inputs and buttons.
-Pulse's `densityCompact` (32px) is desktop sizing and wrong here.
+`densityCompact` (32px) is desktop sizing and wrong here.
 
 ## Build
 
