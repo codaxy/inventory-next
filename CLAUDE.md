@@ -109,8 +109,12 @@ not finished by virtue of being liked; it still goes through the rules below.
 | ----- | ----- | ------------ |
 | `CLAUDE.md` | how work is done | the process itself changes |
 | `docs/engineering/` | what was decided about the system, and why | a decision changes |
+| `.claude/skills/` | how a technology is written here, and its pitfalls | a pitfall is learned or a claim goes stale |
 | `docs/plans/` | the working plan for a piece of work | every session — disposable |
 | the code | the system | continuously |
+
+**Before touching `client/`, load the `cxjs` skill** (`.claude/skills/cxjs/`). Where it and
+`docs/engineering/web-client.md` disagree, the document wins and the skill is corrected.
 
 **When a change touches more than one layer, the most general changes first** — this file, then
 `docs/engineering/`, then the code. Specific statements derive from general ones; the other order

@@ -13,8 +13,10 @@ import "./index.scss";
 import $app from "./model";
 import Routes from "./routes";
 import { theme } from "./theme";
+import { installWidgetDefaults } from "./widgetDefaults";
 
 renderThemeVariables(theme);
+installWidgetDefaults();
 
 const store = new Store();
 

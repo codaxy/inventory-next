@@ -21,8 +21,15 @@ blank, and it does not appear in the client. A condition prefers the direct bind
 combines fields. The application-wide state — `url` and `session` — is `src/model.ts`, imported as
 `$app`.
 
+**Every `TextField` trims**, set once on the prototype in `src/widgetDefaults.ts` rather than per
+field: a value of only spaces then becomes `null`, which `required` counts as empty. A text field's
+store key starts absent, never `''` — `''` is a value, so `required` passes on it.
+
 **A field whose store value may be `null` binds through an adapter** in `src/bindings.ts`:
 `NumberProp` does not admit `null`, although the widget writes it on clear.
+
+How CxJS code is written here — bindings, forms, windows, lists, styling, and the pitfalls behind
+each — is the `cxjs` skill, `.claude/skills/cxjs/SKILL.md`. This file holds the decisions.
 
 ## Structure
 

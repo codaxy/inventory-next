@@ -6,7 +6,9 @@ debug.log
 bin
 obj
 *.user
-.claude
+# Personal Claude Code settings stay out; the shared skills are committed.
+.claude/*
+!.claude/skills/
 node_modules
 .keys/
 client/.certs/
