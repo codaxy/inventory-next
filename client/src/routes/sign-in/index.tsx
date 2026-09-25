@@ -11,7 +11,7 @@ const cannotRequest = expr(m.signin.invalid, m.signin.busy, (invalid, busy) => i
 
 export default createFunctionalComponent(() => (
     <cx>
-        <div class="page" controller={Controller}>
+        <div class="page sign-in-page" controller={Controller}>
             <div class="card sign-in">
                 <div class="brand-mark" />
 

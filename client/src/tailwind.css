@@ -29,6 +29,8 @@
     --color-line: #dfe4ed;
     --color-line-soft: #e9edf4;
     --color-line-strong: #8492a6; /* 3.2 — a field's edge */
+    /* Decoration only: the sign-in backdrop's dot grid. */
+    --color-dot: #c3cddc;
 
     --color-danger: #c8322b;
     --color-danger-text: #c8322b; /* 5.3, 4.7 */
