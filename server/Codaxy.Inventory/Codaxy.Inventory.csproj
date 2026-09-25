@@ -28,4 +28,33 @@
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
   </ItemGroup>
+
+  <!-- Installs the pre-commit hook after restore, so a clone that builds the server has it. Runs again
+       only when the tool manifest changes. `HUSKY=0` turns it off where there is no repository to
+       hook: the image build and CI. -->
+  <PropertyGroup>
+    <HuskyRoot Condition="'$(HuskyRoot)' == ''">../../</HuskyRoot>
+  </PropertyGroup>
+
+  <Target
+    Name="Husky"
+    AfterTargets="Restore"
+    Condition="'$(HUSKY)' != 0"
+    Inputs="$(HuskyRoot).config/dotnet-tools.json"
+    Outputs="$(HuskyRoot).husky/_/install.stamp"
+  >
+    <Exec
+      Command="dotnet tool restore"
+      StandardOutputImportance="Low"
+      StandardErrorImportance="High"
+      WorkingDirectory="$(HuskyRoot)"
+    />
+    <Exec
+      Command="dotnet husky install"
+      StandardOutputImportance="Low"
+      StandardErrorImportance="High"
+      WorkingDirectory="$(HuskyRoot)"
+    />
+    <Touch Files="$(HuskyRoot).husky/_/install.stamp" AlwaysCreate="true" />
+  </Target>
 </Project>

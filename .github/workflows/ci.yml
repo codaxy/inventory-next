@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+# The server build would otherwise install the pre-commit hook into the runner's checkout.
+env:
+  HUSKY: 0
+
 jobs:
   server:
     runs-on: ubuntu-latest

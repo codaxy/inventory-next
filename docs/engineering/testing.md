@@ -29,10 +29,16 @@ Unit tests are for logic that has a shape of its own: seat counts, expiry, alloc
 ## Formatting
 
 CSharpier formats the server and Prettier the client, both pinned and both checked in CI, so
-formatting is never a review comment. **A pre-commit hook applies them**, through husky and
-lint-staged at the repository root, to staged files only and with exactly the globs CI checks — a
-hook broader than CI rewrites files CI never looks at, and a narrower one lets a commit fail CI.
-Prettier runs from the client's own install, so its version is pinned once. EF's migrations are
+formatting is never a review comment. **A pre-commit hook applies them**: Husky.Net, a dotnet
+tool beside CSharpier, so the repository root carries no `package.json`. It runs on staged files
+only, with exactly the globs CI checks — a hook broader than CI rewrites files CI never looks at,
+and a narrower one lets a commit fail CI — then re-stages them. Prettier runs from the client's own
+install, so its version is pinned once. The server's restore installs the hook through a target in
+`Codaxy.Inventory.csproj`; `HUSKY=0` turns that off in the image build and CI, which have no
+repository to hook.
+
+**Re-staging adds whole files.** A file committed with only some of its hunks staged goes in with all
+of them once the hook has touched it; lint-staged stashes the rest first, Husky.Net does not. EF's migrations are
 excluded — the next `migrations add` would undo it.
 
 ## Naming

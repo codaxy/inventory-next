@@ -8,6 +8,8 @@ COPY client/ ./
 RUN npm run build
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS server
+# No repository here for the pre-commit hook to install into.
+ENV HUSKY=0
 WORKDIR /src
 COPY server/*.slnx ./
 COPY server/Codaxy.Inventory/*.csproj Codaxy.Inventory/

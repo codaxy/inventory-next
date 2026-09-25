@@ -10,7 +10,6 @@ So far it signs you in and does nothing else.
 
 ```
 dotnet dev-certs https --trust                # once per machine
-npm install && dotnet tool restore            # once per clone: the pre-commit hook and CSharpier
 docker compose up -d                          # PostgreSQL and Mailpit
 cd client && npm install && npm start         # watches and serves the bundles, leave it running
 cd ../server && dotnet run --project Codaxy.Inventory
@@ -58,8 +57,12 @@ docker compose --profile app up --build     # http://localhost:8090
 ## Formatting
 
 A pre-commit hook formats what is staged — CSharpier the server, Prettier the client — with the scope
-CI checks, so nobody runs either by hand. The root `npm install` installs it; it needs the client's
-`npm install` and `dotnet tool restore` to have run. To format everything at once anyway:
+CI checks, so nobody runs either by hand. It is [Husky.Net](https://alirezanet.github.io/Husky.Net/),
+a dotnet tool, and the server's first restore installs it: `git config core.hooksPath` then prints
+`.husky`. A clone that never builds the server installs it with `dotnet tool restore && dotnet husky
+install`. Prettier runs from the client's own install, so `npm install` in `client` has to have run.
+
+To format everything at once anyway:
 
 ```
 dotnet csharpier format server

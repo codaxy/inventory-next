@@ -1,0 +1,51 @@
+{
+  "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
+  "tasks": [
+    {
+      "name": "csharpier",
+      "group": "pre-commit",
+      "command": "dotnet",
+      "args": ["csharpier", "format", "${staged}"],
+      "include": [
+        "server/**/*.cs",
+        "server/**/*.csproj",
+        "server/**/*.props",
+        "server/**/*.targets"
+      ]
+    },
+    {
+      "name": "prettier",
+      "group": "pre-commit",
+      "cwd": "client",
+      "pathMode": "absolute",
+      "command": "node",
+      "args": ["node_modules/prettier/bin/prettier.cjs", "--write", "${staged}"],
+      "include": [
+        "client/src/**/*.ts",
+        "client/src/**/*.tsx",
+        "client/src/**/*.scss",
+        "client/src/**/*.html",
+        "client/*.json",
+        "client/*.js"
+      ]
+    },
+    {
+      "name": "restage",
+      "group": "pre-commit",
+      "command": "git",
+      "args": ["add", "${staged}"],
+      "include": [
+        "server/**/*.cs",
+        "server/**/*.csproj",
+        "server/**/*.props",
+        "server/**/*.targets",
+        "client/src/**/*.ts",
+        "client/src/**/*.tsx",
+        "client/src/**/*.scss",
+        "client/src/**/*.html",
+        "client/*.json",
+        "client/*.js"
+      ]
+    }
+  ]
+}
