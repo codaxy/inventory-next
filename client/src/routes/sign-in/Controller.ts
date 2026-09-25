@@ -1,12 +1,18 @@
 import { Controller } from "cx/ui";
 
 import { ApiError, getAuthProviders, requestOneTimeCode, verifyOneTimeCode } from "../../api/auth";
+import m from "./model";
 
 export default class extends Controller {
     onInit() {
-        this.store.set("providers", { google: false, oneTimeCode: false });
+        this.store.set(m.signin.providers, { google: false, oneTimeCode: false });
+        this.store.set(m.signin.codeSent, false);
+        this.store.set(m.signin.busy, false);
+        this.store.set(m.signin.error, null);
+        this.store.delete(m.signin.email);
+        this.store.delete(m.signin.code);
 
-        getAuthProviders().then((providers) => this.store.set("providers", providers));
+        getAuthProviders().then((providers) => this.store.set(m.signin.providers, providers));
 
         // Google redirects back here with a reason rather than a stack trace; the query is the only
         // thing that survives the round trip.
@@ -14,7 +20,7 @@ export default class extends Controller {
 
         if (error)
             this.store.set(
-                "error",
+                m.signin.error,
                 error === "refused"
                     ? "That account is not allowed to sign in."
                     : "Signing in with Google did not work.",
@@ -22,42 +28,48 @@ export default class extends Controller {
     }
 
     async onRequestCode() {
-        const email = this.store.get("email") as string;
+        const email = this.store.get(m.signin.email) ?? "";
 
-        this.store.set("busy", true);
-        this.store.set("error", null);
+        this.store.set(m.signin.busy, true);
+        this.store.set(m.signin.error, null);
 
         try {
             await requestOneTimeCode(email);
-            this.store.set("codeSent", true);
+            this.store.set(m.signin.codeSent, true);
         } catch (error) {
-            this.store.set("error", error instanceof ApiError ? error.message : "Something went wrong.");
+            this.store.set(
+                m.signin.error,
+                error instanceof ApiError ? error.message : "Something went wrong.",
+            );
         } finally {
-            this.store.set("busy", false);
+            this.store.set(m.signin.busy, false);
         }
     }
 
     async onVerifyCode() {
-        const email = this.store.get("email") as string;
-        const code = this.store.get("code") as number | null;
+        const email = this.store.get(m.signin.email) ?? "";
+        const code = this.store.get(m.signin.code);
 
-        this.store.set("busy", true);
-        this.store.set("error", null);
+        this.store.set(m.signin.busy, true);
+        this.store.set(m.signin.error, null);
 
         try {
             // Six digits with a leading zero are still six digits; the field holds a number.
             await verifyOneTimeCode(email, String(code ?? "").padStart(6, "0"));
             window.location.href = "/";
         } catch (error) {
-            this.store.set("error", error instanceof ApiError ? error.message : "Something went wrong.");
+            this.store.set(
+                m.signin.error,
+                error instanceof ApiError ? error.message : "Something went wrong.",
+            );
         } finally {
-            this.store.set("busy", false);
+            this.store.set(m.signin.busy, false);
         }
     }
 
     onStartOver() {
-        this.store.set("codeSent", false);
-        this.store.set("code", null);
-        this.store.set("error", null);
+        this.store.set(m.signin.codeSent, false);
+        this.store.delete(m.signin.code);
+        this.store.set(m.signin.error, null);
     }
 }

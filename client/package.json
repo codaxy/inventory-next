@@ -11,8 +11,8 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "cx": "^25.12.1",
-        "cx-react": "^24.7.1",
+        "cx": "^26.9.3",
+        "cx-react": "^26.1.0",
         "cx-theme-aquamarine": "^18.7.3",
         "react": "^19.2.4",
         "react-dom": "^19.2.4"
@@ -21,7 +21,7 @@
         "@babel/core": "^7.26.0",
         "@babel/preset-typescript": "^7.26.0",
         "babel-loader": "^9.2.1",
-        "babel-preset-cx-env": "^19.1.0",
+        "babel-preset-cx-env": "^26.1.0",
         "css-loader": "^7.1.2",
         "html-webpack-plugin": "^5.6.3",
         "mini-css-extract-plugin": "^2.9.2",
