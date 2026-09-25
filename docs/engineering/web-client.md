@@ -78,6 +78,9 @@ second value set for the same tokens.
 two read as a frame, and the active item a solid primary fill rather than a wash. The `ink`, `line` and
 `hover` tokens are tuned for white and fail on navy, so nothing in the chrome uses them.
 
+**The logo tile is violet**, `brand`, wherever it appears: the chrome is Pulse's, and the mark is what
+tells the two applications apart at a glance.
+
 **Every colour and shadow is a token in `src/tailwind.css`**, in `@theme static`, and nothing else in the client
 writes one. Each text token clears AA (4.5:1) on both the card and the page; field and button borders
 clear 3:1 on the card. The house values for `ink-faint`, `line-strong` and `warn` fail that, so those values are
