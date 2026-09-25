@@ -171,10 +171,22 @@ public static class AuthEndpoints
 
     public sealed record MeResponse(string Email, string Name);
 
-    public sealed record OneTimeCodeRequest([property: Required, EmailAddress] string Email);
+    // The messages reach the sign-in screen verbatim.
+    public sealed record OneTimeCodeRequest(
+        [property: Required(ErrorMessage = EmailMessage), EmailAddress(ErrorMessage = EmailMessage)]
+            string Email
+    );
 
     public sealed record OneTimeCodeVerification(
-        [property: Required, EmailAddress] string Email,
-        [property: Required, RegularExpression("^[0-9]{6}$")] string Code
+        [property: Required(ErrorMessage = EmailMessage), EmailAddress(ErrorMessage = EmailMessage)]
+            string Email,
+        [property:
+            Required(ErrorMessage = CodeMessage),
+            RegularExpression("^[0-9]{6}$", ErrorMessage = CodeMessage)
+        ]
+            string Code
     );
+
+    private const string EmailMessage = "Enter a valid email address.";
+    private const string CodeMessage = "Enter the six-digit code from the email.";
 }

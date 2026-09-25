@@ -21,6 +21,8 @@
     max-width: 360px;
     padding: 32px 28px 28px;
     text-align: center;
+    // Centred lines of unequal length strand a short last word; balance evens them out.
+    text-wrap: balance;
 
     h1 {
         margin-bottom: 8px;
@@ -61,6 +63,42 @@
         &:hover {
             color: var(--color-primary-text);
         }
+    }
+}
+
+// The server's answer about the field above: the field turns red, this says why.
+.card p.field-message {
+    margin-top: -8px;
+    color: var(--color-danger-text);
+    font-size: 13px;
+}
+
+// The address on a line of its own: it is what the reader checks, and a wrap mid-sentence buried it.
+.card p.sent-to {
+    margin-top: -8px;
+
+    strong {
+        display: block;
+        color: var(--color-ink);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+}
+
+// Six digits read as one code: centred, larger, spaced, every figure the same width. The indent
+// matches the letter spacing, which also trails the last digit and would pull the code off centre.
+.sign-in .code-input > .cxe-textfield-input {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.4em;
+    text-indent: 0.4em;
+
+    &::placeholder {
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: normal;
     }
 }
 

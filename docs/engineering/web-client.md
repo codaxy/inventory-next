@@ -73,6 +73,12 @@ full list of variables is `cx-theme-variables/build/presets/default.js`; the doc
 one partial per component in `src/scss/`, for what no variable expresses. The theme's SCSS and ours
 load inside `@layer components`, so a Tailwind utility in markup wins over both.
 
+**An invalid field is its red border**, never a tinted fill: CxJS's pink wash is overridden in
+`src/scss/_fields.scss`. A message beneath it is for what the field cannot show — the server
+refusing the address — never for "required" or "not a valid address", which say what the red
+border and an empty field already do. Sign-in's button is disabled until the address is
+well-formed, and empty is not an error.
+
 **Controls are 44px by padding, not by a density preset.** The largest preset stops at 40px, so
 `theme.ts` takes `densityComfortable`'s 24px line and sets 9px vertical padding on inputs and buttons.
 `densityCompact` (32px) is desktop sizing and wrong here.
@@ -122,6 +128,14 @@ that a static shell supports. Worth deciding before there are screens, not after
 **A component used inside `<cx>` must be a `createFunctionalComponent`.** A bare arrow function is
 handed to React as a React component, returns CxJS configuration, and the application white-screens
 with `Objects are not valid as a React child`.
+
+**A validation problem's `title` says nothing.** ASP.NET's is always "One or more validation errors
+occurred."; `src/api/` shows the first message in `errors`, so a request model's `ErrorMessage` is
+text a person reads.
+
+**A code is text, not a number.** A `NumberField` groups digits by culture — `665,355` — and
+drops a leading zero; a `TextField` with `inputMode: "numeric"` and `autoComplete: "one-time-code"`
+keeps both and lets the phone offer the code from the message.
 
 **`ValidationGroup` renders no element of its own**, so a `class` on it styles nothing. Wrap it in a
 `div` for layout.

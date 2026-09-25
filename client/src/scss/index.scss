@@ -5,4 +5,5 @@
 // 2. **Prefer a theme variable.** Colours, sizes and spacing of CxJS widgets belong in `theme.ts`;
 //    a selector here is for what no variable expresses.
 @forward "surfaces";
+@forward "fields";
 @forward "signin";

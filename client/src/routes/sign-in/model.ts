@@ -11,12 +11,16 @@ export interface SignInState {
     providers: AuthProviders;
     /** Never initialised: an absent key is what `required` treats as empty. */
     email?: string | null;
-    code?: number | null;
+    code?: string | null;
     codeSent: boolean;
     busy: boolean;
     /** Written by the form's `ValidationGroup`. */
     invalid: boolean;
+    /** A failure that is not about a field: Google's refusal, a network error. */
     error: string | null;
+    /** The server's answer about a field, shown under it and deleted when it is edited. */
+    emailError?: string;
+    codeError?: string;
 }
 
 export interface Model {

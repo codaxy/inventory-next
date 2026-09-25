@@ -1,0 +1,6 @@
+// An invalid field is marked by its red border and the message under it. CxJS also tints the fill,
+// which on a white card reads as a warning banner and stays pink while the value is retyped.
+.cxb-textfield.cxs-error > .cxe-textfield-input,
+.cxb-numberfield.cxs-error > .cxe-numberfield-input {
+    background-color: var(--color-surface);
+}

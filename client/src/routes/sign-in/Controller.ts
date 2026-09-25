@@ -9,8 +9,13 @@ export default class extends Controller {
         this.store.set(m.signin.codeSent, false);
         this.store.set(m.signin.busy, false);
         this.store.set(m.signin.error, null);
+        this.store.delete(m.signin.emailError);
+        this.store.delete(m.signin.codeError);
         this.store.delete(m.signin.email);
         this.store.delete(m.signin.code);
+
+        this.addTrigger("email-edited", [m.signin.email], () => this.store.delete(m.signin.emailError));
+        this.addTrigger("code-edited", [m.signin.code], () => this.store.delete(m.signin.codeError));
 
         getAuthProviders().then((providers) => this.store.set(m.signin.providers, providers));
 
@@ -37,10 +42,7 @@ export default class extends Controller {
             await requestOneTimeCode(email);
             this.store.set(m.signin.codeSent, true);
         } catch (error) {
-            this.store.set(
-                m.signin.error,
-                error instanceof ApiError ? error.message : "Something went wrong.",
-            );
+            this.fail(error, m.signin.emailError);
         } finally {
             this.store.set(m.signin.busy, false);
         }
@@ -54,21 +56,24 @@ export default class extends Controller {
         this.store.set(m.signin.error, null);
 
         try {
-            // Six digits with a leading zero are still six digits; the field holds a number.
-            await verifyOneTimeCode(email, String(code ?? "").padStart(6, "0"));
+            await verifyOneTimeCode(email, code ?? "");
             window.location.href = "/";
         } catch (error) {
-            this.store.set(
-                m.signin.error,
-                error instanceof ApiError ? error.message : "Something went wrong.",
-            );
+            this.fail(error, m.signin.codeError);
         } finally {
             this.store.set(m.signin.busy, false);
         }
     }
 
+    /** The API's answer goes under the field it is about; anything else above the form. */
+    fail(error: unknown, field: typeof m.signin.emailError) {
+        if (error instanceof ApiError) this.store.set(field, error.message);
+        else this.store.set(m.signin.error, "Something went wrong.");
+    }
+
     onStartOver() {
         this.store.set(m.signin.codeSent, false);
+        this.store.delete(m.signin.email);
         this.store.delete(m.signin.code);
         this.store.set(m.signin.error, null);
     }

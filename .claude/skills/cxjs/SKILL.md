@@ -151,7 +151,9 @@ no hand-written `if (!x) setError(…)` in a controller — declare `required`, 
 `onValidate={(v) => message | undefined}` on the field, and let the group report whether the form may
 be submitted. Fields: `TextField`, `TextArea`, `NumberField`, `DateField`, `LookupField`, `Checkbox`,
 `Radio`, `Switch`, all from `cx/widgets`. **Server rules stay on the server**; client validation only
-saves a round trip.
+saves a round trip. **The server's answer about a field goes on that field** — `error={m.form.emailError}` turns it
+red and a line beneath it says why, the key absent when there is none (`StringProp` admits no
+`null`) and deleted by a trigger on the field's value — never in a banner above the form.
 
 **The submit guard sets `visited`, it does not disable the button:**
 
@@ -169,8 +171,8 @@ saves a round trip.
 />
 ```
 
-The sign-in screen still disables "Continue with email" on `invalid || busy`; a new form uses the
-guard. Disabling while a request is in flight is fine.
+Disabling while a request is in flight is fine. **A one-field form whose only error is visible on
+sight disables instead** — sign-in, per `web-client.md`.
 
 **Every picker is a `LookupField`, never a `Select`.** A native `<select>` has no search. `options` is
 a data prop, not children; `optionIdField`/`optionTextField` name the fields. It has **no `onChange`**,
