@@ -48,8 +48,10 @@ public static class AuthEndpoints
             }
         );
 
-        auth.MapPost("/one-time-code/request", RequestOneTimeCode);
-        auth.MapPost("/one-time-code/verify", VerifyOneTimeCode);
+        auth.MapPost("/one-time-code/request", RequestOneTimeCode)
+            .RequireRateLimiting(RateLimitSetup.SignInPolicy);
+        auth.MapPost("/one-time-code/verify", VerifyOneTimeCode)
+            .RequireRateLimiting(RateLimitSetup.SignInPolicy);
 
         var google = app.MapGroup("/auth/google");
 
@@ -95,15 +97,18 @@ public static class AuthEndpoints
         // turns this endpoint into a way of listing who works here.
         if (decision.IsAllowed)
         {
+            // Null when one was sent moments ago: a caller changing address cannot make someone
+            // else's mailbox the target.
             var code = codes.Issue(request.Email);
 
-            await email.SendAsync(
-                request.Email,
-                "Your Inventory sign-in code",
-                $"Your sign-in code is {code}. It is valid for "
-                    + $"{options.Value.OneTimeCode.Validity.TotalMinutes:0} minutes.",
-                cancellation
-            );
+            if (code is not null)
+                await email.SendAsync(
+                    request.Email,
+                    "Your Inventory sign-in code",
+                    $"Your sign-in code is {code}. It is valid for "
+                        + $"{options.Value.OneTimeCode.Validity.TotalMinutes:0} minutes.",
+                    cancellation
+                );
         }
         else
         {

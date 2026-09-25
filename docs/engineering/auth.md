@@ -41,7 +41,8 @@ credentials would advertise a provider that fails at Google rather than one that
 offered, and the repository holds no secrets, so the default state is off.
 
 The OAuth hop lands in a separate `External` cookie; `/auth/google/callback` reads it, applies the
-policy, and only then issues the session. The alternative — letting the handler sign the person in
+policy, and only then issues the session. The correlation cookie that carries the flow across is
+`SameSite=Lax`, which the top-level redirect back satisfies. The alternative — letting the handler sign the person in
 directly — would mean revoking a session already granted.
 
 ## One-time codes
@@ -55,7 +56,8 @@ Deliberately the simplest thing that works, and temporary:
   cannot verify a code the first issued. `IOneTimeCodeStore` exists so that decision can be retaken
   without touching the endpoints.
 - **Any failed attempt burns the code**, not just a correct one. That is what stops six digits being
-  guessed; the cost is that a mistyped code means asking for another.
+  guessed; the cost is that a mistyped code means asking for another, and the cooldown means waiting
+  for it.
 - **Requesting a code says only that the domain is refused**, never which domain would be accepted and
   never that a particular person is not on the list. The first gives someone who mistyped their own
   address something to act on and names nothing; the other two answer questions worth asking, so they
@@ -81,11 +83,27 @@ dotnet user-secrets set "Auth:Google:ClientSecret" "…"
 Nothing else about the application is configured that way, and nothing secret may be added to the
 committed file — the moment something is, it is in the history.
 
+## Rate limits
+
+Two, because they stop different things.
+
+**Per caller**, on both one-time-code endpoints: `RateLimit:SignIn`, ten attempts in five minutes,
+partitioned by the caller's address so exhausting the permits locks out nobody else. A rejected
+request answers `429` with `Retry-After`. Nothing else in the application is limited.
+
+**Per address**: `Auth:OneTimeCode:Cooldown`, a minute between codes for one email whoever asks for
+them. The caller limit alone would leave someone's mailbox open to anyone willing to change address.
+Consuming a code clears the cooldown, so signing out and back in does not wait.
+
+Both are configured rather than compiled in, because the right numbers depend on how many people sit
+behind one address — which the application cannot know.
+
 ## Traps
 
 **There are no roles.** Every signed-in person will be able to do everything, as in the original. The
 claims carried are name and email only; anything built on "everyone sees everything" will be revisited
 when roles arrive.
 
-**Nothing rate-limits sign-in.** Burning a code on a failed attempt is the only brake, and the code
-request endpoint will send an email as often as it is asked.
+**The caller limit counts addresses, not people.** Everyone behind one office address shares a
+partition, so the permit count has to allow for however many that is; and everyone on their own
+connection gets their own, which an attacker with a pool of addresses also gets.

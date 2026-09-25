@@ -47,6 +47,13 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
         // MigrationsTests; running them for every fixture would prove the same thing more slowly.
         builder.UseSetting("Database:MigrateOnStartup", "false");
 
+        // Every request in the suite arrives from the same address, so the caller limit would count
+        // whole test classes as one attacker. RateLimitTests sets its own.
+        builder.UseSetting("RateLimit:SignIn:Permits", "1000");
+
+        // A test signs in more than once a minute, which a real caller has no reason to.
+        builder.UseSetting("Auth:OneTimeCode:Cooldown", "00:00:00");
+
         builder.ConfigureServices(services =>
         {
             services.RemoveAll<IEmailSender>();

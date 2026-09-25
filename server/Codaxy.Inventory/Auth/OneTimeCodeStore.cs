@@ -13,7 +13,8 @@ namespace Codaxy.Inventory.Auth;
 /// </summary>
 public interface IOneTimeCodeStore
 {
-    string Issue(string email);
+    /// <summary>The code to send, or null while the address is within its cooldown.</summary>
+    string? Issue(string email);
 
     bool Consume(string email, string code);
 }
@@ -29,11 +30,20 @@ public sealed class InMemoryOneTimeCodeStore(
     );
     private readonly AuthOptions options = options.Value;
 
-    public string Issue(string email)
+    public string? Issue(string email)
     {
+        var now = time.GetUtcNow();
+
+        if (entries.TryGetValue(email, out var outstanding) && now < outstanding.NextIssueAt)
+            return null;
+
         var code = RandomNumberGenerator.GetInt32(0, 1_000_000).ToString("D6");
 
-        entries[email] = new Entry(code, time.GetUtcNow() + options.OneTimeCode.Validity);
+        entries[email] = new Entry(
+            code,
+            now + options.OneTimeCode.Validity,
+            now + options.OneTimeCode.Cooldown
+        );
         Prune();
 
         return code;
@@ -69,5 +79,9 @@ public sealed class InMemoryOneTimeCodeStore(
                 entries.TryRemove(email, out _);
     }
 
-    private readonly record struct Entry(string Code, DateTimeOffset ExpiresAt);
+    private readonly record struct Entry(
+        string Code,
+        DateTimeOffset ExpiresAt,
+        DateTimeOffset NextIssueAt
+    );
 }

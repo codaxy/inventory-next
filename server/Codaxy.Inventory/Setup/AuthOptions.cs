@@ -40,5 +40,8 @@ public sealed class AuthOptions
         public bool Enabled { get; init; }
 
         public TimeSpan Validity { get; init; } = TimeSpan.FromMinutes(10);
+
+        /// <summary>How long one address waits between codes, whoever asks for them.</summary>
+        public TimeSpan Cooldown { get; init; } = TimeSpan.FromMinutes(1);
     }
 }

@@ -9,6 +9,7 @@ builder
     .AddInventoryPersistence(builder.Configuration)
     .AddInventoryDataProtection(builder.Configuration)
     .AddInventoryAuthentication(builder.Configuration)
+    .AddInventoryRateLimiting(builder.Configuration)
     .AddInventoryHttpLogging()
     .AddInventoryHealthChecks();
 
@@ -17,6 +18,7 @@ var app = builder.Build();
 app.MigrateAndSeed();
 
 app.UseHttpLogging();
+app.UseRateLimiter();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseAuthentication();

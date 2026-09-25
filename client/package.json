@@ -6,6 +6,7 @@
         "build": "webpack --mode production",
         "format": "prettier --write \"src/**/*.{ts,tsx,scss,html}\" \"*.{json,js}\"",
         "format:check": "prettier --check \"src/**/*.{ts,tsx,scss,html}\" \"*.{json,js}\"",
+        "prestart": "dotnet dev-certs https --export-path .certs/localhost.pem --format PEM --no-password",
         "start": "webpack serve --mode development",
         "typecheck": "tsc --noEmit"
     },

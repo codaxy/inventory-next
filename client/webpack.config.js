@@ -2,7 +2,16 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const DEV_SERVER = "http://localhost:8765/";
+const fs = require("fs");
+
+const DEV_SERVER = "https://localhost:8765/";
+
+// The ASP.NET development certificate, exported by `npm start`. One certificate for the server and
+// the watcher means one thing to trust and no warning on either.
+const certificate = {
+    key: path.resolve(__dirname, ".certs/localhost.key"),
+    cert: path.resolve(__dirname, ".certs/localhost.pem"),
+};
 
 // Production output stays in the client and is copied into the server's wwwroot by the image.
 const dist = path.resolve(__dirname, "dist");
@@ -57,6 +66,13 @@ module.exports = (_env, argv) => {
             // the page you were on instead of reloading it away.
             hot: true,
             port: 8765,
+            server: {
+                type: "https",
+                options: {
+                    key: fs.readFileSync(certificate.key),
+                    cert: fs.readFileSync(certificate.cert),
+                },
+            },
             // Only the shell reaches disk; the bundles are served from memory by the dev server, so
             // wwwroot never accumulates a build that would be served instead of them.
             devMiddleware: {

@@ -9,14 +9,20 @@ So far it signs you in and does nothing else.
 ## Running it
 
 ```
+dotnet dev-certs https --trust                # once per machine
 docker compose up -d                          # PostgreSQL and Mailpit
 cd client && npm install && npm start         # watches and serves the bundles, leave it running
 cd ../server && dotnet run --project Codaxy.Inventory
 ```
 
-Open **http://localhost:5080** — the server's own origin, in development as in production. The
+Open **https://localhost:5443** — the server's own origin, in development as in production. The
 application is served from there and only its bundles come from the watcher on 8765, so an edit is
 live without a rebuild and the session cookie belongs to the same origin it will in production.
+
+Development runs over TLS for the same reason: cookies behave differently without it, and a
+difference between development and production shows up as a browser-specific failure nobody can
+reproduce. `npm start` exports the ASP.NET development certificate for the watcher, so both are
+served with the one certificate the trust command above installed.
 
 `appsettings.Development.json` is committed and points at the compose defaults. Sign in with an
 address in one of `Auth:AllowedDomains` — `codaxy.com` out of the box — and the code arrives in
@@ -35,13 +41,10 @@ dotnet user-secrets set "Auth:Google:ClientSecret" "your-secret"
 
 Restart the server; `GET /api/auth/options` reports `"google": true` and the sign-in screen offers it.
 
-The Google client needs the matching redirect URI registered, and **which one depends on how you are
-running the client**, because the handler builds it from the host that asked:
-
-- `http://localhost:5080/signin-google` — server serving the built client, the command above.
-- `http://localhost:8765/signin-google` — webpack dev server proxying to it, `npm start`.
-
-Register both and either loop works. `dotnet user-secrets list` shows what is set, and `dotnet
+The Google client needs `https://localhost:5443/signin-google` registered as a redirect URI. Without
+it the flow reaches Google and comes back as `Error 400: redirect_uri_mismatch` — the application is
+fine, the console entry is missing. Only that one URI is needed: the page is served by the server on
+5443 whether or not the watcher is running. `dotnet user-secrets list` shows what is set, and `dotnet
 user-secrets clear` removes it.
 
 `npm run build` writes to `client/dist` and is only needed for a production-like run; the image does

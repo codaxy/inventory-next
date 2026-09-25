@@ -35,6 +35,11 @@ public static class AuthenticationSetup
                 options.ClientSecret = google["ClientSecret"]!;
                 options.SignInScheme = AuthEndpoints.ExternalScheme;
                 options.CallbackPath = "/signin-google";
+
+                // Lax is enough for the cookie that carries the flow across to Google, because the
+                // redirect back is a top-level GET; None would let it travel with any cross-site
+                // request for no gain.
+                options.CorrelationCookie.SameSite = SameSiteMode.Lax;
             });
 
         return services.AddAuthorization();

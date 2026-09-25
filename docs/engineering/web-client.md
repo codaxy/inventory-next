@@ -43,8 +43,14 @@ not guarantee, and the page padding respects `env(safe-area-inset-bottom)`.
 
 **The application is always served by the server, on its own origin**, in development as in
 production. In development the watcher writes only the shell to `wwwroot` — bundles stay in its
-memory and the shell's `publicPath` points at `http://localhost:8765/` — so the page comes from the
+memory and the shell's `publicPath` points at `https://localhost:8765/` — so the page comes from the
 server and the scripts come from the watcher.
+
+**Both are served over TLS in development**, with the ASP.NET development certificate that `npm
+start` exports for the watcher. One certificate, so one thing to trust. It is not decoration: cookie
+attributes depend on the scheme, so an http development loop exercises different rules from
+production and the difference surfaces as a failure in one browser and not another. An https page
+cannot load scripts over http either, so the watcher has no choice once the server has one.
 
 That is the reason for the arrangement rather than the browser being handed to the dev server: the
 session cookie is issued for, and confined to, the origin that serves the application. Point the
@@ -69,6 +75,11 @@ that a static shell supports. Worth deciding before there are screens, not after
 
 ## Traps
 
+**CxJS's `Link` never leaves the application.** It calls `preventDefault` and pushes the href through
+the client router for any local URL, so a link to a server endpoint — starting an OAuth flow, say —
+routes to a page that does not exist and lands back where it started, with no request made. A plain
+anchor is what leaves.
+
 **A CxJS layout is an imported widget, not a string.** `layout={{ type: "vbox" }}` compiles, reaches
 the browser, and throws `Invalid widget type` at render — the screen is simply blank. Anything this
 simple belongs in CSS anyway.
@@ -81,10 +92,10 @@ Letting the whole build land there leaves bundles the server will serve in place
 and an edit then appears to do nothing.
 
 **Both ports are stated twice, in files that do not know about each other.** 8765 is
-`devServer.port` and the `publicPath` in `webpack.config.js`; 5080 is `applicationUrl` in
+`devServer.port` and the `publicPath` in `webpack.config.js`; 5443 is `applicationUrl` in
 `launchSettings.json` and what the browser is told to open. Change one half and the failure is
 silent — the page loads from the server and asks for bundles nobody is serving.
 
-**A shell written in development points at `http://localhost:8765`.** Running the server in
+**A shell written in development points at `https://localhost:8765`.** Running the server in
 Production against that same `wwwroot` serves a page asking for a watcher that is not there; build
 into `dist` and let the image copy it.

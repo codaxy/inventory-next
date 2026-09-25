@@ -1,4 +1,4 @@
-import { Button, Link, NumberField, TextField, ValidationGroup } from "cx/widgets";
+import { Button, NumberField, TextField, ValidationGroup } from "cx/widgets";
 
 import Controller from "./Controller";
 
@@ -14,12 +14,13 @@ export default () => (
 
                 <p class="error" visible-expr="!!{error}" text-bind="error" />
 
-                <Link
-                    href="/auth/google/start"
-                    class="cxb-button cxm-primary"
-                    visible-expr="{providers.google}"
-                    text="Continue with Google"
-                />
+                {/*
+                    A plain anchor, not CxJS's Link: Link routes a local href through the client
+                    router, and this one has to leave the application and reach the server.
+                */}
+                <a href="/auth/google/start" class="cxb-button cxm-primary" visible-expr="{providers.google}">
+                    Continue with Google
+                </a>
 
                 <div class="separator" visible-expr="{providers.google} && {providers.oneTimeCode}">
                     or
@@ -62,11 +63,12 @@ export default () => (
                         style="width: 100%"
                     />
 
-                    <Link
-                        href="#"
+                    <Button
+                        mod="hollow"
                         onClick="onStartOver"
                         visible-expr="{codeSent}"
                         text="Use a different address"
+                        style="width: 100%"
                     />
                 </ValidationGroup>
             </div>

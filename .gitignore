@@ -9,6 +9,7 @@ obj
 .claude
 node_modules
 .keys/
+client/.certs/
 *.sql.gz
 appsettings.Production.json
 server/Codaxy.Inventory/wwwroot/*

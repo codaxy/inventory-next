@@ -10,7 +10,7 @@ public class OneTimeCodeStoreTests
 {
     private readonly FakeTimeProvider time = new();
 
-    private InMemoryOneTimeCodeStore Store(TimeSpan? validity = null) =>
+    private InMemoryOneTimeCodeStore Store(TimeSpan? validity = null, TimeSpan? cooldown = null) =>
         new(
             Options.Create(
                 new AuthOptions
@@ -19,6 +19,7 @@ public class OneTimeCodeStoreTests
                     {
                         Enabled = true,
                         Validity = validity ?? TimeSpan.FromMinutes(10),
+                        Cooldown = cooldown ?? TimeSpan.FromMinutes(1),
                     },
                 }
             ),
@@ -103,11 +104,58 @@ public class OneTimeCodeStoreTests
     [Fact]
     public void Replaces_an_outstanding_code_when_a_new_one_is_asked_for()
     {
-        var store = Store();
+        var store = Store(cooldown: TimeSpan.FromMinutes(1));
 
         store.Issue("someone@codaxy.com");
+        time.Advance(TimeSpan.FromMinutes(1));
         var second = store.Issue("someone@codaxy.com");
 
+        Assert.NotNull(second);
         Assert.True(store.Consume("someone@codaxy.com", second));
+    }
+
+    [Fact]
+    public void Issues_nothing_while_the_address_is_within_its_cooldown()
+    {
+        var store = Store(cooldown: TimeSpan.FromMinutes(1));
+
+        Assert.NotNull(store.Issue("someone@codaxy.com"));
+
+        time.Advance(TimeSpan.FromSeconds(59));
+
+        Assert.Null(store.Issue("someone@codaxy.com"));
+    }
+
+    [Fact]
+    public void Issues_again_once_the_cooldown_has_passed()
+    {
+        var store = Store(cooldown: TimeSpan.FromMinutes(1));
+
+        store.Issue("someone@codaxy.com");
+        time.Advance(TimeSpan.FromMinutes(1));
+
+        Assert.NotNull(store.Issue("someone@codaxy.com"));
+    }
+
+    [Fact]
+    public void Holds_the_cooldown_per_address()
+    {
+        var store = Store(cooldown: TimeSpan.FromMinutes(1));
+
+        store.Issue("one@codaxy.com");
+
+        Assert.NotNull(store.Issue("two@codaxy.com"));
+    }
+
+    [Fact]
+    public void Leaves_a_consumed_code_no_cooldown_behind()
+    {
+        var store = Store(cooldown: TimeSpan.FromMinutes(1));
+        var code = store.Issue("someone@codaxy.com");
+
+        Assert.True(store.Consume("someone@codaxy.com", code!));
+
+        // Signing in and out again must not wait a minute for a new code.
+        Assert.NotNull(store.Issue("someone@codaxy.com"));
     }
 }
