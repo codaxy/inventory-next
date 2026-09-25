@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: inventory
       POSTGRES_DB: inventory
     ports:
-      - "5442:5432"
+      - "55432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -17,6 +17,28 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  pgadmin:
+    image: dpage/pgadmin4:9
+    container_name: inventory-next-pgadmin
+    ports:
+      - "55050:55050"
+    environment:
+      # Desktop mode: no sign-in and no master password. The entrypoint refuses to start without the
+      # two defaults even so, and validates the address — a .local domain is rejected outright.
+      PGADMIN_DEFAULT_EMAIL: admin@codaxy.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      PGADMIN_LISTEN_PORT: 55050
+    volumes:
+      # Pre-registers the database, so nobody retypes what compose already knows. The password is
+      # typed once, on first connect, and kept in pgadmin_data from then on.
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      db:
+        condition: service_healthy
 
   mailpit:
     image: axllent/mailpit:latest
@@ -69,5 +91,6 @@ services:
 
 volumes:
   postgres_data:
+  pgadmin_data:
   # The data protection key ring. Losing it invalidates every session cookie, signing everyone out.
   data_protection_keys:

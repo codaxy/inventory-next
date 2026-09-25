@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Inventory Next",
+      "Group": "Servers",
+      "Host": "db",
+      "Port": 5432,
+      "MaintenanceDB": "inventory",
+      "Username": "inventory",
+      "SSLMode": "prefer",
+      "Comment": "The compose stack's Postgres. Password: inventory"
+    }
+  }
+}

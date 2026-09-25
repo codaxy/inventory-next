@@ -11,7 +11,12 @@ the application from an IDE needs. **`docker compose --profile app up` runs the 
 them.**
 
 Ports are deliberately not the original application's, so both stacks can run at once: PostgreSQL on
-5442, the application on 8090, Mailpit's web interface on 8025 and its relay on 1025.
+55432, pgAdmin on 55050, the application on 8090, Mailpit's web interface on 8025 and its relay on
+1025.
+
+pgAdmin runs in desktop mode — no sign-in, no master password — and `docker/pgadmin/servers.json`
+pre-registers the database so nobody retypes what compose already knows. It, and PostgreSQL's
+published port, are conveniences for a laptop and wrong for anything exposed.
 
 ## Configuration and secrets
 
