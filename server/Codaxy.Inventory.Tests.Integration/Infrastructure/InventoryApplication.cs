@@ -28,7 +28,7 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
 
     /// <summary>Its own ring per run, so a test never writes to the configured path.</summary>
     public string KeyRingPath { get; } =
-        Path.Combine(Path.GetTempPath(), "inventory-next-tests", Guid.NewGuid().ToString());
+        Path.Combine(Path.GetTempPath(), "inventory-next-tests", Guid.CreateVersion7().ToString());
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

@@ -71,31 +71,31 @@ public class InventoryContextSeedData
                 {
                     new AssetStatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Status = "Acquired",
                         Description = "Status reserved for the beginning of the asset's lifecycle",
                     },
                     new AssetStatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Status = "Active",
                         Description = "Status  reserved for assets that are being actively used",
                     },
                     new AssetStatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Status = "In Transit",
                         Description = "Status reserved for assets that are changing their state",
                     },
                     new AssetStatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Status = "Inactive",
                         Description = "Status reserved for assets that are not being actively used",
                     },
                     new AssetStatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Status = "Decommissioned",
                         Description = "Status reserved for the end of the asset's lifecycle",
                     },
@@ -115,37 +115,37 @@ public class InventoryContextSeedData
                 {
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Business Units",
                         AssetCategoryId = entitiesId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Employees",
                         AssetCategoryId = entitiesId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Associates",
                         AssetCategoryId = entitiesId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Providers",
                         AssetCategoryId = entitiesId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Clients",
                         AssetCategoryId = entitiesId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Other Stakeholders",
                         AssetCategoryId = entitiesId,
                     },
@@ -161,25 +161,25 @@ public class InventoryContextSeedData
                 {
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Databases",
                         AssetCategoryId = informationId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Documentation",
                         AssetCategoryId = informationId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Contracts",
                         AssetCategoryId = informationId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Archives",
                         AssetCategoryId = informationId,
                     },
@@ -195,25 +195,25 @@ public class InventoryContextSeedData
                 {
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Application software",
                         AssetCategoryId = softwareId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "System software",
                         AssetCategoryId = softwareId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Licenses",
                         AssetCategoryId = softwareId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Source code",
                         AssetCategoryId = softwareId,
                     },
@@ -229,55 +229,55 @@ public class InventoryContextSeedData
                 {
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Computer equipment",
                         AssetCategoryId = equipmentId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Mobile devices",
                         AssetCategoryId = equipmentId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "BYOD devices",
                         AssetCategoryId = equipmentId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Communication equipment",
                         AssetCategoryId = equipmentId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Data Storage",
                         AssetCategoryId = equipmentId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Technical equipment",
                         AssetCategoryId = equipmentId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Furniture and fixtures",
                         AssetCategoryId = equipmentId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Virtual machines",
                         AssetCategoryId = equipmentId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Electronic Device",
                         AssetCategoryId = equipmentId,
                     },
@@ -293,19 +293,19 @@ public class InventoryContextSeedData
                 {
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Cloud",
                         AssetCategoryId = servicesId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Communication",
                         AssetCategoryId = servicesId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Utilities",
                         AssetCategoryId = servicesId,
                     },
@@ -321,13 +321,13 @@ public class InventoryContextSeedData
                 {
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Data centers",
                         AssetCategoryId = premisesId,
                     },
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Locations & Buildings",
                         AssetCategoryId = premisesId,
                     },
@@ -343,7 +343,7 @@ public class InventoryContextSeedData
                 {
                     new AssetType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Vehicles",
                         AssetCategoryId = transportationId,
                     },
@@ -362,7 +362,7 @@ public class InventoryContextSeedData
                 {
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = acquired.Id,
                         Substatus = "Ordered",
                         Description =
@@ -370,7 +370,7 @@ public class InventoryContextSeedData
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = acquired.Id,
                         Substatus = "Delivered",
                         Description =
@@ -378,7 +378,7 @@ public class InventoryContextSeedData
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = acquired.Id,
                         Substatus = "Available",
                         Description =
@@ -393,14 +393,14 @@ public class InventoryContextSeedData
                 {
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = active.Id,
                         Substatus = "Operational",
                         Description = "A status representing regular usage of the asset",
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = active.Id,
                         Substatus = "Redundant",
                         Description =
@@ -408,7 +408,7 @@ public class InventoryContextSeedData
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = active.Id,
                         Substatus = "Maintained",
                         Description =
@@ -423,14 +423,14 @@ public class InventoryContextSeedData
                 {
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = inTransit.Id,
                         Substatus = "Pending order",
                         Description = "A procurement/creation of the new asset has been requested",
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = inTransit.Id,
                         Substatus = "Pending registration",
                         Description =
@@ -438,7 +438,7 @@ public class InventoryContextSeedData
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = inTransit.Id,
                         Substatus = "Pending repair",
                         Description =
@@ -446,21 +446,21 @@ public class InventoryContextSeedData
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = inTransit.Id,
                         Substatus = "Pending relocation",
                         Description = "Waiting for transfer/relocation of asset to finish",
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = inTransit.Id,
                         Substatus = "Pending decommissioning",
                         Description = "Waiting for decommissioning process to finish",
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = inTransit.Id,
                         Substatus = "Pending return",
                         Description = "Waiting for asset return process to finish",
@@ -474,7 +474,7 @@ public class InventoryContextSeedData
                 {
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = inactive.Id,
                         Substatus = "Non-operational",
                         Description =
@@ -482,7 +482,7 @@ public class InventoryContextSeedData
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = inactive.Id,
                         Substatus = "Loaned",
                         Description =
@@ -490,7 +490,7 @@ public class InventoryContextSeedData
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = inactive.Id,
                         Substatus = "Retired",
                         Description =
@@ -505,7 +505,7 @@ public class InventoryContextSeedData
                 {
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = decommissioned.Id,
                         Substatus = "Changed owner - uncontrolled",
                         Description =
@@ -513,7 +513,7 @@ public class InventoryContextSeedData
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = decommissioned.Id,
                         Substatus = "Changed owner - controlled",
                         Description =
@@ -521,7 +521,7 @@ public class InventoryContextSeedData
                     },
                     new AssetSubstatus
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         AssetStatusId = decommissioned.Id,
                         Substatus = "Disposed",
                         Description =
@@ -538,21 +538,21 @@ public class InventoryContextSeedData
                 {
                     new Confidentiality
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Level = "Public",
                         Weight = 1,
                         Description = "According to classification schema",
                     },
                     new Confidentiality
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Level = "Internal",
                         Weight = 2,
                         Description = "According to classification schema",
                     },
                     new Confidentiality
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Level = "Confidential",
                         Weight = 3,
                         Description = "According to classification schema",
@@ -568,21 +568,21 @@ public class InventoryContextSeedData
                 {
                     new Integrity
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Level = "Low",
                         Weight = 1,
                         Description = "Minimal or no impact on business processes",
                     },
                     new Integrity
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Level = "Medium",
                         Weight = 2,
                         Description = "Noticable impact on business processes",
                     },
                     new Integrity
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Level = "High",
                         Weight = 3,
                         Description =
@@ -599,7 +599,7 @@ public class InventoryContextSeedData
                 {
                     new Availability
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Level = "Low",
                         Weight = 1,
                         Description =
@@ -607,7 +607,7 @@ public class InventoryContextSeedData
                     },
                     new Availability
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Level = "Medium",
                         Weight = 2,
                         Description =
@@ -615,7 +615,7 @@ public class InventoryContextSeedData
                     },
                     new Availability
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Level = "High",
                         Weight = 3,
                         Description =
@@ -632,19 +632,19 @@ public class InventoryContextSeedData
                 {
                     new Importance
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Level = "Low",
                         Description = "Less important resource",
                     },
                     new Importance
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Level = "Medium",
                         Description = "Important resource",
                     },
                     new Importance
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Level = "High",
                         Description = "Very important resource",
                     },
@@ -657,8 +657,8 @@ public class InventoryContextSeedData
             context.LicenseModels.AddRange(
                 new List<LicenseModel>()
                 {
-                    new LicenseModel { Id = Guid.NewGuid(), Text = "OEM" },
-                    new LicenseModel { Id = Guid.NewGuid(), Text = "Standalone" },
+                    new LicenseModel { Id = Guid.CreateVersion7(), Text = "OEM" },
+                    new LicenseModel { Id = Guid.CreateVersion7(), Text = "Standalone" },
                 }
             );
         }
@@ -668,10 +668,10 @@ public class InventoryContextSeedData
             context.LicenseTypes.AddRange(
                 new List<LicenseType>()
                 {
-                    new LicenseType { Id = Guid.NewGuid(), Text = "Commercial" },
-                    new LicenseType { Id = Guid.NewGuid(), Text = "Open source" },
-                    new LicenseType { Id = Guid.NewGuid(), Text = "Freeware," },
-                    new LicenseType { Id = Guid.NewGuid(), Text = "Shareware" },
+                    new LicenseType { Id = Guid.CreateVersion7(), Text = "Commercial" },
+                    new LicenseType { Id = Guid.CreateVersion7(), Text = "Open source" },
+                    new LicenseType { Id = Guid.CreateVersion7(), Text = "Freeware," },
+                    new LicenseType { Id = Guid.CreateVersion7(), Text = "Shareware" },
                 }
             );
         }
@@ -681,9 +681,13 @@ public class InventoryContextSeedData
             context.LicenseExpirationModels.AddRange(
                 new List<LicenseExpirationModel>()
                 {
-                    new LicenseExpirationModel { Id = Guid.NewGuid(), Text = "Subscription" },
-                    new LicenseExpirationModel { Id = Guid.NewGuid(), Text = "Perpetual" },
-                    new LicenseExpirationModel { Id = Guid.NewGuid(), Text = "PayAsYouGo" },
+                    new LicenseExpirationModel
+                    {
+                        Id = Guid.CreateVersion7(),
+                        Text = "Subscription",
+                    },
+                    new LicenseExpirationModel { Id = Guid.CreateVersion7(), Text = "Perpetual" },
+                    new LicenseExpirationModel { Id = Guid.CreateVersion7(), Text = "PayAsYouGo" },
                 }
             );
         }
@@ -693,7 +697,7 @@ public class InventoryContextSeedData
             context.Sequences.AddRange(
                 new List<Sequence>()
                 {
-                    new Sequence { Id = Guid.NewGuid(), AssetInventoryNumber = 100000 },
+                    new Sequence { Id = Guid.CreateVersion7(), AssetInventoryNumber = 100000 },
                 }
             );
         }
@@ -703,13 +707,33 @@ public class InventoryContextSeedData
             context.SoftwareOrServiceCategories.AddRange(
                 new List<SoftwareOrServiceCategory>()
                 {
-                    new SoftwareOrServiceCategory { Id = Guid.NewGuid(), Name = "OS server" },
-                    new SoftwareOrServiceCategory { Id = Guid.NewGuid(), Name = "OS client" },
-                    new SoftwareOrServiceCategory { Id = Guid.NewGuid(), Name = "Application" },
-                    new SoftwareOrServiceCategory { Id = Guid.NewGuid(), Name = "Database" },
-                    new SoftwareOrServiceCategory { Id = Guid.NewGuid(), Name = "Hypervisor" },
-                    new SoftwareOrServiceCategory { Id = Guid.NewGuid(), Name = "Copyright/IP" },
-                    new SoftwareOrServiceCategory { Id = Guid.NewGuid(), Name = "Other" },
+                    new SoftwareOrServiceCategory
+                    {
+                        Id = Guid.CreateVersion7(),
+                        Name = "OS server",
+                    },
+                    new SoftwareOrServiceCategory
+                    {
+                        Id = Guid.CreateVersion7(),
+                        Name = "OS client",
+                    },
+                    new SoftwareOrServiceCategory
+                    {
+                        Id = Guid.CreateVersion7(),
+                        Name = "Application",
+                    },
+                    new SoftwareOrServiceCategory { Id = Guid.CreateVersion7(), Name = "Database" },
+                    new SoftwareOrServiceCategory
+                    {
+                        Id = Guid.CreateVersion7(),
+                        Name = "Hypervisor",
+                    },
+                    new SoftwareOrServiceCategory
+                    {
+                        Id = Guid.CreateVersion7(),
+                        Name = "Copyright/IP",
+                    },
+                    new SoftwareOrServiceCategory { Id = Guid.CreateVersion7(), Name = "Other" },
                 }
             );
         }
@@ -732,8 +756,8 @@ public class InventoryContextSeedData
             context.Periods.AddRange(
                 new List<Period>()
                 {
-                    new Period { Id = Guid.NewGuid(), Text = "Month" },
-                    new Period { Id = Guid.NewGuid(), Text = "Year" },
+                    new Period { Id = Guid.CreateVersion7(), Text = "Month" },
+                    new Period { Id = Guid.CreateVersion7(), Text = "Year" },
                 }
             );
         }
@@ -743,9 +767,9 @@ public class InventoryContextSeedData
             context.Currencies.AddRange(
                 new List<Currency>()
                 {
-                    new Currency { Id = Guid.NewGuid(), Text = "KM" },
-                    new Currency { Id = Guid.NewGuid(), Text = "$" },
-                    new Currency { Id = Guid.NewGuid(), Text = "€" },
+                    new Currency { Id = Guid.CreateVersion7(), Text = "KM" },
+                    new Currency { Id = Guid.CreateVersion7(), Text = "$" },
+                    new Currency { Id = Guid.CreateVersion7(), Text = "€" },
                 }
             );
         }
@@ -755,8 +779,8 @@ public class InventoryContextSeedData
             context.MaintenanceTypes.AddRange(
                 new List<MaintenanceType>()
                 {
-                    new MaintenanceType { Id = Guid.NewGuid(), Text = "Contract" },
-                    new MaintenanceType { Id = Guid.NewGuid(), Text = "AdHoc" },
+                    new MaintenanceType { Id = Guid.CreateVersion7(), Text = "Contract" },
+                    new MaintenanceType { Id = Guid.CreateVersion7(), Text = "AdHoc" },
                 }
             );
         }
@@ -766,8 +790,8 @@ public class InventoryContextSeedData
             context.ElectronicDeviceTags.AddRange(
                 new List<ElectronicDeviceTag>()
                 {
-                    new ElectronicDeviceTag { Id = Guid.NewGuid(), Name = "Mobile" },
-                    new ElectronicDeviceTag { Id = Guid.NewGuid(), Name = "HasData" },
+                    new ElectronicDeviceTag { Id = Guid.CreateVersion7(), Name = "Mobile" },
+                    new ElectronicDeviceTag { Id = Guid.CreateVersion7(), Name = "HasData" },
                 }
             );
         }
@@ -779,205 +803,205 @@ public class InventoryContextSeedData
                 {
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Desktop",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Laptop",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Tablet",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Mobile phone",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Monitor",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Keyboard",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Mouse",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Headset",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Microphone",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Speakers",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Camera",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "CCTV",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Printer",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Scanner",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Copier",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Fax",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Power bank",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "KVM switch",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "KVM console",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Computer rack",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Rack part",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Docking station",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "External optical drive",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "External hard drive",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Computer components",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Server",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Data storage",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Firewall",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Gateway",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Router",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Network bridge",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Modem",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Wireless access point",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Switch",
                         Description = "",
                     },
@@ -990,12 +1014,12 @@ public class InventoryContextSeedData
             context.InformationTypes.AddRange(
                 new List<InformationType>()
                 {
-                    new InformationType { Id = Guid.NewGuid(), Name = "Backup" },
-                    new InformationType { Id = Guid.NewGuid(), Name = "Source code" },
-                    new InformationType { Id = Guid.NewGuid(), Name = "Project task log" },
-                    new InformationType { Id = Guid.NewGuid(), Name = "Contract" },
-                    new InformationType { Id = Guid.NewGuid(), Name = "Access rights" },
-                    new InformationType { Id = Guid.NewGuid(), Name = "Other" },
+                    new InformationType { Id = Guid.CreateVersion7(), Name = "Backup" },
+                    new InformationType { Id = Guid.CreateVersion7(), Name = "Source code" },
+                    new InformationType { Id = Guid.CreateVersion7(), Name = "Project task log" },
+                    new InformationType { Id = Guid.CreateVersion7(), Name = "Contract" },
+                    new InformationType { Id = Guid.CreateVersion7(), Name = "Access rights" },
+                    new InformationType { Id = Guid.CreateVersion7(), Name = "Other" },
                 }
             );
         }
@@ -1005,25 +1029,25 @@ public class InventoryContextSeedData
             context.Persons.AddRange(
                 new List<Person>()
                 {
-                    new Person { Id = Guid.NewGuid(), Name = "Aleksina Matić" },
-                    new Person { Id = Guid.NewGuid(), Name = "Andrea Baćo" },
-                    new Person { Id = Guid.NewGuid(), Name = "Andrej Šimić" },
-                    new Person { Id = Guid.NewGuid(), Name = "Danijela Umjenović" },
-                    new Person { Id = Guid.NewGuid(), Name = "Đorđe Vukelić" },
-                    new Person { Id = Guid.NewGuid(), Name = "Dragan Bjelošević" },
-                    new Person { Id = Guid.NewGuid(), Name = "Igor Timarac" },
-                    new Person { Id = Guid.NewGuid(), Name = "Jovana Romčević Šukalo" },
-                    new Person { Id = Guid.NewGuid(), Name = "Maja Mihajlović" },
-                    new Person { Id = Guid.NewGuid(), Name = "Marko Stijak" },
-                    new Person { Id = Guid.NewGuid(), Name = "Marko Sikirica" },
-                    new Person { Id = Guid.NewGuid(), Name = "Mihajlo Novaković" },
-                    new Person { Id = Guid.NewGuid(), Name = "Milica Tadić" },
-                    new Person { Id = Guid.NewGuid(), Name = "Nebojša Perić" },
-                    new Person { Id = Guid.NewGuid(), Name = "Ognjen Kremenović" },
-                    new Person { Id = Guid.NewGuid(), Name = "Radmila Kecman" },
-                    new Person { Id = Guid.NewGuid(), Name = "Saša Tatar" },
-                    new Person { Id = Guid.NewGuid(), Name = "Vladimir Dangubić" },
-                    new Person { Id = Guid.NewGuid(), Name = "Vladimir Karadža" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Aleksina Matić" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Andrea Baćo" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Andrej Šimić" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Danijela Umjenović" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Đorđe Vukelić" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Dragan Bjelošević" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Igor Timarac" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Jovana Romčević Šukalo" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Maja Mihajlović" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Marko Stijak" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Marko Sikirica" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Mihajlo Novaković" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Milica Tadić" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Nebojša Perić" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Ognjen Kremenović" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Radmila Kecman" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Saša Tatar" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Vladimir Dangubić" },
+                    new Person { Id = Guid.CreateVersion7(), Name = "Vladimir Karadža" },
                 }
             );
         }
@@ -1060,7 +1084,7 @@ public class InventoryContextSeedData
                 {
                     new Location
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Kancelarija Merkur",
                         StateId = null,
                         PostalCode = "78000",
@@ -1073,7 +1097,7 @@ public class InventoryContextSeedData
                     },
                     new Location
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Kancelarija Mars",
                         StateId = null,
                         PostalCode = "78000",
@@ -1086,7 +1110,7 @@ public class InventoryContextSeedData
                     },
                     new Location
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Kancelarija Neptun",
                         StateId = null,
                         PostalCode = "78000",
@@ -1099,7 +1123,7 @@ public class InventoryContextSeedData
                     },
                     new Location
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Kancelarija Direktor",
                         StateId = null,
                         PostalCode = "78000",
@@ -1121,181 +1145,181 @@ public class InventoryContextSeedData
                 {
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "ASUS",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Canon",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "CheckPoint",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "CISCO",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Conteg RUN",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Crypton",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Dell ",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Drvex doo",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Gigabyte",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Goal",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Gorenje",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "HP",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Huawei",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "IKEA",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Intel",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Lenovo",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Lexmark",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "LG",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Logitech",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Microsoft",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Samsung",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Sencha",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Škoda",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Vivax",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Xiaomi ",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Acer",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Apple",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Panasonic",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Google",
                         URL = "",
                     },
                     new Manufacturer
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "GitHub",
                         URL = "",
                     },
@@ -1310,97 +1334,97 @@ public class InventoryContextSeedData
                 {
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Elnos BL doo",
                         Location = "Karađorđeva 79b, Banja Luka",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Miki, Božić Miroslav s.p.",
                         Location = "Dositejeva 172, Laktasi",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Kabinet Plus d.o.o.",
                         Location = "Krajiških brigada 57, Banja Luka",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "3D Box sp",
                         Location = "Jovana Dučića 2, Banja Luka",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Assetmax AG",
                         Location = "Uraniastrasse 34, Zürich",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "PROINTER ITSS d.o.o. Banja Luka",
                         Location = "Vuka Karadžića 2, Banja Luka",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Blicnet d.o.o. Banja Luka",
                         Location = "Majke Jugovića 25, Banja Luka",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "VodafoneZiggo b.v.",
                         Location = "Atoomweg 100, Utrecht",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "AGRAMINVEST d.o.o.",
                         Location = "Vukovarska 1, Banja Luka",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Vesna Ševa",
                         Location = "Maksima Gorkog 18A, Banja Luka",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "GitHub Inc.",
                         Location = "88 Colin P. Kelly Jr. Street, San Francisco",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Stylos doo",
                         Location = "Veselina Masleše 13, Banja Luka",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Godaddy.com",
                         Location = "",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Preventiva d.o.o.",
                         Location = "Mirka Kovačevića 13, Banja Luka",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "EastCode d.o.o Banja Luka",
                         Location = "Bulevar Desanke Maksimović 10, Banja Luka",
                     },
                     new Vendor
                     {
-                        Id = Guid.NewGuid(),
+                        Id = Guid.CreateVersion7(),
                         Name = "Telekomunikacije RS, a.d. Banjaluka",
                         Location = "Vuka Karadžića 2, Banja Luka",
                     },

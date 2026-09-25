@@ -32,6 +32,11 @@ the two meet, the boundary is worth stating out loud.
 change, and what an endpoint advertises is what someone will eventually do with it. Width that is not
 needed today is permission granted by accident.
 
+**A rule that has exceptions is two rules.** "Time-ordered ids, except where ordering does not
+matter" leaves a table holding both kinds and nobody able to tell them apart, and the same shape
+appears wherever a convention is allowed a sensible-sounding escape. Either it holds everywhere or it
+is not the rule.
+
 **Settle it by running it.** A claim about how a framework behaves, what a tool generates, or what a
 round trip does to a value is cheaper to test than to argue, and the test is usually a few minutes.
 Most of the rules above were written after the opposite turned out to be true.

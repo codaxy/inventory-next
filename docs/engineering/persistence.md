@@ -35,12 +35,14 @@ must, because the audit log has recorded them in every row it has ever written.
 
 ## Keys
 
-Primary keys are GUIDs. New ids come from `RT.Comb`'s PostgreSQL provider, registered as
-`ICombProvider`, so they are time-ordered and index-friendly. A service that creates an entity
-allocates the id itself with `combProvider.Create()` rather than letting the database default it —
-which is also what lets an asset and its subtype row share one key before either is inserted.
+Primary keys are GUIDs, and **every new one is a UUID version 7**: `Guid.CreateVersion7()`, never
+`Guid.NewGuid()`. A v7 id begins with its timestamp, so ids arrive in roughly ascending order and an
+index on a primary key stays dense; v4 ids scatter across it and the cost grows with the table. It
+holds everywhere, not only for rows that are obviously ordered — the exceptions are what leave a
+table with two id shapes and no way to tell which is which.
 
-`Guid.NewGuid()` appears in seed data and in the audit log, where ordering does not matter.
+The application allocates the id rather than letting the database default it, which is what lets an
+asset and its subtype row share one key before either is inserted.
 
 Besides the primary keys, `Asset.InventoryNumber` carries the only unique constraint in the database.
 Codebook names are not unique: whether two vendors may share one is a product question nobody has

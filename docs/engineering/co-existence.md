@@ -14,6 +14,10 @@ nothing would enforce that.
 ever written, so an entity renamed here writes a second vocabulary into one log with nothing to tell
 the two apart. Entity and property names match the original exactly; the API's own models are free.
 
+**Ids are UUID v7 here, and the original mints its own differently.** Both are time-ordered GUIDs in
+the same `uuid` column, so neither application has to care which wrote a row: there is nothing to keep
+in step, and nothing of the original's key generation comes across.
+
 **Inventory numbers are allocated the same way** — read the single `Sequence` row, stamp the asset,
 increment. It races, and the unique index on `inventory_number` is what turns a collision into a
 failure rather than a duplicate. Two mechanisms on one counter would disagree where one does not.
