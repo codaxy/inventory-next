@@ -9,6 +9,7 @@ import { renderThemeVariables } from "cx-theme-variables";
 
 import "./tailwind.css";
 import "./index.scss";
+import "./layout/registerIcons";
 
 import $app from "./model";
 import Routes from "./routes";

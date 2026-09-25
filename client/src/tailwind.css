@@ -25,6 +25,8 @@
     --color-primary: #2a60cf; /* white on it is 5.7 */
     --color-primary-strong: #1c4fb8;
     --color-primary-text: #2a60cf; /* 5.7, 5.1 */
+    --color-primary-wash: #e8effc;
+    --color-primary-edge: #c3d3f5;
 
     --color-line: #dfe4ed;
     --color-line-soft: #e9edf4;
@@ -38,6 +40,24 @@
     --color-success-text: #157a48; /* 5.4, 4.7 */
     --color-warn: #c07d0a;
     --color-warn-text: #9a6200; /* 5.1, 4.5 */
+    --color-warn-wash: #fdf6ec;
+    --color-warn-edge: #f2ddb8;
+
+    /* The dark chrome: sidebar and top bar, two tones so they read as a frame. The `ink`, `line` and
+       `hover` tokens are tuned for white and fail here, so the chrome has its own. Ratios are against
+       `nav`. Alpha where one value has to sit on both tones. */
+    --color-nav: #0e1424;
+    --color-nav-bar: #151d33;
+    --color-nav-ink: #ffffff; /* 18.4 */
+    --color-nav-ink-muted: #b4bdd0; /* 9.7 */
+    --color-nav-ink-dim: #7f8aa3; /* 5.3 */
+    --color-nav-line: rgb(255 255 255 / 9%);
+    --color-nav-hover: rgb(255 255 255 / 8%);
+    --color-nav-active: #2a60cf;
+    --color-nav-mark: #4272e0;
+    --color-nav-avatar: #232d4a;
+    --color-nav-avatar-ink: #c3d3f5;
+    --color-nav-scroll: rgb(255 255 255 / 22%);
 
     --shadow-control: 0 1px 2px rgb(16 26 43 / 8%);
     --shadow-card: 0 8px 24px rgb(16 26 43 / 8%);

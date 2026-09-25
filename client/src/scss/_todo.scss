@@ -1,0 +1,90 @@
+// A screen not built yet: a notice on a warning wash, over the grey outline of the list to come.
+.todo {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.25rem;
+    border: 1px dashed var(--color-warn-edge);
+    border-radius: 0.75rem;
+    background: repeating-linear-gradient(
+        -45deg,
+        var(--color-warn-wash) 0 12px,
+        var(--color-surface) 12px 24px
+    );
+}
+
+.todo-badge {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--color-warn-wash);
+    border: 1px solid var(--color-warn-edge);
+    color: var(--color-warn-text);
+}
+
+.todo-pill {
+    display: inline-flex;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    background: var(--color-warn-wash);
+    border: 1px solid var(--color-warn-edge);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-warn-text);
+}
+
+.todo-title {
+    margin: 0.5rem 0 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-ink);
+}
+
+.todo-text {
+    margin: 0.25rem 0 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-ink-muted);
+}
+
+.skeleton {
+    margin-top: 1rem;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+
+    span {
+        display: block;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--color-line-soft);
+    }
+}
+
+.skeleton-head,
+.skeleton-row {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 0.875rem 1.25rem;
+}
+
+.skeleton-head {
+    background: var(--color-canvas);
+    border-bottom: 1px solid var(--color-line);
+
+    span {
+        height: 8px;
+        background: var(--color-line);
+    }
+}
+
+.skeleton-row + .skeleton-row {
+    border-top: 1px solid var(--color-line-soft);
+}

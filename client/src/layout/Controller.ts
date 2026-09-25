@@ -1,6 +1,6 @@
 import { Controller } from "cx/ui";
 
-import { signOut } from "../../api/auth";
+import { signOut } from "../api/auth";
 
 export default class extends Controller {
     async onSignOut() {

@@ -1,3 +1,5 @@
+@use "brand";
+
 // A dot grid under a primary glow in the top-left corner, washed out towards the lower right so
 // the card sits on clean ground. One element, layered top first: fade, glow, dots.
 .sign-in-page {
@@ -29,8 +31,7 @@
     }
 }
 
-// No brand asset exists yet: a primary tile with Lucide's `package` glyph (ISC) cut out of it as a
-// mask, so both colours stay tokens.
+// The brand mark, sized for the sign-in card.
 .brand-mark {
     align-self: center;
     width: 48px;
@@ -45,8 +46,7 @@
         width: 26px;
         height: 26px;
         background: var(--color-surface);
-        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z'/%3E%3Cpath d='M12 22V12'/%3E%3Cpath d='m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7'/%3E%3Cpath d='m7.5 4.27 9 5.15'/%3E%3C/svg%3E")
-            center / contain no-repeat;
+        mask: brand.$glyph center / contain no-repeat;
     }
 }
 

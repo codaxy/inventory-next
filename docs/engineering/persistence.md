@@ -45,7 +45,7 @@ The application allocates the id rather than letting the database default it, wh
 asset and its subtype row share one key before either is inserted.
 
 Besides the primary keys, `Asset.InventoryNumber` carries the only unique constraint in the database.
-Codebook names are not unique: whether two vendors may share one is a product question nobody has
+Names in the codebooks and the directory are not unique: whether two vendors may share one is a product question nobody has
 answered, so the schema does not answer it either.
 
 ## Migrations
@@ -75,7 +75,7 @@ the two describing different schemas with nothing to say which is right.
 ## Seeding
 
 `SeedData()` is idempotent per table — each block runs only when its table is empty — and fills the
-codebooks with the values the product expects. It is safe to run against a populated database, but it
+codebooks and a starting directory with the values the product expects. It is safe to run against a populated database, but it
 will not repair or update a table that already has any row in it.
 
 ## Audit log

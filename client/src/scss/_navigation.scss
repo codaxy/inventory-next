@@ -1,0 +1,127 @@
+@use "brand";
+
+// The dark chrome: sidebar and top bar. Everything here uses the `--color-nav-*` set — the `ink`,
+// `line` and `hover` tokens are tuned for white and disappear on navy.
+
+.logo-mark {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--color-nav-mark);
+
+    &::after {
+        content: "";
+        width: 16px;
+        height: 16px;
+        background: var(--color-nav-ink);
+        mask: brand.$glyph center / contain no-repeat;
+    }
+}
+
+.nav-section {
+    padding: 1.25rem 0.75rem 0.375rem;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-nav-ink-dim);
+}
+
+// `Link` applies `activeClass` when its href matches the url; there is no CSS-only active hook.
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-nav-ink-muted);
+    text-decoration: none;
+    transition:
+        background-color 150ms,
+        color 150ms;
+
+    &:hover {
+        background-color: var(--color-nav-hover);
+        color: var(--color-nav-ink);
+    }
+}
+
+// The selected item inverts rather than tints: a wash of the accent is nearly invisible on navy.
+.nav-link-active,
+.nav-link-active:hover {
+    background-color: var(--color-nav-active);
+    color: var(--color-nav-ink);
+    font-weight: 600;
+}
+
+// Colour comes from `currentColor`, so the link's colour is the icon's.
+.nav-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.nav-footer {
+    padding: 0.75rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--color-nav-line);
+}
+
+// Naming a scrollbar colour also opts out of macOS overlay scrollbars, invisible until scrolled.
+.nav-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-nav-scroll) transparent;
+}
+
+// A button on the chrome. Three classes, because the theme's hollow hover — a near-white wash under
+// pale text — is `.cxb-button.cxm-hollow:hover` in a sheet injected at runtime, which wins a tie.
+// `height: auto` because `.cxb-button` computes its height from theme variables, not padding.
+.cxb-button.cxm-on-dark,
+.cxb-button.cxm-hollow.cxm-on-dark {
+    height: auto;
+    padding: 0.375rem 0.5rem;
+    border: 0;
+    border-radius: 0.375rem;
+    background-color: transparent;
+    box-shadow: none;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--color-nav-ink-dim);
+}
+
+.cxb-button.cxm-on-dark:hover,
+.cxb-button.cxm-hollow.cxm-on-dark:hover,
+.cxb-button.cxm-on-dark:focus-visible,
+.cxb-button.cxm-hollow.cxm-on-dark:focus-visible {
+    background-color: var(--color-nav-hover);
+    color: var(--color-nav-ink);
+}
+
+// `--color-danger` is tuned for white and goes muddy on navy, so it is lightened towards white.
+.cxb-button.cxm-on-dark.cxm-danger:hover,
+.cxb-button.cxm-hollow.cxm-on-dark.cxm-danger:hover {
+    color: color-mix(in oklch, var(--color-danger) 55%, white);
+}
+
+// The menu button: a 44px square, the one control on a phone that must never be missed.
+.cxb-button.cxm-hollow.cxm-on-dark.nav-toggle {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 0.5rem;
+    color: var(--color-nav-ink-muted);
+}
+
+// Below `lg` the chrome is a drawer on a touch screen, so its targets meet the 44px rule.
+@media (max-width: 1023.98px) {
+    .nav-link,
+    .nav-footer .cxb-button.cxm-on-dark {
+        min-height: 44px;
+    }
+}

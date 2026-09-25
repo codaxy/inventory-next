@@ -49,17 +49,34 @@ The outermost split is whether there is a session; everything below it can assum
 screen nor the application, which is what stops a signed-in person seeing a sign-in form for a moment
 on every load.
 
+**`src/layout/navigation.ts` is both the menu and the routing table of the screens in it**: sections
+and items as the original's menu has them, flat, with no collapsing. `~/` redirects to the first item —
+there is no home screen, as in the original — and an unmatched URL shows a not-found page inside the
+shell. A screen not built yet routes to `TodoScreen`, which names the programme step that builds it.
+
+**Icons are HugeIcons' free set** (`@hugeicons/core-free-icons`, MIT), registered by name against cx's
+`Icon` in `src/layout/registerIcons.tsx`; a view binds `<Icon name=… />`. One name per use, not per glyph.
+
 ## The phone is the hard case
 
-Every screen is a single column that stops growing on a wide display, rather than a wide layout
-squeezed into a narrow one. Tap targets are at least 44px high, and the page padding respects
-`env(safe-area-inset-bottom)`.
+**The shell is Pulse's.** From `lg` (1024px) a 220px sidebar holds the navigation and the signed-in
+person; below it the sidebar becomes a drawer over the content, opened by a 44px menu button in a top
+bar that carries only the mark. Any tap in the drawer closes it. A screen fills the content column
+under a header band (`.page-header`) flush with its top and sides; it never sets its own outer padding.
+Sign-in, outside the shell, is one centred column that stops growing on a wide display.
+
+Tap targets are at least 44px high wherever the layout is a phone's — the drawer's links included; the
+desktop sidebar keeps Pulse's denser rows. The page padding respects `env(safe-area-inset-bottom)`.
 
 ## Theme
 
-**Light only**, on Codaxy's house palette: its token names, its primary and Montserrat, self-hosted
-through `@fontsource` so no page load reaches a font CDN. A dark mode would be a second value set for
-the same tokens.
+**Light only**, on Codaxy's house palette as Pulse uses it: its token names, its primary and
+Montserrat, self-hosted through `@fontsource` so no page load reaches a font CDN. A dark mode would be a
+second value set for the same tokens.
+
+**The sidebar and top bar are dark chrome with tokens of their own**, `nav-*`: two navy tones so the
+two read as a frame, and the active item a solid primary fill rather than a wash. The `ink`, `line` and
+`hover` tokens are tuned for white and fail on navy, so nothing in the chrome uses them.
 
 **Every colour and shadow is a token in `src/tailwind.css`**, in `@theme static`, and nothing else in the client
 writes one. Each text token clears AA (4.5:1) on both the card and the page; field and button borders
@@ -144,6 +161,10 @@ keeps both and lets the phone offer the code from the message.
 the client router for any local URL, so a link to a server endpoint — starting an OAuth flow, say —
 routes to a page that does not exist and lands back where it started, with no request made. A plain
 anchor is what leaves.
+
+**`Link`'s `match` is widget configuration, not a bindable prop**, so a `Repeater` cannot vary it per
+item. The menu is static, so it is built in JSX from `navigation.ts`, and an item whose href prefixes a
+sibling's (`~/furniture`, `~/furniture/types`) matches `equal` where the rest match `subroute`.
 
 **A CxJS layout is an imported widget, not a string.** `layout={{ type: "vbox" }}` compiles, reaches
 the browser, and throws `Invalid widget type` at render — the screen is simply blank. Anything this

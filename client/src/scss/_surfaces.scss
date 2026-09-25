@@ -8,11 +8,10 @@ body {
 }
 
 #app {
-    min-height: 100%;
+    height: 100%;
 }
 
-// The phone is the case to get right, so every screen is a single column that stops growing on a
-// wide display rather than a wide layout that is squeezed on a narrow one.
+// A screen outside the shell — sign-in, loading: one centred column that stops growing on a wide display.
 .page {
     box-sizing: border-box;
     min-height: 100dvh;

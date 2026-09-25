@@ -33,6 +33,9 @@ the seeded type names are part of the contract between client and server, not fr
 `MaintenanceContract` are first-class entities with their own ids. None has an inventory number and
 none touches `Sequence`.
 
+`VirtualMachine`, `Cloud` and `Software` are the infrastructure: a virtual machine is a name and an
+address, and a cloud or a software entry belongs to a `Volume`.
+
 Licence seats are modelled by three of them: a `Volume` is a quantity of a `SoftwareOrService` bought
 under a licence, and an `Activation` assigns one seat of a volume to a person, a device (an asset) or
 both. `MaintenanceContract` hangs off an asset, optionally.
@@ -46,10 +49,17 @@ activation is deleted and made again.
 ## Codebooks
 
 The lookup tables — countries, cities, states, currencies, periods, confidentiality, integrity,
-availability, importance, licence classes/categories/types/models, vendors, manufacturers, persons,
-locations, business entities — are seeded (see [persistence.md](persistence.md)) and edited through
-the codebooks screens. They are referenced by GUID everywhere except where the client resolves one by
-its text, as with importance levels.
+availability, importance, licence classes/categories/types/models, business entities — are small lists
+of coded values, seeded (see [persistence.md](persistence.md)) and given no screen of their own. They
+are referenced by GUID everywhere except where the client resolves one by its text, as with importance
+levels.
+
+## The directory
+
+`Person`, `Client`, `Project`, `Vendor`, `Manufacturer` and `Location` are records kept up to date by
+hand — a vendor has a VAT number and contacts, a project an owner and a client, a location an address —
+which assets, activations and information point at. They are not codebooks, although persons,
+locations, manufacturers and vendors are seeded with a starting set.
 
 ## Inventory numbers
 
