@@ -21,4 +21,7 @@ const store = new Store();
 // `connect` takes a path, not an accessor.
 History.connect(store, $app.url.toString());
 
-startHotAppLoop(module, document.getElementById("app")!, store, Routes);
+startHotAppLoop({ hot: import.meta.hot }, document.getElementById("app")!, store, Routes);
+
+// Needed even though the hot app loop accepts too; see cxjs-vite-template.
+if (import.meta.hot) import.meta.hot.accept();

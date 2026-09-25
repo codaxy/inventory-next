@@ -1,11 +1,12 @@
 # Web client
 
-A CxJS single-page application in TypeScript, built by webpack into the server's `wwwroot`. One
+A CxJS single-page application in TypeScript, built by Vite into the server's `wwwroot`. One
 deployable serves both, so there is no separate host and no CORS to configure.
 
 ## TypeScript and CxJS
 
-`<cx>` blocks are compiled by `babel-preset-cx-env`, and TypeScript only type-checks them:
+`<cx>` blocks are compiled by Vite through CxJS's JSX runtime (`oxc.jsx.importSource: "cx"`), and
+TypeScript only type-checks them:
 `npm run typecheck` is a separate step, and CI runs it. **TypeScript takes its JSX types from cx**
 (`"jsx": "react-jsx"`, `"jsxImportSource": "cx"`), which declares `<cx>` and gives HTML elements
 CxJS's attributes — `class`, `text`, `visible`. Resolved through React's typings instead, every widget
@@ -71,35 +72,38 @@ Pulse's `densityCompact` (32px) is desktop sizing and wrong here.
 
 ## Build
 
-`npm run build` writes hashed bundles into `client/dist`, which the image copies into the server's
-`wwwroot`.
+`npm run build` is `vite build`: hashed bundles and an `index.html` naming them in `client/dist`,
+which the image copies into the server's `wwwroot`.
 
 **The application is always served by the server, on its own origin**, in development as in
-production. In development the watcher writes only the shell to `wwwroot` — bundles stay in its
-memory and the shell's `publicPath` points at `https://localhost:8765/` — so the page comes from the
-server and the scripts come from the watcher.
+production. In development a plugin in `vite.config.ts` writes the server a copy of `index.html`
+whose scripts point at the dev server on `https://localhost:8765`; the modules stay in its memory,
+so the page comes from the server and the scripts from Vite.
 
 **Both are served over TLS in development**, with the ASP.NET development certificate that `npm
-start` exports for the watcher. One certificate, so one thing to trust. It is not decoration: cookie
+start` exports for Vite. One certificate, so one thing to trust. It is not decoration: cookie
 attributes depend on the scheme, so an http development loop exercises different rules from
 production and the difference surfaces as a failure in one browser and not another. An https page
-cannot load scripts over http either, so the watcher has no choice once the server has one.
+cannot load scripts over http either, so the dev server has no choice once the server has one.
 
-That is the reason for the arrangement rather than the browser being handed to the dev server: the
-session cookie is issued for, and confined to, the origin that serves the application. Point the
-browser at the dev server instead and the cookie belongs to a node process, the origin differs from
-production, and the dev server's own exposure becomes part of the authenticated surface.
+That is the reason for the arrangement rather than the browser being handed to Vite: the session
+cookie is issued for, and confined to, the origin that serves the application. Point the browser at
+the dev server instead and the cookie belongs to a node process, the origin differs from production,
+and the dev server's own exposure becomes part of the authenticated surface. **`server.origin` and
+`cors`** exist because of it: asset URLs have to be absolute, and every module request crosses from
+the server's origin to Vite's.
 
-**Hot replacement is `devServer.hot` plus `startHotAppLoop`**, which swaps the running application and
-keeps the store and the current route rather than reloading the page. Losing either half turns every
-edit into a full reload and a lost session.
+**Hot replacement is Vite's plus `startHotAppLoop`**, which swaps the running application and keeps
+the store and the current route rather than reloading the page. The entry passes
+`{ hot: import.meta.hot }` and also calls `import.meta.hot.accept()` itself; without the second,
+every edit is a full reload and a lost session.
 
 ## No Razor shell
 
 `index.html` is written by the build and served as a static file. Razor earns its place when the HTML
 has to be built per request — resolving hashed bundle names, choosing between development and
 production script URLs, or passing a server-side value into the page — and none of those apply: the
-plugin writes the names, `publicPath` decides the origin, and what the client needs to know it asks
+build writes the names, the development plugin decides the origin, and what the client needs to know it asks
 `/api/auth/options` for.
 
 **A Content-Security-Policy with a nonce would change that**, since a nonce is new per request and
@@ -139,23 +143,22 @@ bundled, and its selectors are often two classes deep: `.cxb-button.cxm-hollow` 
 **`padding` cannot resize a `Button`.** `.cxb-button` sets an explicit height from its own line height,
 padding and border variables; change those in `theme.ts`.
 
-**Tailwind's entry and the fonts are plain `.css`**, so the build has a `.css` rule beside the `.scss`
-one, both through `postcss-loader`. Without it the build still succeeds and the tokens and fonts are
-quietly missing.
+**Only `index.html` is written to `wwwroot` in development.** A build landing there leaves bundles
+the server serves in place of Vite's, and an edit then appears to do nothing.
 
-**Only `index.html` is written to `wwwroot` in development**, through `devMiddleware.writeToDisk`.
-Letting the whole build land there leaves bundles the server will serve in place of the watcher's,
-and an edit then appears to do nothing.
-
-**Both ports are stated twice, in files that do not know about each other.** 8765 is
-`devServer.port` and the `publicPath` in `webpack.config.js`; 5443 is `applicationUrl` in
-`launchSettings.json` and what the browser is told to open. Change one half and the failure is
-silent — the page loads from the server and asks for bundles nobody is serving.
+**The ports are stated in two places that do not know about each other.** 8765 is `DEV_SERVER` and
+`server.port` in `vite.config.ts`; 5443 is `applicationUrl` in `launchSettings.json` and what the
+browser is told to open. Change one half and the failure is silent — the page loads from the server
+and asks for modules nobody is serving.
 
 **A shell written in development points at `https://localhost:8765`.** Running the server in
-Production against that same `wwwroot` serves a page asking for a watcher that is not there; build
+Production against that same `wwwroot` serves a page asking for a dev server that is not there; build
 into `dist` and let the image copy it.
 
-**`webpack.config.js` is evaluated whole in both modes**, `devServer` included. The certificate is
-handed to the dev server as paths, which it reads when it starts; read in the config, it fails `npm
-run build` wherever `npm start` never exported it — CI and the image.
+**`vite.config.ts` is evaluated in both modes**, so the certificate is read only when `command` is
+`serve`. Read unconditionally, it fails `npm run build` wherever `npm start` never exported it — CI
+and the image.
+
+**`dotnet dev-certs https --export-path` will not create the folder it exports into**, so `prestart`
+creates `.certs` first. Without it `npm start` fails on every fresh clone and works on any machine
+where the folder once existed.

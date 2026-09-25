@@ -1,6 +1,0 @@
-{
-    "presets": [
-        ["cx-env", { "targets": { "chrome": 100, "safari": 15, "firefox": 100 }, "modules": false }],
-        ["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]
-    ]
-}
