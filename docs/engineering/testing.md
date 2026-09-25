@@ -29,8 +29,11 @@ Unit tests are for logic that has a shape of its own: seat counts, expiry, alloc
 ## Formatting
 
 CSharpier formats the server and Prettier the client, both pinned and both checked in CI, so
-formatting is never a review comment. EF's migrations are excluded — the next `migrations add` would
-undo it.
+formatting is never a review comment. **A pre-commit hook applies them**, through husky and
+lint-staged at the repository root, to staged files only and with exactly the globs CI checks — a
+hook broader than CI rewrites files CI never looks at, and a narrower one lets a commit fail CI.
+Prettier runs from the client's own install, so its version is pinned once. EF's migrations are
+excluded — the next `migrations add` would undo it.
 
 ## Naming
 

@@ -10,6 +10,7 @@ So far it signs you in and does nothing else.
 
 ```
 dotnet dev-certs https --trust                # once per machine
+npm install && dotnet tool restore            # once per clone: the pre-commit hook and CSharpier
 docker compose up -d                          # PostgreSQL and Mailpit
 cd client && npm install && npm start         # watches and serves the bundles, leave it running
 cd ../server && dotnet run --project Codaxy.Inventory
@@ -56,10 +57,12 @@ docker compose --profile app up --build     # http://localhost:8090
 
 ## Formatting
 
-CSharpier formats the server, Prettier the client, and CI fails on either being out of shape:
+A pre-commit hook formats what is staged — CSharpier the server, Prettier the client — with the scope
+CI checks, so nobody runs either by hand. The root `npm install` installs it; it needs the client's
+`npm install` and `dotnet tool restore` to have run. To format everything at once anyway:
 
 ```
-dotnet tool restore && dotnet csharpier format server
+dotnet csharpier format server
 cd client && npm run format
 ```
 
