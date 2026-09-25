@@ -13,8 +13,11 @@ public sealed class AuthOptions
 
     public OneTimeCodeOptions OneTimeCode { get; init; } = new();
 
-    /// <summary>Email domain every account must belong to. Empty means any domain.</summary>
-    public string? Domain { get; init; }
+    /// <summary>
+    /// The domains an account may belong to. Empty allows any, which is what an internal deployment
+    /// behind an allow list may want and what a public one must not.
+    /// </summary>
+    public string[] AllowedDomains { get; init; } = [];
 
     /// <summary>When non-empty, only these addresses may sign in.</summary>
     public string[] AllowedUsers { get; init; } = [];

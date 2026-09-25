@@ -18,8 +18,9 @@ Open **http://localhost:5080** — the server's own origin, in development as in
 application is served from there and only its bundles come from the watcher on 8765, so an edit is
 live without a rebuild and the session cookie belongs to the same origin it will in production.
 
-`appsettings.Development.json` is committed and points at the compose defaults. Sign in with any
-email address; the code arrives in Mailpit at http://localhost:8025.
+`appsettings.Development.json` is committed and points at the compose defaults. Sign in with an
+address in one of `Auth:AllowedDomains` — `codaxy.com` out of the box — and the code arrives in
+Mailpit at http://localhost:8025, whether or not the mailbox exists.
 
 ## Google sign-in in development
 

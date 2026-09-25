@@ -85,8 +85,14 @@ public static class AuthEndpoints
 
         var decision = policy.Evaluate(request.Email);
 
-        // The answer is the same whether or not the address may sign in: anything else turns this
-        // endpoint into a way of listing who works here.
+        if (decision is { IsAllowed: false, IsSayable: true })
+            return Results.Problem(
+                title: decision.Reason,
+                statusCode: StatusCodes.Status403Forbidden
+            );
+
+        // Otherwise the answer is the same whether or not the address may sign in: anything else
+        // turns this endpoint into a way of listing who works here.
         if (decision.IsAllowed)
         {
             var code = codes.Issue(request.Email);

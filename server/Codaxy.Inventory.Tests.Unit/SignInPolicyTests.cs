@@ -8,10 +8,38 @@ public class SignInPolicyTests
 {
     private static SignInPolicy Policy(AuthOptions options) => new(Options.Create(options));
 
+    [Theory]
+    [InlineData("someone@codaxy.com")]
+    [InlineData("someone@other.com")]
+    public void Allows_an_address_in_any_of_several_configured_domains(string email)
+    {
+        var policy = Policy(new AuthOptions { AllowedDomains = ["codaxy.com", "other.com"] });
+
+        Assert.True(policy.Evaluate(email).IsAllowed);
+    }
+
+    [Theory]
+    [InlineData("@codaxy.com")]
+    [InlineData(" Codaxy.com ")]
+    public void Reads_a_configured_domain_as_it_is_written(string configured)
+    {
+        var policy = Policy(new AuthOptions { AllowedDomains = [configured] });
+
+        Assert.True(policy.Evaluate("someone@codaxy.com").IsAllowed);
+    }
+
+    [Fact]
+    public void Refuses_an_address_with_no_domain_at_all()
+    {
+        var policy = Policy(new AuthOptions { AllowedDomains = ["codaxy.com"] });
+
+        Assert.False(policy.Evaluate("someone").IsAllowed);
+    }
+
     [Fact]
     public void Allows_an_address_in_the_configured_domain()
     {
-        var policy = Policy(new AuthOptions { Domain = "codaxy.com" });
+        var policy = Policy(new AuthOptions { AllowedDomains = ["codaxy.com"] });
 
         Assert.True(policy.Evaluate("someone@codaxy.com").IsAllowed);
     }
@@ -19,12 +47,15 @@ public class SignInPolicyTests
     [Fact]
     public void Refuses_an_address_outside_the_configured_domain()
     {
-        var policy = Policy(new AuthOptions { Domain = "codaxy.com" });
+        var policy = Policy(new AuthOptions { AllowedDomains = ["codaxy.com"] });
 
         var result = policy.Evaluate("someone@example.com");
 
         Assert.False(result.IsAllowed);
-        Assert.Contains("codaxy.com", result.Reason);
+
+        // Refused for its domain, without naming the one that would have worked.
+        Assert.True(result.IsSayable);
+        Assert.DoesNotContain("codaxy.com", result.Reason);
     }
 
     [Fact]
@@ -60,7 +91,11 @@ public class SignInPolicyTests
     public void Ignores_case_and_surrounding_space(string email)
     {
         var policy = Policy(
-            new AuthOptions { Domain = "codaxy.com", AllowedUsers = ["someone@codaxy.com"] }
+            new AuthOptions
+            {
+                AllowedDomains = ["codaxy.com"],
+                AllowedUsers = ["someone@codaxy.com"],
+            }
         );
 
         Assert.True(policy.Evaluate(email).IsAllowed);

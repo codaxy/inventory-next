@@ -38,7 +38,7 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
         // read its configuration, so a setting the application checks at startup would not be there
         // yet.
         builder.UseSetting("ConnectionStrings:PostgreSQL", postgres.GetConnectionString());
-        builder.UseSetting("Auth:Domain", "codaxy.com");
+        builder.UseSetting("Auth:AllowedDomains:0", "codaxy.com");
         builder.UseSetting("Auth:OneTimeCode:Enabled", "true");
         builder.UseSetting("DataProtection:KeyRingPath", KeyRingPath);
 

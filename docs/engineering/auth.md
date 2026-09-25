@@ -26,9 +26,13 @@ reach a backup or an image that travels further than the server.
 
 ## Who may sign in
 
-`SignInPolicy` applies three rules in order, whichever provider the person came through: the domain
-when one is configured, the deny list, then the allow list when it is non-empty. One place holds them
-so a second provider cannot arrive with its own idea of who is allowed.
+`SignInPolicy` applies three rules in order, whichever provider the person came through:
+`AllowedDomains` when it is non-empty, the deny list, then `AllowedUsers` when it is non-empty. One
+place holds them so a second provider cannot arrive with its own idea of who is allowed.
+
+**An empty list means no restriction from that rule**, so an instance with nothing configured admits
+anyone who can receive email. That is deliberate — an instance already behind an allow list should not
+have to name a domain as well — and it is the reason a deployment states at least one of the two.
 
 ## Google
 
@@ -52,14 +56,20 @@ Deliberately the simplest thing that works, and temporary:
   without touching the endpoints.
 - **Any failed attempt burns the code**, not just a correct one. That is what stops six digits being
   guessed; the cost is that a mistyped code means asking for another.
-- **Requesting a code answers `204` whatever the address**, allowed or not. Anything else turns the
-  endpoint into a way of listing who works here.
+- **Requesting a code says only that the domain is refused**, never which domain would be accepted and
+  never that a particular person is not on the list. The first gives someone who mistyped their own
+  address something to act on and names nothing; the other two answer questions worth asking, so they
+  answer `204` exactly as an accepted address does.
 
 ## Development
 
-`appsettings.Development.json` is committed, with one-time codes on, no domain restriction and the
-relay pointed at Mailpit. It holds no secret, and a checkout that runs and can be signed into is
-worth more than the convention of gitignoring that file.
+`appsettings.Development.json` is committed, with one-time codes on and the relay pointed at Mailpit.
+It holds no secret, and a checkout that runs and can be signed into is worth more than the convention
+of gitignoring that file.
+
+**It does not relax who may sign in.** `AllowedDomains` applies in development as everywhere else, so
+the rules being exercised are the rules that run in production — a development configuration that lets
+anyone in is a configuration nobody has tested.
 
 **Google credentials in development go in user secrets**, never in a settings file:
 

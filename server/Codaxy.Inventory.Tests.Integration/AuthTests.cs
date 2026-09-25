@@ -84,7 +84,7 @@ public class AuthTests(InventoryApplication app) : IClassFixture<InventoryApplic
     }
 
     [Fact]
-    public async Task An_address_outside_the_domain_is_answered_the_same_way_and_sent_nothing()
+    public async Task An_address_outside_the_domain_is_told_so_and_sent_nothing()
     {
         var client = Client();
         const string email = "someone@example.com";
@@ -94,8 +94,13 @@ public class AuthTests(InventoryApplication app) : IClassFixture<InventoryApplic
             new { email }
         );
 
-        // The same 204 as an allowed address, so the endpoint cannot be used to list who works here.
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        var body = await response.Content.ReadAsStringAsync();
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+
+        // Told that the domain is refused, never which one would be accepted.
+        Assert.Contains("not allowed", body);
+        Assert.DoesNotContain("codaxy.com", body);
         Assert.Null(app.Emails.LastCodeFor(email));
     }
 
