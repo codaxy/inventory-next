@@ -22,7 +22,7 @@ services:
     image: dpage/pgadmin4:9
     container_name: inventory-next-pgadmin
     ports:
-      - "55050:55050"
+      - "55050:80"
     environment:
       # Desktop mode: no sign-in and no master password. The entrypoint refuses to start without the
       # two defaults even so, and validates the address — a .local domain is rejected outright.
@@ -30,7 +30,6 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
       PGADMIN_CONFIG_SERVER_MODE: "False"
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
-      PGADMIN_LISTEN_PORT: 55050
     volumes:
       # Pre-registers the database, so nobody retypes what compose already knows. The password is
       # typed once, on first connect, and kept in pgadmin_data from then on.
