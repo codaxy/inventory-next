@@ -6,11 +6,6 @@ export interface NavItem {
     title: string;
     href: string;
     icon: NavIconName;
-    /**
-     * Highlight on an exact url, for an item whose href is a prefix of a sibling's: `~/furniture`
-     * would otherwise stay lit on `~/furniture/types`.
-     */
-    exact?: boolean;
 }
 
 export interface NavSection {
@@ -31,7 +26,6 @@ export const navigation: NavSection[] = [
                 title: "Electronic devices",
                 href: "~/electronic-devices",
                 icon: "electronicDevices",
-                exact: true,
             },
             {
                 label: "Types",
@@ -51,7 +45,7 @@ export const navigation: NavSection[] = [
         title: "Licenses",
         step: 3,
         items: [
-            { label: "Licenses", title: "Licenses", href: "~/licenses", icon: "licenses", exact: true },
+            { label: "Licenses", title: "Licenses", href: "~/licenses", icon: "licenses" },
             {
                 label: "Activations",
                 title: "Activations",
@@ -70,7 +64,7 @@ export const navigation: NavSection[] = [
         title: "Furniture",
         step: 4,
         items: [
-            { label: "Furniture", title: "Furniture", href: "~/furniture", icon: "furniture", exact: true },
+            { label: "Furniture", title: "Furniture", href: "~/furniture", icon: "furniture" },
             { label: "Types", title: "Furniture types", href: "~/furniture/types", icon: "furnitureTypes" },
         ],
     },
@@ -83,7 +77,6 @@ export const navigation: NavSection[] = [
                 title: "Information",
                 href: "~/informations",
                 icon: "information",
-                exact: true,
             },
             {
                 label: "Types",
@@ -147,3 +140,17 @@ export const navigation: NavSection[] = [
 
 /** Where `~/` lands: there is no home screen, as in the original. */
 export const landing = navigation[0].items[0].href;
+
+const hrefs = navigation.flatMap((section) => section.items.map((item) => item.href));
+
+/**
+ * Whether the address is the item's — its own, or a record under it — rather than another item's
+ * nested under it: `~/licenses/:id` is Licences', `~/licenses/activations` is Activations'.
+ */
+export function isCurrent(href: string, url: string | null | undefined): boolean {
+    const path = (url ?? "").split("?")[0];
+    const under = (base: string) => path === base || path.startsWith(`${base}/`);
+    return (
+        under(href) && !hrefs.some((other) => other !== href && other.startsWith(`${href}/`) && under(other))
+    );
+}

@@ -1,10 +1,10 @@
-import { createFunctionalComponent, falsy } from "cx/ui";
+import { createFunctionalComponent, expr, falsy } from "cx/ui";
 import { Icon, Link } from "cx/widgets";
 
 import { Logo } from "../components/Logo";
 import $app from "../model";
 import { AccountMenu } from "./AccountMenu";
-import { navigation } from "./navigation";
+import { isCurrent, navigation } from "./navigation";
 
 const closeDrawer = (_e: unknown, { store }: any) => store.set($app.ui.drawerOpen, false);
 
@@ -12,8 +12,9 @@ const closeDrawer = (_e: unknown, { store }: any) => store.set($app.ui.drawerOpe
  * The navigation: a column from `lg` up, a drawer over the content below it. One component, so the two
  * cannot drift apart. Any tap inside it, a link included, closes the drawer.
  *
- * The menu is static, so it is built here rather than repeated from the store — which is also what
- * lets `match` differ per item: it is widget configuration, not a bindable prop.
+ * The menu is static, so it is built here rather than repeated from the store. Which item is lit is
+ * worked out from the address (`isCurrent`), not by cx's `match`: `~/licenses/:id` belongs to Licences
+ * but `~/licenses/activations` does not, and no single `match` says both.
  */
 export const Sidebar = createFunctionalComponent(() => (
     <cx>
@@ -47,9 +48,12 @@ export const Sidebar = createFunctionalComponent(() => (
                                     <Link
                                         href={item.href}
                                         url={$app.url}
-                                        class="nav-link"
-                                        activeClass="nav-link-active"
-                                        match={item.exact ? "equal" : "subroute"}
+                                        class={{
+                                            "nav-link": true,
+                                            "nav-link-active": expr($app.url, (url) =>
+                                                isCurrent(item.href, url),
+                                            ),
+                                        }}
                                     >
                                         <Icon name={item.icon} class="nav-icon" />
                                         <span text={item.label} />
