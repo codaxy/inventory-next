@@ -26,11 +26,14 @@ export function installWidgetDefaults(): void {
 
     Window.prototype.overlayDidMount = function (instance, component) {
         didMount.call(this, instance, component);
+        // Mounted again without unmounting: the lock already held is released, not overwritten.
+        component.releaseScroll?.();
         if (this.modal) component.releaseScroll = lockScroll(component.el);
     };
 
     Window.prototype.overlayWillUnmount = function (instance, component) {
         component.releaseScroll?.();
+        component.releaseScroll = undefined;
         willUnmount.call(this, instance, component);
     };
 }

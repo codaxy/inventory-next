@@ -12,10 +12,12 @@ export function lockScroll(overlay: HTMLElement): () => void {
     let startY = 0;
 
     const onTouchStart = (e: TouchEvent) => {
+        if (stale()) return;
         startY = e.touches[0]?.clientY ?? 0;
     };
 
     const onTouchMove = (e: TouchEvent) => {
+        if (stale()) return;
         const y = e.touches[0]?.clientY ?? startY;
         // A finger moving down scrolls content up.
         // Not cancelable once the browser is already scrolling a list inside the overlay; at its end
@@ -24,19 +26,31 @@ export function lockScroll(overlay: HTMLElement): () => void {
     };
 
     const onWheel = (e: WheelEvent) => {
+        if (stale()) return;
         if (!canScroll(e.target, overlay, e.deltaY)) e.preventDefault();
     };
 
     const options = { passive: false, capture: true } as const;
-    document.addEventListener("touchstart", onTouchStart, options);
-    document.addEventListener("touchmove", onTouchMove, options);
-    document.addEventListener("wheel", onWheel, options);
-
-    return () => {
+    const release = () => {
         document.removeEventListener("touchstart", onTouchStart, options);
         document.removeEventListener("touchmove", onTouchMove, options);
         document.removeEventListener("wheel", onWheel, options);
     };
+
+    // A lock outliving its overlay would refuse every scroll of the page until a reload: the overlay
+    // gone from the document releases it, whether or not the release was ever called — a window
+    // re-mounted without unmounting, as a hot reload can, loses its first release.
+    const stale = () => {
+        if (overlay.isConnected) return false;
+        release();
+        return true;
+    };
+
+    document.addEventListener("touchstart", onTouchStart, options);
+    document.addEventListener("touchmove", onTouchMove, options);
+    document.addEventListener("wheel", onWheel, options);
+
+    return release;
 }
 
 /**
