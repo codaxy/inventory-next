@@ -14,40 +14,18 @@ internal static class LicenseWrites
     private static IResult Problem(string field, string message) =>
         Results.ValidationProblem(new Dictionary<string, string[]> { [field] = [message] });
 
-    /// <summary>Every id the form names exists, and every volume to add is complete.</summary>
+    /// <summary>Every id the form names exists — the asset's and the licence's — and every volume to add is complete.</summary>
     public static async Task<IResult?> CheckAsync(
         InventoryContext context,
         LicenseForm form,
         CancellationToken cancellationToken
     )
     {
+        if (await AssetWrites.CheckAsync(context, form, cancellationToken) is { } asset)
+            return asset;
+
         var checks = new (string Field, Guid? Id, Func<Guid, Task<bool>> Exists)[]
         {
-            (
-                "vendorId",
-                form.VendorId,
-                id => context.Vendors.AnyAsync(x => x.Id == id, cancellationToken)
-            ),
-            (
-                "personId",
-                form.PersonId,
-                id => context.Persons.AnyAsync(x => x.Id == id, cancellationToken)
-            ),
-            (
-                "confidentialityId",
-                form.ConfidentialityId,
-                id => context.Confidentialities.AnyAsync(x => x.Id == id, cancellationToken)
-            ),
-            (
-                "integrityId",
-                form.IntegrityId,
-                id => context.Integrities.AnyAsync(x => x.Id == id, cancellationToken)
-            ),
-            (
-                "availabilityId",
-                form.AvailabilityId,
-                id => context.Availabilities.AnyAsync(x => x.Id == id, cancellationToken)
-            ),
             (
                 "licenseTypeId",
                 form.LicenseTypeId,
@@ -72,16 +50,6 @@ internal static class LicenseWrites
                 "periodId",
                 form.PeriodId,
                 id => context.Periods.AnyAsync(x => x.Id == id, cancellationToken)
-            ),
-            (
-                "businessEntityId",
-                form.BusinessEntityId,
-                id => context.BusinessEntities.AnyAsync(x => x.Id == id, cancellationToken)
-            ),
-            (
-                "locationId",
-                form.LocationId,
-                id => context.Locations.AnyAsync(x => x.Id == id, cancellationToken)
             ),
         };
 
@@ -130,7 +98,7 @@ internal static class LicenseWrites
     private static string? Text(string? value) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
-    /// <summary>The form's fields onto the asset and the licence, the importance computed from the weights.</summary>
+    /// <summary>The form's fields onto the asset, as every asset's are, and onto the licence.</summary>
     public static async Task ApplyAsync(
         InventoryContext context,
         Asset asset,
@@ -140,28 +108,7 @@ internal static class LicenseWrites
         CancellationToken cancellationToken
     )
     {
-        asset.Name = form.Name!.Trim();
-        asset.InvoiceNumber = Text(form.InvoiceNumber);
-        asset.VendorId = form.VendorId!.Value;
-        asset.PurchaseValue = form.PurchaseValue!.Value;
-        asset.PurchaseDate = form.PurchaseDate!.Value;
-        asset.Description = Text(form.Description);
-        asset.PersonId = form.PersonId!.Value;
-        asset.ConfidentialityId = form.ConfidentialityId;
-        asset.IntegrityId = form.IntegrityId;
-        asset.AvailabilityId = form.AvailabilityId;
-        asset.ImportanceId = await AssetWrites.ImportanceAsync(
-            context,
-            form.ConfidentialityId,
-            form.IntegrityId,
-            form.AvailabilityId,
-            cancellationToken
-        );
-        asset.Incomplete = form.Incomplete;
-        asset.BusinessEntityId = form.BusinessEntityId;
-        asset.LocationId = form.LocationId;
-        asset.URL = Text(form.Url);
-        asset.LastModified = AssetWrites.Now(clock);
+        await AssetWrites.ApplyAsync(context, asset, form, clock, cancellationToken);
 
         license.LicenseTypeId = form.LicenseTypeId;
         license.LicenseModelId = form.LicenseModelId;

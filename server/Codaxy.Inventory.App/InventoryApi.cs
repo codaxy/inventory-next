@@ -56,6 +56,24 @@ public static class InventoryApi
         Licenses.SoftwareServices.Update.Endpoint.Map(softwareServices);
         Licenses.SoftwareServices.Delete.Endpoint.Map(softwareServices);
 
+        var furnitureTypes = api.MapGroup("/furniture/types");
+
+        Furnitures.Types.List.Endpoint.Map(furnitureTypes);
+        Furnitures.Types.Get.Endpoint.Map(furnitureTypes);
+        Furnitures.Types.Create.Endpoint.Map(furnitureTypes);
+        Furnitures.Types.Update.Endpoint.Map(furnitureTypes);
+        Furnitures.Types.Delete.Endpoint.Map(furnitureTypes);
+
+        var furniture = api.MapGroup("/furniture");
+
+        Furnitures.Items.List.Endpoint.Map(furniture);
+        Furnitures.Items.Options.Endpoint.Map(furniture);
+        Furnitures.Items.Export.Endpoint.Map(furniture);
+        Furnitures.Items.Get.Endpoint.Map(furniture);
+        Furnitures.Items.Create.Endpoint.Map(furniture);
+        Furnitures.Items.Update.Endpoint.Map(furniture);
+        Furnitures.Items.Delete.Endpoint.Map(furniture);
+
         var auditLog = api.MapGroup("/administration/audit-log");
 
         Administration.AuditLogs.List.Endpoint.Map(auditLog);

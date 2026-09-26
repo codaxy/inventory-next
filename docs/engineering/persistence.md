@@ -52,8 +52,8 @@ asset and its subtype row share one key before either is inserted.
 
 Besides the primary keys, `Asset.InventoryNumber` carries the only unique constraint in the database.
 Names in the codebooks and the directory are not unique: whether two vendors may share one is a product
-question nobody has answered, so the schema does not answer it either. **Device types, tags and software or
-services are unique by name, whatever the case** — the original's editors refused a duplicate — and the application
+question nobody has answered, so the schema does not answer it either. **Device types, tags, software or
+services and furniture types are unique by name, whatever the case** — the original's editors refused a duplicate — and the application
 enforces it, as a field error, since the frozen schema cannot: two saves at once can still both pass.
 
 ## Migrations

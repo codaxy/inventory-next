@@ -17,8 +17,9 @@ public static class Endpoint
         CancellationToken cancellationToken
     )
     {
-        if (!MiniValidator.IsValid(form, out var problem))
-            return problem;
+        // The licence's own attributes and the asset's rules, answered together.
+        if (AssetWrites.Validate(form, MiniValidator.Errors(form)) is { Count: > 0 } errors)
+            return Results.ValidationProblem(errors);
 
         if (form.Volumes?.Any(v => v.Id is not null) == true)
             return Results.ValidationProblem(

@@ -3,6 +3,7 @@ import { Button, DateField, Icon, Link, LinkButton, LookupField, Repeater, TextF
 
 import { dateValue } from "../../bindings";
 import { Pager } from "../../components/Pager";
+import { completeness, segmented } from "../../components/segmented";
 import { sortHeader } from "../../components/sortHeader";
 import { expiryClass } from "../../licensing";
 import $app from "../../model";
@@ -30,41 +31,6 @@ const expiries = [
     { value: "regular", text: "Current" },
     { value: "none", text: "No date" },
 ] as const;
-
-const completeness = [
-    { value: null, text: "Any" },
-    { value: false, text: "Complete" },
-    { value: true, text: "Incomplete" },
-] as const;
-
-/** A segmented switch over one filter: the controller's setter takes the chosen value. */
-const segmented = <T extends string | boolean | null>(
-    label: string,
-    items: readonly { value: T; text: string }[],
-    value: typeof f.expiry | typeof f.incomplete,
-    setter: "setExpiry" | "setIncomplete",
-) => (
-    <cx>
-        <div class="list-filter list-filter-wide">
-            <div class="list-filter-label" text={label} />
-            <div class="segmented" role="group" aria-label={label}>
-                {items.map((item) => (
-                    <cx>
-                        <Button
-                            mod="hollow"
-                            class={{
-                                "segmented-item": true,
-                                "segmented-item-on": expr(value, (v) => (v ?? null) === item.value),
-                            }}
-                            text={item.text}
-                            onClick={(_e: unknown, { controller }: any) => controller[setter](item.value)}
-                        />
-                    </cx>
-                ))}
-            </div>
-        </div>
-    </cx>
-);
 
 /** Licences: most recently changed first, each with where its subscription stands. */
 export default createFunctionalComponent(() => {

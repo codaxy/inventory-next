@@ -1,6 +1,9 @@
 // A list of records, each row opening its editor: a stacked card on a phone, columns from `md`, the
 // header's columns sorting on a tap. A screen names its columns with a class of its own
 // (`tag-columns`), which sets `grid-template-columns` from `md`.
+//
+// Open question: a class per screen grows with every list, several near-identical (name, description,
+// a count). Classes named by shape rather than by screen would stop that; undecided.
 
 .record-list {
     overflow: clip;
@@ -329,4 +332,62 @@
     border-color: var(--color-warn-edge);
     background: var(--color-warn-wash);
     color: var(--color-warn-text);
+}
+
+// Furniture types: on a phone the name, the description, the count; from `md` a column each, the count
+// narrow and at the end.
+.furniture-type-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 18rem) minmax(0, 40rem) minmax(0, 8rem);
+    }
+}
+
+// Furniture: on a phone the name first, then who has it and where, its type, vendor and value; the
+// number and the change time from `md`, where every column shows.
+.furniture-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    > .furniture-number,
+    > .furniture-changed {
+        display: none;
+    }
+
+    > :nth-child(2) {
+        order: -1;
+    }
+
+    @media (min-width: 768px) {
+        // Shares, not widths: eight columns overflow the page at fixed widths, and every one then
+        // shrinks alike — the name, which needs the room, first to be cut.
+        grid-template-columns:
+            4.5rem minmax(0, 2.2fr) minmax(0, 1.3fr) minmax(0, 1.2fr) minmax(0, 1.1fr)
+            minmax(0, 1fr) 7.5rem 7rem;
+
+        > .furniture-number,
+        > .furniture-changed {
+            display: block;
+        }
+
+        > :nth-child(2) {
+            order: 0;
+        }
+    }
+
+    // Eight columns do not fit below `xl`: the vendor and the change time, the least scanned, wait for
+    // the record's page — the list still sorts by change.
+    @media (min-width: 768px) and (max-width: 1279.98px) {
+        grid-template-columns: 4.5rem minmax(0, 2fr) minmax(0, 1.3fr) minmax(0, 1.2fr) minmax(0, 1fr) 7.5rem;
+
+        > :nth-child(6),
+        > .furniture-changed,
+        > :nth-child(8) {
+            display: none;
+        }
+    }
+}
+
+.furniture-value {
+    font-variant-numeric: tabular-nums;
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Codaxy.Inventory.App.Shared.Assets;
 
 /// <summary>What every path that writes an asset does the same way: the number, the type, the time.</summary>
-public static class AssetWrites
+public static partial class AssetWrites
 {
     /// <summary>
     /// The next inventory number, as the original allocates it: read the single row, take its value,

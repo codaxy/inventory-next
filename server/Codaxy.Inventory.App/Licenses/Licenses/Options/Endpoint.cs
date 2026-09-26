@@ -1,4 +1,5 @@
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Assets;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codaxy.Inventory.App.Licenses.Licenses.Options;
@@ -9,26 +10,26 @@ public static class Endpoint
 
     public sealed record Option(Guid Id, string Text);
 
-    /// <param name="Weight">What the importance is computed from.</param>
-    public sealed record Weighted(Guid Id, string Text, int Weight);
-
     public sealed record VolumeType(int Id, string Text);
 
-    /// <summary>Every picker the editor and the list's filters show, in one call: all small lists.</summary>
+    /// <summary>
+    /// Every picker the editor and the list's filters show, in one call — the asset's, shared by every
+    /// asset form, and the licence's own. All small lists.
+    /// </summary>
     public sealed record Response(
-        IReadOnlyList<Option> Vendors,
-        IReadOnlyList<Option> People,
-        IReadOnlyList<Weighted> Confidentialities,
-        IReadOnlyList<Weighted> Integrities,
-        IReadOnlyList<Weighted> Availabilities,
+        IReadOnlyList<AssetOption> Vendors,
+        IReadOnlyList<AssetOption> People,
+        IReadOnlyList<WeightedOption> Confidentialities,
+        IReadOnlyList<WeightedOption> Integrities,
+        IReadOnlyList<WeightedOption> Availabilities,
         IReadOnlyList<Option> Importances,
         IReadOnlyList<Option> LicenseTypes,
         IReadOnlyList<Option> LicenseModels,
         IReadOnlyList<Option> ExpirationModels,
         IReadOnlyList<Option> Currencies,
         IReadOnlyList<Option> Periods,
-        IReadOnlyList<Option> BusinessEntities,
-        IReadOnlyList<Option> Locations,
+        IReadOnlyList<AssetOption> BusinessEntities,
+        IReadOnlyList<AssetOption> Locations,
         IReadOnlyList<Option> Software,
         IReadOnlyList<VolumeType> VolumeTypes
     );
@@ -36,33 +37,16 @@ public static class Endpoint
     private static async Task<Response> Handle(
         InventoryContext context,
         CancellationToken cancellationToken
-    ) =>
-        new(
-            await context
-                .Vendors.AsNoTracking()
-                .OrderBy(x => x.Name)
-                .Select(x => new Option(x.Id, x.Name))
-                .ToListAsync(cancellationToken),
-            await context
-                .Persons.AsNoTracking()
-                .OrderBy(x => x.Name)
-                .Select(x => new Option(x.Id, x.Name))
-                .ToListAsync(cancellationToken),
-            await context
-                .Confidentialities.AsNoTracking()
-                .OrderBy(x => x.Weight)
-                .Select(x => new Weighted(x.Id, x.Level, x.Weight))
-                .ToListAsync(cancellationToken),
-            await context
-                .Integrities.AsNoTracking()
-                .OrderBy(x => x.Weight)
-                .Select(x => new Weighted(x.Id, x.Level, x.Weight))
-                .ToListAsync(cancellationToken),
-            await context
-                .Availabilities.AsNoTracking()
-                .OrderBy(x => x.Weight)
-                .Select(x => new Weighted(x.Id, x.Level, x.Weight))
-                .ToListAsync(cancellationToken),
+    )
+    {
+        var asset = await AssetWrites.OptionsAsync(context, cancellationToken);
+
+        return new(
+            asset.Vendors,
+            asset.People,
+            asset.Confidentialities,
+            asset.Integrities,
+            asset.Availabilities,
             await context
                 .Importances.AsNoTracking()
                 .Select(x => new Option(x.Id, x.Level))
@@ -92,16 +76,8 @@ public static class Endpoint
                 .OrderBy(x => x.Text)
                 .Select(x => new Option(x.Id, x.Text))
                 .ToListAsync(cancellationToken),
-            await context
-                .BusinessEntities.AsNoTracking()
-                .OrderBy(x => x.Text)
-                .Select(x => new Option(x.Id, x.Text))
-                .ToListAsync(cancellationToken),
-            await context
-                .Locations.AsNoTracking()
-                .OrderBy(x => x.Name)
-                .Select(x => new Option(x.Id, x.Name))
-                .ToListAsync(cancellationToken),
+            asset.BusinessEntities,
+            asset.Locations,
             await context
                 .SoftwareOrServices.AsNoTracking()
                 .OrderBy(x => x.Name)
@@ -113,4 +89,5 @@ public static class Endpoint
                 .Select(x => new VolumeType(x.Id, x.Text))
                 .ToListAsync(cancellationToken)
         );
+    }
 }

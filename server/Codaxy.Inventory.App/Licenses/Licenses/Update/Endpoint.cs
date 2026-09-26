@@ -1,4 +1,5 @@
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Assets;
 using Codaxy.Inventory.App.Shared.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,16 +23,9 @@ public static class Endpoint
         CancellationToken cancellationToken
     )
     {
-        if (!MiniValidator.IsValid(form, out var problem))
-            return problem;
-
-        if (form.LastModified is null)
-            return Results.ValidationProblem(
-                new Dictionary<string, string[]>
-                {
-                    ["lastModified"] = ["Send the last-modified time the licence was loaded with."],
-                }
-            );
+        // The licence's own attributes and the asset's rules, answered together.
+        if (AssetWrites.Validate(form, MiniValidator.Errors(form)) is { Count: > 0 } errors)
+            return Results.ValidationProblem(errors);
 
         var license = await context
             .Licenses.Include(l => l.Asset)
@@ -41,11 +35,8 @@ public static class Endpoint
         if (license is null)
             return Results.NotFound();
 
-        if (license.Asset.LastModified != form.LastModified)
-            return Results.Problem(
-                statusCode: StatusCodes.Status409Conflict,
-                title: "Someone changed this licence since you opened it."
-            );
+        if (AssetWrites.CheckUnchanged(license.Asset, form, "licence") is { } changed)
+            return changed;
 
         if (await LicenseWrites.CheckAsync(context, form, cancellationToken) is { } refused)
             return refused;

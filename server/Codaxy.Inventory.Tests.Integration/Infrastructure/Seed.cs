@@ -54,10 +54,16 @@ public static class Seed
             Name = "Electronic Device",
             AssetCategoryId = equipment.Id,
         };
+        var furniture = new AssetType
+        {
+            Id = Guid.CreateVersion7(),
+            Name = "Furniture and fixtures",
+            AssetCategoryId = equipment.Id,
+        };
         var seller = new Vendor { Id = Guid.CreateVersion7(), Name = "Seed vendor" };
         var person = new Person { Id = Guid.CreateVersion7(), Name = "Seed person" };
 
-        context.AddRange(software, equipment, licenses, devices, seller, person);
+        context.AddRange(software, equipment, licenses, devices, furniture, seller, person);
         context.Sequences.Add(
             new Sequence { Id = Guid.CreateVersion7(), AssetInventoryNumber = 100000 }
         );

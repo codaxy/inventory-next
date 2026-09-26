@@ -9,11 +9,12 @@ import {
     type LicenseDetail,
     updateLicense,
 } from "../../../api/licenses";
+import { importanceFor } from "../../../assets";
 import { confirm } from "../../../components/confirm";
 import { guardLeaving } from "../../../leaveGuard";
 import { listReturn, queryOf } from "../../../listAddress";
 import $app from "../../../model";
-import m, { emptyOptions, expiryLine, importanceFor, rowKey, toDraft, toForm, type VolumeRow } from "./model";
+import m, { emptyOptions, expiryLine, rowKey, toDraft, toForm, type VolumeRow } from "./model";
 
 const list = "~/licenses";
 const l = m.license;

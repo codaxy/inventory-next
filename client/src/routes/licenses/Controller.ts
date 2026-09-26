@@ -7,7 +7,7 @@ import {
     licensesExport,
     listLicenses,
 } from "../../api/licenses";
-import { encodeDate } from "../../dates";
+import { dayAfter, isDay } from "../../dates";
 import { type AddressValue, oneOf } from "../../listAddress";
 import { ListController } from "../../listController";
 import m, { type FilterKey, type Filters, type Row, toChips, toRows } from "./model";
@@ -15,13 +15,6 @@ import m, { type FilterKey, type Filters, type Row, toChips, toRows } from "./mo
 const s = m.list;
 const expiries = ["expired", "soon", "regular", "none"] as const;
 const keys = ["number", "name", "vendor", "value", "purchased", "expires", "modified"] as const;
-const day = /^\d{4}-\d{2}-\d{2}$/;
-
-/** The day after, as `YYYY-MM-DD`: the server's `to` is exclusive, the reader's "to" includes the day. */
-function dayAfter(value: string) {
-    const [y, mo, d] = value.split("-").map(Number);
-    return encodeDate(new Date(y, mo - 1, d + 1));
-}
 
 /** The filters as the API takes them: the reader's inclusive last day becomes the exclusive next one. */
 const request = (f: Filters): Partial<LicenseQuery> => ({
@@ -68,8 +61,8 @@ export default class extends ListController<Filters, LicenseItem, Row, LicenseSo
         const to = query.get("purchasedTo");
         return {
             vendorId: query.get("vendorId"),
-            from: from && day.test(from) ? from : null,
-            to: to && day.test(to) ? to : null,
+            from: isDay(from) ? from : null,
+            to: isDay(to) ? to : null,
             expiry: oneOf(query, "expiry", expiries) as Expiry | "none" | null,
             incomplete: incomplete === "true" ? true : incomplete === "false" ? false : null,
         };

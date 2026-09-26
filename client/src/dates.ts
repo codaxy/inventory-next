@@ -57,3 +57,12 @@ export function formatDayHeading(date: Date, now = new Date()): string {
     if (days === 1) return "Yesterday";
     return longDayFormat.format(date);
 }
+
+/** The day after, as `YYYY-MM-DD`: the server's `to` is exclusive, the reader's "to" includes the day. */
+export function dayAfter(value: string) {
+    const [y, mo, d] = value.split("-").map(Number);
+    return encodeDate(new Date(y, mo - 1, d + 1));
+}
+
+/** A `YYYY-MM-DD` value, as an address may or may not carry one. */
+export const isDay = (value: string | null): value is string => !!value && /^\d{4}-\d{2}-\d{2}$/.test(value);

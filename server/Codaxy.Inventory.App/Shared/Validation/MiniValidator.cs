@@ -12,21 +12,25 @@ public static class MiniValidator
     public static bool IsValid<T>(T value, out IResult problem)
         where T : notnull
     {
+        var errors = Errors(value);
+        problem = errors.Count == 0 ? Results.Empty : Results.ValidationProblem(errors);
+        return errors.Count == 0;
+    }
+
+    /// <summary>
+    /// The attributes' messages by field, keyed as the JSON the client sent, so a message lands under
+    /// the field it names; for an endpoint that adds rules of its own before answering.
+    /// </summary>
+    public static Dictionary<string, string[]> Errors<T>(T value)
+        where T : notnull
+    {
         List<ValidationResult> results = [];
+        Validator.TryValidateObject(value, new ValidationContext(value), results, true);
 
-        if (Validator.TryValidateObject(value, new ValidationContext(value), results, true))
-        {
-            problem = Results.Empty;
-            return true;
-        }
-
-        problem = Results.ValidationProblem(
-            results.ToDictionary(
-                // Keyed as the JSON the client sent, so a message lands under the field it names.
-                r => JsonNamingPolicy.CamelCase.ConvertName(r.MemberNames.FirstOrDefault() ?? ""),
-                r => new[] { r.ErrorMessage ?? "Invalid." }
+        return results
+            .GroupBy(r =>
+                JsonNamingPolicy.CamelCase.ConvertName(r.MemberNames.FirstOrDefault() ?? "")
             )
-        );
-        return false;
+            .ToDictionary(g => g.Key, g => g.Select(r => r.ErrorMessage ?? "Invalid.").ToArray());
     }
 }

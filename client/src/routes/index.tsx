@@ -10,6 +10,10 @@ import ServerLog from "./administration/server-log";
 import TagEditor from "./electronic-devices/tags/editor";
 import Tags from "./electronic-devices/tags";
 import TypeEditor from "./electronic-devices/types/editor";
+import Furniture from "./furniture";
+import FurnitureEditor from "./furniture/editor";
+import FurnitureTypes from "./furniture/types";
+import FurnitureTypeEditor from "./furniture/types/editor";
 import Licenses from "./licenses";
 import ActivationEditor from "./licenses/activations/editor";
 import Activations from "./licenses/activations";
@@ -27,6 +31,8 @@ const screens: Record<string, any> = {
     "~/administration/server-log": ServerLog,
     "~/electronic-devices/tags": Tags,
     "~/electronic-devices/types": Types,
+    "~/furniture": Furniture,
+    "~/furniture/types": FurnitureTypes,
     "~/licenses": Licenses,
     "~/licenses/activations": Activations,
     "~/licenses/software-services": SoftwareServices,
@@ -85,6 +91,19 @@ export default (
                     </Route>
                     <Route route="~/electronic-devices/types/:id" url={$app.url}>
                         <TypeEditor />
+                    </Route>
+                    {/* Before `~/furniture/:id`, which would take `types` for an id. */}
+                    <Route route="~/furniture/types/:id/edit" url={$app.url}>
+                        <FurnitureTypeEditor />
+                    </Route>
+                    <Route route="~/furniture/types/:id" url={$app.url}>
+                        <FurnitureTypeEditor />
+                    </Route>
+                    <Route route="~/furniture/:id/edit" url={$app.url}>
+                        <FurnitureEditor />
+                    </Route>
+                    <Route route="~/furniture/:id" url={$app.url}>
+                        <FurnitureEditor />
                     </Route>
                     {/* Before `~/licenses/:id`, which would take `activations` and `software-services` for an id. */}
                     <Route route="~/licenses/activations/:id" url={$app.url}>

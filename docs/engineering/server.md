@@ -110,7 +110,11 @@ session — so restricting it to a role is one line, not a search for every endp
 
 **An asset is written through `Shared/Assets/AssetWrites`**: the inventory number taken from
 `Sequence`, the asset type found by its seeded name on the server, the importance computed, and
-`LastModified` set by the server to the microsecond PostgreSQL keeps.
+`LastModified` set by the server to the microsecond PostgreSQL keeps. **Every asset's form carries the
+asset's fields flat beside its own and implements `IAssetForm`**, so one `Validate`, `CheckAsync`
+(every id exists), `ApplyAsync`, `CheckUnchanged` and `OptionsAsync` (the pickers) serve each subtype;
+the subtype's writes call them first, then do their own. Not a nested asset object on the wire: the
+interface shares the code without changing the API.
 
 **An asset's update is checked against the `lastModified` it was loaded with**: the body echoes it,
 and one that no longer matches is a 409 — someone saved since, and their edit is not overwritten.

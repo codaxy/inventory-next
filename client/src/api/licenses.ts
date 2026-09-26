@@ -1,11 +1,9 @@
 import type { Page } from "../paging";
 import type { Expiry } from "./activations";
+import type { AssetDetail, AssetForm, AssetOptions, Option, Ref } from "./assets";
 import { send, toQuery } from "./http";
 
-export interface Ref {
-    id: string;
-    name: string;
-}
+export type { Option, Ref, Weighted } from "./assets";
 
 export interface LicenseItem {
     id: string;
@@ -32,21 +30,7 @@ export interface VolumeDetail {
     held: string | null;
 }
 
-export interface LicenseDetail {
-    id: string;
-    number: number | null;
-    name: string;
-    invoiceNumber: string | null;
-    vendor: Ref;
-    purchaseValue: number;
-    purchaseDate: string;
-    description: string | null;
-    person: Ref;
-    confidentiality: Ref | null;
-    integrity: Ref | null;
-    availability: Ref | null;
-    importance: Ref | null;
-    incomplete: boolean;
+export interface LicenseDetail extends AssetDetail {
     licenseType: Ref | null;
     licenseModel: Ref | null;
     expirationModel: Ref | null;
@@ -56,13 +40,9 @@ export interface LicenseDetail {
     currency: Ref | null;
     period: Ref | null;
     autoRenew: boolean;
-    businessEntity: Ref | null;
     managementConsoleUrl: string | null;
     registrationNumber: string | null;
     keyIdentifier: string | null;
-    location: Ref | null;
-    url: string | null;
-    lastModified: string;
     volumes: VolumeDetail[];
 }
 
@@ -74,18 +54,7 @@ export interface VolumeForm {
     description?: string | null;
 }
 
-export interface LicenseForm {
-    name: string;
-    invoiceNumber: string | null;
-    vendorId: string | null;
-    purchaseValue: number | null;
-    purchaseDate: string | null;
-    description: string | null;
-    personId: string | null;
-    confidentialityId: string | null;
-    integrityId: string | null;
-    availabilityId: string | null;
-    incomplete: boolean;
+export interface LicenseForm extends AssetForm {
     licenseTypeId: string | null;
     licenseModelId: string | null;
     expirationModelId: string | null;
@@ -94,14 +63,10 @@ export interface LicenseForm {
     currencyId: string | null;
     periodId: string | null;
     autoRenew: boolean;
-    businessEntityId: string | null;
     managementConsoleUrl: string | null;
     registrationNumber: string | null;
     keyIdentifier: string | null;
-    locationId: string | null;
-    url: string | null;
     volumes: VolumeForm[];
-    lastModified?: string;
 }
 
 export type LicenseSort =
@@ -119,29 +84,13 @@ export interface LicenseQuery {
     pageSize: number;
 }
 
-export interface Option {
-    id: string;
-    text: string;
-}
-
-export interface Weighted extends Option {
-    weight: number;
-}
-
-export interface LicenseOptions {
-    vendors: Option[];
-    people: Option[];
-    confidentialities: Weighted[];
-    integrities: Weighted[];
-    availabilities: Weighted[];
+export interface LicenseOptions extends AssetOptions {
     importances: Option[];
     licenseTypes: Option[];
     licenseModels: Option[];
     expirationModels: Option[];
     currencies: Option[];
     periods: Option[];
-    businessEntities: Option[];
-    locations: Option[];
     software: Option[];
     volumeTypes: { id: number; text: string }[];
 }

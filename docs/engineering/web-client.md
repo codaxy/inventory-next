@@ -115,7 +115,10 @@ chips, the caption line, and the error, empty and loading states. A screen's row
 
 **The list is one markup at both widths**: a stacked card on a phone, a row of columns with a header
 from `md`, laid out by CSS grid areas. Not a `Grid` for desktop beside cards for the phone — two
-renderings of every row, drifting apart.
+renderings of every row, drifting apart. **A wide list's columns are shares (`fr`), not fixed widths**:
+fixed widths that overflow the page shrink every column alike, and the name — which needs the room —
+is cut first. Where the columns do not fit below `xl`, the least scanned go until then — furniture's
+vendor and change time — and wait for the record's page.
 
 **The toolbar is one row, pinned** — search, *Filters* and a compact previous/next, with the range
 beside them from `md` — so nothing needs a scroll back up, and it costs a phone one 44px row. Below
@@ -200,6 +203,13 @@ below the last** (`editor-actions-bar`): a footer inside one card sticks only wh
 screen. A view-mode value reads at the input's size whatever the field — cx sets text fields'
 larger than pickers'. In view mode a field is text lined up with its label, and a list of values — the types on a tag —
 is chips, each a link to its record.
+
+**Every asset's page opens with the same "Basic information"** — the asset's own fields, then the
+subtype's sections. `formFields()` in `components/formFields.tsx` makes an editor's fields over its
+state (picker, text, prose, money, date, yes/no, each labelled above with the server's message
+beneath) and `basicInformation()` from them; `src/assets.ts` holds the asset's draft, its load from a
+detail and its form, and the importance as the server will compute it. A subtype's model extends the
+asset's draft and form and adds its own fields.
 
 **A licence's volume is read in parts, not as a sentence**: its software, then its type and
 description muted beneath, and its seats — "15 / 35 in use" over a meter, primary while seats are

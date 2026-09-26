@@ -28,11 +28,11 @@ points at the substatus only, so its status is reached through it.
 kind of thing — `Mobile`, `HasData` — and the link table is the whole of the relation.
 
 **A device type says whether its devices hold licences** (`HoldLicences`): only a device of such a type
-is offered when an activation is assigned to a device. **A type a device uses is not deleted** — the
-device's foreign key does not cascade — while a tag goes with its links.
+is offered when an activation is assigned to a device. **A type a device or a piece of furniture uses
+is not deleted** — the foreign key does not cascade — while a tag goes with its links.
 
-The client picks the asset type by **name** when creating (`loadAssetType("Electronic Device")`), so
-the seeded type names are part of the contract between client and server, not free text.
+The asset type is found by its seeded **name** when an asset is created — "Electronic Device",
+"Furniture and fixtures", "Licenses" — so those names are part of the contract, not free text.
 
 ## Entities that are not assets
 
