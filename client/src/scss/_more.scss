@@ -1,0 +1,88 @@
+// The ⋮ beside a record's primary action, and the menu of its secondary ones.
+
+.more-menu {
+    display: inline-flex;
+}
+
+.more-menu .cxb-menuitem.more-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    // A ghost button: no border, the glyph alone beside the primary action; its 44px target and its
+    // hover and focus states are what make it a button.
+    border: 0;
+    border-radius: var(--cx-button-border-radius);
+    background: transparent;
+    color: var(--color-ink-soft);
+    cursor: pointer;
+}
+
+.cxs-focusable > .cxb-menuitem.more-trigger:hover,
+.cxs-focusable > .cxb-menuitem.more-trigger.cxs-open,
+.cxs-focusable > .cxb-menuitem.more-trigger:focus-visible {
+    background: var(--color-hover);
+    color: var(--color-ink);
+}
+
+.cxs-focusable > .cxb-menuitem.more-trigger:focus-visible {
+    outline: 2px solid var(--color-primary-text);
+    outline-offset: 2px;
+}
+
+.cxb-dropdown.more-dropdown {
+    min-width: 12rem;
+    padding: 0.25rem;
+    border: 1px solid var(--color-line);
+    border-radius: 10px;
+    background: var(--color-surface);
+    box-shadow: 0 10px 28px -12px color-mix(in srgb, var(--color-ink) 35%, transparent);
+}
+
+.more-dropdown .cxb-menuitem.more-action {
+    padding: 0;
+    border-radius: 6px;
+}
+
+// A link item is an `<a>` straight inside the menu item, which the theme pads, borders and blocks as
+// its own (`.cxb-menuitem.cxs-medium-padding > a`); the selector outranks it.
+.more-action-body,
+.more-dropdown .cxb-menuitem.more-action > a.more-action-body {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 40px;
+    padding: 0 0.75rem;
+    border: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-ink);
+    text-decoration: none;
+
+    @media (pointer: coarse) {
+        min-height: 44px;
+    }
+}
+
+.cxs-focusable > .cxb-menuitem.more-action:hover,
+.cxs-focusable.cxs-cursor > .cxb-menuitem.more-action.cxs-cursor {
+    background: var(--color-hover);
+}
+
+// Destructive, last, and set apart from the rest by a rule.
+.more-dropdown .cxb-menuitem.more-action-danger {
+    margin-top: 0.25rem;
+    border-top: 1px solid var(--color-line-soft);
+    border-radius: 0 0 6px 6px;
+
+    .more-action-body {
+        color: var(--color-danger-text);
+    }
+}
+
+.cxs-focusable > .cxb-menuitem.more-action-danger:hover,
+.cxs-focusable.cxs-cursor > .cxb-menuitem.more-action-danger.cxs-cursor {
+    background: var(--color-danger-wash);
+}

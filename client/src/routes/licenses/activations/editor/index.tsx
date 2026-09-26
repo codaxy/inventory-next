@@ -12,6 +12,7 @@ import {
 
 import { dateValue, numberValue } from "../../../../bindings";
 import { expiryClass } from "../../../../licensing";
+import { moreActions } from "../../../../components/moreActions";
 import $app from "../../../../model";
 import Controller from "./Controller";
 import m from "./model";
@@ -57,15 +58,6 @@ export default createFunctionalComponent(() => (
                     <h1 class="page-title" text={a.title} />
                     <div class="editor-heading-actions" visible={shown}>
                         <Button
-                            mod="hollow"
-                            class="editor-delete"
-                            onClick="remove"
-                            attrs={{ "aria-label": "Delete", title: "Delete" }}
-                        >
-                            <Icon name="delete" class="size-4" />
-                            <span class="hidden sm:inline" text="Delete" />
-                        </Button>
-                        <Button
                             mod="primary"
                             visible={active}
                             onClick="deactivate"
@@ -83,6 +75,7 @@ export default createFunctionalComponent(() => (
                             <Icon name="reactivate" class="size-4" />
                             <span class="hidden sm:inline" text="Reactivate" />
                         </Button>
+                        {moreActions([{ text: "Delete", icon: "delete", onClick: "remove", danger: true }])}
                     </div>
                 </div>
             </div>

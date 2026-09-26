@@ -151,8 +151,10 @@ that closed it has already left the screen.
 ## Editors
 
 **Every entity has a page of its own**, never a window, **and a row opens it read-only**:
-`~/<item>/:id` shows the record, Delete and Edit in the header beside its name — icons only on a phone,
-named for screen readers; editing is `~/<item>/:id/edit`, Cancel and Save in the card's footer; `new` opens in editing, there being nothing to show yet. A
+`~/<item>/:id` shows the record, **its primary action in the header beside its name and the rest behind
+a ⋮** (`moreActions` in `components/`, a borderless 44px button with a hover tint and a focus ring): Edit visible — or Deactivate, for a record never edited — and
+Duplicate and Delete a click deeper, Delete last and red, so what destroys is never one mis-click
+away; icons only on a phone, named for screen readers; editing is `~/<item>/:id/edit`, Cancel and Save in the card's footer; `new` opens in editing, there being nothing to show yet. A
 record's actions go where the eye starts, a form's commit where the form finishes. Not everyone will be allowed to edit, and
 a record should not change because someone clicked into it. Cancel and a successful Save of an edit
 return to the read-only page; a new record's Save and Cancel return to the list. Both modes are one form, switched by the `ValidationGroup`'s `viewMode`, which every
@@ -307,6 +309,10 @@ must appear in both the header and every script tag. Script hashes in the header
 that a static shell supports. Worth deciding before there are screens, not after.
 
 ## Traps
+
+**A `var()` naming a token that does not exist voids the whole declaration**, silently: `border: 1px
+solid var(--color-typo)` computes to no border, not to a border of some default colour. A name
+carried over from Pulse is the likely typo — check `tailwind.css` before reaching for `!important`.
 
 **Free text is often a URL, which has nowhere to break**: anything showing a typed value in a flex or
 grid cell sets `overflow-wrap: anywhere`, or one long description widens the page on a phone — and a

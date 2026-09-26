@@ -1,4 +1,5 @@
 import {
+    MoreVerticalIcon,
     Undo02Icon,
     Add01Icon,
     AppStoreIcon,
@@ -93,6 +94,7 @@ const uiIcons = {
     edit: PencilEdit01Icon,
     delete: Delete02Icon,
     duplicate: Copy01Icon,
+    more: MoreVerticalIcon,
     deactivate: CancelCircleIcon,
     reactivate: Undo02Icon,
 } satisfies Record<string, IconData>;

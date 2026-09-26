@@ -16,6 +16,7 @@ import {
 
 import { dateValue, numberValue } from "../../../bindings";
 import { expiryClass } from "../../../licensing";
+import { moreActions } from "../../../components/moreActions";
 import $app from "../../../model";
 import Controller from "./Controller";
 import m from "./model";
@@ -123,23 +124,6 @@ export default createFunctionalComponent(() => (
                         <span class="page-title-note" visible={hasValue(l.number)} text={l.number} />
                     </h1>
                     <div class="editor-heading-actions" visible={l.viewing}>
-                        <Button
-                            mod="hollow"
-                            class="editor-delete"
-                            onClick="remove"
-                            attrs={{ "aria-label": "Delete", title: "Delete" }}
-                        >
-                            <Icon name="delete" class="size-4" />
-                            <span class="hidden sm:inline" text="Delete" />
-                        </Button>
-                        <LinkButton
-                            mod="hollow"
-                            href={expr(l.id, (id) => `~/licenses/new?from=${id}`)}
-                            attrs={{ "aria-label": "Duplicate", title: "Duplicate" }}
-                        >
-                            <Icon name="duplicate" class="size-4" />
-                            <span class="hidden sm:inline" text="Duplicate" />
-                        </LinkButton>
                         <LinkButton
                             mod="primary"
                             href={expr(l.id, (id) => `~/licenses/${id}/edit`)}
@@ -148,6 +132,14 @@ export default createFunctionalComponent(() => (
                             <Icon name="edit" class="size-4" />
                             <span class="hidden sm:inline" text="Edit" />
                         </LinkButton>
+                        {moreActions([
+                            {
+                                text: "Duplicate",
+                                icon: "duplicate",
+                                href: expr(l.id, (id) => `~/licenses/new?from=${id}`),
+                            },
+                            { text: "Delete", icon: "delete", onClick: "remove", danger: true },
+                        ])}
                     </div>
                 </div>
             </div>
