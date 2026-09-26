@@ -233,7 +233,7 @@ no filter pane. A screen declares its API, draft, fields and columns;
 a record checked for an edit made meanwhile names its `lastModified` (a refused save offers Reload), one
 that can be copied names what a copy keeps (`new?from=:id`, Duplicate behind the ⋮), and a new asset
 bought in batches offers **"Save and replicate"** — saved, and the next opened as its copy;
-on a phone that button takes a row of its own above Cancel and Save. **Whatever names a record with a page
+on a phone it reads "Replicate", with the copy icon, to fit beside Cancel and Save. **Whatever names a record with a page
 is a link to it in view** — a picker (`pick(…, { href })`), a fact on a read-only page, a volume's
 software — the assignee, vendor, location, type, manufacturer; a codebook value, which has no page,
 stays text. The city and state a location offers are the

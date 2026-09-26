@@ -44,14 +44,19 @@ export function recordPage(o: RecordPage) {
             />
             {o.another ? (
                 <cx>
+                    {/* On a phone, one word and the copy icon, so it fits beside Cancel and Save. */}
                     <Button
                         mod="hollow"
                         class="editor-another"
                         visible={expr(r.id, (id) => !id)}
-                        text="Save and replicate"
                         onClick="saveAndAnother"
                         disabled={truthy(r.saving)}
-                    />
+                        attrs={{ "aria-label": "Save and replicate", title: "Save and replicate" }}
+                    >
+                        <Icon name="duplicate" class="size-4 sm:hidden" />
+                        <span class="sm:hidden" text="Replicate" />
+                        <span class="hidden sm:inline" text="Save and replicate" />
+                    </Button>
                 </cx>
             ) : null}
             <Button mod="primary" text="Save" onClick="save" disabled={truthy(r.saving)} />

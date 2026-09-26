@@ -565,11 +565,8 @@ a.volume-row.volume-link {
     }
 }
 
-// "Save and replicate" does not fit beside Cancel and Save on a phone: there it takes a row
-// of its own above them, Save staying last and at hand.
-@media (max-width: 639.98px) {
-    .cxb-button.editor-another {
-        order: -1;
-        flex-basis: 100%;
-    }
+.cxb-button.editor-another {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
 }
