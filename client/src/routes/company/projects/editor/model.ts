@@ -40,7 +40,7 @@ export const toForm = (d: ProjectDraft): ProjectForm => ({
 
 export const toAttached = (p: ProjectDetail) =>
     toSections(
-        [informationKind(p.information)],
+        [informationKind(p.information, "projectId", p.id)],
         "No information is of it.",
         (kinds) => `No ${kinds} is of it.`,
     );

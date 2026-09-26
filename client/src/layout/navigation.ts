@@ -119,7 +119,12 @@ export const navigation: NavSection[] = [
                 href: "~/infrastructure/virtual-machines",
                 icon: "virtualMachines",
             },
-            { label: "Clouds", title: "Clouds", href: "~/infrastructure/clouds", icon: "clouds" },
+            {
+                label: "Cloud subscriptions",
+                title: "Cloud subscriptions",
+                href: "~/infrastructure/cloud-subscriptions",
+                icon: "cloudSubscriptions",
+            },
             { label: "Software", title: "Software", href: "~/infrastructure/software", icon: "software" },
         ],
     },

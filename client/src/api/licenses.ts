@@ -26,7 +26,7 @@ export interface VolumeDetail {
     description: string | null;
     inUse: number;
     activationCount: number;
-    /** Why it cannot be removed — activations, a cloud or software on it — or null. */
+    /** Why it cannot be removed — activations, a cloud subscription or software on it — or null. */
     held: string | null;
 }
 

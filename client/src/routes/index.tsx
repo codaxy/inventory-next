@@ -27,6 +27,12 @@ import Furniture from "./furniture";
 import FurnitureEditor from "./furniture/editor";
 import FurnitureTypes from "./furniture/types";
 import FurnitureTypeEditor from "./furniture/types/editor";
+import Informations from "./informations";
+import InformationEditor from "./informations/editor";
+import InformationTags from "./informations/tags";
+import InformationTagEditor from "./informations/tags/editor";
+import InformationTypes from "./informations/types";
+import InformationTypeEditor from "./informations/types/editor";
 import Licenses from "./licenses";
 import ActivationEditor from "./licenses/activations/editor";
 import Activations from "./licenses/activations";
@@ -52,6 +58,9 @@ const screens: Record<string, any> = {
     "~/electronic-devices/types": Types,
     "~/furniture": Furniture,
     "~/furniture/types": FurnitureTypes,
+    "~/informations": Informations,
+    "~/informations/tags": InformationTags,
+    "~/informations/types": InformationTypes,
     "~/licenses": Licenses,
     "~/licenses/activations": Activations,
     "~/licenses/software-services": SoftwareServices,
@@ -162,6 +171,25 @@ export default (
                     </Route>
                     <Route route="~/furniture/:id" url={$app.url}>
                         <FurnitureEditor />
+                    </Route>
+                    {/* Before `~/informations/:id`, which would take `types` and `tags` for an id. */}
+                    <Route route="~/informations/types/:id/edit" url={$app.url}>
+                        <InformationTypeEditor />
+                    </Route>
+                    <Route route="~/informations/types/:id" url={$app.url}>
+                        <InformationTypeEditor />
+                    </Route>
+                    <Route route="~/informations/tags/:id/edit" url={$app.url}>
+                        <InformationTagEditor />
+                    </Route>
+                    <Route route="~/informations/tags/:id" url={$app.url}>
+                        <InformationTagEditor />
+                    </Route>
+                    <Route route="~/informations/:id/edit" url={$app.url}>
+                        <InformationEditor />
+                    </Route>
+                    <Route route="~/informations/:id" url={$app.url}>
+                        <InformationEditor />
                     </Route>
                     {/* Before `~/licenses/:id`, which would take `activations` and `software-services` for an id. */}
                     <Route route="~/licenses/activations/:id" url={$app.url}>

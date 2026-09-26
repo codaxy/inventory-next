@@ -62,7 +62,7 @@ together — never a bin sorted by kind:
   contracts, business entities: `Asset` is the base of devices, furniture and licenses alike.
 - **`Shared/Classification`** — confidentiality, integrity, availability and importance, which assets
   and information always carry as a set.
-- **`Shared/Volumes`** — `Volume` and its type. Licenses, software and services, clouds, software and
+- **`Shared/Volumes`** — `Volume` and its type. Licenses, software and services, cloud subscriptions, software and
   activations all point at a volume.
 
 **`Persistence/`** holds the context, the migrations, the seed data, the audit log and its interceptor,

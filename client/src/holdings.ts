@@ -148,13 +148,23 @@ export const assetKinds = (a: AssetSections, filter: string, id: string): Kind[]
     },
 ];
 
-/** Information attached to a record: no screen yet, so its rows are not links. */
-export const informationKind = (s: Section<{ id: string; name: string; type: string | null }>): Kind => ({
+/** Information attached to a record; "See all" filters the information list by `filter`, where it can. */
+export const informationKind = (
+    s: Section<{ id: string; name: string; type: string | null }>,
+    filter?: string,
+    id?: string,
+): Kind => ({
     key: "information",
     title: "Information",
     none: "information",
     one: "piece of information",
     many: "pieces of information",
     total: s.total,
-    rows: s.items.map((i) => ({ key: i.id, title: i.name, meta: i.type ?? undefined })),
+    rows: s.items.map((i) => ({
+        key: i.id,
+        title: i.name,
+        meta: i.type ?? undefined,
+        href: `~/informations/${i.id}`,
+    })),
+    moreHref: filter && id ? `~/informations?${filter}=${id}` : undefined,
 });

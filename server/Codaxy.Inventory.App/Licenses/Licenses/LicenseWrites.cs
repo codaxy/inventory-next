@@ -137,24 +137,35 @@ internal static class LicenseWrites
                 v.Id,
                 Software = v.SoftwareOrService.Name,
                 Activations = v.Activations.Count,
-                Clouds = context.Clouds.Count(c => c.VolumeId == v.Id),
+                CloudSubscriptions = context.Clouds.Count(c => c.VolumeId == v.Id),
                 Softwares = context.Softwares.Count(s => s.VolumeId == v.Id),
             })
             .ToListAsync(cancellationToken);
 
         return counts
-            .Select(c => (c.Id, Reason: Held(c.Software, c.Activations, c.Clouds, c.Softwares)))
+            .Select(c =>
+                (c.Id, Reason: Held(c.Software, c.Activations, c.CloudSubscriptions, c.Softwares))
+            )
             .Where(c => c.Reason is not null)
             .ToDictionary(c => c.Id, c => c.Reason!);
     }
 
-    private static string? Held(string software, int activations, int clouds, int softwares)
+    private static string? Held(
+        string software,
+        int activations,
+        int cloudSubscriptions,
+        int softwares
+    )
     {
         var parts = new List<string>();
         if (activations > 0)
             parts.Add(activations == 1 ? "an activation" : $"{activations} activations");
-        if (clouds > 0)
-            parts.Add(clouds == 1 ? "a cloud" : $"{clouds} clouds");
+        if (cloudSubscriptions > 0)
+            parts.Add(
+                cloudSubscriptions == 1
+                    ? "a cloud subscription"
+                    : $"{cloudSubscriptions} cloud subscriptions"
+            );
         if (softwares > 0)
             parts.Add(softwares == 1 ? "a software entry" : $"{softwares} software entries");
 
@@ -164,7 +175,7 @@ internal static class LicenseWrites
     /// <summary>
     /// The volumes made to match the form's: one without an id is added, one the form leaves out is
     /// removed, one it keeps stays as it was. A volume anything stands on is not removed — its foreign
-    /// keys cascade, and would take the activations, clouds and software with it.
+    /// keys cascade, and would take the activations, cloud subscriptions and software with it.
     /// </summary>
     public static async Task<IResult?> ReconcileVolumesAsync(
         InventoryContext context,

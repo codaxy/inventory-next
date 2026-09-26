@@ -75,7 +75,7 @@ export default createFunctionalComponent(() => (
 
                 <div class="holding-footnote" visible={truthy(p.holdingsLoaded)}>
                     <p visible={hasValue(p.none)} text={p.none} />
-                    <p text="Virtual machines, clouds and software have no owner, so none are listed here." />
+                    <p text="Virtual machines, cloud subscriptions and software have no owner, so none are listed here." />
                 </div>
             </div>
         </div>

@@ -38,7 +38,7 @@ wrong.
    phone layout survive this, they survive everything.
 3. ~~**Licenses, volumes and activations.**~~ The only area with behaviour rather than shape — seat
    counts, activation and its reversal, subscription expiry.
-4. **Furniture, the infrastructure — virtual machines, clouds, software — and the remaining asset
+4. **Furniture, the infrastructure — virtual machines, cloud subscriptions, software — and the remaining asset
    types.** Shapes already proven by step 2.
 5. **Information and its types, tags and locations.**
 6. **The company.** Many screens, one shape.

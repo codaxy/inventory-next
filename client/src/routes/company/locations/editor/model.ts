@@ -72,7 +72,7 @@ export const toForm = (d: LocationDraft): LocationForm => ({
 
 export const toAttached = (l: LocationDetail) =>
     toSections(
-        [...assetKinds(l.assets, "locationId", l.id), informationKind(l.information)],
+        [...assetKinds(l.assets, "locationId", l.id), informationKind(l.information, "locationId", l.id)],
         "Nothing is kept here.",
         (kinds) => `No ${kinds} kept here.`,
     );

@@ -240,7 +240,8 @@ description muted beneath, and its seats — "15 / 35 in use" over a meter, prim
 free, green when every one is used — a bought seat is meant to be — and red only past the quantity — in a column of their own, where the eye scans for them; on a
 phone the seats take a line beneath the name.
 
-**Removing a saved part of a record waits for the save**: a license's existing volume is struck
+**Removing a saved part of a record waits for the save** — a license's volume, a place where
+information is kept: the existing one is struck
 through, marked "Removed when you save", and has an Undo, so the reader sees what the save will take
 and can take it back; one added in the same edit goes at once, as nothing is lost.
 

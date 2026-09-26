@@ -55,7 +55,7 @@ public sealed record Ref(Guid Id, string Name);
 public sealed record VolumeTypeRef(int Id, string Name);
 
 /// <param name="InUse">Seats taken by activations still active.</param>
-/// <param name="Held">Why it cannot be removed — activations, a cloud or software on it — or none.</param>
+/// <param name="Held">Why it cannot be removed — activations, a cloud subscription or software on it — or none.</param>
 public sealed record VolumeDetail(
     Guid Id,
     Ref Software,

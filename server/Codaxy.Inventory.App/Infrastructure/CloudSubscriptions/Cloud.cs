@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Volumes;
 
-namespace Codaxy.Inventory.App.Infrastructure.Clouds;
+namespace Codaxy.Inventory.App.Infrastructure.CloudSubscriptions;
 
 public class Cloud : IIdentifiable<Guid>
 {

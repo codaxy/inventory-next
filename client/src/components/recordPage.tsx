@@ -6,7 +6,7 @@ import { listReturn } from "../listAddress";
 import $app from "../model";
 import type { RecordState } from "../recordController";
 import { holdingSections } from "./holdings";
-import { moreActions } from "./moreActions";
+import { type MoreAction, moreActions } from "./moreActions";
 
 interface RecordPage {
     r: AccessorChain<RecordState<any>>;
@@ -16,6 +16,12 @@ interface RecordPage {
     back: string;
     /** The form's fields, in the editor grid. */
     fields: any;
+    /** The first card's title, where more cards follow. */
+    title?: string;
+    /** Further cards of the form; Cancel and Save then sit in a bar of their own below the last. */
+    cards?: any;
+    /** Actions behind the ⋮ before Delete. */
+    more?: MoreAction[];
 }
 
 /**
@@ -25,6 +31,23 @@ interface RecordPage {
  */
 export function recordPage(o: RecordPage) {
     const r = o.r;
+    const commit = (
+        <cx>
+            <LinkButton
+                mod="hollow"
+                text="Cancel"
+                href={expr(r.id, (id) => (id ? `${o.path}/${id}` : listReturn(o.path)))}
+            />
+            <Button mod="primary" text="Save" onClick="save" disabled={truthy(r.saving)} />
+        </cx>
+    );
+    const actions = (
+        <cx>
+            <div class="editor-actions" visible={falsy(r.viewing)}>
+                {commit}
+            </div>
+        </cx>
+    );
     return (
         <cx>
             <div class="page-header">
@@ -43,7 +66,10 @@ export function recordPage(o: RecordPage) {
                             <Icon name="edit" class="size-4" />
                             <span class="hidden sm:inline" text="Edit" />
                         </LinkButton>
-                        {moreActions([{ text: "Delete", icon: "delete", onClick: "remove", danger: true }])}
+                        {moreActions([
+                            ...(o.more ?? []),
+                            { text: "Delete", icon: "delete", onClick: "remove", danger: true },
+                        ])}
                     </div>
                 </div>
             </div>
@@ -55,16 +81,22 @@ export function recordPage(o: RecordPage) {
 
                 <ValidationGroup valid={r.valid} visited={r.visited} viewMode={r.viewing}>
                     <section class="editor-section">
+                        {o.title ? (
+                            <cx>
+                                <h2 class="editor-section-title" text={o.title} />
+                            </cx>
+                        ) : null}
                         <div class="editor-grid">{o.fields}</div>
-                        <div class="editor-actions" visible={falsy(r.viewing)}>
-                            <LinkButton
-                                mod="hollow"
-                                text="Cancel"
-                                href={expr(r.id, (id) => (id ? `${o.path}/${id}` : listReturn(o.path)))}
-                            />
-                            <Button mod="primary" text="Save" onClick="save" disabled={truthy(r.saving)} />
-                        </div>
+                        {o.cards ? null : actions}
                     </section>
+                    {o.cards ?? null}
+                    {o.cards ? (
+                        <cx>
+                            <div class="editor-actions editor-actions-bar" visible={falsy(r.viewing)}>
+                                {commit}
+                            </div>
+                        </cx>
+                    ) : null}
                 </ValidationGroup>
 
                 {holdingSections(r.sections, r.viewing)}

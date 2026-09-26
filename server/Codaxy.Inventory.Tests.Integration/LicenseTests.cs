@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using Codaxy.Inventory.App.Company.Manufacturers;
-using Codaxy.Inventory.App.Infrastructure.Clouds;
+using Codaxy.Inventory.App.Infrastructure.CloudSubscriptions;
 using Codaxy.Inventory.App.Licenses.Licenses;
 using Codaxy.Inventory.App.Licenses.SoftwareServices;
 using Codaxy.Inventory.App.Persistence;
@@ -19,7 +19,7 @@ using Options = App.Licenses.Licenses.Options.Endpoint.Response;
 
 /// <summary>
 /// The codebooks, two software entries, and three licenses: Office, whose volume has an activation;
-/// Backup, whose volume a cloud stands on; and Spare, with nothing on it. A test that changes data
+/// Backup, whose volume a cloud subscription stands on; and Spare, with nothing on it. A test that changes data
 /// makes its own license.
 /// </summary>
 public class LicenseApplication : InventoryApplication
@@ -84,7 +84,7 @@ public class LicenseApplication : InventoryApplication
             new Cloud
             {
                 Id = Guid.CreateVersion7(),
-                Name = "Seed cloud",
+                Name = "Seed cloud subscription",
                 VolumeId = BackupLicense.Volume,
             }
         );
@@ -490,7 +490,9 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
         var activated = await client.DeleteAsync(
             $"{Url}/{LicenseApplication.OfficeLicense.License}"
         );
-        var clouded = await client.DeleteAsync($"{Url}/{LicenseApplication.BackupLicense.License}");
+        var subscribed = await client.DeleteAsync(
+            $"{Url}/{LicenseApplication.BackupLicense.License}"
+        );
 
         Assert.Equal(HttpStatusCode.Conflict, activated.StatusCode);
         Assert.Equal(
@@ -498,8 +500,8 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
             (await activated.Content.ReadFromJsonAsync<ProblemDetails>())!.Title
         );
         Assert.Equal(
-            "The Backup volume has a cloud, so the license cannot be deleted.",
-            (await clouded.Content.ReadFromJsonAsync<ProblemDetails>())!.Title
+            "The Backup volume has a cloud subscription, so the license cannot be deleted.",
+            (await subscribed.Content.ReadFromJsonAsync<ProblemDetails>())!.Title
         );
         Assert.True(
             await app.InScopeAsync(c =>

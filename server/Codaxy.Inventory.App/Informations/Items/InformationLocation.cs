@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Codaxy.Inventory.App.Company.Locations;
 using Codaxy.Inventory.App.ElectronicDevices.Devices;
-using Codaxy.Inventory.App.Infrastructure.Clouds;
+using Codaxy.Inventory.App.Infrastructure.CloudSubscriptions;
 using Codaxy.Inventory.App.Infrastructure.Softwares;
 using Codaxy.Inventory.App.Infrastructure.VirtualMachines;
 using Codaxy.Inventory.App.Persistence;

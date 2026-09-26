@@ -72,6 +72,11 @@ export abstract class RecordController<D extends object, Detail, Form> extends C
     /** The server's field names that the form binds under another: a picker's `<key>Id`. */
     protected readonly fieldAliases: Record<string, string> = {};
 
+    /** What the delete confirmation says goes with the record. */
+    protected deleteMessage() {
+        return "Nothing is attached to it. This cannot be undone.";
+    }
+
     protected emptyDraft(): D {
         return {} as D;
     }
@@ -212,7 +217,7 @@ export abstract class RecordController<D extends object, Detail, Form> extends C
 
         const confirmed = await confirm({
             title: `Delete this ${this.noun}?`,
-            message: "Nothing is attached to it. This cannot be undone.",
+            message: this.deleteMessage(),
             confirmText: `Delete ${this.noun}`,
             cancelText: "Keep",
             danger: true,

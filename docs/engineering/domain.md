@@ -37,11 +37,19 @@ The asset type is found by its seeded **name** when an asset is created — "Ele
 ## Entities that are not assets
 
 `Information` (with its types, tags and locations), `SoftwareOrService`, `Volume`, `Activation` and
-`MaintenanceContract` are first-class entities with their own ids. None has an inventory number and
+`MaintenanceContract` are first-class entities with their own ids.
+
+**A piece of information is kept in places**, each exactly one of an electronic device, a virtual
+machine, a software entry, a cloud subscription, a physical location or a web address; a saved place is kept or
+removed, never edited. Its importance is computed from the three weights as an asset's is. **A type
+in use is not deleted** — the information's foreign key cascades, so the delete would take every
+piece of the type — while a tag goes with its links and the information stays. None has an inventory number and
 none touches `Sequence`.
 
 `VirtualMachine`, `Cloud` and `Software` are the infrastructure: a virtual machine is a name and an
-address, and a cloud or a software entry belongs to a `Volume`.
+address, and a cloud subscription (`Cloud`) or a software entry belongs to a `Volume`. **A `Cloud` is
+a cloud subscription** — an Azure subscription, an AWS account, a Microsoft 365 tenant: one seat of a
+cloud service, administered at its management URL — and is called that everywhere but the entity.
 
 License seats are modelled by three of them: a `Volume` is a quantity of a `SoftwareOrService` bought
 under a license, and an `Activation` assigns one seat of a volume to a person, a device (an asset) or
@@ -66,7 +74,7 @@ Today is the server's UTC date. Auto-renewal is a recorded flag and changes none
 3–4 Low, 5–7 Medium, 8–9 High — and is absent unless all three are chosen. The server computes it on
 every save; the original's client did, and sent the result.
 
-**What stands on a volume keeps it**: its activations, clouds and software entries cascade with it, so
+**What stands on a volume keeps it**: its activations, cloud subscriptions and software entries cascade with it, so
 a volume holding any is not removed from its license, and a license with such a volume — or with a
 maintenance contract — is not deleted. A software or service a volume is of is not deleted either. An
 existing volume is kept as it is or removed; editing one is not offered, as in the original.
@@ -88,7 +96,7 @@ locations, manufacturers and vendors are seeded with a starting set.
 
 **What a person holds**: the assets assigned to them — devices, furniture, licenses — the seats
 activated for them by name and those on a device they hold, the information they own and the
-projects they lead. Virtual machines, clouds and software entries have no owner: nothing in the
+projects they lead. Virtual machines, cloud subscriptions and software entries have no owner: nothing in the
 schema ties one to a person. **A company record something points at is not deleted** — a person
 holding anything, a client with a project, a project with information, a vendor an asset or a
 maintenance contract names, a manufacturer a device or a software names, a location an asset or

@@ -9,7 +9,7 @@ public static class Endpoint
 
     /// <summary>
     /// The volumes, the license and the asset, in one save — unless something stands on them: a
-    /// volume's activations, clouds or software cascade with it, and a maintenance contract restricts
+    /// volume's activations, cloud subscriptions or software cascade with it, and a maintenance contract restricts
     /// the asset. Those are named in a 409 rather than taken along or left to fail as a 500.
     /// </summary>
     private static async Task<IResult> Handle(

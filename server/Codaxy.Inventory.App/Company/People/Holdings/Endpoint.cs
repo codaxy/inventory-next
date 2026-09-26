@@ -7,7 +7,7 @@ namespace Codaxy.Inventory.App.Company.People.Holdings;
 
 /// <summary>
 /// Everything attached to a person, for their page: per kind the total and the first rows. Virtual
-/// machines, clouds and software have no owner in the schema, so they are not here.
+/// machines, cloud subscriptions and software have no owner in the schema, so they are not here.
 /// </summary>
 public static class Endpoint
 {

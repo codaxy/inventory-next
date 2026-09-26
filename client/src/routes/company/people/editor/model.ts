@@ -78,7 +78,7 @@ export function toHoldings(h: Holdings, person: string) {
                 })),
                 moreHref: `~/licenses/activations?personId=${person}`,
             },
-            informationKind(h.information),
+            informationKind(h.information, "personId", person),
             {
                 key: "projects",
                 title: "Projects",

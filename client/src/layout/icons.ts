@@ -65,7 +65,7 @@ const navIcons = {
     informationTypes: Shapes01Icon,
     informationTags: Tag01Icon,
     virtualMachines: ServerStack01Icon,
-    clouds: CloudIcon,
+    cloudSubscriptions: CloudIcon,
     software: SoftwareIcon,
     people: UserIcon,
     clients: Building03Icon,

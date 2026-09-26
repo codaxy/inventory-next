@@ -448,3 +448,21 @@
         grid-template-columns: minmax(0, 20rem) minmax(0, 16rem) minmax(0, 16rem) minmax(0, 7rem);
     }
 }
+
+// Information types and tags: the name, the description, the count narrow.
+.information-group-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 18rem) minmax(0, 40rem) minmax(0, 8rem);
+    }
+}
+
+// Information: the name first, then its type and who it is assigned to; author and project from `md`.
+.information-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+    }
+}

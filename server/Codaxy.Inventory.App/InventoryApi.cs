@@ -90,6 +90,32 @@ public static class InventoryApi
         Company.Locations.Update.Endpoint.Map(locations);
         Company.Locations.Delete.Endpoint.Map(locations);
 
+        var informationTypes = api.MapGroup("/informations/types");
+
+        Informations.Types.List.Endpoint.Map(informationTypes);
+        Informations.Types.Get.Endpoint.Map(informationTypes);
+        Informations.Types.Create.Endpoint.Map(informationTypes);
+        Informations.Types.Update.Endpoint.Map(informationTypes);
+        Informations.Types.Delete.Endpoint.Map(informationTypes);
+
+        var informationTags = api.MapGroup("/informations/tags");
+
+        Informations.Tags.List.Endpoint.Map(informationTags);
+        Informations.Tags.Get.Endpoint.Map(informationTags);
+        Informations.Tags.Create.Endpoint.Map(informationTags);
+        Informations.Tags.Update.Endpoint.Map(informationTags);
+        Informations.Tags.Delete.Endpoint.Map(informationTags);
+
+        var information = api.MapGroup("/informations");
+
+        Informations.Items.List.Endpoint.Map(information);
+        Informations.Items.Options.Endpoint.Map(information);
+        Informations.Items.Export.Endpoint.Map(information);
+        Informations.Items.Get.Endpoint.Map(information);
+        Informations.Items.Create.Endpoint.Map(information);
+        Informations.Items.Update.Endpoint.Map(information);
+        Informations.Items.Delete.Endpoint.Map(information);
+
         var clients = api.MapGroup("/company/clients");
 
         Company.Clients.List.Endpoint.Map(clients);

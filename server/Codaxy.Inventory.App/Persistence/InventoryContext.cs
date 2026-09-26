@@ -15,7 +15,7 @@ using Codaxy.Inventory.App.Furnitures.Types;
 using Codaxy.Inventory.App.Informations.Items;
 using Codaxy.Inventory.App.Informations.Tags;
 using Codaxy.Inventory.App.Informations.Types;
-using Codaxy.Inventory.App.Infrastructure.Clouds;
+using Codaxy.Inventory.App.Infrastructure.CloudSubscriptions;
 using Codaxy.Inventory.App.Infrastructure.Softwares;
 using Codaxy.Inventory.App.Infrastructure.VirtualMachines;
 using Codaxy.Inventory.App.Licenses.Activations;

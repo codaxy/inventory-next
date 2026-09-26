@@ -249,7 +249,7 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("Client");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.Clouds.Cloud", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.CloudSubscriptions.Cloud", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -1571,7 +1571,7 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .HasForeignKey("CountryCode");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.Clouds.Cloud", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.CloudSubscriptions.Cloud", b =>
                 {
                     b.HasOne("Codaxy.Inventory.App.Shared.Volumes.Volume", "Volume")
                         .WithMany()
@@ -1753,7 +1753,7 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
 
             modelBuilder.Entity("Codaxy.Inventory.App.Informations.Items.InformationLocation", b =>
                 {
-                    b.HasOne("Codaxy.Inventory.App.Infrastructure.Clouds.Cloud", "Cloud")
+                    b.HasOne("Codaxy.Inventory.App.Infrastructure.CloudSubscriptions.Cloud", "Cloud")
                         .WithMany()
                         .HasForeignKey("CloudId");
 
