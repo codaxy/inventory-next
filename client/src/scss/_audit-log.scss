@@ -170,7 +170,9 @@
     .audit-list-head,
     .audit-row {
         grid-template-areas: "time action record summary user";
-        grid-template-columns: 3.5rem 6.5rem minmax(0, 1.4fr) minmax(0, 1.2fr) minmax(0, 1fr);
+        // Fixed where the content is fixed, capped where it is text: spare width gathers after the last
+        // column instead of opening gaps between them.
+        grid-template-columns: 3.5rem 6.5rem minmax(0, 28rem) minmax(0, 24rem) minmax(0, 18rem);
         gap: 1rem;
     }
 

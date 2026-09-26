@@ -19,7 +19,7 @@ const rows = [
 /** A routed screen that is not built yet: a page of its own, saying so, over the outline of a list. */
 export const TodoScreen = createFunctionalComponent(({ title, step }: Props) => (
     <cx>
-        <div class="page-body">
+        <div class="page-body page-wide">
             <h1 class="page-header page-title" text={title} />
 
             <div class="todo">

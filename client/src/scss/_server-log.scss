@@ -3,8 +3,6 @@
 // message in a row from `md`; on a phone the first three share a line and the message wraps beneath.
 // Nothing scrolls sideways: long tokens break anywhere.
 
-// The day and the level on one row: days scroll on the left, the level stays put on the right.
-// Below `sm` the two wrap: days on a line of their own, the level full width beneath.
 .log-controls {
     display: flex;
     flex-wrap: wrap;

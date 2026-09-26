@@ -5,7 +5,7 @@ import { landing } from "../../layout/navigation";
 
 export default createFunctionalComponent(() => (
     <cx>
-        <div class="page-body">
+        <div class="page-body page-narrow">
             <h1 class="page-header page-title" text="Page not found" />
             <p class="page-lede">
                 Nothing lives at this address. Check the URL, or go to{" "}

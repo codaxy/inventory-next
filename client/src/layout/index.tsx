@@ -22,7 +22,7 @@ export const AppLayout = createFunctionalComponent(({ children }: { children?: a
             <Sidebar />
             <div class="flex min-w-0 flex-1 flex-col">
                 <TopBar />
-                <main class="flex-1">{children}</main>
+                <main class="flex flex-1 flex-col">{children}</main>
             </div>
         </div>
     </cx>

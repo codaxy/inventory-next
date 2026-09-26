@@ -76,6 +76,13 @@ from `widgetDefaults.ts`, hooked into cx's `overlayDidMount`, so no screen has t
 list also does not pass its scroll on (`overscroll-behavior: contain`). A screen fills
 the content column under a header band (`.page-header`) flush with its top and sides; it never sets
 its own outer padding.
+
+**A page's width is set by its kind, not by the display** — `page-wide` (96rem, Tailwind's `2xl`) for
+lists and logs, `page-narrow` (52rem) for a record's page, in `_shell.scss`. Header band, pinned bars
+and content share the one left-aligned column, so the search is never wider than what it searches;
+a list's columns are capped so a spare width stays in the page, not between the cells. Past the column
+the page fills the viewport's height with the primary glow and dot grid of sign-in, fading in from
+its left: a bare canvas reads as unfinished. The server log follows the same rule — no pane is special.
 Sign-in, outside the shell, is one centred column that stops growing on a wide display.
 
 **Input text is 16px on a touch screen**, 14px elsewhere: iPhone Safari zooms into a focused field
@@ -120,7 +127,8 @@ pinned: the pane is too tall to hold on screen.
 the total, previous and next, and from `sm` the first, last and current page with a neighbour each side.
 A phone gets "3 / 40" in place of the links. Paging scrolls the page back to the top. In the bar the
 pager is compact — bare chevrons drawn at 32px, touched at 44 — and the line it sits on is small type
-without borders, so it reads as a caption under the search rather than a second toolbar. Not
+without borders, so it reads as a caption under the search rather than a second toolbar. The bar's
+chevrons stay, disabled, when nothing matches, as on a single page; the pager under the list goes. Not
 infinite scroll: it loses the reader's place and cannot reach page 40 without loading 39.
 
 **Only the latest request writes.** A controller numbers its requests and drops any answer that is not
@@ -138,13 +146,13 @@ that closed it has already left the screen.
 named for screen readers; editing is `~/<item>/:id/edit`, Cancel and Save in a bar pinned to the bottom
 of the viewport, where the form ends; `new` opens in editing, there being nothing to show yet. A
 record's actions go where the eye starts, a form's commit where the form finishes. Not everyone will be allowed to edit, and
-a record should not change because someone clicked into it. Cancel and a successful Save return to the
-read-only page. Both modes are one form, switched by the `ValidationGroup`'s `viewMode`, which every
+a record should not change because someone clicked into it. Cancel and a successful Save of an edit
+return to the read-only page; a new record's Save and Cancel return to the list. Both modes are one form, switched by the `ValidationGroup`'s `viewMode`, which every
 field inside it follows. The routes come after the menu's own, since a menu item's href can share the
 prefix.
 
-The page is the header band with a back link and the record's name, the form as sections in a column
-that stops at 52rem, and, while editing, the bar spanning the page with its buttons lined up with the
+The page is the header band with a back link and the record's name, the form as sections in the
+narrow column, and, while editing, the bar spanning the page with its buttons lined up with the
 form. In view mode a field is text lined up with its label, and a list of values — the types on a tag —
 is chips, each a link to its record.
 
@@ -159,7 +167,7 @@ changes asks "Keep editing" or "Discard changes".
 
 **The route's id is read through `$route`**, declared in the editor's model, and **the address, not the
 mount, says which record and mode are open**: `new` and an id match one route, so saving a new record
-keeps the page and its controller, which reopens on every change of `$app.url`. The server's field
+would keep the page and its controller, which therefore reopens on every change of `$app.url`. The server's field
 errors land under their fields through `fieldErrors`; **unsaved changes ask before leaving**, in editing
 only —
 `guardLeaving` in `src/leaveGuard.ts`, cx's navigation confirmation for in-app links and the browser's
@@ -167,8 +175,9 @@ prompt for a reload or a closed tab. Browser Back leaves without asking: cx cann
 browser has already made. A save or a delete releases the guard before it navigates.
 
 **A list of records** — `_records.scss` — is a card per row on a phone and columns from `md`, a header
-that sorts on a tap, a row that opens its editor, and a *New* button in the toolbar where a screen's
-filters would be.
+that sorts on a tap, a row that opens its record, and a *New* button in the toolbar where a screen's
+filters would be. A list cut short — the first three types on a tag, the first fields of an audit
+change — ends in a muted `+N` pill (`record-more`), so the count never reads as another name.
 
 ## Dates
 

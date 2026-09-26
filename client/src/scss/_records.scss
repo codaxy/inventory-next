@@ -76,6 +76,21 @@
     }
 }
 
+// "+6": a count, not one more name, so it reads as a pill after the names.
+.record-more {
+    display: inline-block;
+    margin-left: 0.375rem;
+    padding: 0 0.375rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: var(--color-raised);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--color-ink-muted);
+    vertical-align: 1px;
+}
+
 .record-meta {
     font-size: 12.5px;
     color: var(--color-ink-faint);
@@ -142,7 +157,7 @@
     }
 
     @media (min-width: 768px) {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1.5fr);
+        grid-template-columns: minmax(0, 18rem) minmax(0, 36rem) minmax(0, 30rem);
 
         > :nth-child(2) {
             order: 0;

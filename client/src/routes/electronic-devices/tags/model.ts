@@ -8,6 +8,8 @@ export interface Row {
     name: string;
     description?: string;
     types: string;
+    /** "+6" when more types carry the tag than the row names. */
+    more?: string;
 }
 
 export interface TagListState {
@@ -35,9 +37,6 @@ export const toRows = (items: TagItem[]): Row[] =>
         id: t.id,
         name: t.name,
         description: t.description ?? undefined,
-        types:
-            t.typeCount === 0
-                ? "No types"
-                : t.firstTypes.join(", ") +
-                  (t.typeCount > t.firstTypes.length ? ` +${t.typeCount - t.firstTypes.length}` : ""),
+        types: t.typeCount === 0 ? "No types" : t.firstTypes.join(", "),
+        more: t.typeCount > t.firstTypes.length ? `+${t.typeCount - t.firstTypes.length}` : undefined,
     }));

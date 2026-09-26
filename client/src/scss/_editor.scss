@@ -2,11 +2,6 @@
 // between them is a column that stops growing on a wide screen, and the bar's buttons line up with it.
 // The bar is pinned to the bottom of the viewport, so Save is in reach however long the form is.
 
-.editor,
-.editor-actions-row {
-    max-width: 52rem;
-}
-
 // The title and, while viewing, the record's actions on the same line.
 .editor-heading {
     display: flex;
@@ -35,6 +30,8 @@
 }
 
 .editor-back {
+    // A grid item in the header band: without this it stretches, and the whole row becomes the link.
+    justify-self: start;
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;

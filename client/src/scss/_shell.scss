@@ -41,6 +41,70 @@
     }
 }
 
+// A page has one width, set by its kind, and everything on it lines up to it: `page-wide` for a
+// list — the server log included — and `page-narrow` for a record or a form. Left-aligned beside the
+// navigation: centred, a wide screen strands the sidebar.
+//
+// The bands that run edge to edge — the header, a list's pinned toolbar, an editor's bar — keep their
+// background and lay their content in one column of the page's width, so a title's actions end where
+// the content ends.
+.page-body {
+    --page-width: 100%;
+    --page-pad: 0.75rem;
+
+    @media (min-width: 640px) {
+        --page-pad: 1.25rem;
+    }
+}
+
+// Tailwind's widest breakpoint, `2xl`: the common desktop resolutions, and wide enough for a list.
+.page-wide {
+    --page-width: 96rem;
+}
+
+// A readable form's width, not a screen's.
+.page-narrow {
+    --page-width: 52rem;
+}
+
+.page-header,
+.list-bar,
+.editor-actions {
+    display: grid;
+    grid-template-columns: minmax(0, var(--page-width));
+}
+
+.page-body > :not(.page-header, .list-bar, .editor-actions) {
+    max-width: var(--page-width);
+}
+
+// What a wide screen leaves beside the content: the sign-in page's dot grid under a primary glow,
+// faded in from the content's edge. Behind everything; the header band's white covers its top, and
+// on a laptop there is no room for it at all.
+// The page fills the content column's height, however little is on it, or the dots stop where the
+// content does.
+.page-body {
+    position: relative;
+    isolation: isolate;
+    flex: 1 0 auto;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 0 calc(var(--page-pad) * 2 + var(--page-width) + 2rem);
+        z-index: -1;
+        pointer-events: none;
+        background:
+            radial-gradient(
+                circle 38rem at 0 14rem,
+                color-mix(in srgb, var(--color-primary) 10%, transparent),
+                transparent
+            ),
+            radial-gradient(var(--color-dot) 1px, transparent 0) 0 0 / 22px 22px;
+        mask-image: linear-gradient(to right, transparent, black 10rem);
+    }
+}
+
 .page-title {
     font-size: 1.5rem;
     font-weight: 700;

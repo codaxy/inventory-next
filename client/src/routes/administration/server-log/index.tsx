@@ -40,7 +40,7 @@ export default createFunctionalComponent(() => {
 
     return (
         <cx>
-            <div class="page-body server-log" controller={Controller}>
+            <div class="page-body page-wide server-log" controller={Controller}>
                 <h1 class="page-header page-title" text="Server log" />
 
                 <div class="list-bar" onRef={onBarRef}>
@@ -82,7 +82,7 @@ export default createFunctionalComponent(() => {
                                 )}
                             />
                         </Button>
-                        <div visible={expr(s.total, (t) => t > 0)}>
+                        <div>
                             <Pager
                                 state={s.pager}
                                 compact

@@ -10,7 +10,13 @@
     z-index: 5;
     margin: -0.75rem -0.75rem 0;
     padding: 0.75rem 0.75rem 0.375rem;
-    background: var(--color-canvas);
+    // Opaque over the content it pins above, clear beyond it, so the dots beside the page run on
+    // under a pinned bar instead of being cut by a stripe of canvas.
+    background: linear-gradient(
+        to right,
+        var(--color-canvas) calc(var(--page-pad) * 2 + var(--page-width)),
+        transparent 0
+    );
     transition: transform 200ms ease;
 
     @media (min-width: 640px) {

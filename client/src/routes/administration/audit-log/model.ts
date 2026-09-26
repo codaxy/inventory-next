@@ -48,6 +48,8 @@ export interface Row {
     /** When the row is the first of its day: that day's heading. */
     dayHeading?: string;
     summary: string;
+    /** "+2" when the update changed more fields than the summary names. */
+    more?: string;
 }
 
 export interface AuditLogState {
@@ -123,13 +125,17 @@ export function describeEntity(entry: AuditEntry): { type: string; label: string
     };
 }
 
-/** At most three names, then how many more: a row is one line on a phone. */
-export function summarise(entry: AuditEntry): string {
-    if (entry.action !== "Update") return entry.action === "Create" ? "New record" : "Record removed";
-    if (entry.changed.length === 0) return "No field changed";
+/** At most three names, and how many more: a row is one line on a phone. */
+export function summarise(entry: AuditEntry): { summary: string; more?: string } {
+    if (entry.action !== "Update")
+        return { summary: entry.action === "Create" ? "New record" : "Record removed" };
+    if (entry.changed.length === 0) return { summary: "No field changed" };
 
     const names = entry.changed.map(humanize);
-    return names.length <= 3 ? names.join(", ") : `${names.slice(0, 3).join(", ")} +${names.length - 3} more`;
+    return {
+        summary: names.slice(0, 3).join(", "),
+        more: names.length > 3 ? `+${names.length - 3}` : undefined,
+    };
 }
 
 /** Rows in list order; a row opening a new local day carries that day's heading. */
@@ -151,7 +157,7 @@ export function toRows(entries: AuditEntry[], now = new Date()): Row[] {
             email: entry.email,
             time: formatTime(time),
             dayHeading,
-            summary: summarise(entry),
+            ...summarise(entry),
         };
     });
 }

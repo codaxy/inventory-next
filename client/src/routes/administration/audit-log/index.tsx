@@ -39,7 +39,7 @@ export default createFunctionalComponent(() => {
 
     return (
         <cx>
-            <div class="page-body audit-log" controller={Controller}>
+            <div class="page-body page-wide audit-log" controller={Controller}>
                 <h1 class="page-header page-title" text="Audit log" />
 
                 {/* Pinned while the rows scroll, except while the filters are open: the pane is too tall. */}
@@ -195,7 +195,7 @@ export default createFunctionalComponent(() => {
                                 )}
                             />
                         </Button>
-                        <div visible={expr(s.total, (t) => t > 0)}>
+                        <div>
                             <Pager
                                 state={s.pager}
                                 compact
@@ -255,7 +255,14 @@ export default createFunctionalComponent(() => {
                                     text={m.$row.inventoryNumber}
                                 />
                             </span>
-                            <span class="audit-summary" text={m.$row.summary} />
+                            <span class="audit-summary">
+                                <span text={m.$row.summary} />
+                                <span
+                                    class="record-more"
+                                    visible={hasValue(m.$row.more)}
+                                    text={m.$row.more}
+                                />
+                            </span>
                             <span class="audit-user" text={m.$row.email} />
                         </button>
                     </Repeater>

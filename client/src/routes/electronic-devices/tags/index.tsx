@@ -39,7 +39,7 @@ export default createFunctionalComponent(() => {
 
     return (
         <cx>
-            <div class="page-body tag-list" controller={Controller}>
+            <div class="page-body page-wide tag-list" controller={Controller}>
                 <h1 class="page-header page-title" text="Electronic device tags" />
 
                 <div class="list-bar" onRef={onBarRef}>
@@ -63,7 +63,7 @@ export default createFunctionalComponent(() => {
 
                     <div class="list-results-head">
                         <span class="list-total" text={s.totalText} />
-                        <div visible={expr(s.total, (t) => t > 0)}>
+                        <div>
                             <Pager
                                 state={s.pager}
                                 compact
@@ -101,7 +101,14 @@ export default createFunctionalComponent(() => {
                                 }}
                                 text={expr(m.$row.description, (d) => d ?? "—")}
                             />
-                            <span class="record-meta" text={m.$row.types} />
+                            <span class="record-meta">
+                                <span text={m.$row.types} />
+                                <span
+                                    class="record-more"
+                                    visible={hasValue(m.$row.more)}
+                                    text={m.$row.more}
+                                />
+                            </span>
                         </Link>
                     </Repeater>
                 </div>

@@ -106,7 +106,8 @@ export default class extends Controller {
         try {
             const form = toForm(this.store.get(m.tag.draft));
             const saved = await (id ? updateTag(id, form) : createTag(form));
-            this.leave(`${list}/${saved.id}`);
+            // A new tag returns to the list it was started from; an edit to the view it came from.
+            this.leave(id ? `${list}/${saved.id}` : list);
         } catch (error) {
             if (error instanceof ApiError && Object.keys(error.errors).length > 0)
                 this.store.set(m.tag.errors, fieldErrors<TagEditorState["errors"]>(error));

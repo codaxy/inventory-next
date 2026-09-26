@@ -24,7 +24,7 @@ const t = m.tag;
  */
 export default createFunctionalComponent(() => (
     <cx>
-        <div class="page-body" controller={Controller}>
+        <div class="page-body page-narrow" controller={Controller}>
             <div class="page-header">
                 <Link href="~/electronic-devices/tags" url={$app.url} class="editor-back">
                     <Icon name="previous" class="size-4" />
