@@ -10,7 +10,7 @@ import $app from "../model";
  */
 export const TopBar = createFunctionalComponent(() => (
     <cx>
-        <header class="sticky top-0 z-30 flex items-center gap-3 bg-nav-bar px-4 py-3 lg:hidden">
+        <header class="top-bar sticky top-0 z-30 flex items-center gap-3 bg-nav-bar px-4 py-3 lg:hidden">
             <Button
                 mod={["hollow", "on-dark"]}
                 class="nav-toggle"

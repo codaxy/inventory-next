@@ -1,3 +1,21 @@
+// What the shell pins over the top of the document: the phone's top bar — 44px menu button and
+// 12px padding each side — and nothing from `lg`, where the sidebar replaces it. Anything else that
+// sticks goes beneath it.
+:root {
+    --shell-top: 68px;
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --shell-top: 0px;
+    }
+}
+
+.top-bar {
+    height: var(--shell-top);
+    box-sizing: border-box;
+}
+
 // The signed-in page: a header band flush with the top and sides of the content column, the content
 // padded beneath it. `.page-header` cancels `.page-body`'s padding with negative margins and restores
 // it as its own, so the title aligns with the content: the three numbers move together.

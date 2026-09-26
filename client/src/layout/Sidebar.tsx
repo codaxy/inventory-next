@@ -19,14 +19,14 @@ export const Sidebar = createFunctionalComponent(() => (
     <cx>
         {/* A sibling, not a wrapper, so the drawer slides over the content. Tapping it dismisses. */}
         <div
-            class="fixed inset-0 z-40 bg-ink/30 lg:hidden"
+            class="fixed inset-0 z-40 touch-none bg-ink/30 lg:hidden"
             visible={$app.ui.drawerOpen}
             onClick={closeDrawer}
         />
 
         <aside
             class={{
-                "fixed inset-y-0 left-0 z-50 flex h-dvh w-[220px] shrink-0 flex-col bg-nav": true,
+                "nav-drawer fixed inset-y-0 left-0 z-50 flex h-dvh w-[min(260px,calc(100vw-56px))] shrink-0 flex-col bg-nav": true,
                 "transition-transform duration-200 lg:sticky lg:top-0 lg:translate-x-0": true,
                 "-translate-x-full": falsy($app.ui.drawerOpen),
                 "translate-x-0 shadow-xl lg:shadow-none": $app.ui.drawerOpen,
@@ -37,7 +37,7 @@ export const Sidebar = createFunctionalComponent(() => (
                 <Logo subtitle="Asset register" />
             </div>
 
-            <nav class="nav-scroll flex-1 overflow-y-auto px-2 pb-4">
+            <nav class="nav-scroll flex-1 overflow-y-auto overscroll-contain px-2 pb-4">
                 {navigation.map((section) => (
                     <cx>
                         <div>

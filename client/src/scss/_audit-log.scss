@@ -1,8 +1,42 @@
 // The audit log: a search bar with a pane of filters beneath it, and the entries grouped by day. One
 // markup for both widths: a stacked card on a phone, one row of columns from `md`.
 
+// The toolbar, pinned to the top of the content column while the rows scroll beneath it. It runs
+// into the page's side padding so rows do not show past its edges, and pulls up by its own top padding
+// so the gap under the header band is unchanged until it sticks.
+.list-bar {
+    position: sticky;
+    top: var(--shell-top);
+    z-index: 5;
+    margin: -0.75rem -0.75rem 0;
+    padding: 0.75rem 0.75rem 0.375rem;
+    background: var(--color-canvas);
+    transition: transform 200ms ease;
+
+    @media (min-width: 640px) {
+        margin: -0.75rem -1.25rem 0;
+        padding: 0.75rem 1.25rem 0.375rem;
+    }
+}
+
+.list-bar-static {
+    position: static;
+}
+
+// Off the top on a narrow screen while scrolling down; see `stickyBar.ts`.
+.list-bar-hidden {
+    transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .list-bar {
+        transition: none;
+    }
+}
+
 .audit-toolbar {
     display: flex;
+    align-items: center;
     gap: 0.5rem;
 }
 
@@ -123,36 +157,53 @@
     margin-top: 0.75rem;
 }
 
+// A quiet line under the search bar: where the reader is, the order, and a step either way. Small
+// type and borderless controls, so it reads as a caption rather than a second toolbar.
 .audit-results-head {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin: 1rem 0 0.5rem;
+    gap: 0.25rem;
+    margin-top: 0.375rem;
 }
 
 .audit-total {
-    font-size: 13px;
+    flex: 1;
+    min-width: 0;
+    font-size: 12.5px;
     font-weight: 600;
     color: var(--color-ink-muted);
     font-variant-numeric: tabular-nums;
 }
 
-// Pulled right by its padding, so its label ends on the list's edge.
 .cxb-button.cxm-hollow.audit-sort {
-    margin-right: -0.75rem;
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
+    height: 32px;
+    padding: 0 0.5rem;
     border-color: transparent;
     background: transparent;
     box-shadow: none;
-    font-size: 13px;
-    color: var(--color-ink-soft);
+    font-size: 12.5px;
+    color: var(--color-ink-muted);
+
+    // Drawn at 32px, touched at 44.
+    &::after {
+        content: "";
+        position: absolute;
+        inset: -6px 0;
+    }
 
     &:hover {
         background: var(--color-hover);
+        color: var(--color-ink);
     }
+}
+
+.list-bar + .audit-error,
+.list-bar + .audit-list {
+    margin-top: 0.375rem;
 }
 
 // `clip` rather than `hidden`: it rounds the corners without becoming a scroll container, which
@@ -180,9 +231,11 @@
     text-align: center;
 }
 
+// Sticks beneath the pinned toolbar, following it when it slides away.
 .audit-day {
     position: sticky;
-    top: 0;
+    top: calc(var(--shell-top) + var(--sticky-bar-height, 0px));
+    transition: top 200ms ease;
     z-index: 1;
     padding: 0.5rem 1rem;
     border-bottom: 1px solid var(--color-line-soft);

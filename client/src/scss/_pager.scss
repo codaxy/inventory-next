@@ -8,6 +8,39 @@
     margin-top: 1rem;
 }
 
+// A list bar's pager: previous and next as bare chevrons, drawn at 32px and touched at 44, so the
+// line under the search bar stays a caption.
+.pager-compact {
+    margin-top: 0;
+
+    .pager-controls {
+        gap: 0;
+    }
+
+    .cxb-button.cxm-hollow.pager-step {
+        position: relative;
+        width: 32px;
+        min-width: 32px;
+        height: 32px;
+        padding: 0;
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
+        color: var(--color-ink-muted);
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: -6px -2px;
+        }
+
+        &:hover {
+            background: var(--color-hover);
+            color: var(--color-ink);
+        }
+    }
+}
+
 .pager-summary {
     font-size: 13px;
     font-weight: 600;
@@ -39,9 +72,12 @@
     font-variant-numeric: tabular-nums;
 }
 
+// Bordered like the toolbar's Filters button, which it sits beside in a list's bar.
 .cxb-button.cxm-hollow.pager-step {
     display: inline-grid;
     place-items: center;
+    border-color: var(--color-line-strong);
+    background: var(--color-surface);
 }
 
 .cxb-button.cxm-hollow.pager-link-current,

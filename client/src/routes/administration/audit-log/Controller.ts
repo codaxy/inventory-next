@@ -7,8 +7,6 @@ import { showEntryWindow } from "./EntryWindow";
 import m, { type FilterKey, humanize, type Row, toRows } from "./model";
 import { pageSize, searchDelay, toChips, toQuery } from "./utils";
 
-const count = new Intl.NumberFormat("en-GB");
-
 export default class extends Controller {
     /** The search the list reflects; the box runs ahead of it while someone is typing. */
     private search: string | null = null;
@@ -75,8 +73,7 @@ export default class extends Controller {
         this.store.set(m.auditLog.page, page);
         this.load();
 
-        // The list scrolls inside the shell's content column, not the window.
-        if (scroll) document.querySelector("main")?.scrollTo({ top: 0 });
+        if (scroll) window.scrollTo({ top: 0 });
     }
 
     async load() {
@@ -107,7 +104,9 @@ export default class extends Controller {
             this.store.set(m.auditLog.pager, state);
             this.store.set(
                 m.auditLog.totalText,
-                `${count.format(result.total)} ${result.total === 1 ? "change" : "changes"}`,
+                result.total === 0
+                    ? "No changes"
+                    : `${state.summary} ${result.total === 1 ? "change" : "changes"}`,
             );
             this.store.delete(m.auditLog.error);
             this.store.set(m.auditLog.loaded, true);

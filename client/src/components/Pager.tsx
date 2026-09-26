@@ -10,16 +10,18 @@ interface Props {
     state: AccessorChain<PagerState>;
     /** Called with the page to show. */
     onPage: (page: number, instance: any) => void;
+    /** Previous and next only, for a toolbar that already says where the reader is. */
+    compact?: boolean;
 }
 
 /**
  * Previous and next either side of where the reader is. Page links from `sm` up; a phone gets the
  * position instead, which does not wrap at any width.
  */
-export const Pager = createFunctionalComponent(({ state, onPage }: Props) => (
+export const Pager = createFunctionalComponent(({ state, onPage, compact }: Props) => (
     <cx>
-        <nav class="pager" attrs={{ "aria-label": "Pages" }}>
-            <span class="pager-summary" text={state.summary} />
+        <nav class={{ pager: true, "pager-compact": !!compact }} attrs={{ "aria-label": "Pages" }}>
+            <span class="pager-summary" visible={!compact} text={state.summary} />
 
             <div class="pager-controls">
                 <Button
@@ -34,9 +36,9 @@ export const Pager = createFunctionalComponent(({ state, onPage }: Props) => (
                     <Icon name="previous" class="size-4" />
                 </Button>
 
-                <span class="pager-position sm:hidden" text={state.position} />
+                <span class="pager-position sm:hidden" visible={!compact} text={state.position} />
 
-                <div class="hidden items-center gap-1 sm:flex">
+                <div class="hidden items-center gap-1 sm:flex" visible={!compact}>
                     <Repeater records={state.links} recordAlias={$.$link}>
                         <Button
                             mod="hollow"

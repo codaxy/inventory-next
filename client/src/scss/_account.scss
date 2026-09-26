@@ -25,6 +25,7 @@
 // swapped, so the change reads as the same control changing state.
 .account-chevron {
     flex-shrink: 0;
+    margin-left: -0.25rem;
     width: 16px;
     height: 16px;
     color: var(--color-nav-ink-dim);

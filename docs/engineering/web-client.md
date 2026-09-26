@@ -60,10 +60,18 @@ shell. `screens` in `routes/index.tsx` maps an item's href to its screen; an ite
 
 ## The phone is the hard case
 
-**The shell is Pulse's.** From `lg` (1024px) a 220px sidebar holds the navigation and, at its foot,
+**The shell is Pulse's.** From `lg` (1024px) a 260px sidebar holds the navigation and, at its foot,
 the signed-in person alone; signing out is in the menu that opens above them. Below `lg` the sidebar
-becomes a drawer over the content, opened by a 44px menu button in a top bar that carries only the
-mark. Any tap in the drawer closes it, except one that opens or works the account menu. A screen fills
+becomes a drawer over the content, as wide and never closer than 56px to the far edge. The drawer is
+opened by a 44px menu button in a top
+bar that carries only the mark. Any tap in the drawer closes it, except one that opens or works the account menu.
+**The document scrolls, not the content column**: iPhone Safari collapses its toolbars only when the
+document does, so a scrolling `main` keeps the address bar on screen for good. The desktop sidebar and
+the phone's top bar are sticky; the top bar's height is `--shell-top`, 0 from `lg`, and anything else
+that sticks sits beneath it. **The open drawer locks the page behind it** by refusing gestures — `lockScroll()` in
+`src/scrollLock.ts` lets a touch or wheel scroll through only inside the drawer's own list while it can
+still move — and the list does not pass its scroll on (`overscroll-behavior: contain`). The page stays
+scrollable underneath, so Safari's toolbar keeps its state. A screen fills
 the content column under a header band (`.page-header`) flush with its top and sides; it never sets
 its own outer padding.
 Sign-in, outside the shell, is one centred column that stops growing on a wide display.
@@ -83,9 +91,22 @@ bar, so closing the pane hides nothing that is filtering. Filters apply as they 
 from `md`, laid out by CSS grid areas. Not a `Grid` for desktop beside cards for the phone — two
 renderings of every row, drifting apart.
 
-**`components/Pager`** sits under every list, driven by `pager()` in `src/paging.ts`: the range and the
-total, previous and next, and from `sm` the first, last and current page with a neighbour each side.
-A phone gets "3 / 40" in place of the links. Paging scrolls the content column back to the top.
+**The toolbar is one row, pinned** — search, *Filters* and a compact previous/next, with the range
+beside them from `md` — so nothing needs a scroll back up, and it costs a phone one 44px row. Below
+`md` the range is a caption above the list that scrolls away. The order is set in the pane with the
+filters and shows as a chip when it is not the default: it changes rarely, and a second line of controls
+on every list is too much height to spend on it. `stickyBar()` in `src/stickyBar.ts`
+pins it beneath `--shell-top` and publishes its height as `--sticky-bar-height`, which headings in the
+list stick beneath. Below `md` it slides away while scrolling down and returns on the first scroll up,
+since a bar pinned for good takes a fifth of a phone's screen. With the filter pane open it is not
+pinned: the pane is too tall to hold on screen.
+
+**`components/Pager`** also sits under every list, driven by `pager()` in `src/paging.ts`: the range and
+the total, previous and next, and from `sm` the first, last and current page with a neighbour each side.
+A phone gets "3 / 40" in place of the links. Paging scrolls the page back to the top. In the bar the
+pager is compact — bare chevrons drawn at 32px, touched at 44 — and the line it sits on is small type
+without borders, so it reads as a caption under the search rather than a second toolbar. Not
+infinite scroll: it loses the reader's place and cannot reach page 40 without loading 39.
 
 **Only the latest request writes.** A controller numbers its requests and drops any answer that is not
 the newest, or a slow early answer lands over a later one.
@@ -212,6 +233,15 @@ simple belongs in CSS anyway.
 runs off the bottom of the screen and scrolls the page behind it. A window whose content changes height
 is centred by CSS instead — fixed, translated by half, capped at the viewport — so only its body
 scrolls.
+
+**Neither `overflow: hidden` nor a fixed body is a scroll lock on an iPhone.** `overflow: hidden` jumps
+the page to the top and Safari still scrolls it on a drag; a body fixed at its offset holds, but makes
+the document unscrollable, and Safari expands its collapsed toolbar in answer. Refuse the gestures
+instead.
+
+**A stuck element's `offsetTop` moves with it.** Asking whether the reader has scrolled past a sticky
+bar by comparing against its `offsetTop` is never true once it sticks; measure its resting position
+once, before it does.
 
 **A token used only from SCSS needs `@theme static`.** A plain `@theme` emits only the variables some
 utility references, so `var(--color-…)` in a partial resolves to nothing — a transparent background,
