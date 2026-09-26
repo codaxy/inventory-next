@@ -1,0 +1,356 @@
+// One audit entry: a dialog on a wide screen, the whole screen on a phone. Old against new per field,
+// in two columns from `sm`, stacked and labelled below it.
+
+// Centred by CSS, not by cx: cx places the window once, for the height it opens at, so a window that
+// then grows — unchanged fields shown — runs off the bottom and scrolls the page behind it. Fixed and
+// translated, it stays centred and capped at any height, and only its body scrolls.
+.cxb-window.entry-window {
+    position: fixed;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: min(760px, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    display: flex;
+    flex-direction: column;
+}
+
+// The header, the fields and the footer share one left edge, 1.25rem in; a value's text sits a further
+// .625rem in, inside its box, and every column label lines up with that text.
+.entry-window .cxe-window-header {
+    padding: 1rem 1.25rem 0.875rem;
+    border-bottom: 1px solid var(--color-line);
+}
+
+.entry-window .cxe-window-footer {
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid var(--color-line);
+}
+
+.entry-window .cxe-window-body.entry-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0;
+}
+
+// The whole screen on a phone; `!important` for the same inline styles as above.
+@media (max-width: 639.98px) {
+    .cxb-window.entry-window {
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100dvh !important;
+        max-height: none;
+        border: 0;
+        border-radius: 0;
+        transform: none !important;
+    }
+}
+
+.entry-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.entry-kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-ink-muted);
+}
+
+.entry-title {
+    color: var(--color-ink);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.5rem;
+    margin: 0.375rem 0 0;
+    font-size: 18px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.entry-number {
+    font-size: 14px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink-faint);
+}
+
+.entry-meta {
+    margin: 0.25rem 0 0;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--color-ink-muted);
+    overflow-wrap: anywhere;
+}
+
+// Pulled out by its own padding, so the glyph, not the button, meets the right edge.
+.cxb-button.cxm-hollow.entry-close {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 44px;
+    margin: -0.5rem -0.75rem 0 0;
+    padding: 0;
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    color: var(--color-ink-muted);
+
+    &:hover {
+        background: var(--color-hover);
+    }
+}
+
+.entry-fields-head {
+    display: none;
+}
+
+.entry-field {
+    display: grid;
+    gap: 0.375rem;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--color-line-soft);
+    font-size: 13.5px;
+}
+
+.entry-field-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-ink-soft);
+}
+
+// Every value is padded as if boxed, boxed or not, so text lines up down the window.
+.entry-before,
+.entry-after {
+    min-width: 0;
+    padding: 0.375rem 0.625rem;
+    border-radius: 6px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+}
+
+// An update's unchanged field shows once, quietly.
+.entry-field-update:not(.entry-field-changed) .entry-before {
+    color: var(--color-ink-muted);
+}
+
+// Before recedes and after reads at full strength, so the eye lands on the new value; within each,
+// the words that changed carry the colour.
+.entry-field-update.entry-field-changed {
+    .entry-before {
+        background: var(--color-danger-wash);
+        color: var(--color-ink-muted);
+    }
+
+    .entry-after {
+        background: var(--color-success-wash);
+        color: var(--color-ink);
+    }
+}
+
+// A value replaced whole — a date, a number, a key — has no words to mark: the old one is struck.
+// On the value's own text: on the box it would strike the phone's "Before" label as well.
+.entry-field-whole {
+    .entry-before span:not(.entry-value-empty, .entry-value-hint) {
+        text-decoration: line-through;
+        text-decoration-color: var(--color-danger-text);
+    }
+
+    .entry-after {
+        font-weight: 600;
+    }
+}
+
+.entry-mark-before {
+    border-radius: 3px;
+    background: var(--color-danger-mark);
+    color: var(--color-danger-text);
+    text-decoration: line-through;
+}
+
+.entry-mark-after {
+    border-radius: 3px;
+    background: var(--color-success-mark);
+    font-weight: 600;
+}
+
+.entry-value-empty {
+    color: var(--color-ink-faint);
+}
+
+.entry-value-hint {
+    display: block;
+    margin-top: 0.125rem;
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    white-space: normal;
+}
+
+// Stacked on a phone, each side says which it is.
+@media (max-width: 639.98px) {
+    .entry-field-update.entry-field-changed {
+        .entry-before::before,
+        .entry-after::before {
+            display: block;
+            margin-bottom: 0.125rem;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .entry-before::before {
+            content: "Before";
+            color: var(--color-danger-text);
+        }
+
+        .entry-after::before {
+            content: "After";
+            color: var(--color-success-text);
+        }
+    }
+}
+
+@media (min-width: 640px) {
+    .entry-field {
+        grid-template-columns: 9.5rem minmax(0, 1fr);
+        column-gap: 1rem;
+        align-items: start;
+    }
+
+    .entry-field-update {
+        grid-template-columns: 9.5rem minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    // An unchanged field spans both columns: there is one value, not two.
+    .entry-field-update:not(.entry-field-changed) .entry-before {
+        grid-column: 2 / -1;
+    }
+
+    // Level with the first line of a value, which its box pads down.
+    .entry-field-name {
+        padding-top: 0.4375rem;
+    }
+
+    .entry-fields-head {
+        display: grid;
+        grid-template-columns: 9.5rem minmax(0, 1fr) minmax(0, 1fr);
+        column-gap: 1rem;
+        padding: 0.5rem 1.25rem;
+        border-bottom: 1px solid var(--color-line);
+        background: var(--color-canvas);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+
+        .entry-col-before,
+        .entry-col-after {
+            padding-left: 0.625rem;
+        }
+
+        .entry-col-before {
+            grid-column: 2;
+            color: var(--color-danger-text);
+        }
+
+        .entry-col-after {
+            color: var(--color-success-text);
+        }
+    }
+}
+
+.entry-toggle {
+    padding: 0.25rem 1.25rem;
+    border-bottom: 1px solid var(--color-line-soft);
+}
+
+.entry-toggle-button {
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-primary-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.entry-related {
+    padding: 1rem 1.25rem 1.25rem;
+
+    h3 {
+        margin: 0 0 0.5rem;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--color-ink-muted);
+    }
+}
+
+.entry-related-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font: inherit;
+    font-size: 13.5px;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--color-primary-edge);
+        background: var(--color-hover);
+    }
+}
+
+.entry-related-text {
+    display: flex;
+    flex: 1;
+    gap: 0.375rem;
+    min-width: 0;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.entry-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+
+    .cxb-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    // A secondary action, not a link: it gets the edge the theme's hollow button leaves off.
+    .cxb-button.cxm-hollow {
+        border-color: var(--color-line-strong);
+        background: var(--color-surface);
+    }
+}

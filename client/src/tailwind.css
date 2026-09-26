@@ -39,8 +39,13 @@
 
     --color-danger: #c8322b;
     --color-danger-text: #c8322b; /* 5.3, 4.7 */
+    /* A status's `-text` on its `-wash` clears 4.5; `-mark` is the word that changed, under `ink`. */
+    --color-danger-wash: #fcefee; /* danger-text 4.7 */
+    --color-danger-mark: #f7d1ce;
     --color-success: #157a48;
     --color-success-text: #157a48; /* 5.4, 4.7 */
+    --color-success-wash: #eaf6ef; /* success-text 4.8 */
+    --color-success-mark: #c4e8d3;
     --color-warn: #c07d0a;
     --color-warn-text: #9a6200; /* 5.1, 4.5 */
     --color-warn-wash: #fdf6ec;

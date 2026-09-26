@@ -1,23 +1,34 @@
 import {
+    Add01Icon,
     AppStoreIcon,
+    ArrowLeft01Icon,
+    ArrowRight01Icon,
     ArrowUp01Icon,
     Briefcase01Icon,
     Building03Icon,
-    CheckmarkBadge01Icon,
+    Cancel01Icon,
     Chair01Icon,
+    CheckmarkBadge01Icon,
+    Clock01Icon,
     CloudIcon,
     CommandLineIcon,
     ComputerIcon,
     ConstructionIcon,
+    Delete02Icon,
     Factory01Icon,
+    FilterHorizontalIcon,
     HistoryIcon,
     InformationCircleIcon,
     Key01Icon,
     Location01Icon,
     Logout01Icon,
+    PencilEdit01Icon,
+    Search01Icon,
     ServerStack01Icon,
     Shapes01Icon,
     SoftwareIcon,
+    SortingDownIcon,
+    SortingUpIcon,
     Store01Icon,
     Tag01Icon,
     UserIcon,
@@ -33,7 +44,7 @@ export type IconData = readonly (readonly [string, Readonly<Record<string, strin
  * One name per use, not per glyph: two items sharing a shape still get their own key, so changing one
  * never silently changes the other.
  */
-export const icons = {
+const navIcons = {
     electronicDevices: ComputerIcon,
     electronicDeviceTypes: Shapes01Icon,
     electronicDeviceTags: Tag01Icon,
@@ -56,10 +67,27 @@ export const icons = {
     locations: Location01Icon,
     auditLog: HistoryIcon,
     serverLog: CommandLineIcon,
+} satisfies Record<string, IconData>;
+
+/** Everything that is not a menu item. */
+const uiIcons = {
     todo: ConstructionIcon,
     accountMenu: ArrowUp01Icon,
     signOut: Logout01Icon,
+    previous: ArrowLeft01Icon,
+    next: ArrowRight01Icon,
+    search: Search01Icon,
+    filters: FilterHorizontalIcon,
+    close: Cancel01Icon,
+    newestFirst: SortingDownIcon,
+    oldestFirst: SortingUpIcon,
+    recordHistory: Clock01Icon,
+    created: Add01Icon,
+    updated: PencilEdit01Icon,
+    deleted: Delete02Icon,
 } satisfies Record<string, IconData>;
 
+export const icons = { ...navIcons, ...uiIcons };
+
 export type IconName = keyof typeof icons;
-export type NavIconName = Exclude<IconName, "todo" | "accountMenu" | "signOut">;
+export type NavIconName = keyof typeof navIcons;

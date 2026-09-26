@@ -39,7 +39,7 @@ can both import it. A screen is a `createFunctionalComponent`; the root is a `<c
 `startHotAppLoop` takes configuration rather than a component.
 
 **Text goes in `text=` on a self-closing element** wherever nothing else is inside it.
-`src/api/*` is one module per resource, over `fetch` with `credentials: "same-origin"` — the session
+`src/api/*` is one module per resource, over `send` in `src/api/http.ts` — `fetch` with `credentials: "same-origin"` — the session
 is a cookie, so nothing attaches a token by hand.
 
 Routing is declarative and the first matching route wins, so order in the JSX is the routing table.
@@ -52,7 +52,8 @@ on every load.
 **`src/layout/navigation.ts` is both the menu and the routing table of the screens in it**: sections
 and items as the original's menu has them, flat, with no collapsing. `~/` redirects to the first item —
 there is no home screen, as in the original — and an unmatched URL shows a not-found page inside the
-shell. A screen not built yet routes to `TodoScreen`, which names the programme step that builds it.
+shell. `screens` in `routes/index.tsx` maps an item's href to its screen; an item without one routes to
+`TodoScreen`, which names the programme step that builds it.
 
 **Icons are HugeIcons' free set** (`@hugeicons/core-free-icons`, MIT), registered by name against cx's
 `Icon` in `src/layout/registerIcons.tsx`; a view binds `<Icon name=… />`. One name per use, not per glyph.
@@ -69,6 +70,37 @@ Sign-in, outside the shell, is one centred column that stops growing on a wide d
 
 Tap targets are at least 44px high wherever the layout is a phone's — the drawer's links included; the
 desktop sidebar keeps Pulse's denser rows. The page padding respects `env(safe-area-inset-bottom)`.
+
+## Lists
+
+**One search box, and every other filter in a pane it drops open.** The box is free text, run after a
+300ms pause; the *Filters* button beside it carries the active count and opens the pane beneath the bar,
+pushing the list down rather than covering it. Every active filter shows as a removable chip under the
+bar, so closing the pane hides nothing that is filtering. Filters apply as they change; the pane's
+*Done* only closes it.
+
+**The list is one markup at both widths**: a stacked card on a phone, a row of columns with a header
+from `md`, laid out by CSS grid areas. Not a `Grid` for desktop beside cards for the phone — two
+renderings of every row, drifting apart.
+
+**`components/Pager`** sits under every list, driven by `pager()` in `src/paging.ts`: the range and the
+total, previous and next, and from `sm` the first, last and current page with a neighbour each side.
+A phone gets "3 / 40" in place of the links. Paging scrolls the content column back to the top.
+
+**Only the latest request writes.** A controller numbers its requests and drops any answer that is not
+the newest, or a slow early answer lands over a later one.
+
+**An entry opens in a window, and on a phone the window is the whole screen.** Back closes it:
+`historyEntry()` gives the window an entry in the browser history at the same URL, and steps back over
+it when the window closes any other way. `dismissOnPopState` alone only closes the window — the Back
+that closed it has already left the screen.
+
+## Dates
+
+**British English for every date cx shows** — `Culture.setCulture("en-GB")` and weeks from Monday,
+installed with the date encoding by `installDateCulture` in `src/dates.ts`. A `DateField` stores
+`YYYY-MM-DD`, bound through `dateValue` in `src/bindings.ts`. A day filter becomes the viewer's own
+midnights when the query is built, the end one day on, because the server's `to` is exclusive.
 
 ## Theme
 
@@ -87,7 +119,8 @@ tells the two applications apart at a glance.
 writes one. Each text token clears AA (4.5:1) on both the card and the page; field and button borders
 clear 3:1 on the card. The house values for `ink-faint`, `line-strong` and `warn` fail that, so those values are
 darker here. **Text in a status colour uses its `-text` token**, which equals the fill where the fill
-passes and is darker where it does not: `warn` is 3.4:1 as text, `warn-text` 5.1:1.
+passes and is darker where it does not: `warn` is 3.4:1 as text, `warn-text` 5.1:1. A status's `-wash` is a
+background its `-text` clears 4.5:1 on; `-mark` highlights the words a change touched, under `ink`.
 
 **Two layers, in this order.** `src/theme.ts` maps CxJS's theme variables onto the tokens and is
 applied by `renderThemeVariables` at startup — colours, type and sizes of widgets belong there. The
@@ -174,6 +207,11 @@ sibling's (`~/furniture`, `~/furniture/types`) matches `equal` where the rest ma
 **A CxJS layout is an imported widget, not a string.** `layout={{ type: "vbox" }}` compiles, reaches
 the browser, and throws `Invalid widget type` at render — the screen is simply blank. Anything this
 simple belongs in CSS anyway.
+
+**cx's `center` places a window once, for the height it opens at.** A window that grows afterwards
+runs off the bottom of the screen and scrolls the page behind it. A window whose content changes height
+is centred by CSS instead — fixed, translated by half, capped at the viewport — so only its body
+scrolls.
 
 **A token used only from SCSS needs `@theme static`.** A plain `@theme` emits only the variables some
 utility references, so `var(--color-…)` in a partial resolves to nothing — a transparent background,

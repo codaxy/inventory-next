@@ -1,6 +1,7 @@
 import { Controller } from "cx/ui";
 
-import { ApiError, getAuthProviders, requestOneTimeCode, verifyOneTimeCode } from "../../api/auth";
+import { getAuthProviders, requestOneTimeCode, verifyOneTimeCode } from "../../api/auth";
+import { ApiError } from "../../api/http";
 import m from "./model";
 
 export default class extends Controller {

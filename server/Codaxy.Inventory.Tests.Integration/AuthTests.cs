@@ -143,6 +143,14 @@ public class AuthTests(InventoryApplication app) : IClassFixture<InventoryApplic
         Assert.Contains("text/html", response.Content.Headers.ContentType?.MediaType);
     }
 
+    [Fact]
+    public async Task An_unknown_api_path_is_not_found_rather_than_the_shell()
+    {
+        var response = await Client().GetAsync("/api/no-such-endpoint");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
     [Theory]
     [InlineData("/health/live")]
     [InlineData("/health/ready")]

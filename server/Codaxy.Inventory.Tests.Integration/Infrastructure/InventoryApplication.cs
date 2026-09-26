@@ -61,7 +61,7 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
         });
     }
 
-    public async Task InitializeAsync()
+    public virtual async Task InitializeAsync()
     {
         StubTheShell();
 

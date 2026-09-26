@@ -1,3 +1,4 @@
+using Codaxy.Inventory.App;
 using Codaxy.Inventory.Web.Auth;
 using Codaxy.Inventory.Web.Setup;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -29,8 +30,11 @@ app.UseAuthorization();
 app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = _ => false });
 app.MapHealthChecks("/health/ready");
 app.MapAuth();
+app.MapInventoryApi();
 
-// Every path the client routes to returns the shell; the API is under /api and answers for itself.
+// Every path the client routes to returns the shell. An unknown /api path is a 404, not the shell:
+// served the page, a fetch fails parsing HTML as JSON and says nothing about the missing route.
+app.MapFallback("/api/{**path}", () => Results.NotFound());
 app.MapFallbackToFile("index.html");
 
 app.Run();

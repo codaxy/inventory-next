@@ -11,6 +11,7 @@ import "./tailwind.css";
 import "./index.scss";
 import "./layout/registerIcons";
 
+import { installDateCulture } from "./dates";
 import $app from "./model";
 import Routes from "./routes";
 import { theme } from "./theme";
@@ -18,6 +19,7 @@ import { installWidgetDefaults } from "./widgetDefaults";
 
 renderThemeVariables(theme);
 installWidgetDefaults();
+installDateCulture();
 
 const store = new Store();
 

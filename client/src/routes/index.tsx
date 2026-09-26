@@ -5,9 +5,15 @@ import { TodoScreen } from "../components/TodoScreen";
 import { AppLayout } from "../layout";
 import { landing, navigation } from "../layout/navigation";
 import $app from "../model";
+import AuditLog from "./administration/audit-log";
 import Controller from "./Controller";
 import NotFound from "./not-found";
 import SignIn from "./sign-in";
+
+/** The menu items that have a screen; the rest route to a placeholder naming the step that builds them. */
+const screens: Record<string, any> = {
+    "~/administration/audit-log": AuditLog,
+};
 
 // The first matching route wins, so order is the routing table: signed in or not is the outermost
 // split, and everything below it can assume the answer.
@@ -32,15 +38,22 @@ export default (
                     <RedirectRoute route="~/" url={$app.url} redirect={landing} />
                     <RedirectRoute route="~/sign-in" url={$app.url} redirect={landing} />
 
-                    {/* Every menu item routes to a placeholder until its screen is built. */}
                     {navigation.flatMap((section) =>
-                        section.items.map((item) => (
-                            <cx>
-                                <Route route={item.href} url={$app.url}>
-                                    <TodoScreen title={item.title} step={section.step} />
-                                </Route>
-                            </cx>
-                        )),
+                        section.items.map((item) => {
+                            const Screen = screens[item.href];
+
+                            return (
+                                <cx>
+                                    <Route route={item.href} url={$app.url}>
+                                        {Screen ? (
+                                            <Screen />
+                                        ) : (
+                                            <TodoScreen title={item.title} step={section.step} />
+                                        )}
+                                    </Route>
+                                </cx>
+                            );
+                        }),
                     )}
 
                     <NotFound />

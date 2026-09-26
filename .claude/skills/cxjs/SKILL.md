@@ -91,6 +91,9 @@ text={m.things.title}                              // no bind() wrapper
 `strictEqual`. Reach for `expr(...accessors, fn)` only when none fits, and **lift a compound condition
 out of the JSX and name it** (`const noProvider = expr(…)`), as the sign-in screen does.
 
+**`visible` and `text` do not take a nullable accessor**: `StringProp` and `BooleanProp` admit no
+`null`. Bind `visible={hasValue(m.x)}`, and type a value shown as text `x?: string` — absent, not `null`.
+
 **A helper takes an accessor, not a computed value.** `falsy(anyProvider)` where `anyProvider` is an
 `expr(…)` is a type error; write the inverse as its own `expr`.
 
@@ -195,7 +198,7 @@ either. `null` is the right initialiser only for a non-text draft empty — an i
 
 **`NumberField` and `DateField` need an adapter for that `null`**: `NumberProp` and `Prop<string|Date>`
 admit no empty case although the runtime handles it. `numberValue(m.draft.amount)` from
-`src/bindings.ts`; add a `dateValue` beside it with the first `DateField`.
+`src/bindings.ts`, and `dateValue(m.draft.day)` for a `DateField`.
 
 ### Every `TextField` trims
 
@@ -207,9 +210,9 @@ prose keeps its whitespace.
 ### Dates
 
 **Never put a calendar date through `toISOString()`.** cx's default date encoding is `toISOString()`
-of a local midnight, so picking 7 August east of UTC stores 6 August 22:00Z. With the first
-`DateField`, install a `YYYY-MM-DD` encoder at startup (`Culture.setDefaultDateEncoding`), in a
-`src/dates.ts`; the server side is `DateOnly` — see `persistence.md`.
+of a local midnight, so picking 7 August east of UTC stores 6 August 22:00Z. `installDateCulture` in
+`src/dates.ts` sets a `YYYY-MM-DD` encoder at startup, with `en-GB` and weeks from Monday; the server
+side is `DateOnly` — see `persistence.md`.
 
 ### Labels and layout
 
@@ -270,6 +273,12 @@ export const showNewThingWindow = createHotPromiseWindowFactoryWithProps<Props, 
 );
 ```
 
+- **Back must close the window, not leave the screen.** `dismissOnPopState` only closes it on a
+  navigation that has already happened. Take `historyEntry()` from `src/historyEntry.ts` when the
+  factory runs and resolve through `release` in `onDestroy`, as the audit log's entry window does.
+- **A window that can grow is centred by CSS**, not `center`, which positions it once: `position:
+  fixed`, `top`/`left: 50%` and `translate(-50%, -50%)`, all `!important` against cx's inline styles,
+  with a `max-height` and a scrolling body — see `_entry-window.scss`.
 - **Never pass the store — pass values.** `await showNewThingWindow({ initial })`. With no store the
   factory creates a fresh one per open, which is the only thing that makes the window's state die with
   it. Hand it `this.store` and the `w` branch outlives the dialog; `store.init` is a no-op on a path

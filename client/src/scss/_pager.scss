@@ -1,0 +1,58 @@
+// The pager under a list: where the reader is on the left, the steps on the right.
+.pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin-top: 1rem;
+}
+
+.pager-summary {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-ink-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.pager-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.pager-position {
+    min-width: 4.5rem;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+// Square 44px targets; `height` is the theme's, so only the width is set.
+.cxb-button.cxm-hollow.pager-step,
+.cxb-button.cxm-hollow.pager-link {
+    min-width: 44px;
+    justify-content: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.cxb-button.cxm-hollow.pager-step {
+    display: inline-grid;
+    place-items: center;
+}
+
+.cxb-button.cxm-hollow.pager-link-current,
+.cxb-button.cxm-hollow.pager-link-current:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.pager-gap {
+    min-width: 1.5rem;
+    text-align: center;
+    color: var(--color-ink-faint);
+}

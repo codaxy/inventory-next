@@ -96,6 +96,13 @@ the log cannot log itself.
 
 Rows written in one `SaveChanges` share a `TransactionId`.
 
+**Reading it, what changed is computed, not stored**: both documents hold every property, so an update's
+changes are the properties whose JSON differs. A foreign key's value is named through the EF model —
+the key's target entity and the first of its `Name`, `Text`, `Level`, `Status`, `Substatus` or
+`Description` — so every logged entity is covered without a map per entity. An asset's subtype row has
+no name of its own and shares the asset's id; it is labelled from the asset, or from the asset's last
+logged values once the asset is deleted.
+
 ## Traps
 
 **An explicit `ToTable` or `HasColumnName` overrides the convention silently**, leaving one table in

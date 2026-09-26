@@ -79,7 +79,36 @@ What an item's *code* reaches into is review's to hold; nothing enforces it.
 folder takes the mechanical plural its `DbSet` already uses: `Furnitures/`, `Informations/`,
 `Infrastructure/Softwares/`, `Administration/AuditLogs/`.
 
+## Lists
+
+**Every list pages, filters and sorts in the database**, with one shape. `page` counts from 1 and
+`pageSize` defaults to 25, at most 100, both in the query; the answer is `{ items, total }`, the total
+counted over the filtered rows. A page below 1 or a size outside 1–100 is a 400 validation problem; a
+page past the last is empty with the real total, since the list can shrink under its reader.
+`Shared/Paging` holds the convention: `Paging.Read` validates, `ToPageAsync` counts and then reads the
+window.
+
+**Offset paging with a count**, not keyset: a screen shows "page 3 of 40" and jumps to a page, which
+keyset cannot, and at this data's size the count is free. Not a page of `pageSize + 1` rows either — it
+knows only whether a next page exists, so the pager can say neither where the reader is nor how far is
+left.
+
+**The order ends in a unique key** — `ThenBy(a => a.Id)` after whatever the reader sorted by. Rows
+sharing a sort value otherwise come back in any order, and one appears on two pages or on none.
+
+**Free text is `q`**: split on whitespace, every term must match, each against any of the searched
+columns, by `ILIKE` with `%`, `_` and `\` escaped so they match themselves. Other filters are named
+parameters, exact unless their name says otherwise, ANDed. A range is `from` inclusive and `to`
+exclusive, so adjacent ranges neither overlap nor leave a gap.
+
+**The menu's endpoints are one `/api` group that requires a session**, mapped by `MapInventoryApi`
+beside `MapAuth`, and each item a group beneath it named after its URL.
+
 ## Traps
+
+**An unknown `/api` path must be a 404.** The shell's fallback answers every unmatched path with the
+page and a 200, so without the `/api` fallback before it a missing endpoint reaches the client as HTML,
+which it fails to parse and reports as a generic failure.
 
 **Moving an entity changes its namespace, and two things have to follow.** The table-renaming loop in
 `InventoryContext` walks entities by class name — walked in EF's full-name order, a move renames
