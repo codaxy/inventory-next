@@ -184,7 +184,7 @@ prompt for a reload or a closed tab. Browser Back leaves without asking: cx cann
 browser has already made. A save or a delete releases the guard before it navigates.
 
 **A list of records** — `_records.scss` — is a card per row on a phone and columns from `md`, a header
-that sorts on a tap (`sortHeader`), a row that opens its record, and a *New* button in the toolbar where a screen's
+on `raised` — the page's own tint dissolves the card's top edge — that sorts on a tap (`sortHeader`), a row that opens its record, and a *New* button in the toolbar where a screen's
 filters would be. A list cut short — the first three types on a tag, the first fields of an audit
 change — ends in a muted `+N` pill (`record-more`), so the count never reads as another name. **An empty cell is "—"**, far lighter than a
 value (`record-blank`, `ink-ghost` against values in `ink-soft`: a thin dash is judged by weight, not
