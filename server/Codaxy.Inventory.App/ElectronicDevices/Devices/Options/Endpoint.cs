@@ -4,18 +4,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codaxy.Inventory.App.ElectronicDevices.Devices.Options;
 
-/// <summary>The pickers the device list filters by.</summary>
+/// <summary>The pickers the device list filters by and its form picks from, in one call.</summary>
 public static class Endpoint
 {
     public static void Map(RouteGroupBuilder devices) => devices.MapGet("/options", Handle);
 
+    /// <param name="TypeTags">Each type's tags, by the type's id: what a device of it shows.</param>
     public sealed record Response(
         IReadOnlyList<AssetOption> Types,
         IReadOnlyList<AssetOption> Tags,
         IReadOnlyList<AssetOption> People,
         IReadOnlyList<AssetOption> Vendors,
         IReadOnlyList<AssetOption> Locations,
-        IReadOnlyList<AssetOption> Manufacturers
+        IReadOnlyList<AssetOption> Manufacturers,
+        IReadOnlyList<WeightedOption> Confidentialities,
+        IReadOnlyList<WeightedOption> Integrities,
+        IReadOnlyList<WeightedOption> Availabilities,
+        IReadOnlyList<AssetOption> BusinessEntities,
+        IReadOnlyDictionary<Guid, List<string>> TypeTags
     );
 
     private static async Task<IResult> Handle(
@@ -43,7 +49,24 @@ public static class Endpoint
                     .Manufacturers.AsNoTracking()
                     .OrderBy(m => m.Name)
                     .Select(m => new AssetOption(m.Id, m.Name))
-                    .ToListAsync(cancellationToken)
+                    .ToListAsync(cancellationToken),
+                asset.Confidentialities,
+                asset.Integrities,
+                asset.Availabilities,
+                asset.BusinessEntities,
+                (
+                    await context
+                        .ElectronicDeviceTypes.AsNoTracking()
+                        .Select(t => new
+                        {
+                            t.Id,
+                            Tags = t
+                                .Tags.OrderBy(x => x.ElectronicDeviceTag.Name)
+                                .Select(x => x.ElectronicDeviceTag.Name)
+                                .ToList(),
+                        })
+                        .ToListAsync(cancellationToken)
+                ).ToDictionary(t => t.Id, t => t.Tags)
             )
         );
     }

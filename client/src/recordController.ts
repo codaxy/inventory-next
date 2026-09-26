@@ -5,7 +5,7 @@ import { ApiError, fieldErrors } from "./api/http";
 import { confirm } from "./components/confirm";
 import type { HoldingSection } from "./holdings";
 import { guardLeaving } from "./leaveGuard";
-import { listReturn } from "./listAddress";
+import { listReturn, queryOf } from "./listAddress";
 import $app from "./model";
 
 /** What a record page's markup binds; `RecordController` keeps it. */
@@ -29,6 +29,12 @@ export interface RecordState<D> {
     errors: Record<string, string | undefined>;
     valid: boolean;
     visited: boolean;
+    /** "#100893" beside the title, for a record with a number. */
+    number?: string;
+    /** What the server said it held when loaded, echoed on save: an edit made meanwhile is refused. */
+    lastModified?: string;
+    /** The save was refused because someone saved first; Reload shows theirs. */
+    stale?: boolean;
 }
 
 export interface Attached {
@@ -56,7 +62,8 @@ export abstract class RecordController<D extends object, Detail, Form> extends C
     protected abstract update(id: string, form: Form): Promise<{ id: string }>;
     protected abstract destroy(id: string): Promise<void>;
     protected abstract toDraft(detail: Detail): D;
-    protected abstract toForm(draft: D): Form;
+    /** What the server is sent; `lastModified` where the record is checked for an edit made meanwhile. */
+    protected abstract toForm(draft: D, lastModified?: string): Form;
     protected abstract titleOf(detail: Detail): string;
 
     /** What is attached, for the page and for a delete. */
@@ -83,6 +90,18 @@ export abstract class RecordController<D extends object, Detail, Form> extends C
 
     /** The draft after the record loads: the options it depends on, say. */
     protected loaded(_detail: Detail) {}
+
+    /** A record checked for an edit made meanwhile names the time it was last saved. */
+    protected lastModifiedOf?(detail: Detail): string;
+
+    /** A record with an inventory number shows it beside its title. */
+    protected numberOf?(detail: Detail): number | null;
+
+    /**
+     * A record that can be duplicated: the draft `new?from=:id` opens with — the source's fields but
+     * those a copy must not share.
+     */
+    protected duplicate?(detail: Detail): D;
 
     /** The form as loaded; what "unsaved" is measured against. */
     private saved = "";
@@ -116,16 +135,35 @@ export abstract class RecordController<D extends object, Detail, Form> extends C
         this.store.set(r.sections, []);
         this.store.delete(r.none);
         this.store.delete(r.holds);
+        this.store.delete(r.number);
+        this.store.delete(r.lastModified);
+        this.store.set(r.stale, false);
         this.fill(this.emptyDraft(), id ? "" : this.newTitle);
 
         this.release?.();
         this.release = viewing ? undefined : guardLeaving(() => this.dirty());
+
+        // From the store, not `window.location`: cx moves the browser's address only once the page has rendered.
+        const from = !id && this.duplicate ? queryOf(this.store.get($app.url)).get("from") : null;
+        if (from) {
+            this.store.set(r.loading, true);
+            this.load(from)
+                .then((detail) => {
+                    if (this.store.get(r.id) !== null) return;
+                    this.fill(this.duplicate!(detail), this.newTitle);
+                })
+                .catch(() => this.store.set(r.error, `The ${this.noun} to copy could not be loaded.`))
+                .finally(() => this.store.set(r.loading, false));
+        }
 
         if (id)
             this.load(id)
                 .then((detail) => {
                     if (this.store.get(r.id) !== id) return;
                     this.fill(this.toDraft(detail), this.titleOf(detail));
+                    const number = this.numberOf?.(detail);
+                    if (number) this.store.set(r.number, `#${number}`);
+                    if (this.lastModifiedOf) this.store.set(r.lastModified, this.lastModifiedOf(detail));
                     const attached = this.attached(detail);
                     this.store.set(r.sections, attached.sections);
                     this.store.set(r.none, attached.none);
@@ -163,20 +201,46 @@ export abstract class RecordController<D extends object, Detail, Form> extends C
         return JSON.stringify(this.toForm(this.store.get(this.r.draft))) !== this.saved;
     }
 
-    async save() {
+    /** Saved: an edit returns to its view, a new record to the list. */
+    save() {
+        return this.commit((saved, created) =>
+            created ? listReturn(this.path) : `${this.path}/${saved.id}`,
+        );
+    }
+
+    /** A new record saved, and the next one opened like it — a batch bought together, entered one by one. */
+    saveAndAnother() {
+        return this.commit((saved) => `${this.path}/new?from=${saved.id}`);
+    }
+
+    /** After a refused save: the record as it is now, the reader's edits discarded. */
+    reload() {
+        this.release?.();
+        this.release = undefined;
+        this.open();
+    }
+
+    private async commit(next: (saved: { id: string }, created: boolean) => string) {
         const r = this.r;
         if (!this.store.get(r.valid)) return this.store.set(r.visited, true);
 
         const id = this.store.get(r.id);
         this.store.set(r.saving, true);
         this.store.delete(r.error);
+        this.store.set(r.stale, false);
 
         try {
-            const form = this.toForm(this.store.get(r.draft));
+            const form = this.toForm(this.store.get(r.draft), this.store.get(r.lastModified));
             const saved = await (id ? this.update(id, form) : this.create(form));
-            this.leave(id ? `${this.path}/${saved.id}` : listReturn(this.path));
+            this.leave(next(saved, !id));
         } catch (error) {
-            if (error instanceof ApiError && Object.keys(error.errors).length > 0)
+            if (error instanceof ApiError && error.status === 409 && id) {
+                this.store.set(
+                    r.error,
+                    `Someone saved this ${this.noun} since you opened it. Reload to see their changes; yours are not saved.`,
+                );
+                this.store.set(r.stale, true);
+            } else if (error instanceof ApiError && Object.keys(error.errors).length > 0)
                 this.store.set(
                     r.errors,
                     Object.fromEntries(

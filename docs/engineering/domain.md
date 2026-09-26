@@ -31,6 +31,11 @@ kind of thing — `Mobile`, `HasData` — and the link table is the whole of the
 is offered when an activation is assigned to a device. **A type a device or a piece of furniture uses
 is not deleted** — the foreign key does not cascade — while a tag goes with its links.
 
+**A device with seats activated on it or information kept on it is not deleted**; its maintenance
+contracts go with it, in the same save — they restrict the asset, so they are removed first there,
+never from the browser in a request of their own. A copy of a device leaves out what no two devices
+share: the serial number and the warranty's number and date.
+
 The asset type is found by its seeded **name** when an asset is created — "Electronic Device",
 "Furniture and fixtures", "Licenses" — so those names are part of the contract, not free text.
 

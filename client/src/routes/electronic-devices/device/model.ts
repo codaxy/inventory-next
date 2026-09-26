@@ -1,12 +1,20 @@
 import { createModel } from "cx/ui";
 
 import type { Option } from "../../../api/assets";
-import type { DeviceDetail } from "../../../api/electronicDevices";
-import { type AssetDraft, assetParts, toDraftOf } from "../../../assets";
-import { type HoldingSection, informationKind, toSections } from "../../../holdings";
+import type { DeviceDetail, DeviceForm, DeviceOptions } from "../../../api/electronicDevices";
+import {
+    type AssetDraft,
+    assetParts,
+    emptyAssetOptions,
+    text,
+    toAssetForm,
+    toDraftOf,
+} from "../../../assets";
+import { informationKind, joinAll, plural, toSections } from "../../../holdings";
 import { formatDate } from "../../../licensing";
+import type { RecordState } from "../../../recordController";
 
-/** A device as its read-only page binds it: the asset's fields and its own, each pick as id and text. */
+/** A device as its form binds it: the asset's fields, then its own, each pick as id and text. */
 export interface DeviceDraft extends AssetDraft {
     typeId?: string | null;
     typeText?: string;
@@ -20,20 +28,14 @@ export interface DeviceDraft extends AssetDraft {
     warrantyExpirationDate?: string | null;
 }
 
-export interface DeviceState {
-    id: string;
-    /** Always: the page is read-only until editing lands. */
-    viewing: boolean;
-    title: string;
-    number?: string;
-    draft: DeviceDraft;
+export interface DeviceState extends RecordState<DeviceDraft> {
+    options: DeviceOptions;
+    /** Computed from the three weights as the server will; "—" until all three are chosen. */
     importance: string;
+    /** The chosen type's tags, as chips. */
     tags: Option[];
-    sections: HoldingSection[];
-    none?: string;
-    loading: boolean;
-    error?: string;
-    errors: Record<string, string | undefined>;
+    /** How many maintenance contracts go with it when it is deleted. */
+    contracts: number;
 }
 
 export interface Model {
@@ -43,6 +45,16 @@ export interface Model {
 }
 
 export default createModel<Model>();
+
+export const emptyOptions: DeviceOptions = {
+    ...emptyAssetOptions,
+    types: [],
+    tags: [],
+    manufacturers: [],
+    typeTags: {},
+};
+
+export const blankDraft = (): DeviceDraft => ({ incomplete: false });
 
 export const toDraft = (d: DeviceDetail): DeviceDraft => {
     const asset = assetParts(d);
@@ -60,11 +72,32 @@ export const toDraft = (d: DeviceDetail): DeviceDraft => {
     );
 };
 
+/** A copy: every field but what no two devices share — the serial number and the warranty's. */
+export const toCopy = (d: DeviceDetail): DeviceDraft => {
+    const { serialNumber: _, warrantyNumber: __, warrantyExpirationDate: ___, ...copy } = toDraft(d);
+    return copy;
+};
+
+export const toForm = (d: DeviceDraft, lastModified?: string): DeviceForm => ({
+    ...toAssetForm(d, lastModified),
+    typeId: d.typeId ?? null,
+    manufacturerId: d.manufacturerId ?? null,
+    manufacturingDate: d.manufacturingDate ?? null,
+    modelName: text(d.modelName),
+    modelCode: text(d.modelCode),
+    serialNumber: text(d.serialNumber),
+    warrantyNumber: text(d.warrantyNumber),
+    warrantyExpirationDate: d.warrantyExpirationDate ?? null,
+});
+
 const joined = (...parts: (string | null | undefined)[]) => parts.filter(Boolean).join(" · ") || undefined;
 
-/** Its maintenance contracts, the seats activated on it and the information kept on it. */
-export const toAttached = (d: DeviceDetail) =>
-    toSections(
+/**
+ * Its maintenance contracts, the seats activated on it and the information kept on it. What keeps it
+ * from being deleted is only the seats and the information: its contracts go with it.
+ */
+export function toAttached(d: DeviceDetail) {
+    const attached = toSections(
         [
             {
                 key: "contracts",
@@ -108,3 +141,11 @@ export const toAttached = (d: DeviceDetail) =>
         "Nothing is attached to it.",
         (kinds) => `No ${kinds} on it.`,
     );
+    const held = [
+        ...(d.seats.total ? [plural(d.seats.total, "seat", "seats")] : []),
+        ...(d.information.total
+            ? [plural(d.information.total, "piece of information", "pieces of information")]
+            : []),
+    ];
+    return { ...attached, holds: held.length ? joinAll(held, "and") : undefined };
+}

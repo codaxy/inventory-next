@@ -212,6 +212,7 @@ a.editor-chip:hover {
     bottom: 0;
     z-index: 5;
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
     gap: 0.5rem;
     margin: 1rem -1rem -1rem;
@@ -561,5 +562,14 @@ a.volume-row.volume-link {
     // The form's rule gives every field its line's width; a value read in view mode takes its own.
     .editor-grid & > .cxs-view-mode {
         width: auto;
+    }
+}
+
+// "Save and replicate" does not fit beside Cancel and Save on a phone: there it takes a row
+// of its own above them, Save staying last and at hand.
+@media (max-width: 639.98px) {
+    .cxb-button.editor-another {
+        order: -1;
+        flex-basis: 100%;
     }
 }

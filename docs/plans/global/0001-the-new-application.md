@@ -35,7 +35,11 @@ wrong.
    schema-match tests, and a deployable image. Every later step copies its shape, so it is worth
    getting slowly.
 2. **Electronic devices.** The largest list and the richest editor: if paging, filtering and the
-   phone layout survive this, they survive everything.
+   phone layout survive this, they survive everything. Amended: in three parts, each shipped on its own —
+   ~~the read-only list and page~~; editing — create, edit, duplicate, delete, a stale save refused,
+   "Save and replicate" for a batch; and last, **still to do**, a device's maintenance
+   contracts edited on its page, saved with the device in one request. Until then a device shows its
+   contracts read-only — there are none in the data.
 3. ~~**Licenses, volumes and activations.**~~ The only area with behaviour rather than shape — seat
    counts, activation and its reversal, subscription expiry.
 4. ~~**Furniture, the infrastructure — virtual machines, cloud subscriptions, software — and the remaining asset

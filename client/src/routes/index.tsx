@@ -133,6 +133,9 @@ export default (
                         <TypeEditor />
                     </Route>
                     {/* After the types' and tags', which `:id` would otherwise take. */}
+                    <Route route="~/electronic-devices/:id/edit" url={$app.url}>
+                        <ElectronicDevice />
+                    </Route>
                     <Route route="~/electronic-devices/:id" url={$app.url}>
                         <ElectronicDevice />
                     </Route>

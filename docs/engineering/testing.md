@@ -37,6 +37,11 @@ PostgreSQL through Docker and drives the host over HTTP.
 log through `UseScratchServerLog()`. The log's default is `logs` under the content root, which is the
 source tree: a test host left on it writes into the developer's own log, beside a running `dotnet run`.
 
+**A fixture another extends keeps its ids per instance, not static.** Two fixtures run in parallel,
+each against its own database; a static field set in `InitializeAsync` is overwritten by whichever
+starts last, and the other's tests then read ids from the wrong database — passing or failing by
+the order they happened to start in.
+
 ## Formatting
 
 CSharpier formats the server and Prettier the client, both pinned and both checked in CI, so

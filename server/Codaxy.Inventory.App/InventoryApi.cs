@@ -148,6 +148,9 @@ public static class InventoryApi
         ElectronicDevices.Devices.Options.Endpoint.Map(devices);
         ElectronicDevices.Devices.Export.Endpoint.Map(devices);
         ElectronicDevices.Devices.Get.Endpoint.Map(devices);
+        ElectronicDevices.Devices.Create.Endpoint.Map(devices);
+        ElectronicDevices.Devices.Update.Endpoint.Map(devices);
+        ElectronicDevices.Devices.Delete.Endpoint.Map(devices);
 
         var clients = api.MapGroup("/company/clients");
 

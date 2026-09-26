@@ -1,6 +1,6 @@
 import type { AccessorChain } from "cx/data";
 import { createFunctionalComponent, expr, falsy, hasValue, isNonEmpty } from "cx/ui";
-import { Button, DateField, Icon, Link, LookupField, Repeater, TextField } from "cx/widgets";
+import { Button, DateField, Icon, Link, LinkButton, LookupField, Repeater, TextField } from "cx/widgets";
 
 import { dateValue } from "../../bindings";
 import { Pager } from "../../components/Pager";
@@ -51,7 +51,7 @@ const optional = (value: AccessorChain<string | undefined>) => (
     </cx>
 );
 
-/** Electronic devices: most recently changed first. Read-only until editing lands: no New yet. */
+/** Electronic devices: most recently changed first. */
 export default createFunctionalComponent(() => {
     const onBarRef = stickyBar();
 
@@ -82,6 +82,11 @@ export default createFunctionalComponent(() => {
                             <span class="hidden sm:inline" text="Filters" />
                             <span class="list-count" visible={hasChips} text={chipCount} />
                         </Button>
+                        <LinkButton mod="primary" class="list-new" href="~/electronic-devices/new">
+                            <Icon name="created" class="size-4" />
+                            <span class="hidden sm:inline" text="New device" />
+                            <span class="sr-only sm:hidden" text="New device" />
+                        </LinkButton>
                     </div>
 
                     <div id="device-filters" class="list-pane" visible={s.filtersOpen}>
@@ -217,7 +222,7 @@ export default createFunctionalComponent(() => {
                     <p
                         class="list-empty-text"
                         visible={falsy(s.idSearch)}
-                        text="Try fewer words or filters."
+                        text="Try fewer words or filters, or add the device."
                     />
                     <Button mod="hollow" text="Clear search and filters" onClick="clearAll" />
                 </div>

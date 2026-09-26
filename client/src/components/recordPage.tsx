@@ -22,6 +22,10 @@ interface RecordPage {
     cards?: any;
     /** Actions behind the ⋮ before Delete. */
     more?: MoreAction[];
+    /** Duplicate behind the ⋮: `new?from=:id`, which the controller opens as a copy. */
+    duplicate?: boolean;
+    /** "Save and replicate" beside Save on a new record: a batch entered one by one. */
+    another?: boolean;
 }
 
 /**
@@ -38,6 +42,18 @@ export function recordPage(o: RecordPage) {
                 text="Cancel"
                 href={expr(r.id, (id) => (id ? `${o.path}/${id}` : listReturn(o.path)))}
             />
+            {o.another ? (
+                <cx>
+                    <Button
+                        mod="hollow"
+                        class="editor-another"
+                        visible={expr(r.id, (id) => !id)}
+                        text="Save and replicate"
+                        onClick="saveAndAnother"
+                        disabled={truthy(r.saving)}
+                    />
+                </cx>
+            ) : null}
             <Button mod="primary" text="Save" onClick="save" disabled={truthy(r.saving)} />
         </cx>
     );
@@ -56,7 +72,10 @@ export function recordPage(o: RecordPage) {
                     <span text={o.back} />
                 </Link>
                 <div class="editor-heading">
-                    <h1 class="page-title" text={r.title} />
+                    <h1 class="page-title">
+                        <span text={r.title} />
+                        <span class="page-title-note" visible={hasValue(r.number)} text={r.number} />
+                    </h1>
                     <div class="editor-heading-actions" visible={r.viewing}>
                         <LinkButton
                             mod="primary"
@@ -67,6 +86,15 @@ export function recordPage(o: RecordPage) {
                             <span class="hidden sm:inline" text="Edit" />
                         </LinkButton>
                         {moreActions([
+                            ...(o.duplicate
+                                ? [
+                                      {
+                                          text: "Duplicate",
+                                          icon: "duplicate",
+                                          href: expr(r.id, (id) => `${o.path}/new?from=${id}`),
+                                      } satisfies MoreAction,
+                                  ]
+                                : []),
                             ...(o.more ?? []),
                             { text: "Delete", icon: "delete", onClick: "remove", danger: true },
                         ])}
@@ -77,6 +105,7 @@ export function recordPage(o: RecordPage) {
             <div class="editor">
                 <div class="editor-alert" visible={hasValue(r.error)}>
                     <span text={r.error} />
+                    <Button mod="hollow" text="Reload" onClick="reload" visible={truthy(r.stale)} />
                 </div>
 
                 <ValidationGroup valid={r.valid} visited={r.visited} viewMode={r.viewing}>

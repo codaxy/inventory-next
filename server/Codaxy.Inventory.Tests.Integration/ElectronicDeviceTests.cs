@@ -26,13 +26,13 @@ using Options = App.ElectronicDevices.Devices.Options.Endpoint.Response;
 /// </summary>
 public class ElectronicDeviceApplication : InventoryApplication
 {
-    public static Guid Laptop;
-    public static Guid Monitor;
+    public Guid Laptop { get; private set; }
+    public Guid Monitor { get; private set; }
     public static readonly Guid LaptopType = Guid.CreateVersion7();
     public static readonly Guid HasData = Guid.CreateVersion7();
     public static readonly Guid Lenovo = Guid.CreateVersion7();
     public static readonly Guid Hq = Guid.CreateVersion7();
-    public static Seed.Basics Basics = null!;
+    public Seed.Basics Basics { get; private set; } = null!;
 
     public override async Task InitializeAsync()
     {
@@ -178,9 +178,7 @@ public class ElectronicDeviceTests(ElectronicDeviceApplication app)
     public async Task A_device_s_detail_carries_every_field_its_type_s_tags_contracts_seats_and_information()
     {
         var laptop = (
-            await (await Client()).GetFromJsonAsync<DeviceDetail>(
-                $"{Url}/{ElectronicDeviceApplication.Laptop}"
-            )
+            await (await Client()).GetFromJsonAsync<DeviceDetail>($"{Url}/{app.Laptop}")
         )!;
 
         Assert.Equal(
@@ -212,9 +210,7 @@ public class ElectronicDeviceTests(ElectronicDeviceApplication app)
         Assert.Equal("Laptop runbook", laptop.Information.Items.Single().Name);
 
         var monitor = (
-            await (await Client()).GetFromJsonAsync<DeviceDetail>(
-                $"{Url}/{ElectronicDeviceApplication.Monitor}"
-            )
+            await (await Client()).GetFromJsonAsync<DeviceDetail>($"{Url}/{app.Monitor}")
         )!;
         Assert.Empty(monitor.Contracts);
         Assert.Equal((0, 0), (monitor.Seats.Total, monitor.Information.Total));
@@ -234,15 +230,12 @@ public class ElectronicDeviceTests(ElectronicDeviceApplication app)
     [InlineData("q=developer")]
     [InlineData("q=%23800001")]
     public async Task Searches_serial_model_description_and_the_number_as_shown(string query) =>
-        Assert.Equal(
-            ElectronicDeviceApplication.Laptop,
-            Assert.Single((await ListAsync(query)).Items).Id
-        );
+        Assert.Equal(app.Laptop, Assert.Single((await ListAsync(query)).Items).Id);
 
     [Fact]
     public async Task Filters_by_every_picker_the_list_offers()
     {
-        var laptop = ElectronicDeviceApplication.Laptop;
+        var laptop = app.Laptop;
         foreach (
             var query in new[]
             {
@@ -257,18 +250,9 @@ public class ElectronicDeviceTests(ElectronicDeviceApplication app)
         )
             Assert.Equal(laptop, Assert.Single((await ListAsync(query)).Items).Id);
 
-        Assert.Equal(
-            2,
-            (await ListAsync($"personId={ElectronicDeviceApplication.Basics.Person}")).Total
-        );
-        Assert.Equal(
-            2,
-            (await ListAsync($"vendorId={ElectronicDeviceApplication.Basics.Vendor}")).Total
-        );
-        Assert.Equal(
-            ElectronicDeviceApplication.Monitor,
-            Assert.Single((await ListAsync("incomplete=false")).Items).Id
-        );
+        Assert.Equal(2, (await ListAsync($"personId={app.Basics.Person}")).Total);
+        Assert.Equal(2, (await ListAsync($"vendorId={app.Basics.Vendor}")).Total);
+        Assert.Equal(app.Monitor, Assert.Single((await ListAsync("incomplete=false")).Items).Id);
     }
 
     [Fact]

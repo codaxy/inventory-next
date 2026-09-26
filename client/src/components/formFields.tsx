@@ -210,38 +210,43 @@ export function formFields(state: FormState, prefix: string) {
         </cx>
     );
 
+    /** The asset's own fields, for a page whose first card holds them. */
+    const basicFields = () => (
+        <cx>
+            {text("Name", "name", 300, { required: true, wide: true })}
+            {pick("Vendor", "vendor", "vendors", {
+                required: true,
+                href: (id) => `~/company/vendors/${id}`,
+            })}
+            {text("Invoice number", "invoiceNumber", 200)}
+            {money("Purchase value (BAM, without VAT)", "purchaseValue", {
+                required: true,
+                name: "Purchase value",
+            })}
+            {date("Purchase date", "purchaseDate", { required: true })}
+            {pick("Assignee", "person", "people", {
+                required: true,
+                href: (id) => `~/company/people/${id}`,
+            })}
+            {flag("Record", "incomplete", "Marked incomplete", "Complete")}
+            {pick("Confidentiality", "confidentiality", "confidentialities")}
+            {pick("Integrity", "integrity", "integrities")}
+            {pick("Availability", "availability", "availabilities")}
+            <div>
+                {label("Importance")}
+                <div class="editor-value" text={state.importance} />
+                <div class="editor-hint" visible={editing} text="From the three above." />
+            </div>
+            {prose("Description", "description", 1000)}
+        </cx>
+    );
+
     /** The asset's own fields, the first section of every asset's page. */
     const basicInformation = () => (
         <cx>
             <section class="editor-section">
                 <h2 class="editor-section-title" text="Basic information" />
-                <div class="editor-grid">
-                    {text("Name", "name", 300, { required: true, wide: true })}
-                    {pick("Vendor", "vendor", "vendors", {
-                        required: true,
-                        href: (id) => `~/company/vendors/${id}`,
-                    })}
-                    {text("Invoice number", "invoiceNumber", 200)}
-                    {money("Purchase value (BAM, without VAT)", "purchaseValue", {
-                        required: true,
-                        name: "Purchase value",
-                    })}
-                    {date("Purchase date", "purchaseDate", { required: true })}
-                    {pick("Assignee", "person", "people", {
-                        required: true,
-                        href: (id) => `~/company/people/${id}`,
-                    })}
-                    {flag("Record", "incomplete", "Marked incomplete", "Complete")}
-                    {pick("Confidentiality", "confidentiality", "confidentialities")}
-                    {pick("Integrity", "integrity", "integrities")}
-                    {pick("Availability", "availability", "availabilities")}
-                    <div>
-                        {label("Importance")}
-                        <div class="editor-value" text={state.importance} />
-                        <div class="editor-hint" visible={editing} text="From the three above." />
-                    </div>
-                    {prose("Description", "description", 1000)}
-                </div>
+                <div class="editor-grid">{basicFields()}</div>
             </section>
         </cx>
     );
@@ -256,6 +261,7 @@ export function formFields(state: FormState, prefix: string) {
         whole,
         date,
         flag,
+        basicFields,
         basicInformation,
         editing,
         noErrorText,

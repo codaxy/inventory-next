@@ -1,5 +1,5 @@
 import type { Page } from "../paging";
-import type { Option, Ref } from "./assets";
+import type { AssetForm, AssetOptions, Option, Ref } from "./assets";
 import { send, toQuery } from "./http";
 
 export interface DeviceItem {
@@ -76,13 +76,24 @@ export interface DeviceDetail {
     information: { total: number; items: { id: string; name: string; type: string | null }[] };
 }
 
-export interface DeviceOptions {
+export interface DeviceOptions extends AssetOptions {
     types: Option[];
     tags: Option[];
-    people: Option[];
-    vendors: Option[];
-    locations: Option[];
     manufacturers: Option[];
+    /** Each type's tags, by the type's id: what a device of it shows. */
+    typeTags: Record<string, string[]>;
+}
+
+/** An asset's fields and the device's own, as the server takes them; "warranty" is the entity's "guarantee". */
+export interface DeviceForm extends AssetForm {
+    typeId: string | null;
+    manufacturerId: string | null;
+    manufacturingDate: string | null;
+    modelName: string | null;
+    modelCode: string | null;
+    serialNumber: string | null;
+    warrantyNumber: string | null;
+    warrantyExpirationDate: string | null;
 }
 
 export type DeviceSort =
@@ -111,3 +122,8 @@ export const listDevices = (q: DeviceQuery) => send<Page<DeviceItem>>(`${base}/?
 export const devicesExport = (q: Omit<DeviceQuery, "page" | "pageSize">) => `${base}/export?${toQuery(q)}`;
 export const getDevice = (id: string) => send<DeviceDetail>(`${base}/${id}`);
 export const getDeviceOptions = () => send<DeviceOptions>(`${base}/options`);
+export const createDevice = (form: DeviceForm) =>
+    send<DeviceDetail>(`${base}/`, { method: "POST", body: JSON.stringify(form) });
+export const updateDevice = (id: string, form: DeviceForm) =>
+    send<DeviceDetail>(`${base}/${id}`, { method: "PUT", body: JSON.stringify(form) });
+export const deleteDevice = (id: string) => send<void>(`${base}/${id}`, { method: "DELETE" });
