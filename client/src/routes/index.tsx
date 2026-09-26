@@ -7,6 +7,8 @@ import { landing, navigation } from "../layout/navigation";
 import $app from "../model";
 import AuditLog from "./administration/audit-log";
 import ServerLog from "./administration/server-log";
+import TagEditor from "./electronic-devices/tags/editor";
+import Tags from "./electronic-devices/tags";
 import Controller from "./Controller";
 import NotFound from "./not-found";
 import SignIn from "./sign-in";
@@ -15,6 +17,7 @@ import SignIn from "./sign-in";
 const screens: Record<string, any> = {
     "~/administration/audit-log": AuditLog,
     "~/administration/server-log": ServerLog,
+    "~/electronic-devices/tags": Tags,
 };
 
 // The first matching route wins, so order is the routing table: signed in or not is the outermost
@@ -57,6 +60,11 @@ export default (
                             );
                         }),
                     )}
+
+                    {/* Editors, after the menu's own routes: `~/electronic-devices/tags` is one of them. */}
+                    <Route route="~/electronic-devices/tags/:id" url={$app.url}>
+                        <TagEditor />
+                    </Route>
 
                     <NotFound />
                 </PureContainer>

@@ -131,6 +131,25 @@ the newest, or a slow early answer lands over a later one.
 it when the window closes any other way. `dismissOnPopState` alone only closes the window — the Back
 that closed it has already left the screen.
 
+## Editors
+
+**Every entity is edited on a page of its own**, never in a window — `~/<item>/:id`, `new` while
+creating — routed after the menu's own routes, since a menu item's href can share the prefix. The page
+opens editable: the header band with a back link and the record's name, the form as sections in a
+column that stops at 52rem, and an action bar spanning the page and pinned to the bottom of the
+viewport, its buttons lined up with the form — Delete on the left once the record exists, Cancel and
+Save on the right. Deleting asks first and says what goes with it.
+
+**The route's id is read through `$route`**, declared in the editor's model; the server's field errors
+land under their fields through `fieldErrors`; **unsaved changes ask before leaving** —
+`guardLeaving` in `src/leaveGuard.ts`, cx's navigation confirmation for in-app links and the browser's
+prompt for a reload or a closed tab. Browser Back leaves without asking: cx cannot hold a navigation the
+browser has already made. A save or a delete releases the guard before it navigates.
+
+**A list of records** — `_records.scss` — is a card per row on a phone and columns from `md`, a header
+that sorts on a tap, a row that opens its editor, and a *New* button in the toolbar where a screen's
+filters would be.
+
 ## Dates
 
 **British English for every date cx shows** — `Culture.setCulture("en-GB")` and weeks from Monday,

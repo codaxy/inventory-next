@@ -1,5 +1,6 @@
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Paging;
+using Codaxy.Inventory.App.Shared.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,16 +44,16 @@ public static class Endpoint
 
         var rows = context.AuditLogs.AsNoTracking();
 
-        foreach (var term in Terms(query.Q))
+        foreach (var term in FreeText.Terms(query.Q))
         {
-            var pattern = $"%{EscapeLike(term)}%";
+            var pattern = FreeText.Pattern(term);
 
             rows = rows.Where(a =>
-                EF.Functions.ILike(a.Email, pattern, @"\")
-                || EF.Functions.ILike(a.Table, pattern, @"\")
-                || EF.Functions.ILike(a.EntityId.ToString(), pattern, @"\")
-                || EF.Functions.ILike(a.NewValuesJson, pattern, @"\")
-                || EF.Functions.ILike(a.OldValuesJson, pattern, @"\")
+                EF.Functions.ILike(a.Email, pattern, FreeText.Escape)
+                || EF.Functions.ILike(a.Table, pattern, FreeText.Escape)
+                || EF.Functions.ILike(a.EntityId.ToString(), pattern, FreeText.Escape)
+                || EF.Functions.ILike(a.NewValuesJson, pattern, FreeText.Escape)
+                || EF.Functions.ILike(a.OldValuesJson, pattern, FreeText.Escape)
             );
         }
 
@@ -96,15 +97,6 @@ public static class Endpoint
             )
         );
     }
-
-    private static IEnumerable<string> Terms(string? q) =>
-        (q ?? "").Split(
-            ' ',
-            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries
-        );
-
-    private static string EscapeLike(string term) =>
-        term.Replace(@"\", @"\\").Replace("%", @"\%").Replace("_", @"\_");
 
     /// <summary>
     /// The asset holding the number and the subtype rows that share its id. The logged values are

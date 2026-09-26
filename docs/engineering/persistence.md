@@ -90,11 +90,22 @@ populated database, but it will not repair or update a table that already has an
 
 `AuditLogInterceptor` is a `SaveChangesInterceptor` registered on the context. For every added,
 modified or deleted entity implementing `IIdentifiableReadOnly<Guid>`, it writes one `AuditLog` row
-holding the table name, the entity id, the signed-in user's email (`"system"` when there is no HTTP
-context), the action, and the complete before/after property set as JSON. `AuditLog` is excluded so
-the log cannot log itself.
+holding the entity's class name, its id, the user's email (`system` without one), `Create` /
+`Update` / `Delete`, and the complete before/after property set as JSON. `AuditLog` is excluded so the
+log cannot log itself. Rows written in one `SaveChanges` share a `TransactionId`.
 
-Rows written in one `SaveChanges` share a `TransactionId`.
+**The format is the original application's, because both write into one log**: indented, every
+property in EF's order — the key, then by name — changed or not; `DateOnly` as `yyyy-MM-dd`; non-ASCII
+written as it is. `AuditLogInterceptorTests` holds it to that.
+
+**The user is read when the save happens**, through `ICurrentUser`, which the host implements from the
+request in progress. The interceptor is a singleton and knows nothing of HTTP; a save outside a
+request records `system`.
+
+**What it cannot record**: a link table's rows — `ElectronicDeviceTypeElectronicDeviceTag` and the
+like have a composite key and no id, so tagging a type leaves no trace, as in the original — and
+anything the database cascades without EF tracking it. Seeding a fresh database is audited like any
+save.
 
 **Reading it, what changed is computed, not stored**: both documents hold every property, so an update's
 changes are the properties whose JSON differs. A foreign key's value is named through the EF model —
@@ -127,9 +138,6 @@ user — see [auth.md](auth.md).
 **`TransactionId` names something that does not exist.** No code opens a transaction, so the value is
 a fresh GUID per `SaveChanges`. It groups a save, and reading it as a business transaction is wrong.
 
-**The interceptor captures `HttpContext` in its constructor**, so it attributes writes correctly only
-on the request scope that resolved it; anything saving outside a request records `"system"`. Its
-synchronous `SavingChanges` blocks on the async path with `.Result`.
 
 **An instant must be `DateTimeOffset`.** It maps to `timestamp with time zone` and keeps its offset
 all the way to the browser, which is why `AuditLog.TimeCreated` and `Asset.LastModified` display

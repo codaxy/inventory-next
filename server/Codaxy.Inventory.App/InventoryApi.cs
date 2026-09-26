@@ -7,6 +7,15 @@ public static class InventoryApi
     {
         var api = app.MapGroup("/api").RequireAuthorization();
 
+        var tags = api.MapGroup("/electronic-devices/tags");
+
+        ElectronicDevices.Tags.List.Endpoint.Map(tags);
+        ElectronicDevices.Tags.Options.Endpoint.Map(tags);
+        ElectronicDevices.Tags.Get.Endpoint.Map(tags);
+        ElectronicDevices.Tags.Create.Endpoint.Map(tags);
+        ElectronicDevices.Tags.Update.Endpoint.Map(tags);
+        ElectronicDevices.Tags.Delete.Endpoint.Map(tags);
+
         var auditLog = api.MapGroup("/administration/audit-log");
 
         Administration.AuditLogs.List.Endpoint.Map(auditLog);

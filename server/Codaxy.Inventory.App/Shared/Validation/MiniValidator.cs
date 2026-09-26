@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
-namespace Codaxy.Inventory.Web.Auth;
+namespace Codaxy.Inventory.App.Shared.Validation;
 
 /// <summary>
 /// Minimal endpoints do not validate a body the way `[ApiController]` does, and one helper is
 /// cheaper than a package.
 /// </summary>
-internal static class MiniValidator
+public static class MiniValidator
 {
     public static bool IsValid<T>(T value, out IResult problem)
         where T : notnull
@@ -21,7 +22,8 @@ internal static class MiniValidator
 
         problem = Results.ValidationProblem(
             results.ToDictionary(
-                r => r.MemberNames.FirstOrDefault() ?? "",
+                // Keyed as the JSON the client sent, so a message lands under the field it names.
+                r => JsonNamingPolicy.CamelCase.ConvertName(r.MemberNames.FirstOrDefault() ?? ""),
                 r => new[] { r.ErrorMessage ?? "Invalid." }
             )
         );

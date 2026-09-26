@@ -24,6 +24,9 @@ left to imply features that did not exist.
 `AssetType` groups under `AssetCategory`; `AssetSubstatus` groups under `AssetStatus`, and an asset
 points at the substatus only, so its status is reached through it.
 
+**Tags attach to device types, never to devices**: a device shows the tags of its type. A tag names a
+kind of thing — `Mobile`, `HasData` — and the link table is the whole of the relation.
+
 The client picks the asset type by **name** when creating (`loadAssetType("Electronic Device")`), so
 the seeded type names are part of the contract between client and server, not free text.
 

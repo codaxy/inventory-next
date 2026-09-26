@@ -68,7 +68,9 @@ together — never a bin sorted by kind:
 **`Persistence/`** holds the context, the migrations, the seed data, the audit log and its interceptor,
 and `IIdentifiable`. It is neither an item nor shared domain.
 
-Any item may read another's entities and hold a foreign key to them; only the owner writes them. The
+Any item may read another's entities and hold a foreign key to them; only the owner writes them.
+**A link table belongs to both sides of its many-to-many**: a tag's editor writes the tag–type pairs,
+and so will a type's. The
 schema is one graph and frozen, so an entity referencing another item's is a foreign key, not a breach.
 What an item's *code* reaches into is review's to hold; nothing enforces it.
 
@@ -106,7 +108,14 @@ beside `MapAuth`, and each item a group beneath it named after its URL. **An ite
 narrow has its own named policy now**, defined in the host — the server log's `ServerLog`, today any
 session — so restricting it to a role is one line, not a search for every endpoint it covers.
 
+**Shared helpers for every item**: `Shared/Paging` (the window and the page), `Shared/Search`
+(`FreeText`, the free-text terms), `Shared/Validation` (`MiniValidator`, whose problem keys are the
+JSON's field names, so a message lands under the field it names).
+
 ## Traps
+
+**Order on the entity, then project.** EF cannot translate an `OrderBy` over the members of a record
+built in a `Select`; a list sorts its query and projects last.
 
 **An unknown `/api` path must be a 404.** The shell's fallback answers every unmatched path with the
 page and a 200, so without the `/api` fallback before it a missing endpoint reaches the client as HTML,

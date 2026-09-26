@@ -406,6 +406,10 @@ classes land on the `tbody`. **Grid selects on `mousedown`**, not `click`.
   case-insensitively or assert on DOM structure.
 - **`addTrigger` callbacks run after the commit that fired them**; a trigger that clears a message
   swallows one set in the same cycle.
+- **A route's parameters are read through its record, `$route`**, declared in the screen's model
+  like any alias (`$route: { id: string }`, then `m.$route.id`). Never through `Route`'s `params`: it
+  reads `params.bind`, which an accessor answers with another accessor, so the values land at
+  `<path>.bind`.
 - **CxJS's `Link` never leaves the application** — it routes any local href through the client router.
   A link to a server endpoint (an OAuth start) is a plain `<a>`.
 - **A layout is an imported widget, not a string**: `layout={{ type: "vbox" }}` throws

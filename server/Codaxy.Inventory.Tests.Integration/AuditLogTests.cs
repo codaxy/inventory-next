@@ -9,6 +9,7 @@ using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Assets;
 using Codaxy.Inventory.App.Shared.Paging;
 using Codaxy.Inventory.Tests.Integration.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Codaxy.Inventory.Tests.Integration;
@@ -188,6 +189,11 @@ public class AuditLogApplication : InventoryApplication
         );
 
         await context.SaveChangesAsync();
+
+        // The seeding itself was audited, as any save is; the tests are about the rows seeded above.
+        await context
+            .AuditLogs.Where(a => a.Email == AuditLogInterceptor.SystemUser)
+            .ExecuteDeleteAsync();
     }
 
     private static AuditLog Row(

@@ -1,0 +1,135 @@
+// An editor page: the header band and the action bar span the page like every screen's; the form
+// between them is a column that stops growing on a wide screen, and the bar's buttons line up with it.
+// The bar is pinned to the bottom of the viewport, so Save is in reach however long the form is.
+
+.editor,
+.editor-actions-row {
+    max-width: 52rem;
+}
+
+.editor-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
+    color: var(--color-primary-text);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.editor-section {
+    padding: 1rem;
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    background: var(--color-surface);
+
+    & + & {
+        margin-top: 1rem;
+    }
+
+    @media (min-width: 640px) {
+        padding: 1.25rem;
+    }
+}
+
+.editor-section-title {
+    margin: 0 0 0.875rem;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-ink);
+}
+
+.editor-grid {
+    display: grid;
+    gap: 0.875rem 1rem;
+
+    @media (min-width: 640px) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cxb-textfield,
+    .cxb-textarea,
+    .cxb-lookupfield,
+    .cxb-numberfield,
+    .cxb-datetimefield {
+        display: block;
+        width: 100%;
+    }
+}
+
+.editor-wide {
+    grid-column: 1 / -1;
+}
+
+.editor-label {
+    margin-bottom: 0.375rem;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-ink-soft);
+}
+
+.editor-required::after {
+    content: " *";
+    color: var(--color-danger-text);
+}
+
+.editor-hint {
+    margin-top: 0.25rem;
+    font-size: 12px;
+    color: var(--color-ink-muted);
+}
+
+// A problem the form cannot put under one field: the record changed, or went away.
+.editor-alert {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-danger);
+    border-radius: 12px;
+    background: var(--color-danger-wash);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-danger-text);
+}
+
+.editor-actions-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.editor-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    margin: 1rem -0.75rem calc(-1.25rem - env(safe-area-inset-bottom));
+    padding: 0.75rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--color-line);
+    background: var(--color-surface);
+
+    @media (min-width: 640px) {
+        margin: 1.25rem -1.25rem calc(-1.5rem - env(safe-area-inset-bottom));
+        padding: 0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom));
+    }
+
+    .editor-actions-end {
+        display: flex;
+        gap: 0.5rem;
+        margin-left: auto;
+    }
+}
+
+.cxb-button.editor-delete {
+    border-color: var(--color-danger);
+    color: var(--color-danger-text);
+}

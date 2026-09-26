@@ -50,6 +50,9 @@ in a fresh environment, once.
 Things the database wants and cannot have until the original is gone. This list is the input to the
 first migration after deprecation, not a backlog to act on.
 
+- **"Guarantee" is warranty.** `ElectronicDevice.GuaranteeNumber` and `GuaranteeExpirationDate` name
+  a warranty; the screens and the API models say so, and the entity keeps the frozen names until
+  this rename.
 - **No index serves any predicate.** Primary keys and the unique `inventory_number` are the whole of
   the indexing. The original filtered in the browser so there was nothing to serve; this application
   filters, sorts and pages in the database, and does it with sequential scans. At the present size —

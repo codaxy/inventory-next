@@ -1,4 +1,5 @@
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.Web.Auth;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codaxy.Inventory.Web.Setup;
@@ -20,8 +21,16 @@ public static class PersistenceSetup
                     + "in user secrets, or as ConnectionStrings__PostgreSQL in the environment."
             );
 
-        return services.AddDbContext<InventoryContext>(options =>
-            options.UseNpgsql(connectionString)
+        // Every save records what it changed; see AuditLogInterceptor.
+        services.AddHttpContextAccessor();
+        services.AddSingleton<ICurrentUser, HttpCurrentUser>();
+        services.AddSingleton<AuditLogInterceptor>();
+
+        return services.AddDbContext<InventoryContext>(
+            (provider, options) =>
+                options
+                    .UseNpgsql(connectionString)
+                    .AddInterceptors(provider.GetRequiredService<AuditLogInterceptor>())
         );
     }
 

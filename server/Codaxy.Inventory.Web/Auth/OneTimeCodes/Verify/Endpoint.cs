@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Codaxy.Inventory.App.Shared.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
