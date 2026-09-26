@@ -56,15 +56,57 @@ public static class InventoryApi
         Licenses.SoftwareServices.Update.Endpoint.Map(softwareServices);
         Licenses.SoftwareServices.Delete.Endpoint.Map(softwareServices);
 
-        var people = api.MapGroup("/directory/people");
+        var projects = api.MapGroup("/company/projects");
 
-        Directory.People.List.Endpoint.Map(people);
-        Directory.People.Get.Endpoint.Map(people);
-        Directory.People.Holdings.Endpoint.Map(people);
-        Directory.People.Handover.Endpoint.Map(people);
-        Directory.People.Create.Endpoint.Map(people);
-        Directory.People.Update.Endpoint.Map(people);
-        Directory.People.Delete.Endpoint.Map(people);
+        Company.Projects.List.Endpoint.Map(projects);
+        Company.Projects.Options.Endpoint.Map(projects);
+        Company.Projects.Get.Endpoint.Map(projects);
+        Company.Projects.Create.Endpoint.Map(projects);
+        Company.Projects.Update.Endpoint.Map(projects);
+        Company.Projects.Delete.Endpoint.Map(projects);
+
+        var vendors = api.MapGroup("/company/vendors");
+
+        Company.Vendors.List.Endpoint.Map(vendors);
+        Company.Vendors.Get.Endpoint.Map(vendors);
+        Company.Vendors.Create.Endpoint.Map(vendors);
+        Company.Vendors.Update.Endpoint.Map(vendors);
+        Company.Vendors.Delete.Endpoint.Map(vendors);
+
+        var manufacturers = api.MapGroup("/company/manufacturers");
+
+        Company.Manufacturers.List.Endpoint.Map(manufacturers);
+        Company.Manufacturers.Get.Endpoint.Map(manufacturers);
+        Company.Manufacturers.Create.Endpoint.Map(manufacturers);
+        Company.Manufacturers.Update.Endpoint.Map(manufacturers);
+        Company.Manufacturers.Delete.Endpoint.Map(manufacturers);
+
+        var locations = api.MapGroup("/company/locations");
+
+        Company.Locations.List.Endpoint.Map(locations);
+        Company.Locations.Options.Endpoint.Map(locations);
+        Company.Locations.Get.Endpoint.Map(locations);
+        Company.Locations.Create.Endpoint.Map(locations);
+        Company.Locations.Update.Endpoint.Map(locations);
+        Company.Locations.Delete.Endpoint.Map(locations);
+
+        var clients = api.MapGroup("/company/clients");
+
+        Company.Clients.List.Endpoint.Map(clients);
+        Company.Clients.Get.Endpoint.Map(clients);
+        Company.Clients.Create.Endpoint.Map(clients);
+        Company.Clients.Update.Endpoint.Map(clients);
+        Company.Clients.Delete.Endpoint.Map(clients);
+
+        var people = api.MapGroup("/company/people");
+
+        Company.People.List.Endpoint.Map(people);
+        Company.People.Get.Endpoint.Map(people);
+        Company.People.Holdings.Endpoint.Map(people);
+        Company.People.Handover.Endpoint.Map(people);
+        Company.People.Create.Endpoint.Map(people);
+        Company.People.Update.Endpoint.Map(people);
+        Company.People.Delete.Endpoint.Map(people);
 
         var furnitureTypes = api.MapGroup("/furniture/types");
 

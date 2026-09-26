@@ -11,7 +11,7 @@ public static class Endpoint
 {
     public static void Map(RouteGroupBuilder licenses) => licenses.MapGet("/export", Handle);
 
-    /// <summary>One licence as the original's spreadsheet has it; the headers are its own.</summary>
+    /// <summary>One license as the original's spreadsheet has it; the headers are its own.</summary>
     public sealed class Row
     {
         [TableColumn(HeaderText = "No     ")]

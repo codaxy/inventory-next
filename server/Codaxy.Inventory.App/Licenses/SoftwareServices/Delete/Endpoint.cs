@@ -8,7 +8,7 @@ public static class Endpoint
     public static void Map(RouteGroupBuilder entries) => entries.MapDelete("/{id:guid}", Handle);
 
     /// <summary>
-    /// An entry no licence volume names goes. One named is refused: the volume's foreign key
+    /// An entry no license volume names goes. One named is refused: the volume's foreign key
     /// cascades, so the database would take the volumes and every activation of them along with it.
     /// </summary>
     private static async Task<IResult> Handle(
@@ -34,8 +34,8 @@ public static class Endpoint
             return Results.Problem(
                 statusCode: StatusCodes.Status409Conflict,
                 title: volumes == 1
-                    ? "A licence volume is of this software or service, so it cannot be deleted."
-                    : $"{volumes} licence volumes are of this software or service, so it cannot be deleted."
+                    ? "A license volume is of this software or service, so it cannot be deleted."
+                    : $"{volumes} license volumes are of this software or service, so it cannot be deleted."
             );
 
         context.SoftwareOrServices.Remove(entry);

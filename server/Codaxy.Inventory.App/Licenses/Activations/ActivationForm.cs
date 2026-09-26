@@ -43,7 +43,7 @@ public sealed record LicenseSummary(
 
 public sealed record DeviceRef(Guid Id, string Name, int? Number);
 
-/// <summary>An activation as its page shows it, with the licence it draws on.</summary>
+/// <summary>An activation as its page shows it, with the license it draws on.</summary>
 public sealed record ActivationDetail(
     Guid Id,
     Named Software,

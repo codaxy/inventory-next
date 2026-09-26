@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Codaxy.Inventory.App.Directory.People;
+using Codaxy.Inventory.App.Company.People;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Assets;
 using Codaxy.Inventory.App.Shared.Volumes;

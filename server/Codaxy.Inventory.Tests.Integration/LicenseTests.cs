@@ -1,6 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
-using Codaxy.Inventory.App.Directory.Manufacturers;
+using Codaxy.Inventory.App.Company.Manufacturers;
 using Codaxy.Inventory.App.Infrastructure.Clouds;
 using Codaxy.Inventory.App.Licenses.Licenses;
 using Codaxy.Inventory.App.Licenses.SoftwareServices;
@@ -18,9 +18,9 @@ using Item = App.Licenses.Licenses.List.Endpoint.Item;
 using Options = App.Licenses.Licenses.Options.Endpoint.Response;
 
 /// <summary>
-/// The codebooks, two software entries, and three licences: Office, whose volume has an activation;
+/// The codebooks, two software entries, and three licenses: Office, whose volume has an activation;
 /// Backup, whose volume a cloud stands on; and Spare, with nothing on it. A test that changes data
-/// makes its own licence.
+/// makes its own license.
 /// </summary>
 public class LicenseApplication : InventoryApplication
 {
@@ -68,16 +68,16 @@ public class LicenseApplication : InventoryApplication
         OfficeLicense = await Seed.LicenseWithVolumeAsync(
             context,
             Office,
-            "Office licence",
+            "Office license",
             expires: Today.AddDays(-3)
         );
         BackupLicense = await Seed.LicenseWithVolumeAsync(
             context,
             Backup,
-            "Backup licence",
+            "Backup license",
             expires: Today.AddDays(200)
         );
-        SpareLicense = await Seed.LicenseWithVolumeAsync(context, Office, "Spare licence");
+        SpareLicense = await Seed.LicenseWithVolumeAsync(context, Office, "Spare license");
 
         await Seed.ActivationAsync(context, OfficeLicense.Volume, quantity: 3);
         context.Clouds.Add(
@@ -137,7 +137,7 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
             ["managementConsoleUrl"] = "https://console.test",
             ["registrationNumber"] = "REG-7",
             ["keyIdentifier"] = "0042-ABCD",
-            ["url"] = "https://licence.test",
+            ["url"] = "https://license.test",
             ["volumes"] = new object[]
             {
                 new
@@ -163,7 +163,7 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
         return (await response.Content.ReadFromJsonAsync<LicenseDetail>())!;
     }
 
-    /// <summary>The form that saves what the licence already holds, for an edit to change one thing in.</summary>
+    /// <summary>The form that saves what the license already holds, for an edit to change one thing in.</summary>
     private static Dictionary<string, object?> FormOf(LicenseDetail l) =>
         new()
         {
@@ -252,7 +252,7 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
         Assert.True(license.Incomplete);
         Assert.True(license.AutoRenew);
         Assert.Equal(
-            (9.99m, "https://console.test", "REG-7", "0042-ABCD", "https://licence.test"),
+            (9.99m, "https://console.test", "REG-7", "0042-ABCD", "https://license.test"),
             (
                 license.SubscriptionFee,
                 license.ManagementConsoleUrl,
@@ -316,7 +316,7 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
     }
 
     [Fact]
-    public async Task Creating_is_audited_as_the_user_for_the_asset_the_licence_and_the_volume()
+    public async Task Creating_is_audited_as_the_user_for_the_asset_the_license_and_the_volume()
     {
         var license = await CreateAsync("Audited");
 
@@ -446,14 +446,14 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
             await ErrorsOf(response, "volumes")
         );
         var after = await GetAsync(office.Id);
-        Assert.Equal("Office licence", after.Name);
+        Assert.Equal("Office license", after.Name);
         Assert.Single(after.Volumes);
         Assert.Equal("The Office volume has an activation", after.Volumes[0].Held);
         Assert.Equal(3, after.Volumes[0].InUse);
     }
 
     [Fact]
-    public async Task Deleting_takes_the_volumes_the_licence_and_the_asset_and_is_audited()
+    public async Task Deleting_takes_the_volumes_the_license_and_the_asset_and_is_audited()
     {
         var license = await CreateAsync("Doomed");
         var client = await Client();
@@ -483,7 +483,7 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
     }
 
     [Fact]
-    public async Task A_licence_something_stands_on_is_not_deleted_and_says_what()
+    public async Task A_license_something_stands_on_is_not_deleted_and_says_what()
     {
         var client = await Client();
 
@@ -494,11 +494,11 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
 
         Assert.Equal(HttpStatusCode.Conflict, activated.StatusCode);
         Assert.Equal(
-            "The Office volume has an activation, so the licence cannot be deleted.",
+            "The Office volume has an activation, so the license cannot be deleted.",
             (await activated.Content.ReadFromJsonAsync<ProblemDetails>())!.Title
         );
         Assert.Equal(
-            "The Backup volume has a cloud, so the licence cannot be deleted.",
+            "The Backup volume has a cloud, so the license cannot be deleted.",
             (await clouded.Content.ReadFromJsonAsync<ProblemDetails>())!.Title
         );
         Assert.True(
@@ -514,7 +514,7 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
     }
 
     [Fact]
-    public async Task A_licence_with_a_maintenance_contract_is_not_deleted()
+    public async Task A_license_with_a_maintenance_contract_is_not_deleted()
     {
         var license = await CreateAsync("Maintained");
         var vendor = license.Vendor.Id;
@@ -547,7 +547,7 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
     [InlineData("purchaseValue", null)]
     [InlineData("purchaseDate", null)]
     [InlineData("purchaseValue", -1)]
-    public async Task A_licence_needs_its_required_fields(string field, object? value)
+    public async Task A_license_needs_its_required_fields(string field, object? value)
     {
         var form = await FormAsync("Missing");
         form[field] = value;
@@ -637,13 +637,13 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
             )
         );
         Assert.Equal(
-            ["A new licence has only new volumes."],
+            ["A new license has only new volumes."],
             await With(new { id = Guid.CreateVersion7() })
         );
     }
 
     [Fact]
-    public async Task An_unknown_licence_is_not_found_to_read_edit_or_delete()
+    public async Task An_unknown_license_is_not_found_to_read_edit_or_delete()
     {
         var client = await Client();
         var id = Guid.CreateVersion7();
@@ -661,9 +661,9 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
     [Fact]
     public async Task Lists_with_the_expiry_and_searches_number_name_vendor_invoice_and_registration()
     {
-        var office = Assert.Single((await ListAsync("q=office+licence")).Items);
+        var office = Assert.Single((await ListAsync("q=office+license")).Items);
         Assert.Equal(
-            ("Office licence", "Seed vendor", "expired"),
+            ("Office license", "Seed vendor", "expired"),
             (office.Name, office.Vendor, office.Expiry)
         );
 
@@ -688,11 +688,11 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
         );
         Assert.Empty((await ListAsync("purchasedFrom=2026-01-16&purchasedTo=2026-01-16")).Items);
         Assert.Equal(
-            "Office licence",
+            "Office license",
             Assert.Single((await ListAsync("expiry=expired")).Items).Name
         );
-        Assert.Contains((await ListAsync("expiry=regular")).Items, i => i.Name == "Backup licence");
-        Assert.Contains((await ListAsync("expiry=none")).Items, i => i.Name == "Spare licence");
+        Assert.Contains((await ListAsync("expiry=regular")).Items, i => i.Name == "Backup license");
+        Assert.Contains((await ListAsync("expiry=none")).Items, i => i.Name == "Spare license");
         Assert.All((await ListAsync("expiry=soon")).Items, i => Assert.Equal("soon", i.Expiry));
         Assert.All((await ListAsync("incomplete=true")).Items, i => Assert.True(i.Incomplete));
         Assert.All((await ListAsync("incomplete=false")).Items, i => Assert.False(i.Incomplete));
@@ -727,7 +727,7 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
     {
         var client = await Client();
 
-        var office = await client.GetAsync($"{Url}/export?q=office+licence");
+        var office = await client.GetAsync($"{Url}/export?q=office+license");
         var all = await client.GetAsync($"{Url}/export");
 
         Assert.Equal(HttpStatusCode.OK, office.StatusCode);
@@ -746,13 +746,13 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
         );
 
         var filtered = await Spreadsheet.TextOf(office);
-        Assert.Contains("Office licence", filtered);
-        Assert.DoesNotContain("Backup licence", filtered);
+        Assert.Contains("Office license", filtered);
+        Assert.DoesNotContain("Backup license", filtered);
         Assert.Contains("Purchase Value", filtered);
 
         var whole = await Spreadsheet.TextOf(all);
-        Assert.Contains("Backup licence", whole);
-        Assert.Contains("Spare licence", whole);
+        Assert.Contains("Backup license", whole);
+        Assert.Contains("Spare license", whole);
         Assert.Equal(
             HttpStatusCode.BadRequest,
             (await client.GetAsync($"{Url}/export?sort=colour")).StatusCode

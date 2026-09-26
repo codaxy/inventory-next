@@ -8,7 +8,7 @@ public static class Endpoint
     public static void Map(RouteGroupBuilder licenses) => licenses.MapDelete("/{id:guid}", Handle);
 
     /// <summary>
-    /// The volumes, the licence and the asset, in one save — unless something stands on them: a
+    /// The volumes, the license and the asset, in one save — unless something stands on them: a
     /// volume's activations, clouds or software cascade with it, and a maintenance contract restricts
     /// the asset. Those are named in a 409 rather than taken along or left to fail as a 500.
     /// </summary>
@@ -35,7 +35,7 @@ public static class Endpoint
         if (held.Count > 0)
             return Results.Problem(
                 statusCode: StatusCodes.Status409Conflict,
-                title: $"{held.Values.First()}, so the licence cannot be deleted."
+                title: $"{held.Values.First()}, so the license cannot be deleted."
             );
 
         var contracts = await context.MaintenanceContracts.CountAsync(
@@ -46,8 +46,8 @@ public static class Endpoint
             return Results.Problem(
                 statusCode: StatusCodes.Status409Conflict,
                 title: contracts == 1
-                    ? "A maintenance contract is on this licence, so it cannot be deleted."
-                    : $"{contracts} maintenance contracts are on this licence, so it cannot be deleted."
+                    ? "A maintenance contract is on this license, so it cannot be deleted."
+                    : $"{contracts} maintenance contracts are on this license, so it cannot be deleted."
             );
 
         context.Volumes.RemoveRange(license.Volumes);

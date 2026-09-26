@@ -38,7 +38,7 @@ export interface VolumeRow {
     load?: "full" | "over";
     /** Why an existing volume cannot be removed, or absent. */
     held?: string;
-    /** An existing volume marked to go when the licence is saved: struck through until then, and
+    /** An existing volume marked to go when the license is saved: struck through until then, and
      *  undone as easily. */
     removed?: boolean;
     /** The activations list filtered to exactly this volume; absent when it has none. */
@@ -50,7 +50,7 @@ export interface VolumeRow {
     activateHref?: string;
 }
 
-/** The form, as the fields bind it: the asset's fields, then the licence's own. */
+/** The form, as the fields bind it: the asset's fields, then the license's own. */
 export interface Draft extends AssetDraft {
     licenseTypeId?: string | null;
     licenseTypeText?: string;
@@ -119,7 +119,7 @@ export const emptyOptions: LicenseOptions = {
 let next = 0;
 export const rowKey = () => `v${++next}`;
 
-/** A loaded licence as the form: every pick as id and text, the volumes as kept rows. */
+/** A loaded license as the form: every pick as id and text, the volumes as kept rows. */
 export function toDraft(l: LicenseDetail, duplicate: boolean): Draft {
     const asset = assetParts(l);
     return toDraftOf<Draft>(

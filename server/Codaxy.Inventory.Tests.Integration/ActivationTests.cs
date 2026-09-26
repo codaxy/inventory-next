@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
-using Codaxy.Inventory.App.Directory.Manufacturers;
-using Codaxy.Inventory.App.Directory.People;
+using Codaxy.Inventory.App.Company.Manufacturers;
+using Codaxy.Inventory.App.Company.People;
 using Codaxy.Inventory.App.Licenses.Activations;
 using Codaxy.Inventory.App.Licenses.SoftwareServices;
 using Codaxy.Inventory.App.Persistence;
@@ -16,9 +16,9 @@ namespace Codaxy.Inventory.Tests.Integration;
 using Item = App.Licenses.Activations.List.Endpoint.Item;
 
 /// <summary>
-/// Office, a per-user volume of five seats on a licence expiring soon, with one active and one
-/// deactivated activation; Antivirus, a per-device volume on an expired licence, with a device of a
-/// type that holds licences and one that does not. A test that changes data makes its own activation.
+/// Office, a per-user volume of five seats on a license expiring soon, with one active and one
+/// deactivated activation; Antivirus, a per-device volume on an expired license, with a device of a
+/// type that holds licenses and one that does not. A test that changes data makes its own activation.
 /// </summary>
 public class ActivationApplication : InventoryApplication
 {
@@ -71,20 +71,20 @@ public class ActivationApplication : InventoryApplication
         OfficeLicense = await Seed.LicenseWithVolumeAsync(
             context,
             Office,
-            "Office licence",
+            "Office license",
             seats: 5,
             expires: Today.AddDays(5)
         );
         AntivirusLicense = await Seed.LicenseWithVolumeAsync(
             context,
             Antivirus,
-            "Antivirus licence",
+            "Antivirus license",
             seats: 2,
             volumeType: Seed.PerDevice,
             expires: Today.AddDays(-10)
         );
-        Laptop = await Seed.DeviceAsync(context, "lap-ana", holdsLicences: true);
-        Monitor = await Seed.DeviceAsync(context, "mon-ana", holdsLicences: false);
+        Laptop = await Seed.DeviceAsync(context, "lap-ana", holdsLicenses: true);
+        Monitor = await Seed.DeviceAsync(context, "mon-ana", holdsLicenses: false);
 
         ActiveForAna = await Seed.ActivationAsync(
             context,
@@ -170,7 +170,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         var activation = await ActivateForAnaAsync(quantity: 1);
 
         Assert.Equal(
-            ("Office", "Office licence", "Ana Anić", 1, new DateOnly(2026, 4, 1)),
+            ("Office", "Office license", "Ana Anić", 1, new DateOnly(2026, 4, 1)),
             (
                 activation.Software.Name,
                 activation.License.Name,
@@ -192,7 +192,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
     }
 
     [Fact]
-    public async Task Activating_for_a_device_whose_type_holds_licences()
+    public async Task Activating_for_a_device_whose_type_holds_licenses()
     {
         var response = await PostAsync(
             new
@@ -266,7 +266,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
     }
 
     [Fact]
-    public async Task A_per_device_volume_needs_a_device_whose_type_holds_licences()
+    public async Task A_per_device_volume_needs_a_device_whose_type_holds_licenses()
     {
         var volume = ActivationApplication.AntivirusLicense.Volume;
 
@@ -278,7 +278,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
             )
         );
         Assert.Equal(
-            ["Devices of this type cannot hold licences."],
+            ["Devices of this type cannot hold licenses."],
             await ErrorsOf(
                 await PostAsync(
                     new
@@ -474,34 +474,34 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
     }
 
     [Fact]
-    public async Task Lists_with_the_assignee_and_the_licences_expiry()
+    public async Task Lists_with_the_assignee_and_the_licenses_expiry()
     {
         var row = (await ListAsync("q=ana+anić")).Items.Single(i =>
             i.Id == ActivationApplication.ActiveForAna
         );
 
         Assert.Equal(
-            ("Office", "Office licence", "Ana Anić", false, 2, "soon"),
+            ("Office", "Office license", "Ana Anić", false, 2, "soon"),
             (row.Software, row.License, row.Assignee, row.ForDevice, row.Quantity, row.Expiry)
         );
     }
 
     [Fact]
-    public async Task Searches_software_licence_person_and_device()
+    public async Task Searches_software_license_person_and_device()
     {
         Assert.All(
             (await ListAsync("q=antivirus")).Items,
             i => Assert.Equal("Antivirus", i.Software)
         );
         Assert.Contains(
-            (await ListAsync("q=office+licence")).Items,
+            (await ListAsync("q=office+license")).Items,
             i => i.Id == ActivationApplication.ActiveForAna
         );
         Assert.Empty((await ListAsync("q=nobody-by-this-name")).Items);
     }
 
     [Fact]
-    public async Task Filters_by_software_licence_status_and_expiry()
+    public async Task Filters_by_software_license_status_and_expiry()
     {
         var office = await ListAsync($"softwareId={ActivationApplication.Office}");
         var license = await ListAsync($"licenseId={ActivationApplication.OfficeLicense.License}");
@@ -511,7 +511,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         var expired = await ListAsync("expiry=expired");
 
         Assert.All(office.Items, i => Assert.Equal("Office", i.Software));
-        Assert.All(license.Items, i => Assert.Equal("Office licence", i.License));
+        Assert.All(license.Items, i => Assert.Equal("Office license", i.License));
         Assert.All(active.Items, i => Assert.Null(i.DeactivationDate));
         Assert.Contains(deactivated.Items, i => i.Id == ActivationApplication.Deactivated);
         Assert.All(deactivated.Items, i => Assert.NotNull(i.DeactivationDate));
@@ -523,7 +523,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
     }
 
     [Fact]
-    public async Task Filters_by_one_volume_of_a_licence()
+    public async Task Filters_by_one_volume_of_a_license()
     {
         var second = await app.InScopeAsync(async c =>
         {
@@ -559,13 +559,13 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         ).GetFromJsonAsync<App.Licenses.Activations.Options.Endpoint.Response>($"{Url}/options");
         Assert.Contains(
             options!.Volumes,
-            v => v.Id == second && v.Text == "Office · Office licence · Second invoice"
+            v => v.Id == second && v.Text == "Office · Office license · Second invoice"
         );
         Assert.Contains(
             options.Volumes,
             v =>
                 v.Id == ActivationApplication.OfficeLicense.Volume
-                && v.Text == "Office · Office licence · Per user"
+                && v.Text == "Office · Office license · Per user"
         );
     }
 
@@ -605,11 +605,11 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
             )
         );
 
-        Assert.DoesNotContain("Office licence", none);
+        Assert.DoesNotContain("Office license", none);
         Assert.Contains("Software/Service", office);
-        Assert.Contains("Office licence", office);
+        Assert.Contains("Office license", office);
         Assert.Contains("Ana Anić", office);
-        Assert.DoesNotContain("Antivirus licence", office);
+        Assert.DoesNotContain("Antivirus license", office);
         var byVolume = await client.GetAsync(
             $"{Url}/export?volumeId={ActivationApplication.OfficeLicense.Volume}"
         );
@@ -657,7 +657,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         var volume = volumes!.Single(v => v.Id == ActivationApplication.OfficeLicense.Volume);
 
         Assert.Equal(
-            ("Office licence", "Per user", 5),
+            ("Office license", "Per user", 5),
             (volume.License, volume.Type, volume.Quantity)
         );
         Assert.True(volume.InUse >= 2);
@@ -675,7 +675,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         ).GetFromJsonAsync<App.Licenses.Activations.Options.Endpoint.Response>($"{Url}/options");
 
         Assert.Equal(["Antivirus", "Office"], options!.Software.Select(s => s.Text));
-        Assert.Contains(options.Licenses, l => l.Text == "Office licence");
+        Assert.Contains(options.Licenses, l => l.Text == "Office license");
         Assert.Contains(options.People, p => p.Text == "Ana Anić");
         Assert.Contains(options.Devices, d => d.Id == ActivationApplication.Laptop);
         Assert.DoesNotContain(options.Devices, d => d.Id == ActivationApplication.Monitor);

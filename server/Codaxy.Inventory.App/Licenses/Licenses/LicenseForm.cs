@@ -4,8 +4,8 @@ using Codaxy.Inventory.App.Shared.Assets;
 namespace Codaxy.Inventory.App.Licenses.Licenses;
 
 /// <summary>
-/// What creating and editing a licence take: the asset's fields — validated, checked and applied by
-/// <see cref="AssetWrites"/>, as every asset's are — the licence's own, and its volumes.
+/// What creating and editing a license take: the asset's fields — validated, checked and applied by
+/// <see cref="AssetWrites"/>, as every asset's are — the license's own, and its volumes.
 /// </summary>
 public sealed record LicenseForm(
     string? Name,
@@ -67,7 +67,7 @@ public sealed record VolumeDetail(
     string? Held
 );
 
-/// <summary>A licence as its page shows it: every field, the names beside the ids.</summary>
+/// <summary>A license as its page shows it: every field, the names beside the ids.</summary>
 public sealed record LicenseDetail(
     Guid Id,
     int? Number,

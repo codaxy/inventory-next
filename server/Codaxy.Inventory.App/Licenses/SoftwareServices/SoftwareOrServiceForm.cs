@@ -27,7 +27,7 @@ public sealed record SoftwareOrServiceDetail(
     IReadOnlyList<VolumeLine> Volumes
 );
 
-/// <summary>One licence volume of the entry: which licence, its type and description, its seats.</summary>
+/// <summary>One license volume of the entry: which license, its type and description, its seats.</summary>
 public sealed record VolumeLine(
     Guid Id,
     Guid LicenseId,

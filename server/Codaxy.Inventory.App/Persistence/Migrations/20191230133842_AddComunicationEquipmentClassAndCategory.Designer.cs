@@ -172,7 +172,7 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("BusinessUnit");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Directory.Locations.City", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.City", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -295,7 +295,7 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("Confidentiality");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Directory.Locations.Country", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.Country", b =>
                 {
                     b.Property<string>("Code")
                         .ValueGeneratedOnAdd()
@@ -593,7 +593,7 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("LinkType");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Directory.Locations.Location", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.Location", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -634,7 +634,7 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("Location");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Directory.Manufacturers.Manufacturer", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Manufacturers.Manufacturer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -648,7 +648,7 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("Manufacturer");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Directory.People.Person", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.People.Person", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -658,7 +658,7 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("Person");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Directory.Locations.State", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.State", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -685,7 +685,7 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Directory.Vendors.Vendor", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Vendors.Vendor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -751,11 +751,11 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .WithMany("Asset")
                         .HasForeignKey("IntegrityId");
 
-                    b.HasOne("Codaxy.Inventory.App.Directory.Locations.Location", "Location")
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.Location", "Location")
                         .WithMany("Asset")
                         .HasForeignKey("LocationId");
 
-                    b.HasOne("Codaxy.Inventory.App.Directory.People.Person", "Person")
+                    b.HasOne("Codaxy.Inventory.App.Company.People.Person", "Person")
                         .WithMany()
                         .HasForeignKey("PersonId");
                 });
@@ -776,9 +776,9 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Directory.Locations.City", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.City", b =>
                 {
-                    b.HasOne("Codaxy.Inventory.App.Directory.Locations.Country", "Country")
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryCode");
                 });
@@ -795,12 +795,12 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .HasForeignKey("ComputerEquipmentCategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Codaxy.Inventory.App.Directory.Manufacturers.Manufacturer", "Manufacturer")
+                    b.HasOne("Codaxy.Inventory.App.Company.Manufacturers.Manufacturer", "Manufacturer")
                         .WithMany()
                         .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Codaxy.Inventory.App.Directory.Vendors.Vendor", "Vendor")
+                    b.HasOne("Codaxy.Inventory.App.Company.Vendors.Vendor", "Vendor")
                         .WithMany()
                         .HasForeignKey("VendorId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -859,12 +859,12 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .HasForeignKey("LicenseTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Codaxy.Inventory.App.Directory.Manufacturers.Manufacturer", "Manufacturer")
+                    b.HasOne("Codaxy.Inventory.App.Company.Manufacturers.Manufacturer", "Manufacturer")
                         .WithMany()
                         .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Codaxy.Inventory.App.Directory.Vendors.Vendor", "Vendor")
+                    b.HasOne("Codaxy.Inventory.App.Company.Vendors.Vendor", "Vendor")
                         .WithMany()
                         .HasForeignKey("VendorId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -901,33 +901,33 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Directory.Locations.Location", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.Location", b =>
                 {
-                    b.HasOne("Codaxy.Inventory.App.Directory.Locations.City", "City")
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.City", "City")
                         .WithMany()
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Codaxy.Inventory.App.Directory.Locations.Country", "Country")
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryCode");
 
-                    b.HasOne("Codaxy.Inventory.App.Directory.Locations.State", "State")
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.State", "State")
                         .WithMany()
                         .HasForeignKey("StateId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Directory.Locations.State", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.State", b =>
                 {
-                    b.HasOne("Codaxy.Inventory.App.Directory.Locations.Country", "Country")
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryCode");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Directory.Vendors.Vendor", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Vendors.Vendor", b =>
                 {
-                    b.HasOne("Codaxy.Inventory.App.Directory.Locations.Location", "Location")
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.Location", "Location")
                         .WithMany()
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade);

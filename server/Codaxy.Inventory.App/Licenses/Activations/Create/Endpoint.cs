@@ -12,7 +12,7 @@ public static class Endpoint
 
     /// <summary>
     /// Seats of a volume for one assignee: a person where the volume is per user, an electronic device
-    /// whose type holds licences otherwise. Seats past the volume's quantity are allowed — the
+    /// whose type holds licenses otherwise. Seats past the volume's quantity are allowed — the
     /// original only warned, and over-allocation is recorded rather than prevented.
     /// </summary>
     private static async Task<IResult> Handle(
@@ -65,7 +65,7 @@ public static class Endpoint
             if (holds is false)
                 return Activations.Problem(
                     "deviceId",
-                    "Devices of this type cannot hold licences."
+                    "Devices of this type cannot hold licenses."
                 );
 
             if (form.PersonId is not null)

@@ -14,7 +14,7 @@ public static class Endpoint
 
     /// <summary>
     /// Every picker the editor and the list's filters show, in one call — the asset's, shared by every
-    /// asset form, and the licence's own. All small lists.
+    /// asset form, and the license's own. All small lists.
     /// </summary>
     public sealed record Response(
         IReadOnlyList<AssetOption> Vendors,

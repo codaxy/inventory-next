@@ -23,7 +23,7 @@ public static class Endpoint
         CancellationToken cancellationToken
     )
     {
-        // The licence's own attributes and the asset's rules, answered together.
+        // The license's own attributes and the asset's rules, answered together.
         if (AssetWrites.Validate(form, MiniValidator.Errors(form)) is { Count: > 0 } errors)
             return Results.ValidationProblem(errors);
 
@@ -35,7 +35,7 @@ public static class Endpoint
         if (license is null)
             return Results.NotFound();
 
-        if (AssetWrites.CheckUnchanged(license.Asset, form, "licence") is { } changed)
+        if (AssetWrites.CheckUnchanged(license.Asset, form, "license") is { } changed)
             return changed;
 
         if (await LicenseWrites.CheckAsync(context, form, cancellationToken) is { } refused)

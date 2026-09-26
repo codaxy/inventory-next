@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using Codaxy.Inventory.App.Directory.Locations;
-using Codaxy.Inventory.App.Directory.People;
-using Codaxy.Inventory.App.Directory.Vendors;
+using Codaxy.Inventory.App.Company.Locations;
+using Codaxy.Inventory.App.Company.People;
+using Codaxy.Inventory.App.Company.Vendors;
 using Codaxy.Inventory.App.ElectronicDevices.Devices;
 using Codaxy.Inventory.App.Furnitures.Items;
 using Codaxy.Inventory.App.Licenses.Licenses;

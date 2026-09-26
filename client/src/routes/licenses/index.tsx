@@ -32,14 +32,14 @@ const expiries = [
     { value: "none", text: "No date" },
 ] as const;
 
-/** Licences: most recently changed first, each with where its subscription stands. */
+/** Licenses: most recently changed first, each with where its subscription stands. */
 export default createFunctionalComponent(() => {
     const onBarRef = stickyBar();
 
     return (
         <cx>
             <div class="page-body page-wide" controller={Controller}>
-                <h1 class="page-header page-title" text="Licences" />
+                <h1 class="page-header page-title" text="Licenses" />
 
                 <div class={{ "list-bar": true, "list-bar-static": s.filtersOpen }} onRef={onBarRef}>
                     <div class="list-toolbar">
@@ -50,7 +50,7 @@ export default createFunctionalComponent(() => {
                                 value={s.search}
                                 placeholder="Search number, name, vendor, invoice…"
                                 showClear
-                                inputAttrs={{ "aria-label": "Search licences", enterKeyHint: "search" }}
+                                inputAttrs={{ "aria-label": "Search licenses", enterKeyHint: "search" }}
                             />
                         </div>
                         <Button
@@ -65,8 +65,8 @@ export default createFunctionalComponent(() => {
                         </Button>
                         <LinkButton mod="primary" class="list-new" href="~/licenses/new">
                             <Icon name="created" class="size-4" />
-                            <span class="hidden sm:inline" text="New licence" />
-                            <span class="sr-only sm:hidden" text="New licence" />
+                            <span class="hidden sm:inline" text="New license" />
+                            <span class="sr-only sm:hidden" text="New license" />
                         </LinkButton>
                     </div>
 
@@ -217,8 +217,8 @@ export default createFunctionalComponent(() => {
 
                 <div class="list-empty" visible={empty}>
                     <Icon name="search" class="size-6" />
-                    <p class="list-empty-title" text="No licences match" />
-                    <p class="list-empty-text" text="Try fewer words or filters, or add the licence." />
+                    <p class="list-empty-title" text="No licenses match" />
+                    <p class="list-empty-text" text="Try fewer words or filters, or add the license." />
                     <Button mod="hollow" text="Clear search and filters" onClick="clearAll" />
                 </div>
 

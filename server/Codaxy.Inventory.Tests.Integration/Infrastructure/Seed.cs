@@ -1,5 +1,5 @@
-using Codaxy.Inventory.App.Directory.People;
-using Codaxy.Inventory.App.Directory.Vendors;
+using Codaxy.Inventory.App.Company.People;
+using Codaxy.Inventory.App.Company.Vendors;
 using Codaxy.Inventory.App.ElectronicDevices.Devices;
 using Codaxy.Inventory.App.ElectronicDevices.Types;
 using Codaxy.Inventory.App.Licenses.Activations;
@@ -13,9 +13,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Codaxy.Inventory.Tests.Integration.Infrastructure;
 
 /// <summary>
-/// The codebooks and directory rows the licence area stands on, in a test database that starts empty:
+/// The codebooks and directory rows the license area stands on, in a test database that starts empty:
 /// the "Licenses" and "Electronic Device" asset types, a vendor and a person, the sequence, the
-/// classification with the original's weights, the volume types by their seeded ids, and the licence
+/// classification with the original's weights, the volume types by their seeded ids, and the license
 /// codebooks. Written once per database.
 /// </summary>
 public static class Seed
@@ -127,11 +127,11 @@ public static class Seed
 
     public sealed record SeededLicense(Guid License, Guid Volume);
 
-    /// <summary>A licence of one volume of the given software, bought for the given seats.</summary>
+    /// <summary>A license of one volume of the given software, bought for the given seats.</summary>
     public static async Task<SeededLicense> LicenseWithVolumeAsync(
         InventoryContext context,
         Guid software,
-        string name = "Seed licence",
+        string name = "Seed license",
         int seats = 5,
         int volumeType = PerUser,
         DateOnly? expires = null
@@ -173,15 +173,15 @@ public static class Seed
         return new(id, volume.Id);
     }
 
-    /// <summary>An electronic device of a type that holds licences, or of one that does not.</summary>
+    /// <summary>An electronic device of a type that holds licenses, or of one that does not.</summary>
     public static async Task<Guid> DeviceAsync(
         InventoryContext context,
         string name,
-        bool holdsLicences
+        bool holdsLicenses
     )
     {
         var basics = await BasicsAsync(context);
-        var typeName = holdsLicences ? "Seed laptop" : "Seed monitor";
+        var typeName = holdsLicenses ? "Seed laptop" : "Seed monitor";
         var type =
             await context.ElectronicDeviceTypes.FirstOrDefaultAsync(t => t.Name == typeName)
             ?? context
@@ -190,7 +190,7 @@ public static class Seed
                     {
                         Id = Guid.CreateVersion7(),
                         Name = typeName,
-                        HoldLicences = holdsLicences,
+                        HoldLicences = holdsLicenses,
                     }
                 )
                 .Entity;

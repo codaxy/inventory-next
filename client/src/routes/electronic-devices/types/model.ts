@@ -11,8 +11,8 @@ export interface Option {
 export interface Row {
     id: string;
     name: string;
-    /** Present only where the type holds licences: a flag, not a column of "No". */
-    licences?: string;
+    /** Present only where the type holds licenses: a flag, not a column of "No". */
+    licenses?: string;
     description?: string;
     /** Absent when the type carries none: the cell shows "—", as any empty cell does. */
     tags?: string;
@@ -25,10 +25,10 @@ export interface Row {
 export interface Filters {
     tags?: Option[];
     /** `null` or absent: either. */
-    holdsLicences?: boolean | null;
+    holdsLicenses?: boolean | null;
 }
 
-export type FilterKey = "holdsLicences" | `tag:${string}`;
+export type FilterKey = "holdsLicenses" | `tag:${string}`;
 
 export interface Chip {
     key: FilterKey;
@@ -66,7 +66,7 @@ export const toRows = (items: TypeItem[]): Row[] =>
     items.map((t) => ({
         id: t.id,
         name: t.name,
-        licences: t.holdsLicences ? "Holds licences" : undefined,
+        licenses: t.holdsLicenses ? "Holds licenses" : undefined,
         // The original saved an emptied description as "", so blank is absent too.
         description: t.description || undefined,
         tags: t.tagCount === 0 ? undefined : t.firstTags.join(", "),
@@ -76,12 +76,12 @@ export const toRows = (items: TypeItem[]): Row[] =>
 
 export const toChips = (filters: Filters): Chip[] => [
     ...(filters.tags ?? []).map((t) => ({ key: `tag:${t.id}` as const, text: `Tag: ${t.text || "…"}` })),
-    ...(filters.holdsLicences == null
+    ...(filters.holdsLicenses == null
         ? []
         : [
               {
-                  key: "holdsLicences" as const,
-                  text: filters.holdsLicences ? "Holds licences" : "Holds no licences",
+                  key: "holdsLicenses" as const,
+                  text: filters.holdsLicenses ? "Holds licenses" : "Holds no licenses",
               },
           ]),
 ];

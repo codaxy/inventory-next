@@ -59,7 +59,7 @@ export abstract class ListController<
     protected abstract readonly path: string;
     protected abstract readonly defaultSort: Sort;
     protected abstract readonly sorts: readonly Sort[];
-    /** "licence", "licences", "No licences". */
+    /** "license", "licenses", "No licenses". */
     protected abstract readonly nouns: readonly [string, string, string];
     protected abstract readonly failure: string;
 

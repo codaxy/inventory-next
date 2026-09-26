@@ -30,7 +30,7 @@ taken: boundaries between items enforced by tests, since review holds them; data
 layer per slice, since the schema is one frozen graph and the context is shared.
 
 `App` mirrors the client's menu: a folder per section, and in it a folder per item —
-`Licenses/Activations`, `Directory/Locations` — so a screen has the same path on both sides.
+`Licenses/Activations`, `Company/Locations` — so a screen has the same path on both sides.
 
 ```
 Licenses/
@@ -53,16 +53,16 @@ the one call `Program.cs` makes for it.
 ## Where an entity lives
 
 **With the item that shows it**, and a lookup with no screen of its own with the item that uses it:
-countries, cities and states in `Directory/Locations`, currencies and periods in `Licenses/Licenses`.
+countries, cities and states in `Company/Locations`, currencies and periods in `Licenses/Licenses`.
 
 **`Shared/` holds what several items use and none can own**, each as a folder of things that belong
 together — never a bin sorted by kind:
 
 - **`Shared/Assets`** — `Asset` and its categories, statuses and types, `Sequence`, maintenance
-  contracts, business entities: `Asset` is the base of devices, furniture and licences alike.
+  contracts, business entities: `Asset` is the base of devices, furniture and licenses alike.
 - **`Shared/Classification`** — confidentiality, integrity, availability and importance, which assets
   and information always carry as a set.
-- **`Shared/Volumes`** — `Volume` and its type. Licences, software and services, clouds, software and
+- **`Shared/Volumes`** — `Volume` and its type. Licenses, software and services, clouds, software and
   activations all point at a volume.
 
 **`Persistence/`** holds the context, the migrations, the seed data, the audit log and its interceptor,
@@ -75,6 +75,11 @@ schema is one graph and frozen, so an entity referencing another item's is a for
 What an item's *code* reaches into is review's to hold; nothing enforces it.
 
 ## Naming
+
+**"License", never "licence"** — in what a person reads, URLs, DTOs and their JSON, folders,
+identifiers, tests and these documents, as the menu and the original have it. Only what a migration
+would have to rename keeps the original's spelling: entity members and columns,
+`ElectronicDeviceType.HoldLicences` and `hold_licences`.
 
 **No folder takes the name of a class it would shadow.** A namespace wins every lookup from inside
 `Codaxy.Inventory.App`, and entity names are frozen by the audit log. Where the plain name is taken, a
@@ -135,6 +140,11 @@ invariant culture of a container among them, so `Shared/Export/Excel` writes und
 **A delete the database would refuse is a 409 that says what holds the record** — "113 devices are of
 this type" — checked before the save, not left to surface as a foreign-key 500.
 
+**What is attached to a record is counted and sampled by one rule** — `Shared/Assets/AssetHoldings`:
+the devices, furniture and licenses of any asset predicate, and any other kind through
+`SectionAsync`, each its total and its first ten by name. **A name unique by the application** goes
+through `Shared/Validation/Unique`, trimmed and case-folded on both sides.
+
 **A page that gathers other items' records has an endpoint of its own** — a person's holdings, per
 kind the total and the first rows, in one request — rather than a list endpoint per kind called from
 the page: one round trip, and a kind without a list endpoint yet is served all the same. "See all"
@@ -163,10 +173,6 @@ constraints; `MigrationsTests` fails on that. The model snapshot and the migrati
 types as strings and follow only by search and replace: **a stale string passes every test**, so grep
 for the old namespace after a move. Designer strings naming entities dropped long ago keep their old
 namespace.
-
-**`Directory/` shadows `System.IO.Directory`** inside `Codaxy.Inventory.App`: `Directory.Exists` there
-resolves to the menu section and fails to compile. Write `System.IO.Directory`. The tests and `Web` sit
-outside that namespace and are unaffected.
 
 **`App` uses the plain SDK, so it declares the implicit usings `Sdk.Web` would add** — `Http`,
 `Routing`, `Builder`, `Logging` and the rest. Without them every endpoint fails on `IResult` and

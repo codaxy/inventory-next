@@ -1,12 +1,12 @@
 ﻿#nullable disable
 
 using System.Linq;
-using Codaxy.Inventory.App.Directory.Clients;
-using Codaxy.Inventory.App.Directory.Locations;
-using Codaxy.Inventory.App.Directory.Manufacturers;
-using Codaxy.Inventory.App.Directory.People;
-using Codaxy.Inventory.App.Directory.Projects;
-using Codaxy.Inventory.App.Directory.Vendors;
+using Codaxy.Inventory.App.Company.Clients;
+using Codaxy.Inventory.App.Company.Locations;
+using Codaxy.Inventory.App.Company.Manufacturers;
+using Codaxy.Inventory.App.Company.People;
+using Codaxy.Inventory.App.Company.Projects;
+using Codaxy.Inventory.App.Company.Vendors;
 using Codaxy.Inventory.App.ElectronicDevices.Devices;
 using Codaxy.Inventory.App.ElectronicDevices.Tags;
 using Codaxy.Inventory.App.ElectronicDevices.Types;

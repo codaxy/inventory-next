@@ -237,7 +237,7 @@ a.editor-chip:hover {
     color: var(--color-danger-text);
 }
 
-// A link standing in for a value — the licence an activation draws on.
+// A link standing in for a value — the license an activation draws on.
 .editor-link {
     display: inline-block;
     color: var(--color-primary-text);
@@ -284,7 +284,7 @@ a.editor-chip:hover {
     color: var(--color-ink-muted);
 }
 
-// A licence's volumes: an existing one a line, a new one its four fields; remove at the end of each.
+// A license's volumes: an existing one a line, a new one its four fields; remove at the end of each.
 .volume-list {
     display: grid;
     gap: 0.5rem;
@@ -502,7 +502,7 @@ a.editor-chip:hover {
     min-width: 44px;
 }
 
-// A volume row that is a link to its licence, where the software lists its volumes.
+// A volume row that is a link to its license, where the software lists its volumes.
 a.volume-row.volume-link {
     color: inherit;
     text-decoration: none;

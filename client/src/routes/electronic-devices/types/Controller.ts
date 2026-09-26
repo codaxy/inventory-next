@@ -26,7 +26,7 @@ export default class extends ListController<Filters, TypeItem, Row, TypeSort, Fi
         return listTypes({
             ...q,
             tagIds: filters.tags?.map((t) => t.id),
-            holdsLicences: filters.holdsLicences ?? undefined,
+            holdsLicenses: filters.holdsLicenses ?? undefined,
         });
     }
 
@@ -34,23 +34,23 @@ export default class extends ListController<Filters, TypeItem, Row, TypeSort, Fi
     protected toChips = toChips;
 
     protected filtersFrom(query: URLSearchParams): Filters {
-        const holds = query.get("holdsLicences");
+        const holds = query.get("holdsLicenses");
         return {
             // The names come with the options; until then a chip reads "Tag".
             tags: query.getAll("tagId").map((id) => ({ id, text: "" })),
-            holdsLicences: holds === "true" ? true : holds === "false" ? false : null,
+            holdsLicenses: holds === "true" ? true : holds === "false" ? false : null,
         };
     }
 
     protected filtersTo(f: Filters): Record<string, AddressValue> {
         return {
             tagId: f.tags?.map((t) => t.id),
-            holdsLicences: f.holdsLicences == null ? undefined : String(f.holdsLicences),
+            holdsLicenses: f.holdsLicenses == null ? undefined : String(f.holdsLicenses),
         };
     }
 
     protected without(f: Filters, key: FilterKey): Filters {
-        if (key === "holdsLicences") return { ...f, holdsLicences: null };
+        if (key === "holdsLicenses") return { ...f, holdsLicenses: null };
         const id = key.slice("tag:".length);
         return { ...f, tags: (f.tags ?? []).filter((t) => t.id !== id) };
     }
@@ -75,7 +75,7 @@ export default class extends ListController<Filters, TypeItem, Row, TypeSort, Fi
         this.sortOn(key);
     }
 
-    setHoldsLicences(value: boolean | null) {
-        this.store.set(m.types.filters.holdsLicences, value);
+    setHoldsLicenses(value: boolean | null) {
+        this.store.set(m.types.filters.holdsLicenses, value);
     }
 }

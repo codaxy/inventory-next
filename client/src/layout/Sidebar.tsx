@@ -13,7 +13,7 @@ const closeDrawer = (_e: unknown, { store }: any) => store.set($app.ui.drawerOpe
  * cannot drift apart. Any tap inside it, a link included, closes the drawer.
  *
  * The menu is static, so it is built here rather than repeated from the store. Which item is lit is
- * worked out from the address (`isCurrent`), not by cx's `match`: `~/licenses/:id` belongs to Licences
+ * worked out from the address (`isCurrent`), not by cx's `match`: `~/licenses/:id` belongs to Licenses
  * but `~/licenses/activations` does not, and no single `match` says both.
  */
 export const Sidebar = createFunctionalComponent(() => (

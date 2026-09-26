@@ -1,12 +1,12 @@
 import type { Page } from "../paging";
-import type { Expiry } from "./activations";
+import type { AssetRow, LicenseRow, Section } from "./assets";
 import { send, toQuery } from "./http";
 
 export interface PersonItem {
     id: string;
     name: string;
     email: string;
-    /** Every asset they hold: devices, furniture, licences. */
+    /** Every asset they hold: devices, furniture, licenses. */
     assets: number;
     /** Active seats assigned to them by name. */
     seats: number;
@@ -30,28 +30,6 @@ export interface PersonQuery {
     sort?: PersonSort;
     page: number;
     pageSize: number;
-}
-
-export interface Section<T> {
-    total: number;
-    items: T[];
-}
-
-export interface AssetRow {
-    id: string;
-    number: number | null;
-    name: string;
-    type: string | null;
-    model: string | null;
-}
-
-export interface LicenseRow {
-    id: string;
-    number: number | null;
-    name: string;
-    vendor: string;
-    expirationDate: string | null;
-    expiry: Expiry | null;
 }
 
 export interface SeatRow {
@@ -82,7 +60,7 @@ export interface Handover {
     assets: { number: number | null; name: string; description: string | null; type: string }[];
 }
 
-const base = "/api/directory/people";
+const base = "/api/company/people";
 
 export const listPeople = (q: PersonQuery) => send<Page<PersonItem>>(`${base}/?${toQuery(q)}`);
 

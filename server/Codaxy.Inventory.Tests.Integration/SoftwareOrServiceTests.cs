@@ -1,6 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
-using Codaxy.Inventory.App.Directory.Manufacturers;
+using Codaxy.Inventory.App.Company.Manufacturers;
 using Codaxy.Inventory.App.Licenses.SoftwareServices;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Paging;
@@ -15,7 +15,7 @@ namespace Codaxy.Inventory.Tests.Integration;
 using Item = App.Licenses.SoftwareServices.List.Endpoint.Item;
 
 /// <summary>
-/// Two categories, two manufacturers and two entries — Windows, which a licence volume names, and
+/// Two categories, two manufacturers and two entries — Windows, which a license volume names, and
 /// Postgres, which nothing does; a test that changes data works on an entry of its own.
 /// </summary>
 public class SoftwareOrServiceApplication : InventoryApplication
@@ -187,7 +187,7 @@ public class SoftwareOrServiceTests(SoftwareOrServiceApplication app)
 
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
         Assert.StartsWith(
-            "A licence volume",
+            "A license volume",
             (await response.Content.ReadFromJsonAsync<ProblemDetails>())!.Title
         );
         Assert.Equal(volumesBefore, await app.InScopeAsync(c => c.Volumes.CountAsync()));
@@ -317,7 +317,7 @@ public class SoftwareOrServiceTests(SoftwareOrServiceApplication app)
         );
         var volume = Assert.Single(entry.Volumes);
         Assert.Equal(
-            ("Seed licence", "Per user", 5, 0),
+            ("Seed license", "Per user", 5, 0),
             (volume.License, volume.Type, volume.Quantity, volume.InUse)
         );
     }

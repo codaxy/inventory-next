@@ -21,7 +21,7 @@ const notEmpty = expr(
     (loaded, total, error) => !(loaded && total === 0 && !error),
 );
 
-/** Software and services: what a licence's volume is of. Search, filters, each row opening the entry. */
+/** Software and services: what a license's volume is of. Search, filters, each row opening the entry. */
 export default createFunctionalComponent(() => {
     const onBarRef = stickyBar();
 

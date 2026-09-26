@@ -15,7 +15,7 @@ public static class Endpoint
     public sealed record Query(
         string? Q,
         [FromQuery(Name = "tagId")] Guid[]? TagIds,
-        bool? HoldsLicences,
+        bool? HoldsLicenses,
         string? Sort,
         int? Page,
         int? PageSize
@@ -25,7 +25,7 @@ public static class Endpoint
     public sealed record Item(
         Guid Id,
         string Name,
-        bool HoldsLicences,
+        bool HoldsLicenses,
         string? Description,
         int TagCount,
         IReadOnlyList<string> FirstTags,
@@ -73,7 +73,7 @@ public static class Endpoint
         foreach (var tagId in (query.TagIds ?? []).Distinct())
             types = types.Where(t => t.Tags.Any(l => l.ElectronicDeviceTagId == tagId));
 
-        if (query.HoldsLicences is { } holds)
+        if (query.HoldsLicenses is { } holds)
             types = types.Where(t => t.HoldLicences == holds);
 
         var devices = context.ElectronicDevices;

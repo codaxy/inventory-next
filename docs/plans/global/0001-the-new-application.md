@@ -36,15 +36,15 @@ wrong.
    getting slowly.
 2. **Electronic devices.** The largest list and the richest editor: if paging, filtering and the
    phone layout survive this, they survive everything.
-3. ~~**Licences, volumes and activations.**~~ The only area with behaviour rather than shape — seat
+3. ~~**Licenses, volumes and activations.**~~ The only area with behaviour rather than shape — seat
    counts, activation and its reversal, subscription expiry.
 4. **Furniture, the infrastructure — virtual machines, clouds, software — and the remaining asset
    types.** Shapes already proven by step 2.
 5. **Information and its types, tags and locations.**
-6. **The directory.** Many screens, one shape.
+6. **The company.** Many screens, one shape.
 7. **The audit log, the log viewer and Excel export.** The read-only corners, and the ones whose
    behaviour is least worth changing. Amended: export lands with each list it belongs to rather than
-   here — licences and activations have it, electronic devices, furniture and information bring
+   here — licenses and activations have it, electronic devices, furniture and information bring
    theirs. The audit log was built ahead of the rest, at the user's
    request, and is the first list: step 1's paging convention is the one it set, with a search
    modernised rather than kept at parity. The log viewer followed it, reading a daily JSON-lines file
@@ -58,12 +58,12 @@ wrong.
 step 1 is written once; settled in step 4 it is rewritten three times.
 
 **Electronic devices before the rest** because it is the worst case for every decision the skeleton
-made. Proving them on a small directory screen proves nothing.
+made. Proving them on a small company screen proves nothing.
 
 **Activations after devices** because they depend on assets, and because they are the only place where
 the domain has rules rather than fields — the place to get the transition endpoints right.
 
-**The directory late** despite being easy: they are the least risky and the most repetitive, so they are
+**The company late** despite being easy: they are the least risky and the most repetitive, so they are
 what to do when the shape is settled and the work is mechanical.
 
 **Deprecation last and as one act.** Both applications stay reachable until every step above has

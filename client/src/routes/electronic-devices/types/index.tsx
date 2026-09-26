@@ -21,9 +21,9 @@ const notEmpty = expr(
     (loaded, total, error) => !(loaded && total === 0 && !error),
 );
 
-const licences = [
+const licenses = [
     { value: null, text: "Any" },
-    { value: true, text: "Holds licences" },
+    { value: true, text: "Holds licenses" },
     { value: false, text: "Holds none" },
 ] as const;
 
@@ -88,22 +88,22 @@ export default createFunctionalComponent(() => {
                             </div>
 
                             <div class="list-filter">
-                                <div class="list-filter-label" text="Licences" />
-                                <div class="segmented" role="group" aria-label="Licences">
-                                    {licences.map((l) => (
+                                <div class="list-filter-label" text="Licenses" />
+                                <div class="segmented" role="group" aria-label="Licenses">
+                                    {licenses.map((l) => (
                                         <cx>
                                             <Button
                                                 mod="hollow"
                                                 class={{
                                                     "segmented-item": true,
                                                     "segmented-item-on": expr(
-                                                        f.holdsLicences,
+                                                        f.holdsLicenses,
                                                         (v) => (v ?? null) === l.value,
                                                     ),
                                                 }}
                                                 text={l.text}
                                                 onClick={(_e: unknown, { controller }: any) =>
-                                                    controller.setHoldsLicences(l.value)
+                                                    controller.setHoldsLicenses(l.value)
                                                 }
                                             />
                                         </cx>
@@ -177,8 +177,8 @@ export default createFunctionalComponent(() => {
                                 <span text={m.$row.name} />
                                 <span
                                     class="record-flag"
-                                    visible={hasValue(m.$row.licences)}
-                                    text={m.$row.licences}
+                                    visible={hasValue(m.$row.licenses)}
+                                    text={m.$row.licenses}
                                 />
                             </span>
                             <span

@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
-using Codaxy.Inventory.App.Directory.People;
-using Codaxy.Inventory.App.Directory.Vendors;
+using Codaxy.Inventory.App.Company.People;
+using Codaxy.Inventory.App.Company.Vendors;
 using Codaxy.Inventory.App.ElectronicDevices.Devices;
 using Codaxy.Inventory.App.ElectronicDevices.Tags;
 using Codaxy.Inventory.App.ElectronicDevices.Types;
@@ -18,7 +18,7 @@ namespace Codaxy.Inventory.Tests.Integration;
 using Item = App.ElectronicDevices.Types.List.Endpoint.Item;
 
 /// <summary>
-/// Three tags and two types — a laptop that holds licences, carries two tags and has two devices, and
+/// Three tags and two types — a laptop that holds licenses, carries two tags and has two devices, and
 /// a monitor with neither; a test that changes data works on a type of its own.
 /// </summary>
 public class TypeApplication : InventoryApplication
@@ -113,7 +113,7 @@ public class ElectronicDeviceTypeTests(TypeApplication app) : IClassFixture<Type
             new
             {
                 name,
-                holdsLicences = true,
+                holdsLicenses = true,
                 description = "made by a test",
                 tagIds = tags,
             }
@@ -150,7 +150,7 @@ public class ElectronicDeviceTypeTests(TypeApplication app) : IClassFixture<Type
     {
         var type = await CreateAsync("  Tablet  ", TypeApplication.Mobile, TypeApplication.Spare);
 
-        Assert.Equal(("Tablet", true), (type.Name, type.HoldsLicences));
+        Assert.Equal(("Tablet", true), (type.Name, type.HoldsLicenses));
         Assert.Equal(["Mobile", "Spare"], type.Tags.Select(t => t.Name));
         Assert.Equal(0, type.DeviceCount);
         Assert.Equal(
@@ -176,7 +176,7 @@ public class ElectronicDeviceTypeTests(TypeApplication app) : IClassFixture<Type
             new
             {
                 name = "Big phone",
-                holdsLicences = false,
+                holdsLicenses = false,
                 description = "",
                 tagIds = new[] { TypeApplication.HasData, TypeApplication.Spare },
             }
@@ -186,7 +186,7 @@ public class ElectronicDeviceTypeTests(TypeApplication app) : IClassFixture<Type
         var edited = (await response.Content.ReadFromJsonAsync<TypeDetail>())!;
         Assert.Equal(
             ("Big phone", false, (string?)null),
-            (edited.Name, edited.HoldsLicences, edited.Description)
+            (edited.Name, edited.HoldsLicenses, edited.Description)
         );
         Assert.Equal(["HasData", "Spare"], edited.Tags.Select(t => t.Name));
         Assert.Equal(
@@ -349,7 +349,7 @@ public class ElectronicDeviceTypeTests(TypeApplication app) : IClassFixture<Type
 
         Assert.Equal(
             ("Laptop", true, "Portable computer", 2),
-            (type!.Name, type.HoldsLicences, type.Description, type.DeviceCount)
+            (type!.Name, type.HoldsLicenses, type.Description, type.DeviceCount)
         );
         Assert.Equal(["HasData", "Mobile"], type.Tags.Select(t => t.Name));
     }
@@ -361,14 +361,14 @@ public class ElectronicDeviceTypeTests(TypeApplication app) : IClassFixture<Type
 
         Assert.Equal(
             ("Laptop", true, 2, 2),
-            (laptop.Name, laptop.HoldsLicences, laptop.TagCount, laptop.DeviceCount)
+            (laptop.Name, laptop.HoldsLicenses, laptop.TagCount, laptop.DeviceCount)
         );
         Assert.Equal(["HasData", "Mobile"], laptop.FirstTags);
         Assert.Equal(0, Assert.Single((await ListAsync("q=MONITOR")).Items).DeviceCount);
     }
 
     [Fact]
-    public async Task Filters_by_every_given_tag_and_by_licences()
+    public async Task Filters_by_every_given_tag_and_by_licenses()
     {
         var both = await ListAsync(
             $"tagId={TypeApplication.Mobile}&tagId={TypeApplication.HasData}"
@@ -376,8 +376,8 @@ public class ElectronicDeviceTypeTests(TypeApplication app) : IClassFixture<Type
         var spare = await ListAsync(
             $"tagId={TypeApplication.Mobile}&tagId={TypeApplication.Spare}&q=laptop"
         );
-        var notHolding = await ListAsync("holdsLicences=false&q=monitor");
-        var holding = await ListAsync("holdsLicences=true&q=monitor");
+        var notHolding = await ListAsync("holdsLicenses=false&q=monitor");
+        var holding = await ListAsync("holdsLicenses=true&q=monitor");
 
         Assert.Contains(both.Items, t => t.Name == "Laptop");
         Assert.Empty(spare.Items);

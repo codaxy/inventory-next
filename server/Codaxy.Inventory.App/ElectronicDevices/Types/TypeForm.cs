@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codaxy.Inventory.App.ElectronicDevices.Types;
 
-/// <summary>What creating and editing a type take: its words, whether it holds licences, its tags.</summary>
+/// <summary>What creating and editing a type take: its words, whether it holds licenses, its tags.</summary>
 public sealed record TypeForm(
     [property:
         Required(ErrorMessage = "Give the type a name."),
         StringLength(100, ErrorMessage = "A name is at most 100 characters.")
     ]
         string? Name,
-    bool HoldsLicences,
+    bool HoldsLicenses,
     [property: StringLength(1000, ErrorMessage = "A description is at most 1000 characters.")]
         string? Description,
     IReadOnlyList<Guid>? TagIds
@@ -22,7 +22,7 @@ public sealed record TypeForm(
 public sealed record TypeDetail(
     Guid Id,
     string Name,
-    bool HoldsLicences,
+    bool HoldsLicenses,
     string? Description,
     IReadOnlyList<TagRef> Tags,
     int DeviceCount
@@ -93,7 +93,7 @@ internal static class DeviceTypes
     )
     {
         type.Name = form.Name!.Trim();
-        type.HoldLicences = form.HoldsLicences;
+        type.HoldLicences = form.HoldsLicenses;
         type.Description = string.IsNullOrWhiteSpace(form.Description)
             ? null
             : form.Description.Trim();

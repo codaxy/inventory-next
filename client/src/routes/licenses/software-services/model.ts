@@ -9,7 +9,7 @@ export interface Row {
     category: string;
     manufacturer: string;
     url?: string;
-    /** Absent when no licence volume is of it. */
+    /** Absent when no license volume is of it. */
     volumes?: string;
 }
 

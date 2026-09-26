@@ -53,9 +53,9 @@ first migration after deprecation, not a backlog to act on.
 - **"Guarantee" is warranty.** `ElectronicDevice.GuaranteeNumber` and `GuaranteeExpirationDate` name
   a warranty; the screens and the API models say so, and the entity keeps the frozen names until
   this rename.
-- **A licence may name its software or service.** Optional: a licence of one product — most are —
+- **A license may name its software or service.** Optional: a license of one product — most are —
   names it, and its volumes can then only be of that software; one without keeps volumes of any, as
-  now. It needs a nullable `SoftwareOrServiceId` on `License`; until then a licence is attached to
+  now. It needs a nullable `SoftwareOrServiceId` on `License`; until then a license is attached to
   software only through its volumes.
 - **A person's email is unique**, by an index on `lower(trim(email))`. The application refuses a
   duplicate here; the original checks nothing, and two saves at once pass either way.

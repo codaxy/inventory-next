@@ -1,8 +1,9 @@
 import type { AccessorChain } from "cx/data";
 import { type Config, expr, falsy, hasValue } from "cx/ui";
-import { Checkbox, DateField, LookupField, NumberField, TextArea, TextField } from "cx/widgets";
+import { Checkbox, DateField, Link, LookupField, NumberField, TextArea, TextField } from "cx/widgets";
 
 import { dateValue, numberValue } from "../bindings";
+import $app from "../model";
 import { externalLink } from "./externalLink";
 
 /** The server's message goes in a line under its field; cx's hover tooltip would hide it. */
@@ -51,12 +52,35 @@ export function formFields(state: FormState, prefix: string) {
         </cx>
     );
 
-    /** A picker over one of the options' lists, bound as `<key>Id` and `<key>Text`. */
-    const pick = (text: string, key: string, list: string, opts: Layout = {}) => (
+    /**
+     * A picker over one of the options' lists, bound as `<key>Id` and `<key>Text`. Given `href`, the
+     * chosen record's address from its id, the view shows the choice as a link to it.
+     */
+    const pick = (
+        text: string,
+        key: string,
+        list: string,
+        opts: Layout & { href?: (id: string) => string } = {},
+    ) => (
         <cx>
             <div class={{ "editor-wide": !!opts.wide }}>
                 {label(text, opts.required, `${prefix}-${key}-label`)}
+                {opts.href ? (
+                    <cx>
+                        <div class="editor-value" visible={state.viewing}>
+                            <Link
+                                class="editor-link"
+                                visible={hasValue(d[`${key}Id`])}
+                                href={expr(d[`${key}Id`], (id) => (id ? opts.href!(id) : ""))}
+                                url={$app.url}
+                                text={d[`${key}Text`]}
+                            />
+                            <span class="editor-empty" visible={expr(d[`${key}Id`], (id) => !id)} text="—" />
+                        </div>
+                    </cx>
+                ) : null}
                 <LookupField
+                    visible={opts.href ? editing : true}
                     id={`${prefix}-${key}`}
                     value={d[`${key}Id`]}
                     text={d[`${key}Text`]}
@@ -134,6 +158,26 @@ export function formFields(state: FormState, prefix: string) {
         </cx>
     );
 
+    /** A whole number: a house number, a floor. */
+    const whole = (text: string, key: string, opts: Layout & { min?: number } = {}) => (
+        <cx>
+            <div>
+                {label(text, opts.required)}
+                <NumberField
+                    value={numberValue(d[key])}
+                    required={!!opts.required}
+                    minValue={opts.min}
+                    format="n;0"
+                    emptyText="—"
+                    error={errors[key]}
+                    errorTooltip={noErrorText}
+                    inputAttrs={{ "aria-label": text, inputMode: "numeric" }}
+                />
+                {message(key)}
+            </div>
+        </cx>
+    );
+
     const date = (text: string, key: string, opts: Layout = {}) => (
         <cx>
             <div>
@@ -196,5 +240,18 @@ export function formFields(state: FormState, prefix: string) {
         </cx>
     );
 
-    return { label, message, pick, text, prose, money, date, flag, basicInformation, editing, noErrorText };
+    return {
+        label,
+        message,
+        pick,
+        text,
+        prose,
+        money,
+        whole,
+        date,
+        flag,
+        basicInformation,
+        editing,
+        noErrorText,
+    };
 }

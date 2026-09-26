@@ -143,13 +143,13 @@ export default createFunctionalComponent(() => (
                                 />
                             </div>
                             <div class="editor-wide" visible={expr(e.viewing, e.loading, (v, l) => v && !l)}>
-                                <div class="editor-label" text="Licence volumes" />
+                                <div class="editor-label" text="License volumes" />
                                 <div
                                     class="editor-value"
                                     visible={expr(e.volumes, (v) => !v?.length)}
                                     text={expr(e.volumeCount, (n) => volumesText(n ?? 0))}
                                 />
-                                {/* Each a link to its licence, read in the same parts as on the licence's page. */}
+                                {/* Each a link to its license, read in the same parts as on the license's page. */}
                                 <div class="volume-list">
                                     <Repeater records={e.volumes} recordAlias={m.$volume} keyField="id">
                                         <Link

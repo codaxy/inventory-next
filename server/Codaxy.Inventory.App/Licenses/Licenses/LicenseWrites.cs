@@ -5,16 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codaxy.Inventory.App.Licenses.Licenses;
 
-/// <summary>What creating, editing and reading a licence share.</summary>
+/// <summary>What creating, editing and reading a license share.</summary>
 internal static class LicenseWrites
 {
-    /// <summary>The seeded asset type every licence carries.</summary>
+    /// <summary>The seeded asset type every license carries.</summary>
     public const string AssetType = "Licenses";
 
     private static IResult Problem(string field, string message) =>
         Results.ValidationProblem(new Dictionary<string, string[]> { [field] = [message] });
 
-    /// <summary>Every id the form names exists — the asset's and the licence's — and every volume to add is complete.</summary>
+    /// <summary>Every id the form names exists — the asset's and the license's — and every volume to add is complete.</summary>
     public static async Task<IResult?> CheckAsync(
         InventoryContext context,
         LicenseForm form,
@@ -98,7 +98,7 @@ internal static class LicenseWrites
     private static string? Text(string? value) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
-    /// <summary>The form's fields onto the asset, as every asset's are, and onto the licence.</summary>
+    /// <summary>The form's fields onto the asset, as every asset's are, and onto the license.</summary>
     public static async Task ApplyAsync(
         InventoryContext context,
         Asset asset,
@@ -190,7 +190,7 @@ internal static class LicenseWrites
             context.Volumes.Remove(volume);
         }
 
-        // Added to the context, not only to the collection: a tracked licence's new child that already
+        // Added to the context, not only to the collection: a tracked license's new child that already
         // carries its key is taken for an existing row, and saved as an update that matches nothing.
         foreach (var volume in (form.Volumes ?? []).Where(v => v.Id is null))
         {

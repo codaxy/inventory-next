@@ -51,9 +51,10 @@ The application allocates the id rather than letting the database default it, wh
 asset and its subtype row share one key before either is inserted.
 
 Besides the primary keys, `Asset.InventoryNumber` carries the only unique constraint in the database.
-Names in the codebooks and the directory are not unique: whether two vendors may share one is a product
+Names in the codebooks and the company's records are not unique: whether two vendors may share one is a product
 question nobody has answered, so the schema does not answer it either. **Device types, tags, software or
-services, furniture types and people are unique by name, whatever the case** — the original's editors refused a duplicate — and **people
+services, furniture types and every company record — people, clients, projects, vendors,
+manufacturers, locations — are unique by name, whatever the case** — the original's editors refused a duplicate — and **people
 by email too**, since an email is what a sign-in would be matched against. The application enforces
 it, as a field error, since the frozen schema cannot: two saves at once can still both pass, and the
 original can still write a duplicate. Both sides are compared trimmed — the original saved values
@@ -88,7 +89,7 @@ the two describing different schemas with nothing to say which is right.
 ## Seeding
 
 `SeedData()` is idempotent per table — each block runs only when its table is empty — and fills the
-codebooks and a starting directory with the values the product expects. It is safe to run against a
+codebooks and the company's starting records with the values the product expects. It is safe to run against a
 populated database, but it will not repair or update a table that already has any row in it.
 
 ## Audit log
@@ -136,7 +137,7 @@ literal GUID, so most codebook ids differ between every database that was ever s
 Nothing may hard-code one, and data cannot be moved between environments by id. The client already
 works around it by looking codebook entries up by text.
 
-**The audit log stores every column of every tracked row, in clear.** That includes licence key
+**The audit log stores every column of every tracked row, in clear.** That includes license key
 identifiers and anything in `Information` marked as personal data. It is readable by every signed-in
 user — see [auth.md](auth.md).
 

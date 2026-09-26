@@ -53,7 +53,7 @@ export default class extends Controller {
         this.store.set(m.type.errors, {});
         this.store.set(m.type.visited, false);
         this.store.set(m.type.valid, true);
-        this.load({ holdsLicences: false, tags: [] }, id ? "" : "New type");
+        this.load({ holdsLicenses: false, tags: [] }, id ? "" : "New type");
 
         // Only an editor can hold unsaved changes; the read-only view has nothing to lose.
         this.release?.();
@@ -67,7 +67,7 @@ export default class extends Controller {
                     this.load(
                         {
                             name: type.name,
-                            holdsLicences: type.holdsLicences,
+                            holdsLicenses: type.holdsLicenses,
                             description: type.description,
                             tags: type.tags.map((t) => ({ id: t.id, text: t.name })),
                         },
@@ -91,7 +91,7 @@ export default class extends Controller {
 
     private load(draft: TypeDraft, title: string) {
         // Text keys stay absent rather than empty: '' is a value, and `required` would pass on it.
-        const clean: TypeDraft = { holdsLicences: draft.holdsLicences, tags: draft.tags };
+        const clean: TypeDraft = { holdsLicenses: draft.holdsLicenses, tags: draft.tags };
         if (draft.name) clean.name = draft.name;
         if (draft.description) clean.description = draft.description;
 

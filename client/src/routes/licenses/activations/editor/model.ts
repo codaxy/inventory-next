@@ -60,11 +60,11 @@ export interface EditorState {
     /** The chosen volume, with its seats in use. */
     volume?: VolumeOption;
     forPerson: boolean;
-    /** The address named the volume — `new?volumeId=…`, from a licence's volume — so it and its
+    /** The address named the volume — `new?volumeId=…`, from a license's volume — so it and its
      *  software are shown, not asked. */
     fixed: boolean;
     /** Where the form was started from, and where its back link, Cancel and a save return: the
-     *  licence whose volume it activates, or the activations list. */
+     *  license whose volume it activates, or the activations list. */
     origin: { href: string; text: string };
     /** Why the seats asked for run past the volume's; it warns, it does not refuse. */
     overWarning?: string;

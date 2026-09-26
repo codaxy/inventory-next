@@ -187,7 +187,7 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("Integrity");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Directory.Locations.Location", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.Location", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -245,7 +245,7 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .HasForeignKey("IntegrityId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Codaxy.Inventory.App.Directory.Locations.Location", "Location")
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.Location", "Location")
                         .WithMany("Asset")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade);

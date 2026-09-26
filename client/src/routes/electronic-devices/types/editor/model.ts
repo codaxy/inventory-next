@@ -8,7 +8,7 @@ export interface Option {
 /** The form, as the fields bind it: text keys absent until typed, the tags as picker records. */
 export interface TypeDraft {
     name?: string | null;
-    holdsLicences: boolean;
+    holdsLicenses: boolean;
     description?: string | null;
     tags: Option[];
 }
@@ -45,7 +45,7 @@ export default createModel<Model>();
 /** What the server is sent: trimmed text, empty as null, the tag ids. */
 export const toForm = (draft: TypeDraft) => ({
     name: (draft.name ?? "").trim(),
-    holdsLicences: !!draft.holdsLicences,
+    holdsLicenses: !!draft.holdsLicenses,
     description: draft.description?.trim() || null,
     tagIds: draft.tags.map((t) => t.id),
 });

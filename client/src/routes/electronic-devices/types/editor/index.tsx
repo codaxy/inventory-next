@@ -82,17 +82,17 @@ export default createFunctionalComponent(() => (
                                 />
                             </div>
                             <div class="editor-wide">
-                                <div class="editor-label" text="Licences" />
+                                <div class="editor-label" text="Licenses" />
                                 <Checkbox
                                     visible={falsy(t.viewing)}
-                                    value={t.draft.holdsLicences}
-                                    text="Its devices can hold licences"
+                                    value={t.draft.holdsLicenses}
+                                    text="Its devices can hold licenses"
                                 />
                                 <div
                                     class="editor-value"
                                     visible={t.viewing}
-                                    text={expr(t.draft.holdsLicences, (h) =>
-                                        h ? "Its devices can hold licences" : "Its devices hold no licences",
+                                    text={expr(t.draft.holdsLicenses, (h) =>
+                                        h ? "Its devices can hold licenses" : "Its devices hold no licenses",
                                     )}
                                 />
                             </div>

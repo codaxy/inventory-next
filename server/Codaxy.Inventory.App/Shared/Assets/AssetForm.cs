@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Codaxy.Inventory.App.Shared.Assets;
 
 /// <summary>
-/// The asset's fields, as every asset's form carries them flat beside its own: a licence's, a piece of
+/// The asset's fields, as every asset's form carries them flat beside its own: a license's, a piece of
 /// furniture's. The number, the type and the importance are the server's; the last-modified time is
 /// echoed on an update so an edit made meanwhile is not overwritten.
 /// </summary>

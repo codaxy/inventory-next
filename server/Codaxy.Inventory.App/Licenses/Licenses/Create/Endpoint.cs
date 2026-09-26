@@ -9,7 +9,7 @@ public static class Endpoint
 {
     public static void Map(RouteGroupBuilder licenses) => licenses.MapPost("/", Handle);
 
-    /// <summary>The asset, its licence row and the volumes, numbered from the sequence, in one save.</summary>
+    /// <summary>The asset, its license row and the volumes, numbered from the sequence, in one save.</summary>
     private static async Task<IResult> Handle(
         [FromBody] LicenseForm form,
         InventoryContext context,
@@ -17,7 +17,7 @@ public static class Endpoint
         CancellationToken cancellationToken
     )
     {
-        // The licence's own attributes and the asset's rules, answered together.
+        // The license's own attributes and the asset's rules, answered together.
         if (AssetWrites.Validate(form, MiniValidator.Errors(form)) is { Count: > 0 } errors)
             return Results.ValidationProblem(errors);
 
@@ -25,7 +25,7 @@ public static class Endpoint
             return Results.ValidationProblem(
                 new Dictionary<string, string[]>
                 {
-                    ["volumes"] = ["A new licence has only new volumes."],
+                    ["volumes"] = ["A new license has only new volumes."],
                 }
             );
 

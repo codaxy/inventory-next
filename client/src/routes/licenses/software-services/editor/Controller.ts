@@ -149,7 +149,7 @@ export default class extends Controller {
         if (volumes > 0) {
             await confirm({
                 title: "This entry is in use",
-                message: `${volumesText(volumes)} Remove those volumes from their licences before deleting it.`,
+                message: `${volumesText(volumes)} Remove those volumes from their licenses before deleting it.`,
                 cancelText: "Close",
             });
             return;

@@ -3,7 +3,7 @@
 *Reverse-engineered from the code. It describes what the system does, not decisions recorded when they
 were taken; correct it where it is wrong rather than working around it.*
 
-The system tracks assets through their life-cycle, plus the information, licences and contracts
+The system tracks assets through their life-cycle, plus the information, licenses and contracts
 attached to them.
 
 ## Asset and its subtypes
@@ -12,7 +12,7 @@ attached to them.
 location, holder (`Person`), vendor, business entity, purchase date and value, invoice number, the
 CIA triad and importance, an `Incomplete` flag and `LastModified`.
 
-There are three specialisations — licence, furniture and electronic device — each a **separate table
+There are three specialisations — license, furniture and electronic device — each a **separate table
 sharing the asset's primary key**, in a one-to-one owned by `Asset` and cascade-deleted with it. The
 subtype's `AssetId` *is* its id, so creating one means creating both rows in a single `SaveChanges`,
 and `api/electronicdevices/{id}` and `api/assets/{id}` address the same entity by the same GUID.
@@ -27,7 +27,7 @@ points at the substatus only, so its status is reached through it.
 **Tags attach to device types, never to devices**: a device shows the tags of its type. A tag names a
 kind of thing — `Mobile`, `HasData` — and the link table is the whole of the relation.
 
-**A device type says whether its devices hold licences** (`HoldLicences`): only a device of such a type
+**A device type says whether its devices hold licenses** (`HoldLicences`): only a device of such a type
 is offered when an activation is assigned to a device. **A type a device or a piece of furniture uses
 is not deleted** — the foreign key does not cascade — while a tag goes with its links.
 
@@ -43,8 +43,8 @@ none touches `Sequence`.
 `VirtualMachine`, `Cloud` and `Software` are the infrastructure: a virtual machine is a name and an
 address, and a cloud or a software entry belongs to a `Volume`.
 
-Licence seats are modelled by three of them: a `Volume` is a quantity of a `SoftwareOrService` bought
-under a licence, and an `Activation` assigns one seat of a volume to a person, a device (an asset) or
+License seats are modelled by three of them: a `Volume` is a quantity of a `SoftwareOrService` bought
+under a license, and an `Activation` assigns one seat of a volume to a person, a device (an asset) or
 both. `MaintenanceContract` hangs off an asset, optionally.
 
 **An activation is never edited.** Once created, the only thing that changes is whether it is
@@ -54,12 +54,12 @@ Reactivating discards the date the deactivation held, so the pair is the whole o
 wrong activation is deleted and made again.
 
 **An activation's assignee follows the volume's type**: a person for a per-user volume, otherwise an
-electronic device whose type holds licences. **Seats past a volume's quantity warn, they are not
+electronic device whose type holds licenses. **Seats past a volume's quantity warn, they are not
 refused** — the original only warned, and over-allocation is recorded rather than prevented. Seats in
 use are the sum of the quantities of the volume's active activations.
 
 **A subscription is expired before its date, expires soon within fifteen days of it, and is current
-after**; a licence without a date has no status. A licence expiring today is still valid today.
+after**; a license without a date has no status. A license expiring today is still valid today.
 Today is the server's UTC date. Auto-renewal is a recorded flag and changes none of it.
 
 **Importance is computed from the three weights** of confidentiality, integrity and availability —
@@ -67,34 +67,37 @@ Today is the server's UTC date. Auto-renewal is a recorded flag and changes none
 every save; the original's client did, and sent the result.
 
 **What stands on a volume keeps it**: its activations, clouds and software entries cascade with it, so
-a volume holding any is not removed from its licence, and a licence with such a volume — or with a
+a volume holding any is not removed from its license, and a license with such a volume — or with a
 maintenance contract — is not deleted. A software or service a volume is of is not deleted either. An
 existing volume is kept as it is or removed; editing one is not offered, as in the original.
 
 ## Codebooks
 
 The lookup tables — countries, cities, states, currencies, periods, confidentiality, integrity,
-availability, importance, licence classes/categories/types/models, business entities — are small lists
+availability, importance, license classes/categories/types/models, business entities — are small lists
 of coded values, seeded (see [persistence.md](persistence.md)) and given no screen of their own. They
 are referenced by GUID everywhere except where the client resolves one by its text, as with importance
 levels.
 
-## The directory
+## The company
 
 `Person`, `Client`, `Project`, `Vendor`, `Manufacturer` and `Location` are records kept up to date by
 hand — a vendor has a VAT number and contacts, a project an owner and a client, a location an address —
 which assets, activations and information point at. They are not codebooks, although persons,
 locations, manufacturers and vendors are seeded with a starting set.
 
-**What a person holds**: the assets assigned to them — devices, furniture, licences — the seats
+**What a person holds**: the assets assigned to them — devices, furniture, licenses — the seats
 activated for them by name and those on a device they hold, the information they own and the
 projects they lead. Virtual machines, clouds and software entries have no owner: nothing in the
-schema ties one to a person. **A person holding anything is not deleted.**
+schema ties one to a person. **A company record something points at is not deleted** — a person
+holding anything, a client with a project, a project with information, a vendor an asset or a
+maintenance contract names, a manufacturer a device or a software names, a location an asset or
+information is at. Its page shows what that is.
 
 ## Inventory numbers
 
 A single `Sequence` row holds the next asset inventory number. Only the three services that create
-assets — licence, furniture, electronic device — read it, stamp the asset and increment it. The number
+assets — license, furniture, electronic device — read it, stamp the asset and increment it. The number
 is `int?` and nullable: assets created outside those paths have none.
 
 ## Traps
@@ -111,8 +114,10 @@ subtype row are consistent only because they save together.
 **`Sequence` must already contain a row.** The create paths throw `ItemNotFoundException` when it is
 empty rather than starting at 1.
 
-**Deleting a person cascades to everything they hold.** The foreign keys from asset, information and
-project to person are `ON DELETE CASCADE`, so a delete the application did not refuse would take a
+**Deleting a company record cascades further than it looks.** A person's delete takes their assets,
+information and projects; a client's its projects; a vendor's every asset bought from it and its
+maintenance contracts; a manufacturer's its software and services, and their volumes — the foreign
+keys are `ON DELETE CASCADE`, so a delete the application did not refuse would take a
 default holder's hundreds of devices with it — and the original's delete refuses only when an
 activation happens to stand in the way.
 

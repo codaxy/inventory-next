@@ -31,7 +31,7 @@ export default class extends Controller {
     /** Every volume, from the options: what a volume named in the address is looked up in. */
     private volumeRefs: VolumeRef[] = [];
     private licenses: { id: string; text: string }[] = [];
-    /** A volume named by the address — `new?volumeId=…`, from a licence's volume — to choose once loaded. */
+    /** A volume named by the address — `new?volumeId=…`, from a license's volume — to choose once loaded. */
     private preselect: string | null = null;
 
     onInit() {
@@ -135,12 +135,12 @@ export default class extends Controller {
     private choosePreselected() {
         const ref = this.volumeRefs.find((v) => v.id === this.preselect);
         if (!ref) return;
-        // Started from a licence's volume (`from=license`): that licence is where the reader goes back
+        // Started from a license's volume (`from=license`): that license is where the reader goes back
         // to. Started from the activations list filtered to the volume, the list is, as it was left.
         if (queryOf(this.store.get($app.url)).get("from") === "license")
             this.store.set(a.origin, {
                 href: `~/licenses/${ref.licenseId}`,
-                text: this.licenses.find((l) => l.id === ref.licenseId)?.text ?? "Licence",
+                text: this.licenses.find((l) => l.id === ref.licenseId)?.text ?? "License",
             });
         if (this.store.get(a.draft.softwareId) === ref.softwareId) return;
         this.store.set(a.draft.softwareId, ref.softwareId);

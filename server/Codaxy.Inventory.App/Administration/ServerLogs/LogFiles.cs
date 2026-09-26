@@ -157,14 +157,11 @@ public static partial class LogFiles
     /// <summary>Only names the sink writes; the folder is never walked beyond them.</summary>
     private static IEnumerable<LogFile> Files(string folder)
     {
-        if (!System.IO.Directory.Exists(folder))
+        if (!Directory.Exists(folder))
             yield break;
 
         foreach (
-            var path in System.IO.Directory.EnumerateFiles(
-                folder,
-                ServerLogOptions.FilePrefix + "*.log"
-            )
+            var path in Directory.EnumerateFiles(folder, ServerLogOptions.FilePrefix + "*.log")
         )
         {
             var match = FileName().Match(System.IO.Path.GetFileName(path));

@@ -12,7 +12,7 @@ public static class Endpoint
     /// <param name="Number">The device's inventory number, which a picker searches as well as the name.</param>
     public sealed record DeviceOption(Guid Id, string Text, int? Number, string? Holder);
 
-    /// <param name="Text">What tells one volume from another of the same licence and software: its description, else its type.</param>
+    /// <param name="Text">What tells one volume from another of the same license and software: its description, else its type.</param>
     public sealed record VolumeOption(
         Guid Id,
         string Text,
@@ -23,7 +23,7 @@ public static class Endpoint
 
     /// <summary>
     /// What the form and the list's filters pick from: software and services that have a volume,
-    /// licences, people, and the electronic devices whose type holds licences — the only ones a
+    /// licenses, people, and the electronic devices whose type holds licenses — the only ones a
     /// per-device volume is activated for.
     /// </summary>
     public sealed record Response(

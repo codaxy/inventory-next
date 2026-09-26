@@ -4,7 +4,7 @@ import { send } from "./http";
 export interface TypeItem {
     id: string;
     name: string;
-    holdsLicences: boolean;
+    holdsLicenses: boolean;
     description: string | null;
     tagCount: number;
     /** The first three by name; `tagCount` says how many more. */
@@ -20,7 +20,7 @@ export interface TagRef {
 export interface TypeDetail {
     id: string;
     name: string;
-    holdsLicences: boolean;
+    holdsLicenses: boolean;
     description: string | null;
     tags: TagRef[];
     deviceCount: number;
@@ -28,7 +28,7 @@ export interface TypeDetail {
 
 export interface TypeForm {
     name: string;
-    holdsLicences: boolean;
+    holdsLicenses: boolean;
     description: string | null;
     tagIds: string[];
 }
@@ -39,7 +39,7 @@ export interface TypeQuery {
     q?: string;
     /** A type must carry every one. */
     tagIds?: string[];
-    holdsLicences?: boolean;
+    holdsLicenses?: boolean;
     sort?: TypeSort;
     page: number;
     pageSize: number;

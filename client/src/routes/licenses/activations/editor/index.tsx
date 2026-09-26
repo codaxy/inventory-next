@@ -46,7 +46,7 @@ const fact = (label: string, value: typeof v.software | typeof v.deactivated) =>
 /**
  * An activation. Creating is a form — software, then its volume, then who or what holds the seats.
  * An existing one is never edited, only deactivated or reactivated, or deleted: a read-only page with
- * those actions in its header and the licence it draws on beside it.
+ * those actions in its header and the license it draws on beside it.
  */
 export default createFunctionalComponent(() => (
     <cx>
@@ -100,7 +100,7 @@ export default createFunctionalComponent(() => (
                         <div class="editor-grid">
                             {fact("Software or service", v.software)}
                             <div>
-                                <div class="editor-label" text="Licence" />
+                                <div class="editor-label" text="License" />
                                 <Link
                                     class="editor-value editor-link"
                                     href={expr(v.licenseId, (id) => `~/licenses/${id}`)}
@@ -119,7 +119,7 @@ export default createFunctionalComponent(() => (
                         </div>
                     </section>
                     <section class="editor-section">
-                        <h2 class="editor-section-title" text="The licence" />
+                        <h2 class="editor-section-title" text="The license" />
                         <div class="editor-grid">
                             <div>
                                 <div class="editor-label" text="Expiry" />
@@ -188,7 +188,7 @@ export default createFunctionalComponent(() => (
                                     options={a.volumes}
                                     required
                                     disabled={falsy(a.draft.softwareId)}
-                                    placeholder="Choose the licence's volume"
+                                    placeholder="Choose the license's volume"
                                     error={a.errors.volumeId}
                                     errorTooltip={noErrorText}
                                     inputAttrs={{ "aria-label": "Volume" }}
@@ -245,7 +245,7 @@ export default createFunctionalComponent(() => (
                                     visible={hasValue(a.errors.deviceId)}
                                     text={a.errors.deviceId}
                                 />
-                                <div class="editor-hint" text="Only devices of a type that holds licences." />
+                                <div class="editor-hint" text="Only devices of a type that holds licenses." />
                             </div>
                             <div>
                                 <div class="editor-label editor-required" text="Activated on" />

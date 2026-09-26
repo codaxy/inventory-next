@@ -35,7 +35,7 @@ const newRow = expr(m.$volume.id, (id) => !id);
 const keptRow = expr(m.$volume.id, (id) => !!id);
 
 /**
- * A licence's page: read-only as a row opens it, with Delete, Duplicate and Edit in the header;
+ * A license's page: read-only as a row opens it, with Delete, Duplicate and Edit in the header;
  * editable at `…/edit`, while creating and when duplicating (`new?from=…`). Basic and advanced
  * details, then the volumes: an existing one is kept or removed, a new one filled in.
  */
@@ -45,7 +45,7 @@ export default createFunctionalComponent(() => (
             <div class="page-header">
                 <Link href={listReturn("~/licenses")} url={$app.url} class="editor-back">
                     <Icon name="previous" class="size-4" />
-                    <span text="Licences" />
+                    <span text="Licenses" />
                 </Link>
                 <div class="editor-heading">
                     <h1 class="page-title">
@@ -85,8 +85,8 @@ export default createFunctionalComponent(() => (
                     <section class="editor-section">
                         <h2 class="editor-section-title" text="Subscription and details" />
                         <div class="editor-grid">
-                            {pick("Licence type", "licenseType", "licenseTypes")}
-                            {pick("Licence model", "licenseModel", "licenseModels")}
+                            {pick("License type", "licenseType", "licenseTypes")}
+                            {pick("License model", "licenseModel", "licenseModels")}
                             {pick("Expiration model", "expirationModel", "expirationModels")}
                             <div>
                                 <div class="editor-label" text="Expires" />
@@ -136,7 +136,7 @@ export default createFunctionalComponent(() => (
                         <p
                             class="editor-empty"
                             visible={noVolumes}
-                            text="No volumes: nothing of this licence can be activated."
+                            text="No volumes: nothing of this license can be activated."
                         />
                         <p class="field-message" visible={hasValue(errors.volumes)} text={errors.volumes} />
 

@@ -18,6 +18,23 @@ export interface NavSection {
 /** The menu, and the routing table of every screen in it. */
 export const navigation: NavSection[] = [
     {
+        title: "Company",
+        step: 6,
+        items: [
+            { label: "People", title: "People", href: "~/company/people", icon: "people" },
+            { label: "Clients", title: "Clients", href: "~/company/clients", icon: "clients" },
+            { label: "Projects", title: "Projects", href: "~/company/projects", icon: "projects" },
+            { label: "Vendors", title: "Vendors", href: "~/company/vendors", icon: "vendors" },
+            {
+                label: "Manufacturers",
+                title: "Manufacturers",
+                href: "~/company/manufacturers",
+                icon: "manufacturers",
+            },
+            { label: "Locations", title: "Locations", href: "~/company/locations", icon: "locations" },
+        ],
+    },
+    {
         title: "Electronic devices",
         step: 2,
         items: [
@@ -107,23 +124,6 @@ export const navigation: NavSection[] = [
         ],
     },
     {
-        title: "Directory",
-        step: 6,
-        items: [
-            { label: "People", title: "People", href: "~/directory/people", icon: "people" },
-            { label: "Clients", title: "Clients", href: "~/directory/clients", icon: "clients" },
-            { label: "Projects", title: "Projects", href: "~/directory/projects", icon: "projects" },
-            { label: "Vendors", title: "Vendors", href: "~/directory/vendors", icon: "vendors" },
-            {
-                label: "Manufacturers",
-                title: "Manufacturers",
-                href: "~/directory/manufacturers",
-                icon: "manufacturers",
-            },
-            { label: "Locations", title: "Locations", href: "~/directory/locations", icon: "locations" },
-        ],
-    },
-    {
         title: "Administration",
         step: 7,
         items: [
@@ -145,7 +145,7 @@ const hrefs = navigation.flatMap((section) => section.items.map((item) => item.h
 
 /**
  * Whether the address is the item's — its own, or a record under it — rather than another item's
- * nested under it: `~/licenses/:id` is Licences', `~/licenses/activations` is Activations'.
+ * nested under it: `~/licenses/:id` is Licenses', `~/licenses/activations` is Activations'.
  */
 export function isCurrent(href: string, url: string | null | undefined): boolean {
     const path = (url ?? "").split("?")[0];

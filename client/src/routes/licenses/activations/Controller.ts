@@ -80,13 +80,13 @@ export default class extends ListController<Filters, ActivationItem, Row, Activa
     onInit() {
         super.onInit();
 
-        // A licence and a software sit side by side, one covering the other when the licence has a
+        // A license and a software sit side by side, one covering the other when the license has a
         // volume of it: whichever the reader changes last wins, and the other is cleared if it no
-        // longer fits. The volumes, from the options, are what say which licence covers which.
+        // longer fits. The volumes, from the options, are what say which license covers which.
         let license = this.store.get(s.filters.licenseId) ?? null;
         let software = this.store.get(s.filters.softwareId) ?? null;
         this.addTrigger(
-            "licence-covers-software",
+            "license-covers-software",
             [s.filters.licenseId, s.filters.softwareId, s.volumes],
             (l, sw, volumes) => {
                 const changedSoftware = (sw ?? null) !== software;
@@ -102,7 +102,7 @@ export default class extends ListController<Filters, ActivationItem, Row, Activa
             },
         );
 
-        // The volume is the narrowest filter and lives inside one licence and one software: a licence
+        // The volume is the narrowest filter and lives inside one license and one software: a license
         // or software it does not belong to clears it, so the pane never holds filters that contradict
         // each other and match nothing. Its options arriving late re-checks one the address set.
         this.addTrigger(

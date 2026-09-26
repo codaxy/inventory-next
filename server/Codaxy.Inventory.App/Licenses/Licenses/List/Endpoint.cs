@@ -19,6 +19,7 @@ public static class Endpoint
         string? Q,
         Guid? VendorId,
         Guid? PersonId,
+        Guid? LocationId,
         DateOnly? PurchasedFrom,
         DateOnly? PurchasedTo,
         string? Expiry,
@@ -113,7 +114,7 @@ public static class Endpoint
     }
 
     /// <summary>
-    /// The licences the query selects, in its order — every one, for the page to take its window of
+    /// The licenses the query selects, in its order — every one, for the page to take its window of
     /// and the export to write whole, so the two can never disagree about what the list shows.
     /// </summary>
     internal static IOrderedQueryable<License> Rows(
@@ -140,6 +141,8 @@ public static class Endpoint
             licenses = licenses.Where(l => l.Asset.VendorId == vendor);
         if (query.PersonId is { } person)
             licenses = licenses.Where(l => l.Asset.PersonId == person);
+        if (query.LocationId is { } location)
+            licenses = licenses.Where(l => l.Asset.LocationId == location);
 
         if (query.PurchasedFrom is { } from)
             licenses = licenses.Where(l => l.Asset.PurchaseDate >= from);
@@ -175,7 +178,7 @@ public static class Endpoint
         };
     }
 
-    /// <summary>The reader's column, then the id, so licences that sort equal keep one order across pages.</summary>
+    /// <summary>The reader's column, then the id, so licenses that sort equal keep one order across pages.</summary>
     private static IOrderedQueryable<License> Order<T>(
         IQueryable<License> licenses,
         Expression<Func<License, T>> key,

@@ -22,7 +22,7 @@ internal static class Entries
 
     /// <summary>
     /// Shapes rows for a list. The label is the row's own <c>Name</c>; an asset's subtype row — a
-    /// device, a licence, furniture — has none, and shares its asset's id, so it takes the asset's
+    /// device, a license, furniture — has none, and shares its asset's id, so it takes the asset's
     /// name and number: from the table while the asset exists, from its last logged values once it
     /// does not.
     /// </summary>

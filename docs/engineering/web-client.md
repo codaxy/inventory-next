@@ -50,8 +50,9 @@ screen nor the application, which is what stops a signed-in person seeing a sign
 on every load.
 
 **`src/layout/navigation.ts` is both the menu and the routing table of the screens in it**: sections
-and items as the original's menu has them, flat, with no collapsing. `~/` redirects to the first item —
-there is no home screen, as in the original — and an unmatched URL shows a not-found page inside the
+and items as the original's menu has them, flat, with no collapsing — except that its directory is
+**Company**, and first: the people and organisations everything else is assigned to. `~/` redirects
+to the first item — there is no home screen, as in the original — and an unmatched URL shows a not-found page inside the
 shell. `screens` in `routes/index.tsx` maps an item's href to its screen; an item without one routes to
 `TodoScreen`, which names the programme step that builds it.
 
@@ -150,18 +151,18 @@ travels as typed. The list reads the address when it opens and whenever the addr
 its pause, **replacing the history entry, never adding one**: Back leaves the list rather than
 stepping through every filter. A record's back link, Cancel, and the return after saving a new record
 or deleting one go to the list as it was left (`listReturn`). **Filters nested in one another stay consistent**: a narrower one the broader contradicts is cleared —
-a volume when a licence or software it does not belong to is chosen, or arrives in the address — and
+a volume when a license or software it does not belong to is chosen, or arrives in the address — and
 its picker lists only what the broader ones allow. Filters side by side that can exclude each
-other — a licence and a software, one covering the other when the licence has a volume of it — keep
+other — a license and a software, one covering the other when the license has a volume of it — keep
 whichever was changed last and clear the other, so neither picker has to be narrowed to reach a
 choice outside the other. Nothing is locked or filled in: the narrower filter's chip already names
 what it implies. Links into a list use the same parameters and **name the narrowest record they mean** — a volume's
-activations link by `volumeId`, not by its licence and software, which a licence of five Rider volumes
+activations link by `volumeId`, not by its license and software, which a license of five Rider volumes
 shares five ways — and say how many they lead to ("2 activations"). A form opened on a choice the address already makes — `activations/new?volumeId=…` — shows it,
 and what follows from it, as text rather than asking again: the volume and its software fixed, and
 the next field the one its type calls for, a user or a device. The activations list filtered to one volume
-opens such a form from its New button too. Such a form returns where it was started: from a licence's
-volume (`from=license`), its back link names the licence and Cancel and a save go back to it; from
+opens such a form from its New button too. Such a form returns where it was started: from a license's
+volume (`from=license`), its back link names the license and Cancel and a save go back to it; from
 the list, to the list as it was left. A shortcut is offered only where it leads
 somewhere ordinary: a volume's "Activate" shows while a seat is free, not once all are taken. `ListController` in `src/listController.ts` holds all of this
 with the search's pause, the chips, the sort and the latest-request rule; a list declares its path,
@@ -211,25 +212,35 @@ beneath) and `basicInformation()` from them; `src/assets.ts` holds the asset's d
 detail and its form, and the importance as the server will compute it. A subtype's model extends the
 asset's draft and form and adds its own fields.
 
-**A person's page shows everything attached to them**, read-only: a card per kind that holds
-something, its count in the title and its first ten rows, each a link to its record — a device's too, addressed
-ahead of its screen — and "See all N" to the owning list filtered to them (`personId`), or a line saying only the first are
-shown where there is no list yet. The kinds with nothing are one line beneath, not empty cards. A
+**A record's page shows everything attached to it** — `holdingSections()` in
+`components/holdings.tsx`, over `HoldingSection`s from `src/holdings.ts` — read-only after its own
+fields: on a person's page a card per kind that holds something, on a client's its projects. A card
+has its count in the title and its first ten rows, each a link to its record — a device's and a
+project's too, addressed ahead of their screens — and "See all N" to the owning list filtered to the
+record (`personId`, `clientId`), or a line saying only the first are shown where there is no list yet. The kinds with nothing are one line beneath, not empty cards. A
 seat on a device they hold says which device. On the activations list the filter reads "Held by":
 theirs by name and those on their devices.
 
+**A record page and a searched list are made, not copied.** `RecordController` in
+`src/recordController.ts` holds the page's life — the address naming record and mode, the
+unsaved-changes guard, save, and a delete refused with what holds the record — and `recordPage()` in
+`components/recordPage.tsx` its markup; `searchList()` in `components/searchList.tsx` is a list with
+no filter pane. A screen declares its API, draft, fields and columns. A picker naming another record
+reads, in view, as a link to it (`pick(…, { href })`). The city and state a location offers are the
+chosen country's; a form whose only choice is made — one country, its one city — starts with it.
+
 **A printable document is a page of its own with its own print styles** — the handover sheet at
-`~/directory/people/:id/handover`: the original's text word for word, a Print button, and under
+`~/company/people/:id/handover`: the original's text word for word, a Print button, and under
 `@media print` the shell removed (`display: none`, not hidden — hidden, it keeps its room and
 squeezes the sheet), the table's header repeating on each page, and the signatures on a page of their
 own.
 
-**A licence's volume is read in parts, not as a sentence**: its software, then its type and
+**A license's volume is read in parts, not as a sentence**: its software, then its type and
 description muted beneath, and its seats — "15 / 35 in use" over a meter, primary while seats are
 free, green when every one is used — a bought seat is meant to be — and red only past the quantity — in a column of their own, where the eye scans for them; on a
 phone the seats take a line beneath the name.
 
-**Removing a saved part of a record waits for the save**: a licence's existing volume is struck
+**Removing a saved part of a record waits for the save**: a license's existing volume is struck
 through, marked "Removed when you save", and has an Undo, so the reader sees what the save will take
 and can take it back; one added in the same edit goes at once, as nothing is lost.
 
@@ -264,13 +275,13 @@ change — ends in a muted `+N` pill (`record-more`), so the count never reads a
 value (`record-blank`, `ink-ghost` against values in `ink-soft`: a thin dash is judged by weight, not
 colour, so anything short of a ghost reads as one more value), never words like "No tags" that read as one more value; on a phone's card the
 line goes. A yes/no that
-most rows answer no — a type holding licences — is a flag beside the name (`record-flag`), not a column
+most rows answer no — a type holding licenses — is a flag beside the name (`record-flag`), not a column
 of "No". A subscription's status is a tag (`status-tag`) — red once
 expired, amber within the fortnight, green after, grey on a record that has ended — and always says
 which in words, never by colour alone. A record that has ended — a deactivated activation — stays
 listed as history (`record-row-ended`): the row on the others' white, its text in
 `line-strong` — below AA on purpose, there to be found rather than scanned — its name no longer bold, a
-"Deactivated" flag saying why, and its licence's expiry kept but grey, read rather than signalled.
+"Deactivated" flag saying why, and its license's expiry kept but grey, read rather than signalled.
 
 ## Dates
 

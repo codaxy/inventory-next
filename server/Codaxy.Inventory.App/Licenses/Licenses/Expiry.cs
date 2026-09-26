@@ -2,7 +2,7 @@ namespace Codaxy.Inventory.App.Licenses.Licenses;
 
 /// <summary>
 /// Where a subscription stands on a day: <c>expired</c> before it, <c>soon</c> within the next
-/// fifteen days, <c>regular</c> after; nothing without a date. A licence expiring today is still valid
+/// fifteen days, <c>regular</c> after; nothing without a date. A license expiring today is still valid
 /// today.
 /// </summary>
 public static class Expiry

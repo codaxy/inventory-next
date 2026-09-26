@@ -6,9 +6,19 @@ import { AppLayout } from "../layout";
 import { landing, navigation } from "../layout/navigation";
 import $app from "../model";
 import AuditLog from "./administration/audit-log";
-import People from "./directory/people";
-import PersonEditor from "./directory/people/editor";
-import Handover from "./directory/people/handover";
+import Clients from "./company/clients";
+import ClientEditor from "./company/clients/editor";
+import Locations from "./company/locations";
+import LocationEditor from "./company/locations/editor";
+import Manufacturers from "./company/manufacturers";
+import ManufacturerEditor from "./company/manufacturers/editor";
+import People from "./company/people";
+import PersonEditor from "./company/people/editor";
+import Handover from "./company/people/handover";
+import Projects from "./company/projects";
+import ProjectEditor from "./company/projects/editor";
+import Vendors from "./company/vendors";
+import VendorEditor from "./company/vendors/editor";
 import ServerLog from "./administration/server-log";
 import TagEditor from "./electronic-devices/tags/editor";
 import Tags from "./electronic-devices/tags";
@@ -32,7 +42,12 @@ import SignIn from "./sign-in";
 const screens: Record<string, any> = {
     "~/administration/audit-log": AuditLog,
     "~/administration/server-log": ServerLog,
-    "~/directory/people": People,
+    "~/company/clients": Clients,
+    "~/company/locations": Locations,
+    "~/company/manufacturers": Manufacturers,
+    "~/company/people": People,
+    "~/company/projects": Projects,
+    "~/company/vendors": Vendors,
     "~/electronic-devices/tags": Tags,
     "~/electronic-devices/types": Types,
     "~/furniture": Furniture,
@@ -96,13 +111,43 @@ export default (
                     <Route route="~/electronic-devices/types/:id" url={$app.url}>
                         <TypeEditor />
                     </Route>
-                    <Route route="~/directory/people/:id/handover" url={$app.url}>
+                    <Route route="~/company/projects/:id/edit" url={$app.url}>
+                        <ProjectEditor />
+                    </Route>
+                    <Route route="~/company/projects/:id" url={$app.url}>
+                        <ProjectEditor />
+                    </Route>
+                    <Route route="~/company/vendors/:id/edit" url={$app.url}>
+                        <VendorEditor />
+                    </Route>
+                    <Route route="~/company/vendors/:id" url={$app.url}>
+                        <VendorEditor />
+                    </Route>
+                    <Route route="~/company/manufacturers/:id/edit" url={$app.url}>
+                        <ManufacturerEditor />
+                    </Route>
+                    <Route route="~/company/manufacturers/:id" url={$app.url}>
+                        <ManufacturerEditor />
+                    </Route>
+                    <Route route="~/company/locations/:id/edit" url={$app.url}>
+                        <LocationEditor />
+                    </Route>
+                    <Route route="~/company/locations/:id" url={$app.url}>
+                        <LocationEditor />
+                    </Route>
+                    <Route route="~/company/clients/:id/edit" url={$app.url}>
+                        <ClientEditor />
+                    </Route>
+                    <Route route="~/company/clients/:id" url={$app.url}>
+                        <ClientEditor />
+                    </Route>
+                    <Route route="~/company/people/:id/handover" url={$app.url}>
                         <Handover />
                     </Route>
-                    <Route route="~/directory/people/:id/edit" url={$app.url}>
+                    <Route route="~/company/people/:id/edit" url={$app.url}>
                         <PersonEditor />
                     </Route>
-                    <Route route="~/directory/people/:id" url={$app.url}>
+                    <Route route="~/company/people/:id" url={$app.url}>
                         <PersonEditor />
                     </Route>
                     {/* Before `~/furniture/:id`, which would take `types` for an id. */}

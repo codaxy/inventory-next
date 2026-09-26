@@ -66,7 +66,7 @@ export default class extends Controller {
         this.store.delete(l.lastModified);
         this.store.delete(l.expiry);
         this.store.delete(l.expiryText);
-        this.load({ incomplete: false, autoRenew: false, volumes: [] }, id ? "" : "New licence");
+        this.load({ incomplete: false, autoRenew: false, volumes: [] }, id ? "" : "New license");
 
         this.release?.();
         this.release = viewing ? undefined : guardLeaving(() => this.dirty());
@@ -82,16 +82,16 @@ export default class extends Controller {
                     this.store.set(
                         l.error,
                         error instanceof ApiError && error.status === 404
-                            ? "This licence no longer exists."
-                            : "The licence could not be loaded.",
+                            ? "This license no longer exists."
+                            : "The license could not be loaded.",
                     ),
                 )
                 .finally(() => this.store.set(l.loading, false));
     }
 
-    /** A loaded licence into the form; as a duplicate, everything but the number and the volumes. */
+    /** A loaded license into the form; as a duplicate, everything but the number and the volumes. */
     private show(license: LicenseDetail, duplicate: boolean) {
-        this.load(toDraft(license, duplicate), duplicate ? "New licence" : license.name);
+        this.load(toDraft(license, duplicate), duplicate ? "New license" : license.name);
         if (duplicate) return;
 
         this.store.set(l.number, license.number ? `#${license.number}` : undefined);
@@ -119,7 +119,7 @@ export default class extends Controller {
 
     /**
      * A volume added in this edit goes at once — nothing is lost. An existing one is struck through
-     * and goes only when the licence is saved, so the reader sees what the save will remove and can
+     * and goes only when the license is saved, so the reader sees what the save will remove and can
      * take it back.
      */
     removeVolume(key: string) {
@@ -150,7 +150,7 @@ export default class extends Controller {
             if (error instanceof ApiError && error.status === 409) {
                 this.store.set(
                     l.error,
-                    "Someone saved this licence since you opened it. Reload to see their changes; yours are not saved.",
+                    "Someone saved this license since you opened it. Reload to see their changes; yours are not saved.",
                 );
                 this.store.set(l.stale, true);
             } else if (error instanceof ApiError && Object.keys(error.errors).length > 0)
@@ -159,15 +159,15 @@ export default class extends Controller {
                 this.store.set(
                     l.error,
                     error instanceof ApiError && error.status === 404
-                        ? "This licence was deleted while you were editing it."
-                        : "The licence could not be saved.",
+                        ? "This license was deleted while you were editing it."
+                        : "The license could not be saved.",
                 );
         } finally {
             this.store.set(l.saving, false);
         }
     }
 
-    /** After a refused save: the licence as it is now, the reader's edits discarded. */
+    /** After a refused save: the license as it is now, the reader's edits discarded. */
     reload() {
         this.release?.();
         this.release = undefined;
@@ -178,12 +178,12 @@ export default class extends Controller {
         const id = this.store.get(l.id);
         if (!id) return;
 
-        // Something on a volume keeps the licence; say so rather than ask and then refuse.
+        // Something on a volume keeps the license; say so rather than ask and then refuse.
         const held = this.store.get(l.draft.volumes).find((v) => v.held);
         if (held) {
             await confirm({
-                title: "This licence is in use",
-                message: `${held.held}. Deactivate and delete those first, or keep the licence.`,
+                title: "This license is in use",
+                message: `${held.held}. Deactivate and delete those first, or keep the license.`,
                 cancelText: "Close",
             });
             return;
@@ -191,12 +191,12 @@ export default class extends Controller {
 
         const volumes = this.store.get(l.draft.volumes).length;
         const confirmed = await confirm({
-            title: "Delete this licence?",
+            title: "Delete this license?",
             message:
                 volumes === 0
                     ? "This cannot be undone."
                     : `${volumes === 1 ? "Its volume goes" : `Its ${volumes} volumes go`} with it. This cannot be undone.`,
-            confirmText: "Delete licence",
+            confirmText: "Delete license",
             cancelText: "Keep",
             danger: true,
         });
@@ -210,7 +210,7 @@ export default class extends Controller {
                 l.error,
                 error instanceof ApiError && error.status === 409
                     ? error.message
-                    : "The licence could not be deleted.",
+                    : "The license could not be deleted.",
             );
         }
     }

@@ -65,3 +65,33 @@ export interface AssetForm {
     url: string | null;
     lastModified?: string;
 }
+
+/** A kind of record attached to another: how many, and the first of them. */
+export interface Section<T> {
+    total: number;
+    items: T[];
+}
+
+export interface AssetRow {
+    id: string;
+    number: number | null;
+    name: string;
+    type: string | null;
+    model: string | null;
+}
+
+export interface LicenseRow {
+    id: string;
+    number: number | null;
+    name: string;
+    vendor: string;
+    expirationDate: string | null;
+    expiry: import("./activations").Expiry | null;
+}
+
+/** The devices, furniture and licenses attached to a record. */
+export interface AssetSections {
+    devices: Section<AssetRow>;
+    furniture: Section<AssetRow>;
+    licenses: Section<LicenseRow>;
+}

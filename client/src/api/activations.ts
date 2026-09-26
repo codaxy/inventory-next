@@ -109,7 +109,7 @@ export interface VolumeOption {
     typeId: number;
     quantity: number;
     inUse: number;
-    /** What tells volumes of one licence and software apart. */
+    /** What tells volumes of one license and software apart. */
     description: string | null;
 }
 

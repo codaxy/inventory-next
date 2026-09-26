@@ -14,7 +14,7 @@ public static class Endpoint
 
     /// <summary>
     /// One activation as the original's spreadsheet has it; the headers are its own, and so is "Last
-    /// Modified", which is the licence's.
+    /// Modified", which is the license's.
     /// </summary>
     public sealed class Row
     {

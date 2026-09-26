@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
-using Codaxy.Inventory.App.Directory.Clients;
-using Codaxy.Inventory.App.Directory.Manufacturers;
-using Codaxy.Inventory.App.Directory.People;
-using Codaxy.Inventory.App.Directory.Projects;
+using Codaxy.Inventory.App.Company.Clients;
+using Codaxy.Inventory.App.Company.Manufacturers;
+using Codaxy.Inventory.App.Company.People;
+using Codaxy.Inventory.App.Company.Projects;
 using Codaxy.Inventory.App.Furnitures.Items;
 using Codaxy.Inventory.App.Informations.Items;
 using Codaxy.Inventory.App.Informations.Types;
@@ -18,12 +18,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Codaxy.Inventory.Tests.Integration;
 
-using Handover = App.Directory.People.Handover.Endpoint.Response;
-using Holdings = App.Directory.People.Holdings.Endpoint.Response;
-using Item = App.Directory.People.List.Endpoint.Item;
+using Handover = App.Company.People.Handover.Endpoint.Response;
+using Holdings = App.Company.People.Holdings.Endpoint.Response;
+using Item = App.Company.People.List.Endpoint.Item;
 
 /// <summary>
-/// Hana holds two devices, a chair, a licence, three seats — one by name, one ended, one on her laptop
+/// Hana holds two devices, a chair, a license, three seats — one by name, one ended, one on her laptop
 /// — a piece of information and a project; Ivo holds nothing.
 /// </summary>
 public class PeopleApplication : InventoryApplication
@@ -67,13 +67,13 @@ public class PeopleApplication : InventoryApplication
         );
         await context.SaveChangesAsync();
 
-        Laptop = await Seed.DeviceAsync(context, "Hana's laptop", holdsLicences: true);
-        var monitor = await Seed.DeviceAsync(context, "Hana's monitor", holdsLicences: false);
-        var perUser = await Seed.LicenseWithVolumeAsync(context, editor.Id, "Editor licence");
+        Laptop = await Seed.DeviceAsync(context, "Hana's laptop", holdsLicenses: true);
+        var monitor = await Seed.DeviceAsync(context, "Hana's monitor", holdsLicenses: false);
+        var perUser = await Seed.LicenseWithVolumeAsync(context, editor.Id, "Editor license");
         var perDevice = await Seed.LicenseWithVolumeAsync(
             context,
             editor.Id,
-            "Editor device licence",
+            "Editor device license",
             volumeType: Seed.PerDevice
         );
         License = perUser.License;
@@ -145,7 +145,7 @@ public class PeopleApplication : InventoryApplication
 
 public class PeopleTests(PeopleApplication app) : IClassFixture<PeopleApplication>
 {
-    private const string Url = "/api/directory/people";
+    private const string Url = "/api/company/people";
 
     private async Task<HttpClient> Client() => await app.ClientAsync("editor@codaxy.com");
 
@@ -316,7 +316,7 @@ public class PeopleTests(PeopleApplication app) : IClassFixture<PeopleApplicatio
             ("Hana's chair", "Ergo"),
             (h.Furniture.Items.Single().Name, h.Furniture.Items.Single().Model)
         );
-        Assert.Equal("Editor licence", h.Licenses.Items.Single().Name);
+        Assert.Equal("Editor license", h.Licenses.Items.Single().Name);
         Assert.Equal((3, 2), (h.Seats.Total, h.Seats.Active));
         // Active first; the ended one last.
         Assert.NotNull(h.Seats.Items[^1].DeactivationDate);
@@ -390,16 +390,16 @@ public class PeopleTests(PeopleApplication app) : IClassFixture<PeopleApplicatio
     }
 
     [Fact]
-    public async Task The_licence_and_activation_lists_filter_by_person()
+    public async Task The_license_and_activation_lists_filter_by_person()
     {
         var client = await Client();
 
-        var licences = (
+        var licenses = (
             await client.GetFromJsonAsync<Page<App.Licenses.Licenses.List.Endpoint.Item>>(
                 $"/api/licenses/?personId={PeopleApplication.Hana}"
             )
         )!;
-        Assert.Equal(["Editor licence"], licences.Items.Select(l => l.Name));
+        Assert.Equal(["Editor license"], licenses.Items.Select(l => l.Name));
 
         var seats = (
             await client.GetFromJsonAsync<Page<App.Licenses.Activations.List.Endpoint.Item>>(

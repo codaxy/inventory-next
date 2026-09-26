@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Codaxy.Inventory.App.Directory.Locations;
+using Codaxy.Inventory.App.Company.Locations;
 using Codaxy.Inventory.App.ElectronicDevices.Devices;
 using Codaxy.Inventory.App.Infrastructure.Clouds;
 using Codaxy.Inventory.App.Infrastructure.Softwares;

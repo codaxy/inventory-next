@@ -264,7 +264,7 @@
     }
 }
 
-// Activations: on a phone the software, the licence, who or what holds the seats, when; from `md` a
+// Activations: on a phone the software, the license, who or what holds the seats, when; from `md` a
 // column each, the dates and the count narrow.
 .activation-columns {
     grid-template-columns: minmax(0, 1fr);
@@ -287,13 +287,13 @@
     overflow: visible;
 }
 
-// An ended record's tag loses its colour: its licence's expiry no longer matters to it.
+// An ended record's tag loses its colour: its license's expiry no longer matters to it.
 .record-row-ended .status-tag {
     background: var(--color-raised);
     color: var(--color-line-strong);
 }
 
-// Licences: on a phone the name first, then vendor and value, when bought, the subscription; the number
+// Licenses: on a phone the name first, then vendor and value, when bought, the subscription; the number
 // and the change time from `md`, where every column shows.
 .license-columns {
     grid-template-columns: minmax(0, 1fr);
@@ -398,5 +398,53 @@
 
     @media (min-width: 768px) {
         grid-template-columns: minmax(0, 20rem) minmax(0, 24rem) minmax(0, 7rem) minmax(0, 7rem);
+    }
+}
+
+// Clients: the name, then the project count, narrow.
+.client-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 30rem) minmax(0, 8rem);
+    }
+}
+
+// Vendors: on a phone the name, then who to call and how; from `md` a column each, the count narrow.
+.vendor-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr) minmax(0, 1.4fr) minmax(0, 1fr) minmax(
+                0,
+                6rem
+            );
+    }
+}
+
+// Manufacturers: the name, the URL muted, then the two counts narrow.
+.manufacturer-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 20rem) minmax(0, 26rem) minmax(0, 7rem) minmax(0, 7rem);
+    }
+}
+
+// Locations: the name, the address, the room, the count.
+.location-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 18rem) minmax(0, 26rem) minmax(0, 8rem) minmax(0, 6rem);
+    }
+}
+
+// Projects: the name, its client and who leads it, the information count narrow.
+.project-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 20rem) minmax(0, 16rem) minmax(0, 16rem) minmax(0, 7rem);
     }
 }

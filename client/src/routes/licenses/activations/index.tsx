@@ -22,7 +22,7 @@ const notEmpty = expr(
     (loaded, total, error) => !(loaded && total === 0 && !error),
 );
 
-/** The volumes the chosen licence and software have, so the picker lists the few that can match. */
+/** The volumes the chosen license and software have, so the picker lists the few that can match. */
 const volumeOptions = expr(s.volumes, f.licenseId, f.softwareId, (volumes, license, software) =>
     (volumes ?? [])
         .filter((v) => (!license || v.licenseId === license) && (!software || v.softwareId === software))
@@ -92,7 +92,7 @@ export default createFunctionalComponent(() => {
                             <TextField
                                 class="list-search-field"
                                 value={s.search}
-                                placeholder="Search software, licences, people, devices…"
+                                placeholder="Search software, licenses, people, devices…"
                                 showClear
                                 inputAttrs={{ "aria-label": "Search activations", enterKeyHint: "search" }}
                             />
@@ -134,16 +134,16 @@ export default createFunctionalComponent(() => {
                             <div class="list-filter">
                                 <div
                                     class="list-filter-label"
-                                    id="licenses-activations-licence-label"
-                                    text="Licence"
+                                    id="licenses-activations-license-label"
+                                    text="License"
                                 />
                                 <LookupField
-                                    id="licenses-activations-licence"
+                                    id="licenses-activations-license"
                                     value={f.licenseId}
                                     text={f.licenseText}
                                     options={s.licenses}
-                                    placeholder="Any licence"
-                                    inputAttrs={{ "aria-label": "Licence" }}
+                                    placeholder="Any license"
+                                    inputAttrs={{ "aria-label": "License" }}
                                 />
                             </div>
                             <div class="list-filter">
@@ -177,7 +177,7 @@ export default createFunctionalComponent(() => {
                                 />
                             </div>
                             {segmented("Status", statuses, f.status, "setStatus")}
-                            {segmented("Licence expiry", expiries, f.expiry, "setExpiry")}
+                            {segmented("License expiry", expiries, f.expiry, "setExpiry")}
                         </div>
                         <div class="list-pane-footer">
                             <Button
@@ -237,12 +237,12 @@ export default createFunctionalComponent(() => {
                 <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head activation-columns">
                         {sortHeader(s.sort, "software", "Software")}
-                        {sortHeader(s.sort, "license", "Licence")}
+                        {sortHeader(s.sort, "license", "License")}
                         {sortHeader(s.sort, "assignee", "User or device")}
                         <span text="Seats" />
                         {sortHeader(s.sort, "activated", "Activated")}
                         {sortHeader(s.sort, "deactivated", "Deactivated")}
-                        <span text="Licence expiry" />
+                        <span text="License expiry" />
                     </div>
 
                     <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />

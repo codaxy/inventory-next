@@ -19,9 +19,9 @@ export interface EditorState {
     viewing: boolean;
     title: string;
     draft: Draft;
-    /** How many licence volumes are of it: what keeps it from being deleted. */
+    /** How many license volumes are of it: what keeps it from being deleted. */
     volumeCount: number;
-    /** Its licence volumes, each a link to its licence. */
+    /** Its license volumes, each a link to its license. */
     volumes: VolumeRow[];
     categories: Option[];
     manufacturers: Option[];
@@ -33,7 +33,7 @@ export interface EditorState {
     visited: boolean;
 }
 
-/** A licence volume as a row: its licence, its type and description, its seats metered. */
+/** A license volume as a row: its license, its type and description, its seats metered. */
 export interface VolumeRow {
     id: string;
     href: string;
@@ -62,10 +62,10 @@ export const toForm = (d: Draft) => ({
 
 export const volumesText = (n: number) =>
     n === 0
-        ? "No licence volume is of it."
+        ? "No license volume is of it."
         : n === 1
-          ? "1 licence volume is of it."
-          : `${n} licence volumes are of it.`;
+          ? "1 license volume is of it."
+          : `${n} license volumes are of it.`;
 
 export const toVolumeRows = (volumes: VolumeLine[]): VolumeRow[] =>
     volumes.map((v) => ({
