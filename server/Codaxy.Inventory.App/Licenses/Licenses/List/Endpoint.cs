@@ -18,6 +18,7 @@ public static class Endpoint
     public sealed record Query(
         string? Q,
         Guid? VendorId,
+        Guid? PersonId,
         DateOnly? PurchasedFrom,
         DateOnly? PurchasedTo,
         string? Expiry,
@@ -137,6 +138,8 @@ public static class Endpoint
 
         if (query.VendorId is { } vendor)
             licenses = licenses.Where(l => l.Asset.VendorId == vendor);
+        if (query.PersonId is { } person)
+            licenses = licenses.Where(l => l.Asset.PersonId == person);
 
         if (query.PurchasedFrom is { } from)
             licenses = licenses.Where(l => l.Asset.PurchaseDate >= from);

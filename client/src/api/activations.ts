@@ -72,6 +72,8 @@ export interface ActivationQuery {
     softwareId?: string;
     licenseId?: string;
     volumeId?: string;
+    /** Theirs by name, and those on a device they hold. */
+    personId?: string;
     status?: "active" | "deactivated";
     expiry?: Expiry | "none";
     sort?: ActivationSort;

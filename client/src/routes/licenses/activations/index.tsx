@@ -161,6 +161,21 @@ export default createFunctionalComponent(() => {
                                     inputAttrs={{ "aria-label": "Volume" }}
                                 />
                             </div>
+                            <div class="list-filter">
+                                <div
+                                    class="list-filter-label"
+                                    id="licenses-activations-person-label"
+                                    text="Held by"
+                                />
+                                <LookupField
+                                    id="licenses-activations-person"
+                                    value={f.personId}
+                                    text={f.personText}
+                                    options={s.people}
+                                    placeholder="Anyone"
+                                    inputAttrs={{ "aria-label": "Held by" }}
+                                />
+                            </div>
                             {segmented("Status", statuses, f.status, "setStatus")}
                             {segmented("Licence expiry", expiries, f.expiry, "setExpiry")}
                         </div>

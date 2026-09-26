@@ -57,6 +57,8 @@ first migration after deprecation, not a backlog to act on.
   names it, and its volumes can then only be of that software; one without keeps volumes of any, as
   now. It needs a nullable `SoftwareOrServiceId` on `License`; until then a licence is attached to
   software only through its volumes.
+- **A person's email is unique**, by an index on `lower(trim(email))`. The application refuses a
+  duplicate here; the original checks nothing, and two saves at once pass either way.
 - **No index serves any predicate.** Primary keys and the unique `inventory_number` are the whole of
   the indexing. The original filtered in the browser so there was nothing to serve; this application
   filters, sorts and pages in the database, and does it with sequential scans. At the present size —

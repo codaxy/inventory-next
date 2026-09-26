@@ -75,6 +75,7 @@ export type LicenseSort =
 export interface LicenseQuery {
     q?: string;
     vendorId?: string;
+    personId?: string;
     purchasedFrom?: string;
     purchasedTo?: string;
     expiry?: Expiry | "none";

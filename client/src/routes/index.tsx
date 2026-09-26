@@ -6,6 +6,9 @@ import { AppLayout } from "../layout";
 import { landing, navigation } from "../layout/navigation";
 import $app from "../model";
 import AuditLog from "./administration/audit-log";
+import People from "./directory/people";
+import PersonEditor from "./directory/people/editor";
+import Handover from "./directory/people/handover";
 import ServerLog from "./administration/server-log";
 import TagEditor from "./electronic-devices/tags/editor";
 import Tags from "./electronic-devices/tags";
@@ -29,6 +32,7 @@ import SignIn from "./sign-in";
 const screens: Record<string, any> = {
     "~/administration/audit-log": AuditLog,
     "~/administration/server-log": ServerLog,
+    "~/directory/people": People,
     "~/electronic-devices/tags": Tags,
     "~/electronic-devices/types": Types,
     "~/furniture": Furniture,
@@ -91,6 +95,15 @@ export default (
                     </Route>
                     <Route route="~/electronic-devices/types/:id" url={$app.url}>
                         <TypeEditor />
+                    </Route>
+                    <Route route="~/directory/people/:id/handover" url={$app.url}>
+                        <Handover />
+                    </Route>
+                    <Route route="~/directory/people/:id/edit" url={$app.url}>
+                        <PersonEditor />
+                    </Route>
+                    <Route route="~/directory/people/:id" url={$app.url}>
+                        <PersonEditor />
                     </Route>
                     {/* Before `~/furniture/:id`, which would take `types` for an id. */}
                     <Route route="~/furniture/types/:id/edit" url={$app.url}>

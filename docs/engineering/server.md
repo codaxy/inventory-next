@@ -135,6 +135,11 @@ invariant culture of a container among them, so `Shared/Export/Excel` writes und
 **A delete the database would refuse is a 409 that says what holds the record** — "113 devices are of
 this type" — checked before the save, not left to surface as a foreign-key 500.
 
+**A page that gathers other items' records has an endpoint of its own** — a person's holdings, per
+kind the total and the first rows, in one request — rather than a list endpoint per kind called from
+the page: one round trip, and a kind without a list endpoint yet is served all the same. "See all"
+is the owning item's list, filtered.
+
 **Shared helpers for every item**: `Shared/Paging` (the window and the page), `Shared/Search`
 (`FreeText`, the free-text terms), `Shared/Validation` (`MiniValidator`, whose problem keys are the
 JSON's field names, so a message lands under the field it names).

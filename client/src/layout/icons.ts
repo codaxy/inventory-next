@@ -1,6 +1,7 @@
 import {
     SquareArrowUpRightIcon,
     Download04Icon,
+    PrinterIcon,
     MoreVerticalIcon,
     Undo02Icon,
     Add01Icon,
@@ -98,6 +99,7 @@ const uiIcons = {
     duplicate: Copy01Icon,
     more: MoreVerticalIcon,
     download: Download04Icon,
+    print: PrinterIcon,
     external: SquareArrowUpRightIcon,
     deactivate: CancelCircleIcon,
     reactivate: Undo02Icon,

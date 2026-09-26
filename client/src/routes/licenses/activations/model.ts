@@ -28,11 +28,14 @@ export interface Filters {
     /** One volume of a licence: what a licence page's volume links to. */
     volumeId?: string | null;
     volumeText?: string;
+    /** The seats a person answers for: theirs by name, and those on a device they hold. */
+    personId?: string | null;
+    personText?: string;
     status?: "active" | "deactivated" | null;
     expiry?: Expiry | "none" | null;
 }
 
-export type FilterKey = "software" | "license" | "volume" | "status" | "expiry";
+export type FilterKey = "software" | "license" | "volume" | "person" | "status" | "expiry";
 
 export interface Chip {
     key: FilterKey;
@@ -47,6 +50,7 @@ export interface ListState {
     software: Option[];
     licenses: Option[];
     volumes: VolumeRef[];
+    people: Option[];
     sort: ActivationSort;
     page: number;
     rows: Row[];
@@ -90,6 +94,7 @@ export const toChips = (f: Filters): Chip[] => [
     ...(f.softwareId ? [{ key: "software" as const, text: f.softwareText ?? "Software" }] : []),
     ...(f.licenseId ? [{ key: "license" as const, text: `Licence: ${f.licenseText ?? "…"}` }] : []),
     ...(f.volumeId ? [{ key: "volume" as const, text: `Volume: ${f.volumeText ?? "…"}` }] : []),
+    ...(f.personId ? [{ key: "person" as const, text: `Held by: ${f.personText ?? "…"}` }] : []),
     ...(f.status ? [{ key: "status" as const, text: statusText[f.status] }] : []),
     ...(f.expiry ? [{ key: "expiry" as const, text: `Licence: ${expiryFilterText[f.expiry]}` }] : []),
 ];

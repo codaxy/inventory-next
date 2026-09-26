@@ -1,0 +1,96 @@
+// What is attached to a person: a card per kind, its count beside its title, a row per thing — a link
+// where the thing has a page — and "See all" to the list filtered to them.
+
+.holding-count {
+    margin-left: 0.5rem;
+    font-weight: 500;
+    color: var(--color-ink-muted);
+}
+
+.holding-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0 -0.5rem;
+}
+
+.holding-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.125rem 0.75rem;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.5rem;
+    border-radius: 8px;
+    color: var(--color-ink);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+a.holding-row {
+    &:hover {
+        background: var(--color-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-primary-text);
+        outline-offset: -2px;
+    }
+}
+
+.holding-row + .holding-row {
+    border-top: 1px solid var(--color-line-soft);
+    border-radius: 0 0 8px 8px;
+}
+
+.holding-main {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.holding-title {
+    font-weight: 600;
+}
+
+.holding-meta {
+    grid-column: 1;
+    font-size: 13px;
+    color: var(--color-ink-soft);
+    overflow-wrap: anywhere;
+}
+
+.holding-status {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+}
+
+// A deactivated seat is history, as in the activations list.
+.holding-row-ended {
+    .holding-title,
+    .holding-meta,
+    .record-note {
+        color: var(--color-line-strong);
+    }
+
+    .holding-title {
+        font-weight: 500;
+    }
+}
+
+.holding-more {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 0.25rem;
+}
+
+.holding-footnote {
+    // The cards' own gap: the line belongs to the page, not to the card above it.
+    margin-top: 1rem;
+    padding: 0 0.25rem;
+    font-size: 13px;
+    color: var(--color-ink-muted);
+
+    > p + p {
+        margin-top: 0.25rem;
+    }
+}

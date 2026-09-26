@@ -19,6 +19,7 @@ const keys = ["number", "name", "vendor", "value", "purchased", "expires", "modi
 /** The filters as the API takes them: the reader's inclusive last day becomes the exclusive next one. */
 const request = (f: Filters): Partial<LicenseQuery> => ({
     vendorId: f.vendorId ?? undefined,
+    personId: f.personId ?? undefined,
     purchasedFrom: f.from ?? undefined,
     purchasedTo: f.to ? dayAfter(f.to) : undefined,
     expiry: f.expiry ?? undefined,
@@ -61,6 +62,7 @@ export default class extends ListController<Filters, LicenseItem, Row, LicenseSo
         const to = query.get("purchasedTo");
         return {
             vendorId: query.get("vendorId"),
+            personId: query.get("personId"),
             from: isDay(from) ? from : null,
             to: isDay(to) ? to : null,
             expiry: oneOf(query, "expiry", expiries) as Expiry | "none" | null,
@@ -70,6 +72,7 @@ export default class extends ListController<Filters, LicenseItem, Row, LicenseSo
 
     protected filtersTo = (f: Filters): Record<string, AddressValue> => ({
         vendorId: f.vendorId,
+        personId: f.personId,
         purchasedFrom: f.from,
         purchasedTo: f.to,
         expiry: f.expiry,
@@ -78,18 +81,22 @@ export default class extends ListController<Filters, LicenseItem, Row, LicenseSo
 
     protected without(f: Filters, key: FilterKey): Filters {
         if (key === "vendor") return { ...f, vendorId: undefined, vendorText: undefined };
+        if (key === "person") return { ...f, personId: undefined, personText: undefined };
         if (key === "range") return { ...f, from: undefined, to: undefined };
         return { ...f, [key]: undefined };
     }
 
     protected loadOptions() {
         this.store.set(s.vendors, []);
+        this.store.set(s.people, []);
         getLicenseOptions()
             .then((o) => {
                 this.store.set(s.vendors, o.vendors);
+                this.store.set(s.people, o.people);
                 this.store.update(s.filters, (f) => ({
                     ...f,
                     vendorText: f.vendorText ?? o.vendors.find((x) => x.id === f.vendorId)?.text,
+                    personText: f.personText ?? o.people.find((x) => x.id === f.personId)?.text,
                 }));
             })
             .catch(() => {});

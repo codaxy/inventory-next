@@ -84,6 +84,17 @@ export default createFunctionalComponent(() => {
                                 />
                             </div>
                             <div class="list-filter">
+                                <div class="list-filter-label" id="licenses-person-label" text="Assignee" />
+                                <LookupField
+                                    id="licenses-person"
+                                    value={f.personId}
+                                    text={f.personText}
+                                    options={s.people}
+                                    placeholder="Anyone"
+                                    inputAttrs={{ "aria-label": "Assignee" }}
+                                />
+                            </div>
+                            <div class="list-filter">
                                 <div class="list-filter-label" text="Bought from" />
                                 <DateField
                                     value={dateValue(f.from)}

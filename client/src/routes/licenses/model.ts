@@ -24,13 +24,15 @@ export interface Row {
 export interface Filters {
     vendorId?: string | null;
     vendorText?: string;
+    personId?: string | null;
+    personText?: string;
     from?: string | null;
     to?: string | null;
     expiry?: Expiry | "none" | null;
     incomplete?: boolean | null;
 }
 
-export type FilterKey = "vendor" | "range" | "expiry" | "incomplete";
+export type FilterKey = "vendor" | "person" | "range" | "expiry" | "incomplete";
 
 export interface Chip {
     key: FilterKey;
@@ -44,6 +46,7 @@ export interface ListState {
     filtersValid: boolean;
     chips: Chip[];
     vendors: Option[];
+    people: Option[];
     sort: LicenseSort;
     page: number;
     rows: Row[];
@@ -83,6 +86,7 @@ const expiryFilterText = { ...expiryText, none: "No expiry date" } as const;
 
 export const toChips = (f: Filters): Chip[] => [
     ...(f.vendorId ? [{ key: "vendor" as const, text: `Vendor: ${f.vendorText ?? "…"}` }] : []),
+    ...(f.personId ? [{ key: "person" as const, text: `Assignee: ${f.personText ?? "…"}` }] : []),
     ...(f.from || f.to
         ? [
               {

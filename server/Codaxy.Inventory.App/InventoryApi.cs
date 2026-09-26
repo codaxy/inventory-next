@@ -56,6 +56,16 @@ public static class InventoryApi
         Licenses.SoftwareServices.Update.Endpoint.Map(softwareServices);
         Licenses.SoftwareServices.Delete.Endpoint.Map(softwareServices);
 
+        var people = api.MapGroup("/directory/people");
+
+        Directory.People.List.Endpoint.Map(people);
+        Directory.People.Get.Endpoint.Map(people);
+        Directory.People.Holdings.Endpoint.Map(people);
+        Directory.People.Handover.Endpoint.Map(people);
+        Directory.People.Create.Endpoint.Map(people);
+        Directory.People.Update.Endpoint.Map(people);
+        Directory.People.Delete.Endpoint.Map(people);
+
         var furnitureTypes = api.MapGroup("/furniture/types");
 
         Furnitures.Types.List.Endpoint.Map(furnitureTypes);

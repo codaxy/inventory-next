@@ -11,6 +11,7 @@ public static class Endpoint
     public static void Map(RouteGroupBuilder activations) => activations.MapGet("/", Handle);
 
     /// <param name="Q">Free text over software, licence, person, device name and number.</param>
+    /// <param name="PersonId">The seats the person answers for: theirs by name, and those on a device they hold.</param>
     /// <param name="Status"><c>active</c> or <c>deactivated</c>.</param>
     /// <param name="Expiry">The licence's: <c>expired</c>, <c>soon</c>, <c>regular</c> or <c>none</c>.</param>
     /// <param name="Sort"><c>-activated</c> (default), <c>activated</c>, <c>software</c>, <c>license</c>, <c>assignee</c>, <c>deactivated</c>; <c>-</c> for descending.</param>
@@ -19,6 +20,7 @@ public static class Endpoint
         Guid? SoftwareId,
         Guid? LicenseId,
         Guid? VolumeId,
+        Guid? PersonId,
         string? Status,
         string? Expiry,
         string? Sort,
@@ -152,6 +154,9 @@ public static class Endpoint
 
         if (query.VolumeId is { } volume)
             rows = rows.Where(a => a.VolumeId == volume);
+        // The seats a person answers for: theirs by name, or on a device they hold.
+        if (query.PersonId is { } person)
+            rows = rows.Where(a => a.PersonId == person || a.Asset.PersonId == person);
 
         if (query.Status == "active")
             rows = rows.Where(a => a.DeactivationDate == null);

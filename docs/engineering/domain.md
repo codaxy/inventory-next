@@ -86,6 +86,11 @@ hand — a vendor has a VAT number and contacts, a project an owner and a client
 which assets, activations and information point at. They are not codebooks, although persons,
 locations, manufacturers and vendors are seeded with a starting set.
 
+**What a person holds**: the assets assigned to them — devices, furniture, licences — the seats
+activated for them by name and those on a device they hold, the information they own and the
+projects they lead. Virtual machines, clouds and software entries have no owner: nothing in the
+schema ties one to a person. **A person holding anything is not deleted.**
+
 ## Inventory numbers
 
 A single `Sequence` row holds the next asset inventory number. Only the three services that create
@@ -105,6 +110,11 @@ subtype row are consistent only because they save together.
 
 **`Sequence` must already contain a row.** The create paths throw `ItemNotFoundException` when it is
 empty rather than starting at 1.
+
+**Deleting a person cascades to everything they hold.** The foreign keys from asset, information and
+project to person are `ON DELETE CASCADE`, so a delete the application did not refuse would take a
+default holder's hundreds of devices with it — and the original's delete refuses only when an
+activation happens to stand in the way.
 
 **Deleting an asset cascades to its subtype row**, by configuration rather than by anything visible at
 the call site. Maintenance contracts are *not* part of that cascade: the foreign key is `ON DELETE

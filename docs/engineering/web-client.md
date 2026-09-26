@@ -211,6 +211,19 @@ beneath) and `basicInformation()` from them; `src/assets.ts` holds the asset's d
 detail and its form, and the importance as the server will compute it. A subtype's model extends the
 asset's draft and form and adds its own fields.
 
+**A person's page shows everything attached to them**, read-only: a card per kind that holds
+something, its count in the title and its first ten rows, each a link to its record — a device's too, addressed
+ahead of its screen — and "See all N" to the owning list filtered to them (`personId`), or a line saying only the first are
+shown where there is no list yet. The kinds with nothing are one line beneath, not empty cards. A
+seat on a device they hold says which device. On the activations list the filter reads "Held by":
+theirs by name and those on their devices.
+
+**A printable document is a page of its own with its own print styles** — the handover sheet at
+`~/directory/people/:id/handover`: the original's text word for word, a Print button, and under
+`@media print` the shell removed (`display: none`, not hidden — hidden, it keeps its room and
+squeezes the sheet), the table's header repeating on each page, and the signatures on a page of their
+own.
+
 **A licence's volume is read in parts, not as a sentence**: its software, then its type and
 description muted beneath, and its seats — "15 / 35 in use" over a meter, primary while seats are
 free, green when every one is used — a bought seat is meant to be — and red only past the quantity — in a column of their own, where the eye scans for them; on a

@@ -391,3 +391,12 @@
 .furniture-value {
     font-variant-numeric: tabular-nums;
 }
+
+// People: on a phone the name, the email, what they hold; from `md` a column each, the counts narrow.
+.people-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 20rem) minmax(0, 24rem) minmax(0, 7rem) minmax(0, 7rem);
+    }
+}
