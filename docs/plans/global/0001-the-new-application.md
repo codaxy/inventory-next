@@ -45,7 +45,8 @@ wrong.
 7. **The audit log, the log viewer and Excel export.** The read-only corners, and the ones whose
    behaviour is least worth changing. The audit log was built ahead of the rest, at the user's
    request, and is the first list: step 1's paging convention is the one it set, with a search
-   modernised rather than kept at parity.
+   modernised rather than kept at parity. The log viewer followed it, reading a daily JSON-lines file
+   the application now writes.
 8. **Deprecation.** Delete the original, then the first migration: the deferred schema changes, and
    whatever roles turn out to need.
 

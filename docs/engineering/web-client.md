@@ -88,7 +88,9 @@ desktop sidebar keeps Pulse's denser rows. The page padding respects `env(safe-a
 
 ## Lists
 
-**One search box, and every other filter in a pane it drops open.** The box is free text, run after a
+**One search box, and every other filter in a pane it drops open** — or inline, where a screen has a
+single filter: the server log's level switch sits beside its day strip, since a pane for one switch is
+a card of empty space. The box is free text, run after a
 300ms pause; the *Filters* button beside it carries the active count and opens the pane beneath the bar,
 pushing the list down rather than covering it. Every active filter shows as a removable chip under the
 bar, so closing the pane hides nothing that is filtering. Filters apply as they change; the pane's
@@ -96,6 +98,9 @@ bar, so closing the pane hides nothing that is filtering. Filters apply as they 
 
 **A picker searches from seven options**, cx's default, and its list stops at `min(16rem, 40dvh)`
 and scrolls inside it.
+
+**The toolbar's parts are shared** — `list-*` in `_list.scss`: the bar, search, Filters and its pane,
+chips, the caption line, and the error, empty and loading states. A screen's rows are its own.
 
 **The list is one markup at both widths**: a stacked card on a phone, a row of columns with a header
 from `md`, laid out by CSS grid areas. Not a `Grid` for desktop beside cards for the phone — two
@@ -142,6 +147,12 @@ second value set for the same tokens.
 **The sidebar and top bar are dark chrome with tokens of their own**, `nav-*`: two navy tones so the
 two read as a frame, and the active item a solid primary fill rather than a wash. The `ink`, `line` and
 `hover` tokens are tuned for white and fail on navy, so nothing in the chrome uses them.
+
+**The server log is a terminal on a palette of its own**, `term-*`, as the chrome has `nav-*`: every
+text colour clears 4.5:1 on both its tones, and the type is the system monospace stack — no font to
+download. A marker the server put in place of a character that would have acted (`⟨ESC⟩`,
+`⟨U+202E⟩`) is set apart in `term-mark`, and a line break inside a message carries a `⏎`, so an
+injection attempt reads as one.
 
 **The logo tile is violet**, `brand`, wherever it appears: the chrome is Pulse's, and the mark is what
 tells the two applications apart at a glance.
@@ -191,6 +202,13 @@ the dev server instead and the cookie belongs to a node process, the origin diff
 and the dev server's own exposure becomes part of the authenticated surface. **`server.origin` and
 `cors`** exist because of it: asset URLs have to be absolute, and every module request crosses from
 the server's origin to Vite's.
+
+**Every response says what a browser may keep** (`CachingSetup`): `/api` is `no-store`; the shell
+and other static files are `no-cache`, revalidated on every load so a deploy takes effect at once; the
+hashed bundles under `/assets` are kept a year, `immutable`, since their names change with their
+content. Left unsaid, a response with only a `Last-Modified` is cached for a guessed lifetime — a
+browser then answers an API URL with whatever it once got there, the shell from a build that lacked
+the route, until its cache is emptied by hand.
 
 **Hot replacement is Vite's plus `startHotAppLoop`**, which swaps the running application and keeps
 the store and the current route rather than reloading the page. The entry passes

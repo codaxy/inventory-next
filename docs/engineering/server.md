@@ -102,7 +102,9 @@ parameters, exact unless their name says otherwise, ANDed. A range is `from` inc
 exclusive, so adjacent ranges neither overlap nor leave a gap.
 
 **The menu's endpoints are one `/api` group that requires a session**, mapped by `MapInventoryApi`
-beside `MapAuth`, and each item a group beneath it named after its URL.
+beside `MapAuth`, and each item a group beneath it named after its URL. **An item whose readers will
+narrow has its own named policy now**, defined in the host — the server log's `ServerLog`, today any
+session — so restricting it to a role is one line, not a search for every endpoint it covers.
 
 ## Traps
 

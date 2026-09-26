@@ -1,0 +1,291 @@
+// The server log: a strip of days, then one day's entries in a terminal on its own dark palette
+// (`--color-term-*`) and the system monospace stack. Each entry is time, level tag, category and
+// message in a row from `md`; on a phone the first three share a line and the message wraps beneath.
+// Nothing scrolls sideways: long tokens break anywhere.
+
+// The day and the level on one row: days scroll on the left, the level stays put on the right.
+// Below `sm` the two wrap: days on a line of their own, the level full width beneath.
+.log-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+    margin: 0.375rem 0 0.625rem;
+
+    @media (min-width: 640px) {
+        flex-wrap: nowrap;
+
+        .log-days {
+            flex: 1 1 auto;
+        }
+    }
+}
+
+.log-days {
+    display: flex;
+    flex: 1 1 100%;
+    gap: 0.375rem;
+    min-width: 0;
+    padding: 6px 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.log-levels {
+    flex: 1 1 100%;
+    padding: 2px;
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+
+    @media (min-width: 640px) {
+        flex: 0 0 auto;
+    }
+
+    .cxb-button.cxm-hollow.segmented-item {
+        position: relative;
+        height: 28px;
+        padding: 0 0.625rem;
+        font-size: 12.5px;
+
+        // Drawn at 28px inside the 32px track, touched at 44.
+        &::after {
+            content: "";
+            position: absolute;
+            inset: -8px 0;
+        }
+    }
+}
+
+.log-day {
+    position: relative;
+    flex-shrink: 0;
+    height: 32px;
+    padding: 0 0.75rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-ink-soft);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+
+    // Drawn at 32px, touched at 44.
+    &::after {
+        content: "";
+        position: absolute;
+        inset: -6px 0;
+    }
+
+    &:hover {
+        border-color: var(--color-primary);
+    }
+}
+
+.log-day-on,
+.log-day-on:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: white;
+}
+
+.term {
+    overflow: clip;
+    border-radius: 12px;
+    background: var(--color-term);
+    box-shadow: var(--shadow-card);
+    color: var(--color-term-ink);
+    font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 12.5px;
+    line-height: 1.55;
+    transition: opacity 150ms;
+}
+
+.term-loading {
+    opacity: 0.7;
+}
+
+// A window's title bar: decoration, and the file the day is read from.
+.term-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.625rem 1rem;
+    border-bottom: 1px solid var(--color-term-line);
+    background: var(--color-term-alt);
+}
+
+.term-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-term-line);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 12%);
+}
+
+.term-title {
+    margin-left: 0.5rem;
+    color: var(--color-term-dim);
+    font-size: 12px;
+}
+
+.term-empty {
+    padding: 1.5rem 1rem;
+    color: var(--color-term-dim);
+}
+
+.term-entry {
+    display: grid;
+    grid-template-areas:
+        "time tag category"
+        "message message message";
+    grid-template-columns: auto auto minmax(0, 1fr);
+    column-gap: 0.625rem;
+    padding: 0.375rem 1rem;
+    border-bottom: 1px solid var(--color-term-line);
+
+    &:last-child {
+        border-bottom: 0;
+    }
+
+    &:hover {
+        background: var(--color-term-alt);
+    }
+}
+
+.term-time {
+    grid-area: time;
+    color: var(--color-term-dim);
+    font-variant-numeric: tabular-nums;
+}
+
+.term-tag {
+    grid-area: tag;
+    font-weight: 700;
+}
+
+.term-category {
+    grid-area: category;
+    overflow: hidden;
+    color: var(--color-term-dim);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.term-message {
+    grid-area: message;
+    min-width: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.term-info .term-tag {
+    color: var(--color-term-info);
+}
+
+.term-warn {
+    .term-tag,
+    .term-message {
+        color: var(--color-term-warn);
+    }
+}
+
+.term-error {
+    background: rgb(255 138 128 / 6%);
+
+    .term-tag,
+    .term-message {
+        color: var(--color-term-error);
+    }
+}
+
+.term-debug {
+    .term-tag,
+    .term-message {
+        color: var(--color-term-debug);
+    }
+}
+
+.term-raw {
+    .term-tag,
+    .term-message,
+    .term-category {
+        color: var(--color-term-raw);
+    }
+}
+
+// Where the server replaced a character that would have acted — an escape, a bidi override — the
+// marker is set apart, so an injection attempt reads as one.
+.term-marker {
+    padding: 0 0.125rem;
+    border-radius: 3px;
+    background: rgb(255 184 107 / 14%);
+    color: var(--color-term-mark);
+}
+
+.term-newline {
+    margin-left: 0.25rem;
+    color: var(--color-term-mark);
+}
+
+.term-toggle {
+    position: relative;
+    margin-left: 0.5rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-term-info);
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: -12px -6px;
+    }
+}
+
+.term-exception {
+    grid-column: 1 / -1;
+    margin: 0.375rem 0 0.125rem;
+    padding: 0.5rem 0.625rem;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    border-left: 2px solid var(--color-term-error);
+    border-radius: 0 6px 6px 0;
+    background: rgb(0 0 0 / 25%);
+    color: var(--color-term-ink);
+    font: inherit;
+    font-size: 12px;
+}
+
+@keyframes term-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.term-spin {
+    animation: term-spin 0.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .term-spin {
+        animation: none;
+    }
+}
+
+@media (min-width: 768px) {
+    .term-entry {
+        grid-template-areas: "time tag category message";
+        grid-template-columns: 7.25rem 2.25rem 11rem minmax(0, 1fr);
+        column-gap: 0.875rem;
+    }
+
+    .term {
+        font-size: 13px;
+    }
+}

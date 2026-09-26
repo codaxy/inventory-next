@@ -23,6 +23,7 @@ import {
     Location01Icon,
     Logout01Icon,
     PencilEdit01Icon,
+    RefreshIcon,
     Search01Icon,
     ServerStack01Icon,
     Shapes01Icon,
@@ -85,6 +86,7 @@ const uiIcons = {
     created: Add01Icon,
     updated: PencilEdit01Icon,
     deleted: Delete02Icon,
+    refresh: RefreshIcon,
 } satisfies Record<string, IconData>;
 
 export const icons = { ...navIcons, ...uiIcons };

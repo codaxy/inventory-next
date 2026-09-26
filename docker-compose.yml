@@ -73,8 +73,10 @@ services:
       Auth__Google__ClientId: "${GOOGLE_CLIENT_ID:-}"
       Auth__Google__ClientSecret: "${GOOGLE_CLIENT_SECRET:-}"
       DataProtection__KeyRingPath: /var/lib/inventory/keys
+      ServerLog__Path: /var/lib/inventory/logs
     volumes:
       - data_protection_keys:/var/lib/inventory/keys
+      - server_logs:/var/lib/inventory/logs
     healthcheck:
       # Liveness, not readiness: a database outage must not restart the application.
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health/live || exit 1"]
@@ -93,3 +95,5 @@ volumes:
   pgadmin_data:
   # The data protection key ring. Losing it invalidates every session cookie, signing everyone out.
   data_protection_keys:
+  # The server log, a file per day, kept for ServerLog:RetentionDays. Never under wwwroot.
+  server_logs:

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddInventoryServerLog();
+
 builder
     .Services.AddInventoryOptions(builder.Configuration)
     .AddInventoryPersistence(builder.Configuration)
@@ -19,9 +21,10 @@ var app = builder.Build();
 app.MigrateAndSeed();
 
 app.UseHttpLogging();
+app.UseNoStoreForApi();
 app.UseRateLimiter();
 app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(CachingSetup.StaticFiles);
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -35,7 +38,7 @@ app.MapInventoryApi();
 // Every path the client routes to returns the shell. An unknown /api path is a 404, not the shell:
 // served the page, a fetch fails parsing HTML as JSON and says nothing about the missing route.
 app.MapFallback("/api/{**path}", () => Results.NotFound());
-app.MapFallbackToFile("index.html");
+app.MapFallbackToFile("index.html", CachingSetup.StaticFiles);
 
 app.Run();
 

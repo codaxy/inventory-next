@@ -16,6 +16,7 @@ public class HealthCheckTests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Testing");
+            builder.UseScratchServerLog();
             builder.UseSetting("Database:MigrateOnStartup", "false");
             builder.UseSetting(
                 "ConnectionStrings:PostgreSQL",

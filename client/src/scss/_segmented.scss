@@ -21,12 +21,14 @@
     color: var(--color-ink-muted);
 }
 
+// Selected is a primary fill, as a day chip or the current page is: a white pill on the grey track read
+// as one more unselected choice beside them.
 .cxb-button.cxm-hollow.segmented-item-on,
 .cxb-button.cxm-hollow.segmented-item-on:hover {
-    border-color: var(--color-line);
-    background: var(--color-surface);
+    border-color: var(--color-primary);
+    background: var(--color-primary);
     box-shadow: var(--shadow-control);
-    color: var(--color-ink);
+    color: white;
 }
 
 // Inside its 44px track, the pill reaches the tap target on a phone.

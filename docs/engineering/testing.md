@@ -31,6 +31,12 @@ references `App` and `Web` but needs nothing — no Docker, no host — so it al
 host-testing package it cannot boot the application. The integration project references `Web`, starts
 PostgreSQL through Docker and drives the host over HTTP.
 
+## Isolation
+
+**Every factory that starts the application gives it scratch folders** — the key ring, and the server
+log through `UseScratchServerLog()`. The log's default is `logs` under the content root, which is the
+source tree: a test host left on it writes into the developer's own log, beside a running `dotnet run`.
+
 ## Formatting
 
 CSharpier formats the server and Prettier the client, both pinned and both checked in CI, so

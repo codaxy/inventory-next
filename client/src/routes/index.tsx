@@ -6,6 +6,7 @@ import { AppLayout } from "../layout";
 import { landing, navigation } from "../layout/navigation";
 import $app from "../model";
 import AuditLog from "./administration/audit-log";
+import ServerLog from "./administration/server-log";
 import Controller from "./Controller";
 import NotFound from "./not-found";
 import SignIn from "./sign-in";
@@ -13,6 +14,7 @@ import SignIn from "./sign-in";
 /** The menu items that have a screen; the rest route to a placeholder naming the step that builds them. */
 const screens: Record<string, any> = {
     "~/administration/audit-log": AuditLog,
+    "~/administration/server-log": ServerLog,
 };
 
 // The first matching route wins, so order is the routing table: signed in or not is the outermost

@@ -25,10 +25,10 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 COPY --from=server /app ./
 
-# A fresh named volume takes its ownership from the image, so the directory is created and handed to
-# the application's user before the volume is mounted over it — otherwise a non-root process cannot
-# write its keys.
-RUN mkdir -p /var/lib/inventory/keys && chown -R $APP_UID /var/lib/inventory
+# A fresh named volume takes its ownership from the image, so the directories are created and handed to
+# the application's user before the volumes are mounted over them — otherwise a non-root process cannot
+# write its keys or its log.
+RUN mkdir -p /var/lib/inventory/keys /var/lib/inventory/logs && chown -R $APP_UID /var/lib/inventory
 
 # Not root. The image serves static files and talks to Postgres; it needs nothing it owns.
 USER $APP_UID

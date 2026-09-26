@@ -143,6 +143,27 @@ public class AuthTests(InventoryApplication app) : IClassFixture<InventoryApplic
         Assert.Contains("text/html", response.Content.Headers.ContentType?.MediaType);
     }
 
+    [Theory]
+    [InlineData("/api/auth/options")]
+    [InlineData("/api/auth/me")]
+    [InlineData("/api/no-such-endpoint")]
+    public async Task No_api_response_may_be_stored(string path)
+    {
+        var response = await Client().GetAsync(path);
+
+        Assert.True(response.Headers.CacheControl?.NoStore);
+    }
+
+    [Theory]
+    [InlineData("/")]
+    [InlineData("/sign-in")]
+    public async Task The_shell_is_revalidated_on_every_load(string path)
+    {
+        var response = await Client().GetAsync(path);
+
+        Assert.True(response.Headers.CacheControl?.NoCache);
+    }
+
     [Fact]
     public async Task An_unknown_api_path_is_not_found_rather_than_the_shell()
     {

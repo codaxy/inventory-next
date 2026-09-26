@@ -1,3 +1,4 @@
+using Codaxy.Inventory.App.Administration.ServerLogs;
 using Codaxy.Inventory.Web.Auth;
 using Codaxy.Inventory.Web.Auth.OneTimeCodes;
 using Microsoft.AspNetCore.Authentication;
@@ -16,6 +17,12 @@ public static class AuthenticationSetup
         services.AddSingleton<IOneTimeCodeStore, InMemoryOneTimeCodeStore>();
         services.AddScoped<SignInPolicy>();
         services.AddScoped<IEmailSender, SmtpEmailSender>();
+
+        // Every endpoint's policy that is more than "signed in" is named here, so tightening one is
+        // one line. The server log is readable by any session until roles exist.
+        services
+            .AddAuthorizationBuilder()
+            .AddPolicy(ServerLogOptions.ReadPolicy, policy => policy.RequireAuthenticatedUser());
 
         var authentication = services
             .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

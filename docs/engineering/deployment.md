@@ -54,12 +54,28 @@ before sending traffic.
 
 ## Logs
 
-The framework's own console logger, in its default format, and one combined line per request through
-its HTTP logging — method, path, status, duration, no headers and no bodies, because a request body
-here is a sign-in attempt. No logging library and no custom formatter: nothing yet needs a sink or a
-shape the framework does not have, and a container's log is its stdout.
+Code logs through the framework's `ILogger`, filtered by `Logging:LogLevel`, to two places: the
+framework's console logger, so `docker compose logs` works, and the server log. Requests are one
+combined line each through the framework's HTTP logging — method, path, status, duration, no headers
+and no bodies, because a request body here is a sign-in attempt.
+
+**The server log is Serilog's file sink**, added as a provider directly rather than through
+`AddSerilog`, whose own "everything" filter outranks `Logging:LogLevel`. Nothing outside
+`ServerLogSetup` names Serilog. **One rendered compact-JSON object per line**: a newline in a logged
+value stays escaped inside its string, so nothing logged can start an entry of its own — plain-text
+lines are what make log injection possible. **A file per day**, `server-yyyyMMdd.log`, rolling to
+`_001` past 50 MB, deleted after `ServerLog:RetentionDays` (30). **Shared**: the sink appends through
+the operating system, so a second writer — a restart overlapping the old process, two instances on one
+volume — cannot interleave with it. Unshared, it writes at a position it tracks itself, and two writers
+overwrite each other's lines into fragments.
+
+**`ServerLog:Path` is outside `wwwroot`, and startup refuses otherwise.** The files are read only
+through the API, behind its own policy; a folder the static-file middleware serves would hand them to
+anyone. Compose puts it on the `server_logs` volume, beside the key ring, so a deploy keeps it; a
+checkout writes to `logs/` under the content root.
 
 ## Traps
+
 
 **`dotnet run` is Production without `launchSettings.json`.** The environment comes from there, so a
 missing or renamed profile means development settings are never loaded and the application stops at

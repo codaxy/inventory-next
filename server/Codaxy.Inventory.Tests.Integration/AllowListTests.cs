@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Codaxy.Inventory.Tests.Integration.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -16,6 +17,7 @@ public class AllowListTests
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Testing");
+            builder.UseScratchServerLog();
             builder.UseSetting("Database:MigrateOnStartup", "false");
             builder.UseSetting("ConnectionStrings:PostgreSQL", "Host=localhost;Database=unused");
             builder.UseSetting("Auth:AllowedDomains:0", "codaxy.com");

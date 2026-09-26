@@ -30,6 +30,15 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
     public string KeyRingPath { get; } =
         Path.Combine(Path.GetTempPath(), "inventory-next-tests", Guid.CreateVersion7().ToString());
 
+    /// <summary>Its own log folder per run, so a test never writes into the source tree.</summary>
+    public string ServerLogPath { get; } =
+        Path.Combine(
+            Path.GetTempPath(),
+            "inventory-next-tests",
+            Guid.CreateVersion7().ToString(),
+            "logs"
+        );
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
@@ -41,6 +50,7 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
         builder.UseSetting("Auth:AllowedDomains:0", "codaxy.com");
         builder.UseSetting("Auth:OneTimeCode:Enabled", "true");
         builder.UseSetting("DataProtection:KeyRingPath", KeyRingPath);
+        builder.UseSetting("ServerLog:Path", ServerLogPath);
 
         // The schema here comes from the model through EnsureCreated, and the codebooks stay empty so
         // a test seeds exactly what it needs. Migrations are proven against their own database by
@@ -80,6 +90,9 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
 
         if (Directory.Exists(KeyRingPath))
             Directory.Delete(KeyRingPath, recursive: true);
+
+        if (Directory.Exists(ServerLogPath))
+            Directory.Delete(ServerLogPath, recursive: true);
 
         await postgres.DisposeAsync();
         await base.DisposeAsync();

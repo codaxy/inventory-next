@@ -44,11 +44,11 @@ export default createFunctionalComponent(() => {
 
                 {/* Pinned while the rows scroll, except while the filters are open: the pane is too tall. */}
                 <div class={{ "list-bar": true, "list-bar-static": s.filtersOpen }} onRef={onBarRef}>
-                    <div class="audit-toolbar">
-                        <div class="audit-search">
-                            <Icon name="search" class="audit-search-icon" />
+                    <div class="list-toolbar">
+                        <div class="list-search">
+                            <Icon name="search" class="list-search-icon" />
                             <TextField
-                                class="audit-search-field"
+                                class="list-search-field"
                                 value={s.search}
                                 placeholder="Search changes, people, records…"
                                 showClear
@@ -61,22 +61,22 @@ export default createFunctionalComponent(() => {
                         <Button
                             mod="hollow"
                             class={{
-                                "audit-filters-toggle": true,
-                                "audit-filters-toggle-open": s.filtersOpen,
+                                "list-filters-toggle": true,
+                                "list-filters-toggle-open": s.filtersOpen,
                             }}
                             attrs={{ "aria-controls": "audit-filters" }}
                             onClick="toggleFilters"
                         >
                             <Icon name="filters" class="size-4" />
                             <span class="hidden sm:inline" text="Filters" />
-                            <span class="audit-count" visible={hasChips} text={chipCount} />
+                            <span class="list-count" visible={hasChips} text={chipCount} />
                         </Button>
                     </div>
 
-                    <div id="audit-filters" class="audit-pane" visible={s.filtersOpen}>
-                        <div class="audit-pane-grid">
-                            <div class="audit-filter audit-filter-wide">
-                                <div class="audit-filter-label" text="Change" />
+                    <div id="audit-filters" class="list-pane" visible={s.filtersOpen}>
+                        <div class="list-pane-grid">
+                            <div class="list-filter list-filter-wide">
+                                <div class="list-filter-label" text="Change" />
                                 <div class="segmented" role="group" aria-label="Change">
                                     {actions.map((a) => (
                                         <cx>
@@ -99,8 +99,8 @@ export default createFunctionalComponent(() => {
                                 </div>
                             </div>
 
-                            <div class="audit-filter">
-                                <div class="audit-filter-label" text="Record type" />
+                            <div class="list-filter">
+                                <div class="list-filter-label" text="Record type" />
                                 <LookupField
                                     value={f.table}
                                     options={s.tables}
@@ -109,8 +109,8 @@ export default createFunctionalComponent(() => {
                                 />
                             </div>
 
-                            <div class="audit-filter">
-                                <div class="audit-filter-label" text="Changed by" />
+                            <div class="list-filter">
+                                <div class="list-filter-label" text="Changed by" />
                                 <LookupField
                                     value={f.email}
                                     options={s.emails}
@@ -119,8 +119,8 @@ export default createFunctionalComponent(() => {
                                 />
                             </div>
 
-                            <div class="audit-filter">
-                                <div class="audit-filter-label" text="From" />
+                            <div class="list-filter">
+                                <div class="list-filter-label" text="From" />
                                 <DateField
                                     value={dateValue(f.from)}
                                     placeholder="Any day"
@@ -128,8 +128,8 @@ export default createFunctionalComponent(() => {
                                 />
                             </div>
 
-                            <div class="audit-filter">
-                                <div class="audit-filter-label" text="To" />
+                            <div class="list-filter">
+                                <div class="list-filter-label" text="To" />
                                 <DateField
                                     value={dateValue(f.to)}
                                     placeholder="Any day"
@@ -137,8 +137,8 @@ export default createFunctionalComponent(() => {
                                 />
                             </div>
 
-                            <div class="audit-filter">
-                                <div class="audit-filter-label" text="Inventory number" />
+                            <div class="list-filter">
+                                <div class="list-filter-label" text="Inventory number" />
                                 <TextField
                                     value={f.inventoryNumber}
                                     placeholder="e.g. 100893"
@@ -150,7 +150,7 @@ export default createFunctionalComponent(() => {
                             </div>
                         </div>
 
-                        <div class="audit-pane-footer">
+                        <div class="list-pane-footer">
                             <Button
                                 mod="hollow"
                                 text="Clear filters"
@@ -161,7 +161,7 @@ export default createFunctionalComponent(() => {
                         </div>
                     </div>
 
-                    <div class="audit-chips" visible={hasChips}>
+                    <div class="list-chips" visible={hasChips}>
                         <Repeater records={s.chips} recordAlias={m.$chip}>
                             <button
                                 type="button"
@@ -178,11 +178,11 @@ export default createFunctionalComponent(() => {
                         <button type="button" class="chip-clear" onClick="clearFilters" text="Clear all" />
                     </div>
 
-                    <div class="audit-results-head">
-                        <span class="audit-total" text={s.totalText} />
+                    <div class="list-results-head">
+                        <span class="list-total" text={s.totalText} />
                         <Button
                             mod="hollow"
-                            class="audit-sort"
+                            class="list-sort"
                             onClick="toggleSort"
                             attrs={{ "aria-label": "Change the order" }}
                         >
@@ -205,7 +205,7 @@ export default createFunctionalComponent(() => {
                     </div>
                 </div>
 
-                <div class="audit-error" visible={hasValue(s.error)}>
+                <div class="list-error" visible={hasValue(s.error)}>
                     <span text={s.error} />
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
@@ -219,7 +219,7 @@ export default createFunctionalComponent(() => {
                         <span text="By" />
                     </div>
 
-                    <div class="audit-loading" visible={falsy(s.loaded)} text="Loading…" />
+                    <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />
 
                     <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
                         <div
@@ -261,10 +261,10 @@ export default createFunctionalComponent(() => {
                     </Repeater>
                 </div>
 
-                <div class="audit-empty" visible={empty}>
+                <div class="list-empty" visible={empty}>
                     <Icon name="search" class="size-6" />
-                    <p class="audit-empty-title" text="No changes match" />
-                    <p class="audit-empty-text" text="Try fewer words, or loosen a filter." />
+                    <p class="list-empty-title" text="No changes match" />
+                    <p class="list-empty-text" text="Try fewer words, or loosen a filter." />
                     <Button mod="hollow" text="Clear search and filters" onClick="clearAll" />
                 </div>
 

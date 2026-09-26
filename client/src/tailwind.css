@@ -66,6 +66,21 @@
     --color-nav-avatar-ink: #c3d3f5;
     --color-nav-scroll: rgb(255 255 255 / 22%);
 
+    /* The server log's terminal: its own dark palette, as the chrome has one. Ratios are against
+       `term`, then `term-alt`; every text colour clears 4.5. */
+    --color-term: #0d1322;
+    --color-term-alt: #111a2e;
+    --color-term-line: rgb(255 255 255 / 7%);
+    --color-term-ink: #dbe2ee; /* 14.2, 13.3 */
+    --color-term-dim: #8b96ad; /* 6.2, 5.8 */
+    --color-term-info: #7cc0ff; /* 9.6, 9.0 */
+    --color-term-warn: #f2c14e; /* 11.0, 10.3 */
+    --color-term-error: #ff8a80; /* 8.1, 7.6 */
+    --color-term-debug: #a3adc2; /* 8.2, 7.7 */
+    --color-term-raw: #c9a7ff; /* 9.2, 8.6 */
+    /* A marker standing in for a character that would have acted: ⟨ESC⟩, ⟨U+202E⟩. */
+    --color-term-mark: #ffb86b; /* 10.9, 10.2 */
+
     --shadow-control: 0 1px 2px rgb(16 26 43 / 8%);
     --shadow-card: 0 8px 24px rgb(16 26 43 / 8%);
     --shadow-overlay: 0 10px 25px rgb(16 26 43 / 15%);

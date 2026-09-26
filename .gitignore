@@ -17,4 +17,5 @@ appsettings.Production.json
 server/Codaxy.Inventory.Web/wwwroot/*
 !server/Codaxy.Inventory.Web/wwwroot/.gitkeep
 client/dist/
+server/Codaxy.Inventory.Web/logs/
 coverage/
