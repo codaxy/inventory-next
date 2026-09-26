@@ -17,7 +17,7 @@ export default createFunctionalComponent(() => (
                 noun: "cloud subscriptions",
                 placeholder: "Search name, license, software…",
                 newHref: "~/infrastructure/cloud-subscriptions/new",
-                newText: "New cloud subscription",
+                addText: "Add cloud subscription",
                 href: (id) => `~/infrastructure/cloud-subscriptions/${id}`,
                 columns: "on-volume-columns",
                 cells: [

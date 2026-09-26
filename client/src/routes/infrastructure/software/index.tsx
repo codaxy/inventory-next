@@ -17,7 +17,7 @@ export default createFunctionalComponent(() => (
                 noun: "software",
                 placeholder: "Search name, license, software…",
                 newHref: "~/infrastructure/software/new",
-                newText: "New software",
+                addText: "Add software",
                 href: (id) => `~/infrastructure/software/${id}`,
                 columns: "on-volume-columns",
                 cells: [

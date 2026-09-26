@@ -63,10 +63,14 @@ export default createFunctionalComponent(() => {
                             <span class="hidden sm:inline" text="Filters" />
                             <span class="list-count" visible={hasChips} text={chipCount} />
                         </Button>
-                        <LinkButton mod="primary" class="list-new" href="~/licenses/new">
+                        <LinkButton
+                            mod="primary"
+                            class="list-new"
+                            attrs={{ "aria-label": "Add license", title: "Add license" }}
+                            href="~/licenses/new"
+                        >
                             <Icon name="created" class="size-4" />
-                            <span class="hidden sm:inline" text="New license" />
-                            <span class="sr-only sm:hidden" text="New license" />
+                            <span class="hidden sm:inline" text="Add" />
                         </LinkButton>
                     </div>
 

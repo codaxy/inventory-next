@@ -17,7 +17,7 @@ export default createFunctionalComponent(() => (
                 noun: "types",
                 placeholder: "Search types…",
                 newHref: "~/informations/types/new",
-                newText: "New type",
+                addText: "Add type",
                 href: (id) => `~/informations/types/${id}`,
                 columns: "information-group-columns",
                 cells: [

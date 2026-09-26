@@ -17,7 +17,7 @@ export default createFunctionalComponent(() => (
                 noun: "virtual machines",
                 placeholder: "Search name or address…",
                 newHref: "~/infrastructure/virtual-machines/new",
-                newText: "New virtual machine",
+                addText: "Add virtual machine",
                 href: (id) => `~/infrastructure/virtual-machines/${id}`,
                 columns: "machine-columns",
                 cells: [

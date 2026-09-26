@@ -17,7 +17,7 @@ export default createFunctionalComponent(() => (
                 noun: "manufacturers",
                 placeholder: "Search name or URL…",
                 newHref: "~/company/manufacturers/new",
-                newText: "New manufacturer",
+                addText: "Add manufacturer",
                 href: (id) => `~/company/manufacturers/${id}`,
                 columns: "manufacturer-columns",
                 cells: [

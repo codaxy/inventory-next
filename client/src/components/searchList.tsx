@@ -40,7 +40,8 @@ interface SearchList {
     noun: string;
     placeholder: string;
     newHref: string;
-    newText: string;
+    /** "Add vendor": the button reads "Add", and this is its name for a screen reader and its tooltip. */
+    addText: string;
     /** The row's record page, from its id. */
     href: (id: string) => string;
     /** The screen's class that lays the columns out, in `_records.scss`. */
@@ -80,10 +81,14 @@ export function searchList(o: SearchList) {
                             inputAttrs={{ "aria-label": `Search ${o.noun}`, enterKeyHint: "search" }}
                         />
                     </div>
-                    <LinkButton mod="primary" class="list-new" href={o.newHref}>
+                    <LinkButton
+                        mod="primary"
+                        class="list-new"
+                        href={o.newHref}
+                        attrs={{ "aria-label": o.addText, title: o.addText }}
+                    >
                         <Icon name="created" class="size-4" />
-                        <span class="hidden sm:inline" text={o.newText} />
-                        <span class="sr-only sm:hidden" text={o.newText} />
+                        <span class="hidden sm:inline" text="Add" />
                     </LinkButton>
                 </div>
 

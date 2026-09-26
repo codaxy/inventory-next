@@ -165,7 +165,7 @@ activations link by `volumeId`, not by its license and software, which a license
 shares five ways — and say how many they lead to ("2 activations"). A form opened on a choice the address already makes — `activations/new?volumeId=…` — shows it,
 and what follows from it, as text rather than asking again: the volume and its software fixed, and
 the next field the one its type calls for, a user or a device. The activations list filtered to one volume
-opens such a form from its New button too. Such a form returns where it was started: from a license's
+opens such a form from its Activate button too. Such a form returns where it was started: from a license's
 volume (`from=license`), its back link names the license and Cancel and a save go back to it; from
 the list, to the list as it was left. A shortcut is offered only where it leads
 somewhere ordinary: a volume's "Activate" shows while a seat is free, not once all are taken. `ListController` in `src/listController.ts` holds all of this
@@ -280,7 +280,9 @@ prompt for a reload or a closed tab. Browser Back leaves without asking: cx cann
 browser has already made. A save or a delete releases the guard before it navigates.
 
 **A list of records** — `_records.scss` — is a card per row on a phone and columns from `md`, a header
-on `raised` — the page's own tint dissolves the card's top edge — that sorts on a tap (`sortHeader`), a row that opens its record, and a *New* button in the toolbar where a screen's
+on `raised` — the page's own tint dissolves the card's top edge — that sorts on a tap (`sortHeader`), a row that opens its record, and an **Add** button in the toolbar — "+ Add" whatever the list,
+since its title names what is added, and "Add vendor" as its accessible name; activations keep
+"Activate", the verb for a seat — where a screen's
 filters would be. A list cut short — the first three types on a tag, the first fields of an audit
 change — ends in a muted `+N` pill (`record-more`), so the count never reads as another name. **An empty cell is "—"**, far lighter than a
 value (`record-blank`, `ink-ghost` against values in `ink-soft`: a thin dash is judged by weight, not

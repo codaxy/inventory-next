@@ -17,7 +17,7 @@ export default createFunctionalComponent(() => (
                 noun: "vendors",
                 placeholder: "Search name, contact, email, VAT…",
                 newHref: "~/company/vendors/new",
-                newText: "New vendor",
+                addText: "Add vendor",
                 href: (id) => `~/company/vendors/${id}`,
                 columns: "vendor-columns",
                 cells: [

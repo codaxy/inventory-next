@@ -17,7 +17,7 @@ export default createFunctionalComponent(() => (
                 noun: "tags",
                 placeholder: "Search tags…",
                 newHref: "~/informations/tags/new",
-                newText: "New tag",
+                addText: "Add tag",
                 href: (id) => `~/informations/tags/${id}`,
                 columns: "information-group-columns",
                 cells: [

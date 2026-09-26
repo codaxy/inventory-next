@@ -17,7 +17,7 @@ export default createFunctionalComponent(() => (
                 noun: "locations",
                 placeholder: "Search name, street, city…",
                 newHref: "~/company/locations/new",
-                newText: "New location",
+                addText: "Add location",
                 href: (id) => `~/company/locations/${id}`,
                 columns: "location-columns",
                 cells: [

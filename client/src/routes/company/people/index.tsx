@@ -49,10 +49,14 @@ export default createFunctionalComponent(() => {
                                 inputAttrs={{ "aria-label": "Search people", enterKeyHint: "search" }}
                             />
                         </div>
-                        <LinkButton mod="primary" class="list-new" href="~/company/people/new">
+                        <LinkButton
+                            mod="primary"
+                            class="list-new"
+                            attrs={{ "aria-label": "Add person", title: "Add person" }}
+                            href="~/company/people/new"
+                        >
                             <Icon name="created" class="size-4" />
-                            <span class="hidden sm:inline" text="New person" />
-                            <span class="sr-only sm:hidden" text="New person" />
+                            <span class="hidden sm:inline" text="Add" />
                         </LinkButton>
                     </div>
 
