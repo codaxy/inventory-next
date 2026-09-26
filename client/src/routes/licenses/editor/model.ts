@@ -186,7 +186,9 @@ export function toDraft(l: LicenseDetail, duplicate: boolean): Draft {
                   activationsText:
                       v.activationCount === 1 ? "1 activation" : `${v.activationCount} activations`,
                   activateHref:
-                      v.inUse < v.quantity ? `~/licenses/activations/new?volumeId=${v.id}` : undefined,
+                      v.inUse < v.quantity
+                          ? `~/licenses/activations/new?volumeId=${v.id}&from=license`
+                          : undefined,
               })),
     };
     const picks: [string, { id: string; text: string } | undefined][] = [

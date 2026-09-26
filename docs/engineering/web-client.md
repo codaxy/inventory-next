@@ -156,8 +156,10 @@ what it implies. Links into a list use the same parameters and **name the narrow
 activations link by `volumeId`, not by its licence and software, which a licence of five Rider volumes
 shares five ways — and say how many they lead to ("2 activations"). A form opened on a choice the address already makes — `activations/new?volumeId=…` — shows it,
 and what follows from it, as text rather than asking again: the volume and its software fixed, and
-the next field the one its type calls for, a user or a device. Such a form returns where it was
-started: its back link names the licence, and Cancel and a save go back to it, not to the list. A shortcut is offered only where it leads
+the next field the one its type calls for, a user or a device. The activations list filtered to one volume
+opens such a form from its New button too. Such a form returns where it was started: from a licence's
+volume (`from=license`), its back link names the licence and Cancel and a save go back to it; from
+the list, to the list as it was left. A shortcut is offered only where it leads
 somewhere ordinary: a volume's "Activate" shows while a seat is free, not once all are taken. `ListController` in `src/listController.ts` holds all of this
 with the search's pause, the chips, the sort and the latest-request rule; a list declares its path,
 its filters to and from the address, and its fetch. Not a history entry per change: Back would step

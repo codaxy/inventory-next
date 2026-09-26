@@ -29,6 +29,11 @@ const volumeOptions = expr(s.volumes, f.licenseId, f.softwareId, (volumes, licen
         .map((v) => ({ id: v.id, text: v.text })),
 );
 
+/** A new activation, of the volume the list is filtered to when it is: that choice is already made. */
+const newHref = expr(f.volumeId, (id) =>
+    id ? `~/licenses/activations/new?volumeId=${id}` : "~/licenses/activations/new",
+);
+
 const statuses = [
     { value: null, text: "Any" },
     { value: "active", text: "Active" },
@@ -102,7 +107,7 @@ export default createFunctionalComponent(() => {
                             <span class="hidden sm:inline" text="Filters" />
                             <span class="list-count" visible={hasChips} text={chipCount} />
                         </Button>
-                        <LinkButton mod="primary" class="list-new" href="~/licenses/activations/new">
+                        <LinkButton mod="primary" class="list-new" href={newHref}>
                             <Icon name="created" class="size-4" />
                             <span class="hidden sm:inline" text="Activate" />
                             <span class="sr-only sm:hidden" text="New activation" />
