@@ -166,6 +166,16 @@ export default createFunctionalComponent(() => {
 
                     <div class="list-results-head">
                         <span class="list-total" text={s.totalText} />
+                        {/* A plain anchor: cx's Link would route it inside the app instead of downloading. */}
+                        <a
+                            class="list-export"
+                            href={s.exportHref}
+                            download
+                            attrs={{ title: "Download what the list shows, every page, as Excel" }}
+                        >
+                            <Icon name="download" class="size-3.5" />
+                            <span text="Excel" />
+                        </a>
                         <div>
                             <Pager
                                 state={s.pager}

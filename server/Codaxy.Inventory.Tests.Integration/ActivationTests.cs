@@ -590,6 +590,36 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         Assert.Empty((await ListAsync("page=999")).Items);
     }
 
+    [Fact]
+    public async Task Exports_what_the_list_selects_every_row_not_a_page()
+    {
+        var client = await Client();
+
+        // Nothing matches: still a spreadsheet, though CodeReports writes an empty table without its headers.
+        var nothing = await client.GetAsync($"{Url}/export?q=nobody-by-this-name");
+        Assert.Equal(HttpStatusCode.OK, nothing.StatusCode);
+        var none = await Spreadsheet.TextOf(nothing);
+        var office = await Spreadsheet.TextOf(
+            await client.GetAsync(
+                $"{Url}/export?softwareId={ActivationApplication.Office}&pageSize=1"
+            )
+        );
+
+        Assert.DoesNotContain("Office licence", none);
+        Assert.Contains("Software/Service", office);
+        Assert.Contains("Office licence", office);
+        Assert.Contains("Ana Anić", office);
+        Assert.DoesNotContain("Antivirus licence", office);
+        Assert.Equal(
+            HttpStatusCode.BadRequest,
+            (await client.GetAsync($"{Url}/export?status=paused")).StatusCode
+        );
+        Assert.Equal(
+            HttpStatusCode.Unauthorized,
+            (await app.CreateClient().GetAsync($"{Url}/export")).StatusCode
+        );
+    }
+
     [Theory]
     [InlineData("sort=quantity")]
     [InlineData("status=paused")]

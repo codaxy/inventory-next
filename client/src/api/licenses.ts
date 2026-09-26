@@ -150,6 +150,9 @@ const base = "/api/licenses";
 
 export const listLicenses = (q: LicenseQuery) => send<Page<LicenseItem>>(`${base}/?${toQuery(q)}`);
 
+/** The spreadsheet of what a list query selects, every row. */
+export const licensesExport = (q: Omit<LicenseQuery, "page" | "pageSize">) => `${base}/export?${toQuery(q)}`;
+
 export const getLicense = (id: string) => send<LicenseDetail>(`${base}/${id}`);
 
 export const getLicenseOptions = () => send<LicenseOptions>(`${base}/options`);

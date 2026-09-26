@@ -29,6 +29,7 @@ public static class InventoryApi
 
         Licenses.Licenses.List.Endpoint.Map(licenses);
         Licenses.Licenses.Options.Endpoint.Map(licenses);
+        Licenses.Licenses.Export.Endpoint.Map(licenses);
         Licenses.Licenses.Get.Endpoint.Map(licenses);
         Licenses.Licenses.Create.Endpoint.Map(licenses);
         Licenses.Licenses.Update.Endpoint.Map(licenses);
@@ -38,6 +39,7 @@ public static class InventoryApi
 
         Licenses.Activations.List.Endpoint.Map(activations);
         Licenses.Activations.Options.Endpoint.Map(activations);
+        Licenses.Activations.Export.Endpoint.Map(activations);
         Licenses.Activations.Volumes.Endpoint.Map(activations);
         Licenses.Activations.Get.Endpoint.Map(activations);
         Licenses.Activations.Create.Endpoint.Map(activations);

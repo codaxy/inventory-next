@@ -61,6 +61,53 @@ public static class Endpoint
         if (Paging.Read(query.Page, query.PageSize, out var window) is { } problem)
             return problem;
 
+        if (Refuse(query) is { } refused)
+            return refused;
+
+        var today = Licenses.Expiry.Today(clock);
+
+        var page = await Rows(context, query, today)
+            .Select(a => new
+            {
+                a.Id,
+                Software = a.Volume.SoftwareOrService.Name,
+                a.Volume.LicenseId,
+                License = a.Volume.License.Asset.Name,
+                Assignee = a.PersonId != null ? a.Person.Name : a.Asset.Name,
+                DeviceNumber = a.PersonId != null ? null : a.Asset.InventoryNumber,
+                ForDevice = a.PersonId == null,
+                a.Quantity,
+                a.ActivationDate,
+                a.DeactivationDate,
+                a.Volume.License.SubscriptionExpirationDate,
+            })
+            .ToPageAsync(window, cancellationToken);
+
+        return Results.Ok(
+            new Page<Item>(
+                page.Items.Select(a => new Item(
+                        a.Id,
+                        a.Software,
+                        a.LicenseId,
+                        a.License,
+                        a.Assignee,
+                        a.DeviceNumber,
+                        a.ForDevice,
+                        a.Quantity,
+                        a.ActivationDate,
+                        a.DeactivationDate,
+                        a.SubscriptionExpirationDate,
+                        Licenses.Expiry.Status(a.SubscriptionExpirationDate, today)
+                    ))
+                    .ToList(),
+                page.Total
+            )
+        );
+    }
+
+    /// <summary>A sort, status or expiry outside the convention; the problem to answer with, or none.</summary>
+    internal static IResult? Refuse(Query query)
+    {
         var errors = new Dictionary<string, string[]>();
         if (query.Sort is not null && !Keys.Contains(query.Sort.TrimStart('-')))
             errors["sort"] = ["Sort by activated, software, license, assignee or deactivated."];
@@ -70,8 +117,19 @@ public static class Endpoint
             errors["expiry"] = ["Expiry is expired, soon, regular or none."];
         if (errors.Count > 0)
             return Results.ValidationProblem(errors);
+        return null;
+    }
 
-        var today = Licenses.Expiry.Today(clock);
+    /// <summary>
+    /// The activations the query selects, in its order — every one, for the page to take its window
+    /// of and the export to write whole, so the two can never disagree about what the list shows.
+    /// </summary>
+    internal static IOrderedQueryable<Activation> Rows(
+        InventoryContext context,
+        Query query,
+        DateOnly today
+    )
+    {
         var rows = context.Activations.AsNoTracking();
 
         foreach (var term in FreeText.Terms(query.Q))
@@ -114,7 +172,7 @@ public static class Endpoint
         };
 
         var descending = query.Sort?.StartsWith('-') ?? true;
-        var ordered = (query.Sort?.TrimStart('-') ?? "activated") switch
+        return (query.Sort?.TrimStart('-') ?? "activated") switch
         {
             "software" => Order(rows, a => a.Volume.SoftwareOrService.Name, descending),
             "license" => Order(rows, a => a.Volume.License.Asset.Name, descending),
@@ -126,44 +184,6 @@ public static class Endpoint
             "deactivated" => Order(rows, a => a.DeactivationDate, descending),
             _ => Order(rows, a => a.ActivationDate, descending),
         };
-
-        var page = await ordered
-            .Select(a => new
-            {
-                a.Id,
-                Software = a.Volume.SoftwareOrService.Name,
-                a.Volume.LicenseId,
-                License = a.Volume.License.Asset.Name,
-                Assignee = a.PersonId != null ? a.Person.Name : a.Asset.Name,
-                DeviceNumber = a.PersonId != null ? null : a.Asset.InventoryNumber,
-                ForDevice = a.PersonId == null,
-                a.Quantity,
-                a.ActivationDate,
-                a.DeactivationDate,
-                a.Volume.License.SubscriptionExpirationDate,
-            })
-            .ToPageAsync(window, cancellationToken);
-
-        return Results.Ok(
-            new Page<Item>(
-                page.Items.Select(a => new Item(
-                        a.Id,
-                        a.Software,
-                        a.LicenseId,
-                        a.License,
-                        a.Assignee,
-                        a.DeviceNumber,
-                        a.ForDevice,
-                        a.Quantity,
-                        a.ActivationDate,
-                        a.DeactivationDate,
-                        a.SubscriptionExpirationDate,
-                        Licenses.Expiry.Status(a.SubscriptionExpirationDate, today)
-                    ))
-                    .ToList(),
-                page.Total
-            )
-        );
     }
 
     /// <summary>The column the reader chose, then the newest activation, then the id, so rows that sort equal keep one order across pages.</summary>

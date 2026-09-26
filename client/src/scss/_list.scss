@@ -210,6 +210,33 @@
     }
 }
 
+// The list's spreadsheet, on the caption line beside the order: small, like the line it sits on.
+.list-export {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 32px;
+    padding: 0 0.5rem;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-ink-muted);
+    text-decoration: none;
+
+    // Drawn at 32px, touched at 44.
+    &::after {
+        content: "";
+        position: absolute;
+        inset: -6px 0;
+    }
+
+    &:hover {
+        background: var(--color-hover);
+        color: var(--color-ink);
+    }
+}
+
 .list-loading {
     padding: 2rem 1rem;
     font-size: 13px;

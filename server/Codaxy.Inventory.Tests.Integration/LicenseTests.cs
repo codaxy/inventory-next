@@ -722,6 +722,39 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
         Assert.Empty((await ListAsync("page=999")).Items);
     }
 
+    [Fact]
+    public async Task Exports_what_the_list_selects_as_the_originals_spreadsheet()
+    {
+        var client = await Client();
+
+        var office = await client.GetAsync($"{Url}/export?q=office+licence");
+        var all = await client.GetAsync($"{Url}/export");
+
+        Assert.Equal(HttpStatusCode.OK, office.StatusCode);
+        Assert.Equal(
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            office.Content.Headers.ContentType?.MediaType
+        );
+        Assert.Equal(
+            "Licenses.Export.xlsx",
+            office.Content.Headers.ContentDisposition?.FileNameStar
+                ?? office.Content.Headers.ContentDisposition?.FileName
+        );
+
+        var filtered = await Spreadsheet.TextOf(office);
+        Assert.Contains("Office licence", filtered);
+        Assert.DoesNotContain("Backup licence", filtered);
+        Assert.Contains("Purchase Value", filtered);
+
+        var whole = await Spreadsheet.TextOf(all);
+        Assert.Contains("Backup licence", whole);
+        Assert.Contains("Spare licence", whole);
+        Assert.Equal(
+            HttpStatusCode.BadRequest,
+            (await client.GetAsync($"{Url}/export?sort=colour")).StatusCode
+        );
+    }
+
     [Theory]
     [InlineData("sort=colour")]
     [InlineData("expiry=later")]

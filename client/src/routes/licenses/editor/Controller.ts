@@ -116,8 +116,21 @@ export default class extends Controller {
         ]);
     }
 
+    /**
+     * A volume added in this edit goes at once — nothing is lost. An existing one is struck through
+     * and goes only when the licence is saved, so the reader sees what the save will remove and can
+     * take it back.
+     */
     removeVolume(key: string) {
-        this.store.update(l.draft.volumes, (volumes) => (volumes ?? []).filter((v) => v.key !== key));
+        this.store.update(l.draft.volumes, (volumes) =>
+            (volumes ?? []).flatMap((v) => (v.key !== key ? [v] : v.id ? [{ ...v, removed: true }] : [])),
+        );
+    }
+
+    keepVolume(key: string) {
+        this.store.update(l.draft.volumes, (volumes) =>
+            (volumes ?? []).map((v) => (v.key === key ? { ...v, removed: false } : v)),
+        );
     }
 
     async save() {

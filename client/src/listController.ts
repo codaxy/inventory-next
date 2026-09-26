@@ -79,6 +79,13 @@ export abstract class ListController<
     protected abstract without(filters: F, key: K): F;
     /** Loads the pickers' options; names the address's ids once they arrive. */
     protected loadOptions(): void {}
+    /**
+     * The export of what the list selects: its request without the page. A list without one has no
+     * spreadsheet; a plain link, since a download carries the session cookie.
+     */
+    protected exportUrl?(q: { q?: string; sort: Sort; filters: F }): string;
+    /** Where the export's link is kept, for a list that has one. */
+    protected readonly exportHref?: AccessorChain<string | undefined>;
     /** A filter typed rather than picked — an inventory number — waits for the search's pause too. */
     protected readonly filterDelay: number = 0;
 
@@ -189,6 +196,8 @@ export abstract class ListController<
         // the list's own change rather than apply it back over what only the store holds.
         this.written = toQueryString(address);
         writeAddress(this.store, this.path, address);
+        if (this.exportUrl && this.exportHref)
+            this.store.set(this.exportHref, this.exportUrl({ q, sort, filters }));
 
         try {
             const result = await this.fetch({ q, sort, page, pageSize, filters });

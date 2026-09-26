@@ -144,7 +144,13 @@ travels as typed. The list reads the address when it opens and whenever the addr
 — a link to the same list, filtered otherwise — and writes it after every change, the search after
 its pause, **replacing the history entry, never adding one**: Back leaves the list rather than
 stepping through every filter. A record's back link, Cancel, and the return after saving a new record
-or deleting one go to the list as it was left (`listReturn`). Links into a list use the same parameters and **name the narrowest record they mean** — a volume's
+or deleting one go to the list as it was left (`listReturn`). **Filters nested in one another stay consistent**: a narrower one the broader contradicts is cleared —
+a volume when a licence or software it does not belong to is chosen, or arrives in the address — and
+its picker lists only what the broader ones allow. Filters side by side that can exclude each
+other — a licence and a software, one covering the other when the licence has a volume of it — keep
+whichever was changed last and clear the other, so neither picker has to be narrowed to reach a
+choice outside the other. Nothing is locked or filled in: the narrower filter's chip already names
+what it implies. Links into a list use the same parameters and **name the narrowest record they mean** — a volume's
 activations link by `volumeId`, not by its licence and software, which a licence of five Rider volumes
 shares five ways — and say how many they lead to ("2 activations"). A form opened on a choice the address already makes — `activations/new?volumeId=…` — shows it,
 and what follows from it, as text rather than asking again: the volume and its software fixed, and
@@ -154,6 +160,10 @@ somewhere ordinary: a volume's "Activate" shows while a seat is free, not once a
 with the search's pause, the chips, the sort and the latest-request rule; a list declares its path,
 its filters to and from the address, and its fetch. Not a history entry per change: Back would step
 through every filter click before leaving.
+
+**A list that has a spreadsheet offers it on its caption line** — "Excel", beside the order — as a
+plain anchor to the export of its current request, filters and all: cx's `Link` would route it inside
+the application instead of downloading.
 
 **Only the latest request writes.** A controller numbers its requests and drops any answer that is not
 the newest, or a slow early answer lands over a later one.
@@ -186,6 +196,10 @@ below the last** (`editor-actions-bar`): a footer inside one card sticks only wh
 screen. A view-mode value reads at the input's size whatever the field — cx sets text fields'
 larger than pickers'. In view mode a field is text lined up with its label, and a list of values — the types on a tag —
 is chips, each a link to its record.
+
+**Removing a saved part of a record waits for the save**: a licence's existing volume is struck
+through, marked "Removed when you save", and has an Undo, so the reader sees what the save will take
+and can take it back; one added in the same edit goes at once, as nothing is lost.
 
 **Anything that goes somewhere is a link**, an anchor with an address — a row, a chip naming another
 record, a back link, and the New, Edit and Cancel buttons (`LinkButton`) — so it opens in a new tab,

@@ -1,5 +1,12 @@
 import type { Expiry } from "../../api/activations";
-import { getLicenseOptions, type LicenseItem, type LicenseSort, listLicenses } from "../../api/licenses";
+import {
+    getLicenseOptions,
+    type LicenseItem,
+    type LicenseQuery,
+    type LicenseSort,
+    licensesExport,
+    listLicenses,
+} from "../../api/licenses";
 import { encodeDate } from "../../dates";
 import { type AddressValue, oneOf } from "../../listAddress";
 import { ListController } from "../../listController";
@@ -16,8 +23,18 @@ function dayAfter(value: string) {
     return encodeDate(new Date(y, mo - 1, d + 1));
 }
 
+/** The filters as the API takes them: the reader's inclusive last day becomes the exclusive next one. */
+const request = (f: Filters): Partial<LicenseQuery> => ({
+    vendorId: f.vendorId ?? undefined,
+    purchasedFrom: f.from ?? undefined,
+    purchasedTo: f.to ? dayAfter(f.to) : undefined,
+    expiry: f.expiry ?? undefined,
+    incomplete: f.incomplete ?? undefined,
+});
+
 export default class extends ListController<Filters, LicenseItem, Row, LicenseSort, FilterKey> {
     protected readonly s = s;
+    protected readonly exportHref = s.exportHref;
     protected readonly path = "~/licenses";
     protected readonly defaultSort = "-modified";
     protected readonly sorts = keys.flatMap((k) => [k, `-${k}`] as LicenseSort[]);
@@ -34,14 +51,11 @@ export default class extends ListController<Filters, LicenseItem, Row, LicenseSo
         pageSize: number;
         filters: Filters;
     }) {
-        return listLicenses({
-            ...q,
-            vendorId: f.vendorId ?? undefined,
-            purchasedFrom: f.from ?? undefined,
-            purchasedTo: f.to ? dayAfter(f.to) : undefined,
-            expiry: f.expiry ?? undefined,
-            incomplete: f.incomplete ?? undefined,
-        });
+        return listLicenses({ ...q, ...request(f) });
+    }
+
+    protected exportUrl({ filters, ...q }: { q?: string; sort: LicenseSort; filters: Filters }) {
+        return licensesExport({ ...q, ...request(filters) });
     }
 
     protected toRows = toRows;

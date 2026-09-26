@@ -118,6 +118,15 @@ and one that no longer matches is a 409 — someone saved since, and their edit 
 **A state change is its own endpoint** — `POST …/{id}/deactivate`, `…/reactivate` — never a `PUT` of a
 wide model: it carries only what the change takes, and answers 409 from the wrong state.
 
+**A list's spreadsheet is its own query, every row**: `GET …/export` takes exactly the list's
+parameters, and the list and its export share one function that filters and orders (`Rows`), so the
+file holds what the screen shows, all pages of it. Written as the original wrote them —
+CodeReports, one row type per list, its `[TableColumn]` headers and file names kept — but served as
+the response to that request, not as the original's handle to a file cached for thirty seconds: the
+handle existed because its bearer token could not ride a download link, and the session cookie does.
+CodeReports reads its texts by the thread's culture and throws on one it does not ship, the
+invariant culture of a container among them, so `Shared/Export/Excel` writes under English.
+
 **A delete the database would refuse is a 409 that says what holds the record** — "113 devices are of
 this type" — checked before the save, not left to surface as a foreign-key 500.
 

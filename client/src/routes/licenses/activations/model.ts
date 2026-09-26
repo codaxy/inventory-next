@@ -56,6 +56,8 @@ export interface ListState {
     error?: string;
     pager: PagerState;
     totalText: string;
+    /** The spreadsheet of what the list selects — every row, not the page. */
+    exportHref?: string;
 }
 
 export interface Model {

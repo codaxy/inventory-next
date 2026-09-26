@@ -20,6 +20,9 @@ export interface VolumeRow {
     summary?: string;
     /** Why an existing volume cannot be removed, or absent. */
     held?: string;
+    /** An existing volume marked to go when the licence is saved: struck through until then, and
+     *  undone as easily. */
+    removed?: boolean;
     /** The activations list filtered to exactly this volume; absent when it has none. */
     activationsHref?: string;
     /** "2 activations", deactivated ones included: what the link shows. */
@@ -224,16 +227,18 @@ export const toForm = (d: Draft, lastModified?: string): LicenseForm => ({
     keyIdentifier: text(d.keyIdentifier),
     locationId: d.locationId ?? null,
     url: text(d.url),
-    volumes: d.volumes.map((v) =>
-        v.id
-            ? { id: v.id }
-            : {
-                  softwareOrServiceId: v.softwareId ?? null,
-                  volumeTypeId: v.typeId ?? null,
-                  quantity: v.quantity ?? null,
-                  description: text(v.description),
-              },
-    ),
+    volumes: d.volumes
+        .filter((v) => !v.removed)
+        .map((v) =>
+            v.id
+                ? { id: v.id }
+                : {
+                      softwareOrServiceId: v.softwareId ?? null,
+                      volumeTypeId: v.typeId ?? null,
+                      quantity: v.quantity ?? null,
+                      description: text(v.description),
+                  },
+        ),
     lastModified,
 });
 

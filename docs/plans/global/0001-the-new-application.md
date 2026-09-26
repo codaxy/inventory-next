@@ -43,7 +43,9 @@ wrong.
 5. **Information and its types, tags and locations.**
 6. **The directory.** Many screens, one shape.
 7. **The audit log, the log viewer and Excel export.** The read-only corners, and the ones whose
-   behaviour is least worth changing. The audit log was built ahead of the rest, at the user's
+   behaviour is least worth changing. Amended: export lands with each list it belongs to rather than
+   here — licences and activations have it, electronic devices, furniture and information bring
+   theirs. The audit log was built ahead of the rest, at the user's
    request, and is the first list: step 1's paging convention is the one it set, with a search
    modernised rather than kept at parity. The log viewer followed it, reading a daily JSON-lines file
    the application now writes.

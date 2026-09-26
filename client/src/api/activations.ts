@@ -118,6 +118,10 @@ const base = "/api/licenses/activations";
 
 export const listActivations = (q: ActivationQuery) => send<Page<ActivationItem>>(`${base}/?${toQuery(q)}`);
 
+/** The spreadsheet of what a list query selects, every row. */
+export const activationsExport = (q: Omit<ActivationQuery, "page" | "pageSize">) =>
+    `${base}/export?${toQuery(q)}`;
+
 export const getActivation = (id: string) => send<ActivationDetail>(`${base}/${id}`);
 
 export const getActivationOptions = () =>

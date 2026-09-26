@@ -346,3 +346,32 @@ a.editor-chip:hover {
     min-width: 44px;
     color: var(--color-danger-text);
 }
+
+// An existing volume marked for removal: struck through and faint until the save takes it, the note
+// and its Undo not struck.
+.volume-row.volume-removed {
+    border-style: dashed;
+    background: transparent;
+
+    .volume-summary > :first-child {
+        text-decoration: line-through;
+        color: var(--color-ink-faint);
+    }
+
+    .volume-activations {
+        display: none;
+    }
+}
+
+.volume-removed-note {
+    margin: 0;
+}
+
+.cxb-button.volume-undo {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-width: 44px;
+}

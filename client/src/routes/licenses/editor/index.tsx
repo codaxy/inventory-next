@@ -284,7 +284,13 @@ export default createFunctionalComponent(() => (
                         <div class="volume-list">
                             <Repeater records={l.draft.volumes} recordAlias={m.$volume} keyField="key">
                                 {/* An existing volume: a line, kept or removed. */}
-                                <div class="volume-row" visible={keptRow}>
+                                <div
+                                    class={{
+                                        "volume-row": true,
+                                        "volume-removed": truthy(m.$volume.removed),
+                                    }}
+                                    visible={keptRow}
+                                >
                                     <div class="volume-summary">
                                         <span text={m.$volume.summary} />
                                         <Link
@@ -310,11 +316,33 @@ export default createFunctionalComponent(() => (
                                             visible={expr(m.$volume.held, l.viewing, (h, v) => !!h && !v)}
                                             text="In use — it cannot be removed."
                                         />
+                                        <span
+                                            class="editor-hint volume-removed-note"
+                                            visible={truthy(m.$volume.removed)}
+                                            text="Removed when you save."
+                                        />
                                     </div>
                                     <Button
                                         mod="hollow"
+                                        class="volume-undo"
+                                        visible={truthy(m.$volume.removed)}
+                                        onClick={(_e: unknown, { store, controller }: any) =>
+                                            controller.keepVolume(store.get(m.$volume.key))
+                                        }
+                                        attrs={{ "aria-label": "Keep volume", title: "Keep volume" }}
+                                    >
+                                        <Icon name="reactivate" class="size-4" />
+                                        <span class="hidden sm:inline" text="Undo" />
+                                    </Button>
+                                    <Button
+                                        mod="hollow"
                                         class="volume-remove"
-                                        visible={expr(m.$volume.held, l.viewing, (h, v) => !h && !v)}
+                                        visible={expr(
+                                            m.$volume.held,
+                                            l.viewing,
+                                            m.$volume.removed,
+                                            (h, v, r) => !h && !v && !r,
+                                        )}
                                         onClick={(_e: unknown, { store, controller }: any) =>
                                             controller.removeVolume(store.get(m.$volume.key))
                                         }

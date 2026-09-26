@@ -61,6 +61,45 @@ public static class Endpoint
         if (Paging.Read(query.Page, query.PageSize, out var window) is { } problem)
             return problem;
 
+        if (Refuse(query) is { } refused)
+            return refused;
+
+        var today = Licenses.Expiry.Today(clock);
+
+        var page = await Rows(context, query, today)
+            .Select(l => new Item(
+                l.AssetId,
+                l.Asset.InventoryNumber,
+                l.Asset.Name,
+                l.Asset.Incomplete,
+                l.Asset.Vendor.Name,
+                l.Asset.PurchaseValue,
+                l.Asset.PurchaseDate,
+                l.SubscriptionExpirationDate,
+                null,
+                l.Asset.LastModified
+            ))
+            .ToPageAsync(window, cancellationToken);
+
+        return Results.Ok(
+            page with
+            {
+                Items =
+                [
+                    .. page.Items.Select(i =>
+                        i with
+                        {
+                            Expiry = Licenses.Expiry.Status(i.ExpirationDate, today),
+                        }
+                    ),
+                ],
+            }
+        );
+    }
+
+    /// <summary>A sort or expiry outside the convention; the problem to answer with, or none.</summary>
+    internal static IResult? Refuse(Query query)
+    {
         var errors = new Dictionary<string, string[]>();
         if (query.Sort is not null && !Keys.Contains(query.Sort.TrimStart('-')))
             errors["sort"] =
@@ -69,17 +108,26 @@ public static class Endpoint
             ];
         if (query.Expiry is not null && !Licenses.Expiry.Statuses.Contains(query.Expiry))
             errors["expiry"] = ["Expiry is expired, soon, regular or none."];
-        if (errors.Count > 0)
-            return Results.ValidationProblem(errors);
+        return errors.Count > 0 ? Results.ValidationProblem(errors) : null;
+    }
 
-        var today = Licenses.Expiry.Today(clock);
+    /// <summary>
+    /// The licences the query selects, in its order — every one, for the page to take its window of
+    /// and the export to write whole, so the two can never disagree about what the list shows.
+    /// </summary>
+    internal static IOrderedQueryable<License> Rows(
+        InventoryContext context,
+        Query query,
+        DateOnly today
+    )
+    {
         var licenses = context.Licenses.AsNoTracking();
 
         foreach (var term in FreeText.Terms(query.Q))
         {
             var pattern = FreeText.Pattern(term);
             licenses = licenses.Where(l =>
-                EF.Functions.ILike(l.Asset.InventoryNumber.ToString(), pattern, FreeText.Escape)
+                EF.Functions.ILike(l.Asset.InventoryNumber.ToString()!, pattern, FreeText.Escape)
                 || EF.Functions.ILike(l.Asset.Name, pattern, FreeText.Escape)
                 || EF.Functions.ILike(l.Asset.Vendor.Name, pattern, FreeText.Escape)
                 || EF.Functions.ILike(l.Asset.InvoiceNumber, pattern, FreeText.Escape)
@@ -112,7 +160,7 @@ public static class Endpoint
         };
 
         var descending = query.Sort?.StartsWith('-') ?? true;
-        var ordered = (query.Sort?.TrimStart('-') ?? "modified") switch
+        return (query.Sort?.TrimStart('-') ?? "modified") switch
         {
             "number" => Order(licenses, l => l.Asset.InventoryNumber, descending),
             "name" => Order(licenses, l => l.Asset.Name, descending),
@@ -122,36 +170,6 @@ public static class Endpoint
             "expires" => Order(licenses, l => l.SubscriptionExpirationDate, descending),
             _ => Order(licenses, l => l.Asset.LastModified, descending),
         };
-
-        var page = await ordered
-            .Select(l => new Item(
-                l.AssetId,
-                l.Asset.InventoryNumber,
-                l.Asset.Name,
-                l.Asset.Incomplete,
-                l.Asset.Vendor.Name,
-                l.Asset.PurchaseValue,
-                l.Asset.PurchaseDate,
-                l.SubscriptionExpirationDate,
-                null,
-                l.Asset.LastModified
-            ))
-            .ToPageAsync(window, cancellationToken);
-
-        return Results.Ok(
-            page with
-            {
-                Items =
-                [
-                    .. page.Items.Select(i =>
-                        i with
-                        {
-                            Expiry = Licenses.Expiry.Status(i.ExpirationDate, today),
-                        }
-                    ),
-                ],
-            }
-        );
     }
 
     /// <summary>The reader's column, then the id, so licences that sort equal keep one order across pages.</summary>
