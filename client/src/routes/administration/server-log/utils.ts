@@ -1,7 +1,7 @@
 import type { LogLevel } from "../../../api/serverLog";
 
-/** A log is read in longer runs than a list of records. */
-export const pageSize = 50;
+/** A log line is denser than a record row, so more of them still fit a 1440px-tall display. */
+export const pageSize = 25;
 
 /** Milliseconds of quiet after the last keystroke before the search runs. */
 export const searchDelay = 300;

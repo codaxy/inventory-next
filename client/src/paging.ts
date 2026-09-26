@@ -23,6 +23,9 @@ export interface PagerState {
     links: PagerLink[];
 }
 
+/** Rows per page on every list: a page fits a 1440px-tall display without scrolling. */
+export const pageSize = 20;
+
 const number = new Intl.NumberFormat("en-GB");
 
 /**

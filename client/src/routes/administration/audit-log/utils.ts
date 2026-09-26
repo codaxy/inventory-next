@@ -1,8 +1,7 @@
 import type { AuditEntryDetail, AuditQuery, FieldValue } from "../../../api/auditLog";
 import { endOfDay, formatDateTime, formatDay, startOfDay } from "../../../dates";
+import { pageSize } from "../../../paging";
 import { actionText, type Chip, type Filters, humanize } from "./model";
-
-export const pageSize = 25;
 
 /** Milliseconds of quiet after the last keystroke before the search runs. */
 export const searchDelay = 300;

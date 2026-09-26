@@ -2,10 +2,10 @@ import { Controller } from "cx/ui";
 
 import { getAuditEntry, getAuditFacets, listAuditEntries } from "../../../api/auditLog";
 import { ApiError } from "../../../api/http";
-import { pager } from "../../../paging";
+import { pager, pageSize } from "../../../paging";
 import { showEntryWindow } from "./EntryWindow";
 import m, { type FilterKey, humanize, type Row, toRows } from "./model";
-import { pageSize, searchDelay, toChips, toQuery } from "./utils";
+import { searchDelay, toChips, toQuery } from "./utils";
 
 export default class extends Controller {
     /** The search the list reflects; the box runs ahead of it while someone is typing. */

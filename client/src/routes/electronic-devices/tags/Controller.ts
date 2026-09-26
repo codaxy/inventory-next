@@ -2,10 +2,9 @@ import { Controller } from "cx/ui";
 
 import { listTags } from "../../../api/electronicDeviceTags";
 import { ApiError } from "../../../api/http";
-import { pager } from "../../../paging";
+import { pager, pageSize } from "../../../paging";
 import m, { toRows } from "./model";
 
-const pageSize = 25;
 const searchDelay = 300;
 
 export default class extends Controller {
