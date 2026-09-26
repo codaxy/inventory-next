@@ -73,7 +73,8 @@ refusing gestures: `lockScroll()` in `src/scrollLock.ts` lets a touch or wheel s
 inside a scrollable element of the overlay, or of a cx window or dropdown over it, while it can still
 move. The page stays scrollable underneath, so Safari's toolbar keeps its state. Modal windows get it
 from `widgetDefaults.ts`, hooked into cx's `overlayDidMount`, so no screen has to ask; the drawer's
-list also does not pass its scroll on (`overscroll-behavior: contain`). A screen fills
+list also does not pass its scroll on (`overscroll-behavior: contain`, below `lg` only — the desktop
+sidebar would swallow the wheel). A screen fills
 the content column under a header band (`.page-header`) flush with its top and sides; it never sets
 its own outer padding.
 
@@ -82,7 +83,8 @@ lists and logs, `page-narrow` (52rem) for a record's page, in `_shell.scss`. Hea
 and content share the one left-aligned column, so the search is never wider than what it searches;
 a list's columns are capped so a spare width stays in the page, not between the cells. Past the column
 the page fills the viewport's height with the primary glow and dot grid of sign-in, fading in from
-its left: a bare canvas reads as unfinished. The server log follows the same rule — no pane is special.
+its left: a bare canvas reads as unfinished. The dots hold still while the page scrolls
+(`background-attachment: fixed` on their layer alone). The server log follows the same rule — no pane is special.
 Sign-in, outside the shell, is one centred column that stops growing on a wide display.
 
 **Input text is 16px on a touch screen**, 14px elsewhere: iPhone Safari zooms into a focused field

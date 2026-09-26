@@ -37,7 +37,7 @@ export const Sidebar = createFunctionalComponent(() => (
                 <Logo subtitle="Asset register" />
             </div>
 
-            <nav class="nav-scroll flex-1 overflow-y-auto overscroll-contain px-2 pb-4">
+            <nav class="nav-scroll flex-1 overflow-y-auto overscroll-contain lg:overscroll-auto px-2 pb-4">
                 {navigation.map((section) => (
                     <cx>
                         <div>

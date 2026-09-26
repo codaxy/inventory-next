@@ -101,6 +101,9 @@
                 transparent
             ),
             radial-gradient(var(--color-dot) 1px, transparent 0) 0 0 / 22px 22px;
+        // The dots hold still against the viewport while the glow scrolls with the page. iOS Safari
+        // ignores `fixed` and scrolls them, which is harmless.
+        background-attachment: scroll, fixed;
         mask-image: linear-gradient(to right, transparent, black 10rem);
     }
 }
