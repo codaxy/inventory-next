@@ -315,6 +315,11 @@ public class SoftwareOrServiceTests(SoftwareOrServiceApplication app)
             ("Windows", "Test OS", 1),
             (entry!.Name, entry.Category.Name, entry.VolumeCount)
         );
+        var volume = Assert.Single(entry.Volumes);
+        Assert.Equal(
+            ("Seed licence", "Per user", 5, 0),
+            (volume.License, volume.Type, volume.Quantity, volume.InUse)
+        );
     }
 
     [Fact]

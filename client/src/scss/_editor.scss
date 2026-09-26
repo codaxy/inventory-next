@@ -114,6 +114,7 @@
 // field's text is.
 .editor-value {
     padding: var(--cx-input-padding-y) 0;
+    overflow-wrap: anywhere;
     font-size: var(--cx-input-font-size);
     line-height: var(--cx-input-line-height);
     color: var(--color-ink);
@@ -499,4 +500,66 @@ a.editor-chip:hover {
     justify-content: center;
     gap: 0.375rem;
     min-width: 44px;
+}
+
+// A volume row that is a link to its licence, where the software lists its volumes.
+a.volume-row.volume-link {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+        border-color: var(--color-primary-edge);
+        background: var(--color-hover);
+    }
+
+    &:hover .volume-name {
+        color: var(--color-primary-text);
+    }
+}
+
+// The small button beside a web address that opens it in a new tab: drawn at 28px, touched at 44.
+.external-link {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    color: var(--color-ink-muted);
+    vertical-align: middle;
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: -8px;
+    }
+
+    &:hover {
+        background: var(--color-hover);
+        color: var(--color-primary-text);
+    }
+}
+
+// A value holding a web address, its open button right after it; while editing, after the input,
+// which keeps the line's width.
+.editor-url {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+
+    > :first-child {
+        flex: 0 1 auto;
+        min-width: 0;
+    }
+
+    > .cxs-edit-mode {
+        flex: 1;
+    }
+
+    // The form's rule gives every field its line's width; a value read in view mode takes its own.
+    .editor-grid & > .cxs-view-mode {
+        width: auto;
+    }
 }

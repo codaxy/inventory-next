@@ -110,6 +110,9 @@ and scrolls inside it.
 **The toolbar's parts are shared** — `list-*` in `_list.scss`: the bar, search, Filters and its pane,
 chips, the caption line, and the error, empty and loading states. A screen's rows are its own.
 
+**A cell says only what its column's header does not**: "6 Aug 2024" under Deactivated, not
+"Deactivated 6 Aug 2024" — but a phone's card, which has no headers, keeps the word.
+
 **The list is one markup at both widths**: a stacked card on a phone, a row of columns with a header
 from `md`, laid out by CSS grid areas. Not a `Grid` for desktop beside cards for the phone — two
 renderings of every row, drifting apart.
@@ -205,6 +208,10 @@ phone the seats take a line beneath the name.
 through, marked "Removed when you save", and has an Undo, so the reader sees what the save will take
 and can take it back; one added in the same edit goes at once, as nothing is lost.
 
+**Every web address has an open button** — `externalLink` in `components/`, a small icon anchor
+right after the value, opening it in a new tab — whether the address is a URL field or sits in a
+description. Never inside another link: a row that is itself a link shows it on its record's page.
+
 **Anything that goes somewhere is a link**, an anchor with an address — a row, a chip naming another
 record, a back link, and the New, Edit and Cancel buttons (`LinkButton`) — so it opens in a new tab,
 takes a middle click and can be copied. A button only acts: Save, Delete.
@@ -235,8 +242,10 @@ line goes. A yes/no that
 most rows answer no — a type holding licences — is a flag beside the name (`record-flag`), not a column
 of "No". A subscription's status is a tag (`status-tag`) — red once
 expired, amber within the fortnight, green after, grey on a record that has ended — and always says
-which in words, never by colour alone. A record that has ended, a deactivated activation, stays
-listed, muted (`record-row-ended`).
+which in words, never by colour alone. A record that has ended — a deactivated activation — stays
+listed as history (`record-row-ended`): the row on the others' white, its text in
+`line-strong` — below AA on purpose, there to be found rather than scanned — its name no longer bold, a
+"Deactivated" flag saying why, and its licence's expiry kept but grey, read rather than signalled.
 
 ## Dates
 
@@ -392,9 +401,10 @@ the client router for any local URL, so a link to a server endpoint — starting
 routes to a page that does not exist and lands back where it started, with no request made. A plain
 anchor is what leaves.
 
-**`Link`'s `match` is widget configuration, not a bindable prop**, so a `Repeater` cannot vary it per
-item. The menu is static, so it is built in JSX from `navigation.ts`, and an item whose href prefixes a
-sibling's (`~/furniture`, `~/furniture/types`) matches `equal` where the rest match `subroute`.
+**A menu item is lit by `isCurrent`, not by cx's `match`**: an item stays lit on a record under its
+address — `~/licenses/:id` — but not on another item nested under it — `~/licenses/activations`.
+`equal` darkens the first, `subroute` lights the second; `match` is widget configuration, so it cannot
+vary per item in a `Repeater` either.
 
 **A CxJS layout is an imported widget, not a string.** `layout={{ type: "vbox" }}` compiles, reaches
 the browser, and throws `Invalid widget type` at render — the screen is simply blank. Anything this

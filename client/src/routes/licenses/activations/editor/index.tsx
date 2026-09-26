@@ -14,6 +14,7 @@ import { dateValue, numberValue } from "../../../../bindings";
 import { expiryClass } from "../../../../licensing";
 import { moreActions } from "../../../../components/moreActions";
 import { listReturn } from "../../../../listAddress";
+import { externalLink } from "../../../../components/externalLink";
 import $app from "../../../../model";
 import Controller from "./Controller";
 import m from "./model";
@@ -135,7 +136,19 @@ export default createFunctionalComponent(() => (
                             {fact("Type and model", v.licenseType)}
                             {fact("Expiration model", v.expirationModel)}
                             {fact("Location", v.location)}
-                            {fact("URL", v.url)}
+                            <div>
+                                <div class="editor-label" text="URL" />
+                                <div class="editor-url">
+                                    <div
+                                        class={{
+                                            "editor-value": true,
+                                            "editor-empty": expr(v.url, (x) => !x),
+                                        }}
+                                        text={expr(v.url, (x) => x || "—")}
+                                    />
+                                    {externalLink(v.url)}
+                                </div>
+                            </div>
                         </div>
                     </section>
                 </div>

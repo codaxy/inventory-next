@@ -18,6 +18,7 @@ import { dateValue, numberValue } from "../../../bindings";
 import { expiryClass } from "../../../licensing";
 import { moreActions } from "../../../components/moreActions";
 import { listReturn } from "../../../listAddress";
+import { externalLink } from "../../../components/externalLink";
 import $app from "../../../model";
 import Controller from "./Controller";
 import m from "./model";
@@ -69,23 +70,31 @@ const pick = (
     </cx>
 );
 
-/** A text field, optionally wide. */
-const text = (label: string, key: string, max: number, opts: { required?: boolean; wide?: boolean } = {}) => (
+/** A text field, optionally wide; a `url` field has its open-in-a-new-tab button at the end of the line. */
+const text = (
+    label: string,
+    key: string,
+    max: number,
+    opts: { required?: boolean; wide?: boolean; url?: boolean } = {},
+) => (
     <cx>
         <div class={{ "editor-wide": !!opts.wide }}>
             <div
                 class={{ "editor-label": true, "editor-required": opts.required ? editing : false }}
                 text={label}
             />
-            <TextField
-                value={d[key]}
-                required={!!opts.required}
-                maxLength={max}
-                emptyText="—"
-                error={errors[key]}
-                errorTooltip={noErrorText}
-                inputAttrs={{ "aria-label": label }}
-            />
+            <div class={{ "editor-url": !!opts.url }}>
+                <TextField
+                    value={d[key]}
+                    required={!!opts.required}
+                    maxLength={max}
+                    emptyText="—"
+                    error={errors[key]}
+                    errorTooltip={noErrorText}
+                    inputAttrs={{ "aria-label": label }}
+                />
+                {opts.url ? externalLink(d[key]) : null}
+            </div>
             {message(key)}
         </div>
     </cx>
@@ -261,8 +270,11 @@ export default createFunctionalComponent(() => (
                             {pick("Location", "location", "locations")}
                             {text("Registration number", "registrationNumber", 200)}
                             {text("Key identifier", "keyIdentifier", 500)}
-                            {text("Management console URL", "managementConsoleUrl", 500, { wide: true })}
-                            {text("URL", "url", 500, { wide: true })}
+                            {text("Management console URL", "managementConsoleUrl", 500, {
+                                wide: true,
+                                url: true,
+                            })}
+                            {text("URL", "url", 500, { wide: true, url: true })}
                         </div>
                     </section>
 
@@ -294,7 +306,10 @@ export default createFunctionalComponent(() => (
                                 >
                                     <div class="volume-summary">
                                         <div class="volume-name" text={m.$volume.software} />
-                                        <div class="volume-detail" text={m.$volume.detail} />
+                                        <div class="volume-detail">
+                                            <span text={m.$volume.detail} />
+                                            {externalLink(m.$volume.url)}
+                                        </div>
                                     </div>
                                     <div
                                         class={expr(

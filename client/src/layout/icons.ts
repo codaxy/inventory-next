@@ -1,4 +1,5 @@
 import {
+    SquareArrowUpRightIcon,
     Download04Icon,
     MoreVerticalIcon,
     Undo02Icon,
@@ -97,6 +98,7 @@ const uiIcons = {
     duplicate: Copy01Icon,
     more: MoreVerticalIcon,
     download: Download04Icon,
+    external: SquareArrowUpRightIcon,
     deactivate: CancelCircleIcon,
     reactivate: Undo02Icon,
 } satisfies Record<string, IconData>;

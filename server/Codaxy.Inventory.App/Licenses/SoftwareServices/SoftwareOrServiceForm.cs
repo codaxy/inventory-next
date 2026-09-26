@@ -23,7 +23,20 @@ public sealed record SoftwareOrServiceDetail(
     Ref Category,
     Ref Manufacturer,
     string? Url,
-    int VolumeCount
+    int VolumeCount,
+    IReadOnlyList<VolumeLine> Volumes
+);
+
+/// <summary>One licence volume of the entry: which licence, its type and description, its seats.</summary>
+public sealed record VolumeLine(
+    Guid Id,
+    Guid LicenseId,
+    string License,
+    int? LicenseNumber,
+    string Type,
+    string? Description,
+    int Quantity,
+    int InUse
 );
 
 public sealed record Ref(Guid Id, string Name);
@@ -95,7 +108,20 @@ internal static class SoftwareServices
                 new Ref(s.SoftwareOrServiceCategoryId, s.SoftwareOrServiceCategory.Name),
                 new Ref(s.ManufacturerId, s.Manufacturer.Name),
                 s.Url,
-                s.Volumes.Count
+                s.Volumes.Count,
+                s.Volumes.OrderBy(v => v.License.Asset.Name)
+                    .ThenBy(v => v.Id)
+                    .Select(v => new VolumeLine(
+                        v.Id,
+                        v.LicenseId,
+                        v.License.Asset.Name,
+                        v.License.Asset.InventoryNumber,
+                        v.VolumeType.Text,
+                        v.Description,
+                        v.Quantity,
+                        v.Activations.Where(a => a.DeactivationDate == null).Sum(a => a.Quantity)
+                    ))
+                    .ToList()
             ))
             .FirstOrDefaultAsync(cancellationToken);
 }

@@ -12,7 +12,7 @@ import { confirm } from "../../../../components/confirm";
 import { guardLeaving } from "../../../../leaveGuard";
 import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
-import m, { type Draft, type EditorState, toForm, volumesText } from "./model";
+import m, { type Draft, type EditorState, toForm, toVolumeRows, volumesText } from "./model";
 
 const list = "~/licenses/software-services";
 const e = m.entry;
@@ -56,6 +56,7 @@ export default class extends Controller {
         this.store.set(e.loading, !!id);
         this.store.set(e.saving, false);
         this.store.set(e.volumeCount, 0);
+        this.store.set(e.volumes, []);
         this.store.delete(e.error);
         this.store.set(e.errors, {});
         this.store.set(e.visited, false);
@@ -70,6 +71,7 @@ export default class extends Controller {
                 .then((entry) => {
                     if (this.store.get(e.id) !== id) return;
                     this.store.set(e.volumeCount, entry.volumeCount);
+                    this.store.set(e.volumes, toVolumeRows(entry.volumes));
                     this.load(
                         {
                             name: entry.name,

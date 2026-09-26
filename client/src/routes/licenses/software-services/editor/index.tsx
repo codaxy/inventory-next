@@ -1,8 +1,18 @@
 import { type Config, createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
-import { Button, Icon, Link, LinkButton, LookupField, TextField, ValidationGroup } from "cx/widgets";
+import {
+    Button,
+    Icon,
+    Link,
+    LinkButton,
+    LookupField,
+    Repeater,
+    TextField,
+    ValidationGroup,
+} from "cx/widgets";
 
 import { moreActions } from "../../../../components/moreActions";
 import { listReturn } from "../../../../listAddress";
+import { externalLink } from "../../../../components/externalLink";
 import $app from "../../../../model";
 import Controller from "./Controller";
 import m, { volumesText } from "./model";
@@ -115,14 +125,17 @@ export default createFunctionalComponent(() => (
                             </div>
                             <div class="editor-wide">
                                 <div class="editor-label" text="URL" />
-                                <TextField
-                                    value={e.draft.url}
-                                    maxLength={500}
-                                    emptyText="—"
-                                    error={e.errors.url}
-                                    errorTooltip={noErrorText}
-                                    inputAttrs={{ "aria-label": "URL", inputMode: "url" }}
-                                />
+                                <div class="editor-url">
+                                    <TextField
+                                        value={e.draft.url}
+                                        maxLength={500}
+                                        emptyText="—"
+                                        error={e.errors.url}
+                                        errorTooltip={noErrorText}
+                                        inputAttrs={{ "aria-label": "URL", inputMode: "url" }}
+                                    />
+                                    {externalLink(e.draft.url)}
+                                </div>
                                 <p
                                     class="field-message"
                                     visible={hasValue(e.errors.url)}
@@ -133,8 +146,45 @@ export default createFunctionalComponent(() => (
                                 <div class="editor-label" text="Licence volumes" />
                                 <div
                                     class="editor-value"
+                                    visible={expr(e.volumes, (v) => !v?.length)}
                                     text={expr(e.volumeCount, (n) => volumesText(n ?? 0))}
                                 />
+                                {/* Each a link to its licence, read in the same parts as on the licence's page. */}
+                                <div class="volume-list">
+                                    <Repeater records={e.volumes} recordAlias={m.$volume} keyField="id">
+                                        <Link
+                                            class="volume-row volume-kept volume-link"
+                                            href={m.$volume.href}
+                                            url={$app.url}
+                                        >
+                                            <div class="volume-summary">
+                                                <div class="volume-name" text={m.$volume.license} />
+                                                <div class="volume-detail" text={m.$volume.detail} />
+                                            </div>
+                                            <div
+                                                class={expr(
+                                                    m.$volume.load,
+                                                    (load) =>
+                                                        `volume-seats ${load ? `volume-seats-${load}` : ""}`,
+                                                )}
+                                            >
+                                                <div class="volume-seats-figure">
+                                                    <span text={m.$volume.seats} />
+                                                    <span class="volume-seats-label" text="in use" />
+                                                </div>
+                                                <div class="volume-meter" aria-hidden="true">
+                                                    <div
+                                                        class="volume-meter-fill"
+                                                        style={expr(
+                                                            m.$volume.fill,
+                                                            (f) => `width: ${Math.min(f ?? 0, 100)}%`,
+                                                        )}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </Repeater>
+                                </div>
                             </div>
                         </div>
                         <div class="editor-actions" visible={falsy(e.viewing)}>

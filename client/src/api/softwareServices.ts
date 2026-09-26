@@ -15,6 +15,17 @@ export interface SoftwareServiceItem {
     volumeCount: number;
 }
 
+export interface VolumeLine {
+    id: string;
+    licenseId: string;
+    license: string;
+    licenseNumber: number | null;
+    type: string;
+    description: string | null;
+    quantity: number;
+    inUse: number;
+}
+
 export interface SoftwareServiceDetail {
     id: string;
     name: string;
@@ -22,6 +33,7 @@ export interface SoftwareServiceDetail {
     manufacturer: Ref;
     url: string | null;
     volumeCount: number;
+    volumes: VolumeLine[];
 }
 
 export interface SoftwareServiceForm {
