@@ -36,10 +36,14 @@
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    margin-bottom: 0.25rem;
+    // 44px to a finger, by padding the margin takes back: the header keeps its height.
+    padding: 12px 0;
+    margin: -12px 0 calc(0.25rem - 12px);
+    // Blue, as a link is, but light: at weight 600 it competed with the record's name. A paler blue
+    // would fall below 4.5:1 on white.
     color: var(--color-primary-text);
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
     text-decoration: none;
 
     &:hover {

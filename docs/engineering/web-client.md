@@ -155,7 +155,9 @@ return to the read-only page; a new record's Save and Cancel return to the list.
 field inside it follows. The routes come after the menu's own, since a menu item's href can share the
 prefix.
 
-The page is the header band with a back link and the record's name — as tall in every mode as with
+The page is the header band with a back link — blue at weight 500, light enough that the name leads; grey read as
+disabled — 44px to a
+finger by padding its margin takes back — and the record's name — as tall in every mode as with
 its actions, so switching mode never moves the page — and the form as a card in the narrow column. While editing, the card ends in a footer — the card's own white under a rule,
 buttons at the end; tinted, it takes the page's colour and reads as a hole in the card — sticky at the viewport's foot, so a long form keeps Save in reach and a short one does not
 float a full-width bar over empty canvas. In view mode a field is text lined up with its label, and a list of values — the types on a tag —
