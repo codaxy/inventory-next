@@ -239,6 +239,32 @@ public class ElectronicDeviceTagTests(TagApplication app) : IClassFixture<TagApp
     }
 
     [Fact]
+    public async Task A_name_is_taken_whatever_its_case_but_a_tag_keeps_its_own()
+    {
+        var client = await Client();
+
+        var duplicate = await client.PostAsJsonAsync(Url, new { name = " MOBILE " });
+        var own = await client.PutAsJsonAsync(
+            $"{Url}/{TagApplication.Spare}",
+            new { name = "spare" }
+        );
+        var others = await client.PutAsJsonAsync(
+            $"{Url}/{TagApplication.Spare}",
+            new { name = "Mobile" }
+        );
+
+        Assert.Equal(HttpStatusCode.BadRequest, duplicate.StatusCode);
+        Assert.Equal(
+            ["A tag with this name already exists."],
+            (await duplicate.Content.ReadFromJsonAsync<ValidationProblemDetails>())!.Errors["name"]
+        );
+        Assert.Equal(HttpStatusCode.OK, own.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, others.StatusCode);
+
+        await client.PutAsJsonAsync($"{Url}/{TagApplication.Spare}", new { name = "Spare" });
+    }
+
+    [Fact]
     public async Task Refuses_a_type_that_does_not_exist_and_saves_nothing()
     {
         var before = await app.InScopeAsync(c => c.ElectronicDeviceTags.CountAsync());

@@ -16,6 +16,15 @@ public static class InventoryApi
         ElectronicDevices.Tags.Update.Endpoint.Map(tags);
         ElectronicDevices.Tags.Delete.Endpoint.Map(tags);
 
+        var types = api.MapGroup("/electronic-devices/types");
+
+        ElectronicDevices.Types.List.Endpoint.Map(types);
+        ElectronicDevices.Types.Options.Endpoint.Map(types);
+        ElectronicDevices.Types.Get.Endpoint.Map(types);
+        ElectronicDevices.Types.Create.Endpoint.Map(types);
+        ElectronicDevices.Types.Update.Endpoint.Map(types);
+        ElectronicDevices.Types.Delete.Endpoint.Map(types);
+
         var auditLog = api.MapGroup("/administration/audit-log");
 
         Administration.AuditLogs.List.Endpoint.Map(auditLog);

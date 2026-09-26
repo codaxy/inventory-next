@@ -1,6 +1,7 @@
 import { type Config, createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
 import {
     Button,
+    Checkbox,
     Icon,
     Link,
     LinkButton,
@@ -13,25 +14,25 @@ import {
 
 import $app from "../../../../model";
 import Controller from "./Controller";
-import m from "./model";
+import m, { devicesText } from "./model";
 
 /** The server's message goes in a line under its field; cx's hover tooltip would hide it. */
 const noErrorText = false as unknown as Config;
 
-const t = m.tag;
+const t = m.type;
 
 /**
- * A tag's page: read-only as a row opens it, Delete and Edit in the header beside its name; editable
- * at `…/edit` and while creating, Cancel and Save pinned where the form ends. One form for both,
- * switched by the group's `viewMode`.
+ * A type's page: read-only as a row opens it, Delete and Edit in the header beside its name; editable
+ * at `…/edit` and while creating, Cancel and Save in the card's footer. One form for both, switched by
+ * the group's `viewMode`.
  */
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
             <div class="page-header">
-                <Link href="~/electronic-devices/tags" url={$app.url} class="editor-back">
+                <Link href="~/electronic-devices/types" url={$app.url} class="editor-back">
                     <Icon name="previous" class="size-4" />
-                    <span text="Tags" />
+                    <span text="Types" />
                 </Link>
                 <div class="editor-heading">
                     <h1 class="page-title" text={t.title} />
@@ -49,7 +50,7 @@ export default createFunctionalComponent(() => (
                         </Button>
                         <LinkButton
                             mod="primary"
-                            href={expr(t.id, (id) => `~/electronic-devices/tags/${id}/edit`)}
+                            href={expr(t.id, (id) => `~/electronic-devices/types/${id}/edit`)}
                             attrs={{ "aria-label": "Edit", title: "Edit" }}
                         >
                             <Icon name="edit" class="size-4" />
@@ -87,6 +88,21 @@ export default createFunctionalComponent(() => (
                                 />
                             </div>
                             <div class="editor-wide">
+                                <div class="editor-label" text="Licences" />
+                                <Checkbox
+                                    visible={falsy(t.viewing)}
+                                    value={t.draft.holdsLicences}
+                                    text="Its devices can hold licences"
+                                />
+                                <div
+                                    class="editor-value"
+                                    visible={t.viewing}
+                                    text={expr(t.draft.holdsLicences, (h) =>
+                                        h ? "Its devices can hold licences" : "Its devices hold no licences",
+                                    )}
+                                />
+                            </div>
+                            <div class="editor-wide">
                                 <div class="editor-label" text="Description" />
                                 <TextArea
                                     value={t.draft.description}
@@ -104,50 +120,50 @@ export default createFunctionalComponent(() => (
                                 />
                             </div>
                             <div class="editor-wide">
-                                <div class="editor-label" text="Types with this tag" />
+                                <div class="editor-label" text="Tags" />
                                 <LookupField
                                     visible={falsy(t.viewing)}
-                                    records={t.draft.types}
-                                    options={t.typeOptions}
+                                    records={t.draft.tags}
+                                    options={t.tagOptions}
                                     multiple
-                                    placeholder="No types"
-                                    emptyText="No types"
-                                    error={t.errors.typeIds}
+                                    placeholder="No tags"
+                                    emptyText="No tags"
+                                    error={t.errors.tagIds}
                                     errorTooltip={noErrorText}
-                                    inputAttrs={{ "aria-label": "Types with this tag" }}
+                                    inputAttrs={{ "aria-label": "Tags" }}
                                 />
                                 <p
                                     class="field-message"
-                                    visible={hasValue(t.errors.typeIds)}
-                                    text={t.errors.typeIds}
+                                    visible={hasValue(t.errors.tagIds)}
+                                    text={t.errors.tagIds}
                                 />
                                 {/* cx shows a multiple lookup's view as one run of text; these read as the list they are. */}
                                 <div class="editor-chips" visible={t.viewing}>
-                                    <Repeater records={t.draft.types} recordAlias={m.$type}>
+                                    <Repeater records={t.draft.tags} recordAlias={m.$tag}>
                                         <Link
                                             class="editor-chip"
-                                            href={expr(
-                                                m.$type.id,
-                                                (id) => `~/electronic-devices/types/${id}`,
-                                            )}
+                                            href={expr(m.$tag.id, (id) => `~/electronic-devices/tags/${id}`)}
                                             url={$app.url}
-                                            text={m.$type.text}
+                                            text={m.$tag.text}
                                         />
                                     </Repeater>
                                     <span
                                         class="editor-empty"
-                                        visible={expr(t.draft.types, (types) => !types?.length)}
-                                        text="No types"
+                                        visible={expr(t.draft.tags, (tags) => !tags?.length)}
+                                        text="No tags"
                                     />
                                 </div>
                                 <div
                                     class="editor-hint"
-                                    visible={expr(
-                                        t.viewing,
-                                        t.draft.types,
-                                        (v, types) => !v && types?.length > 0,
-                                    )}
-                                    text="A device of one of these types shows the tag."
+                                    visible={falsy(t.viewing)}
+                                    text="A device of this type shows these tags."
+                                />
+                            </div>
+                            <div class="editor-wide" visible={expr(t.viewing, t.loading, (v, l) => v && !l)}>
+                                <div class="editor-label" text="Devices" />
+                                <div
+                                    class="editor-value"
+                                    text={expr(t.deviceCount, (n) => devicesText(n ?? 0))}
                                 />
                             </div>
                         </div>
@@ -157,7 +173,7 @@ export default createFunctionalComponent(() => (
                                 mod="hollow"
                                 text="Cancel"
                                 href={expr(t.id, (id) =>
-                                    id ? `~/electronic-devices/tags/${id}` : "~/electronic-devices/tags",
+                                    id ? `~/electronic-devices/types/${id}` : "~/electronic-devices/types",
                                 )}
                             />
                             <Button mod="primary" text="Save" onClick="save" disabled={t.saving} />

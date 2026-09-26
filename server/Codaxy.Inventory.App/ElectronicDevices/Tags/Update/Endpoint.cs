@@ -31,6 +31,9 @@ public static class Endpoint
         if (await Tags.CheckTypesAsync(context, typeIds, cancellationToken) is { } missing)
             return missing;
 
+        if (await Tags.CheckNameAsync(context, form.Name!, id, cancellationToken) is { } taken)
+            return taken;
+
         Tags.Apply(context, tag, form, typeIds);
         await context.SaveChangesAsync(cancellationToken);
 

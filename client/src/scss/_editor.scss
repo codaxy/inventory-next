@@ -100,6 +100,15 @@
     overflow-wrap: anywhere;
 }
 
+// A value the form shows but no field holds — a count, a yes/no put in words — set as a view-mode
+// field's text is.
+.editor-value {
+    padding: var(--cx-input-padding-y) 0;
+    font-size: var(--cx-input-font-size);
+    line-height: var(--cx-input-line-height);
+    color: var(--color-ink);
+}
+
 .editor-chips {
     display: flex;
     flex-wrap: wrap;
@@ -137,6 +146,14 @@ a.editor-chip:hover {
 
 .editor-required::after {
     content: " *";
+    color: var(--color-danger-text);
+}
+
+// The server's answer about the field above — a name already taken — never "required", which the red
+// border and the empty field already say.
+.editor-grid .field-message {
+    margin-top: 0.25rem;
+    font-size: 12.5px;
     color: var(--color-danger-text);
 }
 

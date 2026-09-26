@@ -51,9 +51,36 @@ internal static class Tags
     }
 
     /// <summary>
+    /// No other tag holds the name, whatever its case — the original refused duplicates too. Checked
+    /// here, not by an index: the schema is frozen, so two saves at once can still both pass.
+    /// </summary>
+    public static async Task<IResult?> CheckNameAsync(
+        InventoryContext context,
+        string name,
+        Guid? except,
+        CancellationToken cancellationToken
+    )
+    {
+        var lower = name.Trim().ToLowerInvariant();
+        var taken = await context.ElectronicDeviceTags.AnyAsync(
+            t => t.Id != except && t.Name.ToLower() == lower,
+            cancellationToken
+        );
+
+        return taken
+            ? Results.ValidationProblem(
+                new Dictionary<string, string[]>
+                {
+                    ["name"] = ["A tag with this name already exists."],
+                }
+            )
+            : null;
+    }
+
+    /// <summary>
     /// The tag's fields from the form, and its links made to match the form's types: missing ones
     /// added, extra ones removed, the rest untouched. The tag writes the link table as the type
-    /// editor will — either side of a many-to-many owns the pairs.
+    /// editor does — either side of a many-to-many owns the pairs.
     /// </summary>
     public static void Apply(
         InventoryContext context,

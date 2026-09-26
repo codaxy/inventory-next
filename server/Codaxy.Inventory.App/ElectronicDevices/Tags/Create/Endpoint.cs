@@ -22,6 +22,9 @@ public static class Endpoint
         if (await Tags.CheckTypesAsync(context, typeIds, cancellationToken) is { } missing)
             return missing;
 
+        if (await Tags.CheckNameAsync(context, form.Name!, null, cancellationToken) is { } taken)
+            return taken;
+
         var tag = new ElectronicDeviceTag { Id = Guid.CreateVersion7() };
         Tags.Apply(context, tag, form, typeIds);
         context.ElectronicDeviceTags.Add(tag);

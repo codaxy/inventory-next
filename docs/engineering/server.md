@@ -108,6 +108,9 @@ beside `MapAuth`, and each item a group beneath it named after its URL. **An ite
 narrow has its own named policy now**, defined in the host — the server log's `ServerLog`, today any
 session — so restricting it to a role is one line, not a search for every endpoint it covers.
 
+**A delete the database would refuse is a 409 that says what holds the record** — "113 devices are of
+this type" — checked before the save, not left to surface as a foreign-key 500.
+
 **Shared helpers for every item**: `Shared/Paging` (the window and the page), `Shared/Search`
 (`FreeText`, the free-text terms), `Shared/Validation` (`MiniValidator`, whose problem keys are the
 JSON's field names, so a message lands under the field it names).

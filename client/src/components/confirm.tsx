@@ -6,9 +6,10 @@ import { historyEntry } from "../historyEntry";
 interface Props {
     title: string;
     message: string;
-    /** The action, named: "Delete tag", "Discard changes" — never "Yes". */
-    confirmText: string;
-    /** What declining keeps: "Keep", "Keep editing". */
+    /** The action, named: "Delete tag", "Discard changes" — never "Yes". Absent, the dialog only
+     *  tells: one button, `cancelText`, and it resolves `false`. */
+    confirmText?: string;
+    /** What declining keeps: "Keep", "Keep editing"; for a notice, "Close". */
     cancelText: string;
     /** Red: the action cannot be undone. */
     danger?: boolean;
@@ -52,7 +53,8 @@ export const confirm = createHotPromiseWindowFactoryWithProps<Props, boolean>(
                             <Button
                                 mod="primary"
                                 class={{ "confirm-danger": !!danger }}
-                                text={confirmText}
+                                text={confirmText ?? ""}
+                                visible={!!confirmText}
                                 onClick="confirm"
                             />
                         </div>

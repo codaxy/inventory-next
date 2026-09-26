@@ -167,22 +167,26 @@ takes a middle click and can be copied. A button only acts: Save, Delete.
 
 **A question has answers that say what they do** — `confirm()` in `components/confirm.tsx`: "Keep" and
 "Delete tag", never "No" and "Yes", the action last and red when it cannot be undone, the focus on
-declining so Enter never deletes. Deleting asks first and says what goes with it; leaving an edit with
+declining so Enter never deletes. Without an action it is a notice with one button. Deleting asks first
+and says what goes with it; a record something still uses says so instead of asking and then refusing; leaving an edit with
 changes asks "Keep editing" or "Discard changes".
 
 **The route's id is read through `$route`**, declared in the editor's model, and **the address, not the
 mount, says which record and mode are open**: `new` and an id match one route, so saving a new record
 would keep the page and its controller, which therefore reopens on every change of `$app.url`. The server's field
-errors land under their fields through `fieldErrors`; **unsaved changes ask before leaving**, in editing
+errors land under their fields through `fieldErrors`, as a line beneath the field (`field-message`) with
+cx's hover tooltip off, since a tooltip hides the one thing the reader needs; **unsaved changes ask before leaving**, in editing
 only —
 `guardLeaving` in `src/leaveGuard.ts`, cx's navigation confirmation for in-app links and the browser's
 prompt for a reload or a closed tab. Browser Back leaves without asking: cx cannot hold a navigation the
 browser has already made. A save or a delete releases the guard before it navigates.
 
 **A list of records** — `_records.scss` — is a card per row on a phone and columns from `md`, a header
-that sorts on a tap, a row that opens its record, and a *New* button in the toolbar where a screen's
+that sorts on a tap (`sortHeader`), a row that opens its record, and a *New* button in the toolbar where a screen's
 filters would be. A list cut short — the first three types on a tag, the first fields of an audit
-change — ends in a muted `+N` pill (`record-more`), so the count never reads as another name.
+change — ends in a muted `+N` pill (`record-more`), so the count never reads as another name. A yes/no that
+most rows answer no — a type holding licences — is a flag beside the name (`record-flag`), not a column
+of "No".
 
 ## Dates
 
@@ -287,6 +291,10 @@ must appear in both the header and every script tag. Script hashes in the header
 that a static shell supports. Worth deciding before there are screens, not after.
 
 ## Traps
+
+**Text the original emptied is `""`, not `null`.** Its forms saved a cleared description as an empty
+string, so a list that shows "—" for a missing value tests for blank (`||`), not for `null` (`??`), or
+those rows show nothing at all.
 
 **A component used inside `<cx>` must be a `createFunctionalComponent`.** A bare arrow function is
 handed to React as a React component, returns CxJS configuration, and the application white-screens

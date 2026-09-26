@@ -164,3 +164,36 @@
         }
     }
 }
+
+// Types: on a phone the name, its tags, the device count, then the description; from `md` a column
+// each, the count narrow and at the end.
+.type-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    > :nth-child(2) {
+        order: 4;
+    }
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 18rem) minmax(0, 32rem) minmax(0, 26rem) minmax(0, 8rem);
+
+        > :nth-child(2) {
+            order: 0;
+        }
+    }
+}
+
+// A yes/no most rows answer "no" to: a flag beside the name where it is yes, not a column of "No".
+.record-flag {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0 0.4375rem;
+    border: 1px solid var(--color-primary-edge);
+    border-radius: 999px;
+    background: var(--color-primary-wash);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--color-primary-text);
+    vertical-align: 1px;
+}

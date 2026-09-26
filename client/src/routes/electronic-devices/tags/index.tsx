@@ -2,6 +2,7 @@ import { createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
 import { Button, Icon, Link, LinkButton, Repeater, TextField } from "cx/widgets";
 
 import { Pager } from "../../../components/Pager";
+import { sortHeader } from "../../../components/sortHeader";
 import $app from "../../../model";
 import { stickyBar } from "../../../stickyBar";
 import Controller from "./Controller";
@@ -14,23 +15,6 @@ const notEmpty = expr(
     s.total,
     s.error,
     (loaded, total, error) => !(loaded && total === 0 && !error),
-);
-
-/** A column header that sorts, marking the column and direction in force. */
-const SortHeader = (key: "name" | "types", text: string) => (
-    <cx>
-        <button
-            type="button"
-            class="list-sort-header"
-            onClick={(_e: unknown, { controller }: any) => controller.sortBy(key)}
-        >
-            <span text={text} />
-            <span
-                class="list-sort-mark"
-                text={expr(s.sort, (sort) => (sort === key ? "▲" : sort === `-${key}` ? "▼" : ""))}
-            />
-        </button>
-    </cx>
 );
 
 /** Electronic device tags: a searchable list, each row opening the tag's editor. */
@@ -80,9 +64,9 @@ export default createFunctionalComponent(() => {
 
                 <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head tag-columns">
-                        {SortHeader("name", "Name")}
+                        {sortHeader(s.sort, "name", "Name")}
                         <span text="Description" />
-                        {SortHeader("types", "Types")}
+                        {sortHeader(s.sort, "types", "Types")}
                     </div>
 
                     <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />
