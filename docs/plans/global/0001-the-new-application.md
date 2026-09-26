@@ -34,12 +34,11 @@ wrong.
 1. ~~**The walking skeleton.**~~ One paged list, one editor, sign-in, the mobile layout, the migration and
    schema-match tests, and a deployable image. Every later step copies its shape, so it is worth
    getting slowly.
-2. **Electronic devices.** The largest list and the richest editor: if paging, filtering and the
-   phone layout survive this, they survive everything. Amended: in three parts, each shipped on its own —
-   ~~the read-only list and page~~; editing — create, edit, duplicate, delete, a stale save refused,
-   "Save and replicate" for a batch; and last, **still to do**, a device's maintenance
-   contracts edited on its page, saved with the device in one request. Until then a device shows its
-   contracts read-only — there are none in the data.
+2. ~~**Electronic devices.**~~ The largest list and the richest editor: if paging, filtering and the
+   phone layout survive this, they survive everything. Amended: shipped in two parts — the read-only
+   list and page, then editing, with "Save and replicate" for a batch. **Editing a device's
+   maintenance contracts was left out**: there are none in the data and no known use to design it
+   against, so a device shows its contracts read-only, and deleting it takes them with it.
 3. ~~**Licenses, volumes and activations.**~~ The only area with behaviour rather than shape — seat
    counts, activation and its reversal, subscription expiry.
 4. ~~**Furniture, the infrastructure — virtual machines, cloud subscriptions, software — and the remaining asset
