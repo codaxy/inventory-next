@@ -287,12 +287,36 @@ export default createFunctionalComponent(() => (
                                 <div
                                     class={{
                                         "volume-row": true,
+                                        "volume-kept": true,
                                         "volume-removed": truthy(m.$volume.removed),
                                     }}
                                     visible={keptRow}
                                 >
                                     <div class="volume-summary">
-                                        <span text={m.$volume.summary} />
+                                        <div class="volume-name" text={m.$volume.software} />
+                                        <div class="volume-detail" text={m.$volume.detail} />
+                                    </div>
+                                    <div
+                                        class={expr(
+                                            m.$volume.load,
+                                            (load) => `volume-seats ${load ? `volume-seats-${load}` : ""}`,
+                                        )}
+                                    >
+                                        <div class="volume-seats-figure">
+                                            <span text={m.$volume.seats} />
+                                            <span class="volume-seats-label" text="in use" />
+                                        </div>
+                                        <div class="volume-meter" aria-hidden="true">
+                                            <div
+                                                class="volume-meter-fill"
+                                                style={expr(
+                                                    m.$volume.fill,
+                                                    (f) => `width: ${Math.min(f ?? 0, 100)}%`,
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="volume-links">
                                         <Link
                                             class="editor-link volume-activations"
                                             visible={hasValue(m.$volume.activationsHref)}

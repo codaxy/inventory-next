@@ -83,8 +83,7 @@ lists and logs, `page-narrow` (52rem) for a record's page, in `_shell.scss`. Hea
 and content share the one left-aligned column, so the search is never wider than what it searches;
 a list's columns are capped so a spare width stays in the page, not between the cells. Past the column
 the page fills the viewport's height with the primary glow and dot grid of sign-in, fading in from
-its left: a bare canvas reads as unfinished. The dots hold still while the page scrolls
-(`background-attachment: fixed` on their layer alone). The server log follows the same rule — no pane is special.
+its left: a bare canvas reads as unfinished. The server log follows the same rule — no pane is special.
 Sign-in, outside the shell, is one centred column that stops growing on a wide display.
 
 **Input text is 16px on a touch screen**, 14px elsewhere: iPhone Safari zooms into a focused field
@@ -196,6 +195,11 @@ below the last** (`editor-actions-bar`): a footer inside one card sticks only wh
 screen. A view-mode value reads at the input's size whatever the field — cx sets text fields'
 larger than pickers'. In view mode a field is text lined up with its label, and a list of values — the types on a tag —
 is chips, each a link to its record.
+
+**A licence's volume is read in parts, not as a sentence**: its software, then its type and
+description muted beneath, and its seats — "15 / 35 in use" over a meter, primary while seats are
+free, green when every one is used — a bought seat is meant to be — and red only past the quantity — in a column of their own, where the eye scans for them; on a
+phone the seats take a line beneath the name.
 
 **Removing a saved part of a record waits for the save**: a licence's existing volume is struck
 through, marked "Removed when you save", and has an Undo, so the reader sees what the save will take
@@ -338,6 +342,11 @@ must appear in both the header and every script tag. Script hashes in the header
 that a static shell supports. Worth deciding before there are screens, not after.
 
 ## Traps
+
+**A scroll lock that outlives its overlay freezes the page until a reload**: it listens to the whole
+document and refuses every gesture outside the overlay. A window mounted twice without unmounting — a
+hot reload can — overwrites its first release, so `lockScroll` also releases itself once its overlay
+has left the document, and a window's re-mount releases the lock it already holds.
 
 **What a form fills in for itself is where it starts, not an edit**: a value the address preselects
 once the options arrive must be counted into the unsaved-changes baseline, or Cancel asks to discard

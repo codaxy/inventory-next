@@ -16,8 +16,15 @@ export interface VolumeRow {
     typeText?: string;
     quantity?: number | null;
     description?: string | null;
-    /** An existing volume, as a line: "Office · Per user · 3 of 5 in use". */
-    summary?: string;
+    /** An existing volume, shown in parts: its software, then its type and description beneath. */
+    software?: string;
+    detail?: string;
+    /** "3 / 5": the seats in use and bought, the figure a reader scans for. */
+    seats?: string;
+    /** How full, 0–100, for the meter; past 100 when more seats are in use than were bought. */
+    fill?: number;
+    /** `full` at the quantity, `over` past it: the meter's colour. */
+    load?: "full" | "over";
     /** Why an existing volume cannot be removed, or absent. */
     held?: string;
     /** An existing volume marked to go when the licence is saved: struck through until then, and
@@ -164,7 +171,11 @@ export function toDraft(l: LicenseDetail, duplicate: boolean): Draft {
             : l.volumes.map((v) => ({
                   key: rowKey(),
                   id: v.id,
-                  summary: `${v.software.name} · ${v.type.name} · ${v.inUse} of ${v.quantity} in use${v.description ? ` · ${v.description}` : ""}`,
+                  software: v.software.name,
+                  detail: v.description ? `${v.type.name} · ${v.description}` : v.type.name,
+                  seats: `${v.inUse} / ${v.quantity}`,
+                  fill: v.quantity > 0 ? Math.round((v.inUse / v.quantity) * 100) : 0,
+                  load: v.inUse > v.quantity ? "over" : v.inUse === v.quantity ? "full" : undefined,
                   held: v.held ?? undefined,
                   activationsHref:
                       v.activationCount > 0 ? `~/licenses/activations?volumeId=${v.id}` : undefined,

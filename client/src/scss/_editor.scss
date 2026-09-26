@@ -299,17 +299,137 @@ a.editor-chip:hover {
     background: var(--color-raised);
 }
 
+// An existing volume: what it is on the left, its seats on the right where the eye scans a column of
+// them, its links beneath, remove or undo at the end.
+.volume-row.volume-kept {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+        "summary seats action"
+        "links links action";
+    align-items: center;
+    gap: 0.375rem 1rem;
+
+    > .volume-summary {
+        grid-area: summary;
+    }
+
+    > .volume-seats {
+        grid-area: seats;
+    }
+
+    > .volume-links {
+        grid-area: links;
+    }
+
+    > .cxb-button {
+        grid-area: action;
+    }
+
+    // A phone keeps the name its width: the seats take a line of their own beneath it.
+    @media (max-width: 639.98px) {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "summary action"
+            "seats seats"
+            "links links";
+
+        > .volume-seats {
+            justify-items: stretch;
+        }
+
+        .volume-seats-figure {
+            justify-self: start;
+        }
+    }
+}
+
 .volume-summary {
-    display: flex;
-    flex: 1;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.25rem 0.75rem;
     min-width: 0;
     // A description is often a URL, which has nowhere to break and would widen the page.
     overflow-wrap: anywhere;
+}
+
+.volume-name {
     font-size: 14px;
+    font-weight: 600;
     color: var(--color-ink);
+}
+
+.volume-detail {
+    margin-top: 0.125rem;
+    font-size: 12.5px;
+    color: var(--color-ink-muted);
+}
+
+// "15 / 35 in use" over a thin meter: primary while seats are free, green when every one is used —
+// what a bought seat is for — and red only past the quantity.
+.volume-seats {
+    display: grid;
+    gap: 0.3125rem;
+    min-width: 6.5rem;
+    justify-items: end;
+}
+
+.volume-seats-figure {
+    font-size: 14px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink);
+    white-space: nowrap;
+}
+
+.volume-seats-label {
+    margin-left: 0.3125rem;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--color-ink-muted);
+}
+
+.volume-meter {
+    width: 100%;
+    height: 4px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--color-line);
+}
+
+.volume-meter-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--color-primary);
+}
+
+.volume-seats-full {
+    .volume-meter-fill {
+        background: var(--color-success);
+    }
+
+    .volume-seats-figure {
+        color: var(--color-success-text);
+    }
+}
+
+.volume-seats-over {
+    .volume-meter-fill {
+        background: var(--color-danger);
+    }
+
+    .volume-seats-figure {
+        color: var(--color-danger-text);
+    }
+}
+
+.volume-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    min-width: 0;
+
+    &:empty {
+        display: none;
+    }
 }
 
 .volume-activations {
@@ -353,9 +473,14 @@ a.editor-chip:hover {
     border-style: dashed;
     background: transparent;
 
-    .volume-summary > :first-child {
+    .volume-summary,
+    .volume-seats-figure {
         text-decoration: line-through;
         color: var(--color-ink-faint);
+    }
+
+    .volume-meter {
+        opacity: 0.4;
     }
 
     .volume-activations {
