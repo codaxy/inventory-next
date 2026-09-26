@@ -87,6 +87,8 @@ const uiIcons = {
     updated: PencilEdit01Icon,
     deleted: Delete02Icon,
     refresh: RefreshIcon,
+    edit: PencilEdit01Icon,
+    delete: Delete02Icon,
 } satisfies Record<string, IconData>;
 
 export const icons = { ...navIcons, ...uiIcons };

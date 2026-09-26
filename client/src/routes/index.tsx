@@ -62,6 +62,9 @@ export default (
                     )}
 
                     {/* Editors, after the menu's own routes: `~/electronic-devices/tags` is one of them. */}
+                    <Route route="~/electronic-devices/tags/:id/edit" url={$app.url}>
+                        <TagEditor />
+                    </Route>
                     <Route route="~/electronic-devices/tags/:id" url={$app.url}>
                         <TagEditor />
                     </Route>

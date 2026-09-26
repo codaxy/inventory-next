@@ -1,4 +1,4 @@
-import { Controller, History } from "cx/ui";
+import { Controller } from "cx/ui";
 
 import { listTags } from "../../../api/electronicDeviceTags";
 import { ApiError } from "../../../api/http";
@@ -88,14 +88,6 @@ export default class extends Controller {
     sortBy(key: "name" | "types") {
         this.store.update(m.tags.sort, (sort) => (sort === key ? `-${key}` : key) as typeof sort);
         this.goTo(1);
-    }
-
-    open(id: string) {
-        History.pushState({}, null, `~/electronic-devices/tags/${id}`);
-    }
-
-    create() {
-        History.pushState({}, null, "~/electronic-devices/tags/new");
     }
 
     clearSearch() {

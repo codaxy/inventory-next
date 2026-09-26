@@ -291,11 +291,44 @@ public class ElectronicDeviceTagTests(TagApplication app) : IClassFixture<TagApp
         >($"{Url}/?q=carried");
         var mobile = Assert.Single(carried!.Items);
         Assert.Equal(("Mobile", 2), (mobile.Name, mobile.TypeCount));
+        Assert.Equal(["Laptop", "Phone"], mobile.FirstTypes);
 
         var spare = await client.GetFromJsonAsync<
             Page<App.ElectronicDevices.Tags.List.Endpoint.Item>
         >($"{Url}/?q=SPARE");
         Assert.Equal(0, Assert.Single(spare!.Items).TypeCount);
+    }
+
+    [Fact]
+    public async Task A_row_names_its_first_three_types_by_name()
+    {
+        var tag = await CreateAsync(
+            "Everything",
+            TagApplication.Phone,
+            TagApplication.Monitor,
+            TagApplication.Laptop
+        );
+        await (await Client()).PutAsJsonAsync(
+            $"{Url}/{tag.Id}",
+            new
+            {
+                name = "Everything",
+                typeIds = new[]
+                {
+                    TagApplication.Phone,
+                    TagApplication.Monitor,
+                    TagApplication.Laptop,
+                },
+            }
+        );
+
+        var page = await (await Client()).GetFromJsonAsync<
+            Page<App.ElectronicDevices.Tags.List.Endpoint.Item>
+        >($"{Url}/?q=everything");
+        var row = Assert.Single(page!.Items);
+
+        Assert.Equal(["Laptop", "Monitor", "Phone"], row.FirstTypes);
+        Assert.Equal(3, row.TypeCount);
     }
 
     [Fact]

@@ -1,5 +1,5 @@
 import { History } from "cx/ui";
-import { MsgBox } from "cx/widgets";
+import { confirm } from "./components/confirm";
 
 /**
  * Asks before an editor with unsaved changes is left: an in-app link through cx's navigation
@@ -17,9 +17,13 @@ export function guardLeaving(isDirty: () => boolean): () => void {
     History.addNavigateConfirmation(
         () =>
             !isDirty() ||
-            MsgBox.yesNo({ title: "Unsaved changes", message: "Leave and discard your changes?" }).then(
-                (answer) => answer === "yes",
-            ),
+            confirm({
+                title: "Unsaved changes",
+                message: "Leave and lose what you changed?",
+                confirmText: "Discard changes",
+                cancelText: "Keep editing",
+                danger: true,
+            }),
         true,
     );
 

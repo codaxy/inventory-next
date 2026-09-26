@@ -12,7 +12,17 @@ public static class Endpoint
     /// <param name="Sort"><c>name</c> (default), <c>-name</c>, <c>types</c> or <c>-types</c>.</param>
     public sealed record Query(string? Q, string? Sort, int? Page, int? PageSize);
 
-    public sealed record Item(Guid Id, string Name, string? Description, int TypeCount);
+    /// <param name="FirstTypes">The first three types by name; <paramref name="TypeCount"/> says how many more.</param>
+    public sealed record Item(
+        Guid Id,
+        string Name,
+        string? Description,
+        int TypeCount,
+        IReadOnlyList<string> FirstTypes
+    );
+
+    /// <summary>As many type names as a row shows before "+N".</summary>
+    public const int Shown = 3;
 
     private static async Task<IResult> Handle(
         [AsParameters] Query query,
@@ -51,7 +61,13 @@ public static class Endpoint
             _ => tags.OrderBy(t => t.Name).ThenBy(t => t.Id),
         };
 
-        var items = ordered.Select(t => new Item(t.Id, t.Name, t.Description, t.Types.Count));
+        var items = ordered.Select(t => new Item(
+            t.Id,
+            t.Name,
+            t.Description,
+            t.Types.Count,
+            t.Types.Select(l => l.ElectronicDeviceType.Name).OrderBy(n => n).Take(Shown).ToList()
+        ));
 
         return Results.Ok(await items.ToPageAsync(window, cancellationToken));
     }

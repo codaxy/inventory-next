@@ -1,7 +1,8 @@
 import { createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
-import { Button, Icon, Repeater, TextField } from "cx/widgets";
+import { Button, Icon, Link, LinkButton, Repeater, TextField } from "cx/widgets";
 
 import { Pager } from "../../../components/Pager";
+import $app from "../../../model";
 import { stickyBar } from "../../../stickyBar";
 import Controller from "./Controller";
 import m from "./model";
@@ -53,11 +54,11 @@ export default createFunctionalComponent(() => {
                                 inputAttrs={{ "aria-label": "Search tags", enterKeyHint: "search" }}
                             />
                         </div>
-                        <Button mod="primary" class="list-new" onClick="create">
+                        <LinkButton mod="primary" class="list-new" href="~/electronic-devices/tags/new">
                             <Icon name="created" class="size-4" />
                             <span class="hidden sm:inline" text="New tag" />
                             <span class="sr-only sm:hidden" text="New tag" />
-                        </Button>
+                        </LinkButton>
                     </div>
 
                     <div class="list-results-head">
@@ -87,17 +88,21 @@ export default createFunctionalComponent(() => {
                     <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />
 
                     <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <button
-                            type="button"
+                        <Link
                             class="record-row tag-columns"
-                            onClick={(_e: unknown, { store, controller }: any) =>
-                                controller.open(store.get(m.$row.id))
-                            }
+                            href={expr(m.$row.id, (id) => `~/electronic-devices/tags/${id}`)}
+                            url={$app.url}
                         >
                             <span class="record-title" text={m.$row.name} />
-                            <span class="record-muted" text={expr(m.$row.description, (d) => d ?? "—")} />
+                            <span
+                                class={{
+                                    "record-muted": true,
+                                    "record-blank": expr(m.$row.description, (d) => !d),
+                                }}
+                                text={expr(m.$row.description, (d) => d ?? "—")}
+                            />
                             <span class="record-meta" text={m.$row.types} />
-                        </button>
+                        </Link>
                     </Repeater>
                 </div>
 

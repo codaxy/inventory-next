@@ -15,6 +15,8 @@ export interface TagDraft {
 export interface TagEditorState {
     /** `null` while creating. */
     id: string | null;
+    /** Read-only, as a row opens it; editing is `…/:id/edit`, creating opens in it. */
+    viewing: boolean;
     title: string;
     draft: TagDraft;
     typeOptions: Option[];
@@ -32,6 +34,7 @@ export interface Model {
     tag: TagEditorState;
     /** What the enclosing `Route` exposes: `new`, or the tag's id. */
     $route: { id: string };
+    $type: Option;
 }
 
 export default createModel<Model>();

@@ -6,6 +6,8 @@ export interface TagItem {
     name: string;
     description: string | null;
     typeCount: number;
+    /** The first three by name; `typeCount` says how many more. */
+    firstTypes: string[];
 }
 
 export interface TypeRef {

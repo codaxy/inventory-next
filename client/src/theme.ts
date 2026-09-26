@@ -55,6 +55,15 @@ export const theme = {
     windowBorderColor: "var(--color-line)",
     windowHeaderBackgroundColor: "var(--color-surface)",
     windowFooterBackgroundColor: "var(--color-canvas)",
+    // The preset's footer has no top padding, invisible on a transparent footer and flush-top on ours;
+    // its header takes the accent colour, which here reads as a link.
+    windowHeaderColor: "var(--color-ink)",
+    windowHeaderFontSize: "17px",
+    windowHeaderFontWeight: "700",
+    windowHeaderPadding: "18px 20px 0",
+    windowBodyPadding: "12px 20px 20px",
+    windowFooterPadding: "12px 20px",
+    windowFooterBorderWidth: "1px",
     tooltipBackgroundColor: "var(--color-raised)",
     calendarBackgroundColor: "var(--color-surface)",
 

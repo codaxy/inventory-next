@@ -35,5 +35,9 @@ export const toRows = (items: TagItem[]): Row[] =>
         id: t.id,
         name: t.name,
         description: t.description ?? undefined,
-        types: t.typeCount === 0 ? "No types" : t.typeCount === 1 ? "1 type" : `${t.typeCount} types`,
+        types:
+            t.typeCount === 0
+                ? "No types"
+                : t.firstTypes.join(", ") +
+                  (t.typeCount > t.firstTypes.length ? ` +${t.typeCount - t.firstTypes.length}` : ""),
     }));

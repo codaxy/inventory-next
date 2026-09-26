@@ -133,15 +133,35 @@ that closed it has already left the screen.
 
 ## Editors
 
-**Every entity is edited on a page of its own**, never in a window — `~/<item>/:id`, `new` while
-creating — routed after the menu's own routes, since a menu item's href can share the prefix. The page
-opens editable: the header band with a back link and the record's name, the form as sections in a
-column that stops at 52rem, and an action bar spanning the page and pinned to the bottom of the
-viewport, its buttons lined up with the form — Delete on the left once the record exists, Cancel and
-Save on the right. Deleting asks first and says what goes with it.
+**Every entity has a page of its own**, never a window, **and a row opens it read-only**:
+`~/<item>/:id` shows the record, Delete and Edit in the header beside its name — icons only on a phone,
+named for screen readers; editing is `~/<item>/:id/edit`, Cancel and Save in a bar pinned to the bottom
+of the viewport, where the form ends; `new` opens in editing, there being nothing to show yet. A
+record's actions go where the eye starts, a form's commit where the form finishes. Not everyone will be allowed to edit, and
+a record should not change because someone clicked into it. Cancel and a successful Save return to the
+read-only page. Both modes are one form, switched by the `ValidationGroup`'s `viewMode`, which every
+field inside it follows. The routes come after the menu's own, since a menu item's href can share the
+prefix.
 
-**The route's id is read through `$route`**, declared in the editor's model; the server's field errors
-land under their fields through `fieldErrors`; **unsaved changes ask before leaving** —
+The page is the header band with a back link and the record's name, the form as sections in a column
+that stops at 52rem, and, while editing, the bar spanning the page with its buttons lined up with the
+form. In view mode a field is text lined up with its label, and a list of values — the types on a tag —
+is chips, each a link to its record.
+
+**Anything that goes somewhere is a link**, an anchor with an address — a row, a chip naming another
+record, a back link, and the New, Edit and Cancel buttons (`LinkButton`) — so it opens in a new tab,
+takes a middle click and can be copied. A button only acts: Save, Delete.
+
+**A question has answers that say what they do** — `confirm()` in `components/confirm.tsx`: "Keep" and
+"Delete tag", never "No" and "Yes", the action last and red when it cannot be undone, the focus on
+declining so Enter never deletes. Deleting asks first and says what goes with it; leaving an edit with
+changes asks "Keep editing" or "Discard changes".
+
+**The route's id is read through `$route`**, declared in the editor's model, and **the address, not the
+mount, says which record and mode are open**: `new` and an id match one route, so saving a new record
+keeps the page and its controller, which reopens on every change of `$app.url`. The server's field
+errors land under their fields through `fieldErrors`; **unsaved changes ask before leaving**, in editing
+only —
 `guardLeaving` in `src/leaveGuard.ts`, cx's navigation confirmation for in-app links and the browser's
 prompt for a reload or a closed tab. Browser Back leaves without asking: cx cannot hold a navigation the
 browser has already made. A save or a delete releases the guard before it navigates.
@@ -182,6 +202,9 @@ clear 3:1 on the card. The house values for `ink-faint`, `line-strong` and `warn
 darker here. **Text in a status colour uses its `-text` token**, which equals the fill where the fill
 passes and is darker where it does not: `warn` is 3.4:1 as text, `warn-text` 5.1:1. A status's `-wash` is a
 background its `-text` clears 4.5:1 on; `-mark` highlights the words a change touched, under `ink`.
+
+**Windows are themed in `theme.ts`**: the preset's header takes the accent colour and its footer has
+no top padding, which a coloured footer shows as buttons flush to its top edge; both are set there.
 
 **Two layers, in this order.** `src/theme.ts` maps CxJS's theme variables onto the tokens and is
 applied by `renderThemeVariables` at startup — colours, type and sizes of widgets belong there. The

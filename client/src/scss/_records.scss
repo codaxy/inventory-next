@@ -36,6 +36,7 @@
     font: inherit;
     font-size: 14px;
     text-align: left;
+    text-decoration: none;
     cursor: pointer;
 
     &:last-child {
@@ -66,6 +67,13 @@
 .record-muted {
     font-size: 13px;
     color: var(--color-ink-muted);
+}
+
+// An empty cell keeps its column's place from `md`; on a phone's card it is a line of nothing.
+@media (max-width: 767.98px) {
+    .record-blank {
+        display: none;
+    }
 }
 
 .record-meta {
@@ -125,21 +133,19 @@
     }
 }
 
-// Tags: name and type count on a phone's first line, the description beneath.
+// Tags: on a phone the name, then its types, then the description; name, description, types from `md`.
 .tag-columns {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
 
     > :nth-child(2) {
-        grid-column: 1 / -1;
-        grid-row: 2;
+        order: 3;
     }
 
     @media (min-width: 768px) {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) 7rem;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1.5fr);
 
         > :nth-child(2) {
-            grid-column: auto;
-            grid-row: auto;
+            order: 0;
         }
     }
 }

@@ -1,0 +1,25 @@
+// A two-answer question: the message left-aligned under its title, the answers at the right of the
+// footer, the one that acts last.
+
+.cxb-window.confirm-window {
+    width: min(26rem, calc(100vw - 2rem));
+}
+
+.confirm-message {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--color-ink-soft);
+}
+
+.confirm-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.cxb-button.cxm-primary.confirm-danger,
+.cxb-button.cxm-primary.confirm-danger:hover {
+    border-color: var(--color-danger);
+    background: var(--color-danger);
+}

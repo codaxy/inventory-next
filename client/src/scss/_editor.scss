@@ -7,6 +7,33 @@
     max-width: 52rem;
 }
 
+// The title and, while viewing, the record's actions on the same line.
+.editor-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+
+    .page-title {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+.editor-heading-actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 0.5rem;
+
+    .cxb-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.375rem;
+        min-width: 44px;
+    }
+}
+
 .editor-back {
     display: inline-flex;
     align-items: center;
@@ -64,6 +91,43 @@
 
 .editor-wide {
     grid-column: 1 / -1;
+}
+
+// A field in view mode is text under its label, lined up with it: the input's padding and height go.
+.editor-grid .cxs-view-mode {
+    min-height: 0;
+    padding-left: 0;
+    padding-right: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.editor-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    padding: 0.25rem 0;
+}
+
+.editor-chip {
+    padding: 0.125rem 0.625rem;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: var(--color-raised);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-ink);
+    text-decoration: none;
+}
+
+// A chip naming another record is a link to it.
+a.editor-chip:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-text);
+}
+
+.editor-empty {
+    color: var(--color-ink-faint);
 }
 
 .editor-label {
@@ -127,6 +191,12 @@
         gap: 0.5rem;
         margin-left: auto;
     }
+}
+
+.editor-actions .cxb-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
 }
 
 .cxb-button.editor-delete {

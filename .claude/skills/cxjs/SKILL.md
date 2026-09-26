@@ -226,6 +226,13 @@ side is `DateOnly` — see `persistence.md`.
   not clear it until the field is recreated. Cosmetic; do not debug it as your own bug.
 - **Never `type: "search"` on a `showClear` field.** The browser adds its own clear button, so the
   field shows two ×. `enterKeyHint: "search"` alone gives a phone keyboard its Search key.
+- **`viewMode` on a `ValidationGroup` puts every field inside it in view mode.** A multiple
+  `LookupField`'s view mode is its records' texts run together with no separator; render them yourself
+  (chips) and show the field only while editing. A view-mode field keeps the input's padding, so it sits
+  indented from its label unless that goes.
+- **A route that matches two addresses keeps its component between them** — `:id` matches `new` and an
+  id — so a controller that reads the route in `onInit` never sees the second one. Reopen on a trigger
+  on the url.
 - **Fields have no `onBlur`.** It is accepted and ignored. Watch the store with `addTrigger` instead.
 
 ## Windows
