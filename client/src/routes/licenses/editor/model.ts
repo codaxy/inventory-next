@@ -20,8 +20,13 @@ export interface VolumeRow {
     summary?: string;
     /** Why an existing volume cannot be removed, or absent. */
     held?: string;
-    /** The activations list filtered to this volume's licence and software. */
+    /** The activations list filtered to exactly this volume; absent when it has none. */
     activationsHref?: string;
+    /** "2 activations", deactivated ones included: what the link shows. */
+    activationsText?: string;
+    /** A new activation of this volume; absent when every seat is taken, as the shortcut would only
+     *  lead past the quantity — still possible, deliberately, from the activations form. */
+    activateHref?: string;
 }
 
 /** The form, as the fields bind it: text keys absent until typed, a pick as its id and text. */
@@ -159,9 +164,11 @@ export function toDraft(l: LicenseDetail, duplicate: boolean): Draft {
                   summary: `${v.software.name} · ${v.type.name} · ${v.inUse} of ${v.quantity} in use${v.description ? ` · ${v.description}` : ""}`,
                   held: v.held ?? undefined,
                   activationsHref:
-                      v.activationCount > 0
-                          ? `~/licenses/activations?licenseId=${l.id}&softwareId=${v.software.id}`
-                          : undefined,
+                      v.activationCount > 0 ? `~/licenses/activations?volumeId=${v.id}` : undefined,
+                  activationsText:
+                      v.activationCount === 1 ? "1 activation" : `${v.activationCount} activations`,
+                  activateHref:
+                      v.inUse < v.quantity ? `~/licenses/activations/new?volumeId=${v.id}` : undefined,
               })),
     };
     const picks: [string, { id: string; text: string } | undefined][] = [

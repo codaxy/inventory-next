@@ -51,9 +51,15 @@ export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
             <div class="page-header">
-                <Link href={listReturn("~/licenses/activations")} url={$app.url} class="editor-back">
+                <Link
+                    href={expr(a.origin, a.id, (o, id) =>
+                        !id && o ? o.href : listReturn("~/licenses/activations"),
+                    )}
+                    url={$app.url}
+                    class="editor-back"
+                >
                     <Icon name="previous" class="size-4" />
-                    <span text="Activations" />
+                    <span text={expr(a.origin, a.id, (o, id) => (!id && o ? o.text : "Activations"))} />
                 </Link>
                 <div class="editor-heading">
                     <h1 class="page-title" text={a.title} />
@@ -140,11 +146,12 @@ export default createFunctionalComponent(() => (
                         <div class="editor-grid">
                             <div class="editor-wide">
                                 <div
-                                    class="editor-label editor-required"
+                                    class={{ "editor-label": true, "editor-required": falsy(a.fixed) }}
                                     id="licenses-activations-editor-software-or-service-label"
                                     text="Software or service"
                                 />
                                 <LookupField
+                                    viewMode={a.fixed}
                                     id="licenses-activations-editor-software-or-service"
                                     value={a.draft.softwareId}
                                     text={a.draft.softwareText}
@@ -156,11 +163,12 @@ export default createFunctionalComponent(() => (
                             </div>
                             <div class="editor-wide">
                                 <div
-                                    class="editor-label editor-required"
+                                    class={{ "editor-label": true, "editor-required": falsy(a.fixed) }}
                                     id="licenses-activations-editor-volume-label"
                                     text="Volume"
                                 />
                                 <LookupField
+                                    viewMode={a.fixed}
                                     id="licenses-activations-editor-volume"
                                     value={a.draft.volumeId}
                                     text={a.draft.volumeText}
@@ -256,7 +264,7 @@ export default createFunctionalComponent(() => (
                             <LinkButton
                                 mod="hollow"
                                 text="Cancel"
-                                href={listReturn("~/licenses/activations")}
+                                href={expr(a.origin, (o) => o?.href ?? listReturn("~/licenses/activations"))}
                             />
                             <Button mod="primary" text="Activate" onClick="save" disabled={a.saving} />
                         </div>

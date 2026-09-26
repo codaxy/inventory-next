@@ -292,7 +292,18 @@ export default createFunctionalComponent(() => (
                                             visible={hasValue(m.$volume.activationsHref)}
                                             href={m.$volume.activationsHref}
                                             url={$app.url}
-                                            text="Activations"
+                                            text={m.$volume.activationsText}
+                                        />
+                                        <Link
+                                            class="editor-link volume-activations"
+                                            visible={expr(
+                                                l.viewing,
+                                                m.$volume.activateHref,
+                                                (v, href) => !!v && !!href,
+                                            )}
+                                            href={m.$volume.activateHref}
+                                            url={$app.url}
+                                            text="Activate"
                                         />
                                         <span
                                             class="editor-hint"

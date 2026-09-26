@@ -16,7 +16,8 @@ public static class Endpoint
         string Type,
         int TypeId,
         int Quantity,
-        int InUse
+        int InUse,
+        string? Description
     );
 
     /// <summary>The volumes of one software or service, each with its seats in use: what the form picks from.</summary>
@@ -43,7 +44,8 @@ public static class Endpoint
                     v.VolumeType.Text,
                     v.VolumeTypeId,
                     v.Quantity,
-                    v.Activations.Where(a => a.DeactivationDate == null).Sum(a => a.Quantity)
+                    v.Activations.Where(a => a.DeactivationDate == null).Sum(a => a.Quantity),
+                    v.Description
                 ))
                 .ToListAsync(cancellationToken)
         );

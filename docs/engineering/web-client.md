@@ -144,8 +144,13 @@ travels as typed. The list reads the address when it opens and whenever the addr
 — a link to the same list, filtered otherwise — and writes it after every change, the search after
 its pause, **replacing the history entry, never adding one**: Back leaves the list rather than
 stepping through every filter. A record's back link, Cancel, and the return after saving a new record
-or deleting one go to the list as it was left (`listReturn`). Links into a list — a volume's
-activations — use the same parameters. `ListController` in `src/listController.ts` holds all of this
+or deleting one go to the list as it was left (`listReturn`). Links into a list use the same parameters and **name the narrowest record they mean** — a volume's
+activations link by `volumeId`, not by its licence and software, which a licence of five Rider volumes
+shares five ways — and say how many they lead to ("2 activations"). A form opened on a choice the address already makes — `activations/new?volumeId=…` — shows it,
+and what follows from it, as text rather than asking again: the volume and its software fixed, and
+the next field the one its type calls for, a user or a device. Such a form returns where it was
+started: its back link names the licence, and Cancel and a save go back to it, not to the list. A shortcut is offered only where it leads
+somewhere ordinary: a volume's "Activate" shows while a seat is free, not once all are taken. `ListController` in `src/listController.ts` holds all of this
 with the search's pause, the chips, the sort and the latest-request rule; a list declares its path,
 its filters to and from the address, and its fetch. Not a history entry per change: Back would step
 through every filter click before leaving.
@@ -319,6 +324,10 @@ must appear in both the header and every script tag. Script hashes in the header
 that a static shell supports. Worth deciding before there are screens, not after.
 
 ## Traps
+
+**What a form fills in for itself is where it starts, not an edit**: a value the address preselects
+once the options arrive must be counted into the unsaved-changes baseline, or Cancel asks to discard
+changes nobody made.
 
 **Read the address from `$app.url`, never `window.location`**: cx updates the store as it navigates
 and moves the browser's address only once the new page has rendered, so a controller opening on a link

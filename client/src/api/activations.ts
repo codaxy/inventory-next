@@ -71,6 +71,7 @@ export interface ActivationQuery {
     q?: string;
     softwareId?: string;
     licenseId?: string;
+    volumeId?: string;
     status?: "active" | "deactivated";
     expiry?: Expiry | "none";
     sort?: ActivationSort;
@@ -88,6 +89,15 @@ export interface DeviceOption extends Option {
     holder: string | null;
 }
 
+/** A volume for a filter's chip and a form's preselection: what tells it apart, and its software. */
+export interface VolumeRef {
+    id: string;
+    text: string;
+    softwareId: string;
+    software: string;
+    licenseId: string;
+}
+
 export interface VolumeOption {
     id: string;
     licenseId: string;
@@ -97,6 +107,8 @@ export interface VolumeOption {
     typeId: number;
     quantity: number;
     inUse: number;
+    /** What tells volumes of one licence and software apart. */
+    description: string | null;
 }
 
 /** The seeded id of the per-user volume type: the one activated for a person. */
@@ -109,9 +121,13 @@ export const listActivations = (q: ActivationQuery) => send<Page<ActivationItem>
 export const getActivation = (id: string) => send<ActivationDetail>(`${base}/${id}`);
 
 export const getActivationOptions = () =>
-    send<{ software: Option[]; licenses: Option[]; people: Option[]; devices: DeviceOption[] }>(
-        `${base}/options`,
-    );
+    send<{
+        software: Option[];
+        licenses: Option[];
+        people: Option[];
+        devices: DeviceOption[];
+        volumes: VolumeRef[];
+    }>(`${base}/options`);
 
 export const getVolumes = (softwareId: string) =>
     send<VolumeOption[]>(`${base}/volumes?${toQuery({ softwareId })}`);

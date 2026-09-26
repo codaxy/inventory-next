@@ -523,6 +523,53 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
     }
 
     [Fact]
+    public async Task Filters_by_one_volume_of_a_licence()
+    {
+        var second = await app.InScopeAsync(async c =>
+        {
+            var volume = new App.Shared.Volumes.Volume
+            {
+                Id = Guid.CreateVersion7(),
+                LicenseId = ActivationApplication.OfficeLicense.License,
+                SoftwareOrServiceId = ActivationApplication.Office,
+                VolumeTypeId = Seed.PerUser,
+                Quantity = 1,
+                Description = "Second invoice",
+            };
+            c.Volumes.Add(volume);
+            await c.SaveChangesAsync();
+            await Seed.ActivationAsync(c, volume.Id, person: ActivationApplication.Ana);
+            return volume.Id;
+        });
+
+        var first = await ListAsync(
+            $"volumeId={ActivationApplication.OfficeLicense.Volume}&pageSize=100"
+        );
+        var other = await ListAsync($"volumeId={second}");
+        var both = await ListAsync(
+            $"licenseId={ActivationApplication.OfficeLicense.License}&pageSize=100"
+        );
+
+        Assert.Contains(first.Items, i => i.Id == ActivationApplication.ActiveForAna);
+        Assert.Equal(1, other.Total);
+        Assert.Equal(first.Total + 1, both.Total);
+
+        var options = await (
+            await Client()
+        ).GetFromJsonAsync<App.Licenses.Activations.Options.Endpoint.Response>($"{Url}/options");
+        Assert.Contains(
+            options!.Volumes,
+            v => v.Id == second && v.Text == "Office · Office licence · Second invoice"
+        );
+        Assert.Contains(
+            options.Volumes,
+            v =>
+                v.Id == ActivationApplication.OfficeLicense.Volume
+                && v.Text == "Office · Office licence · Per user"
+        );
+    }
+
+    [Fact]
     public async Task Sorts_newest_first_by_default_and_by_each_column()
     {
         var all = (await ListAsync("pageSize=100")).Items;
@@ -563,7 +610,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         var volumes = await client.GetFromJsonAsync<
             List<App.Licenses.Activations.Volumes.Endpoint.Volume>
         >($"{Url}/volumes?softwareId={ActivationApplication.Office}");
-        var volume = Assert.Single(volumes!);
+        var volume = volumes!.Single(v => v.Id == ActivationApplication.OfficeLicense.Volume);
 
         Assert.Equal(
             ("Office licence", "Per user", 5),

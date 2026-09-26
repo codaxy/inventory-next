@@ -60,6 +60,12 @@ export interface EditorState {
     /** The chosen volume, with its seats in use. */
     volume?: VolumeOption;
     forPerson: boolean;
+    /** The address named the volume — `new?volumeId=…`, from a licence's volume — so it and its
+     *  software are shown, not asked. */
+    fixed: boolean;
+    /** Where the form was started from, and where its back link, Cancel and a save return: the
+     *  licence whose volume it activates, or the activations list. */
+    origin: { href: string; text: string };
     /** Why the seats asked for run past the volume's; it warns, it does not refuse. */
     overWarning?: string;
     loading: boolean;
@@ -92,7 +98,7 @@ export const toForm = (d: Draft, forPerson: boolean) => ({
 });
 
 export const volumeText = (v: VolumeOption) =>
-    `${v.license}${v.licenseNumber ? ` #${v.licenseNumber}` : ""} · ${v.type} · ${v.inUse} of ${v.quantity} in use`;
+    `${v.license}${v.licenseNumber ? ` #${v.licenseNumber}` : ""} · ${v.description || v.type} · ${v.inUse} of ${v.quantity} in use`;
 
 export const deviceText = (d: DeviceOption) =>
     [d.text, d.number ? `#${d.number}` : null, d.holder].filter(Boolean).join(" · ");

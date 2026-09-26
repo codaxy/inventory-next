@@ -18,6 +18,7 @@ public static class Endpoint
         string? Q,
         Guid? SoftwareId,
         Guid? LicenseId,
+        Guid? VolumeId,
         string? Status,
         string? Expiry,
         string? Sort,
@@ -90,6 +91,9 @@ public static class Endpoint
 
         if (query.LicenseId is { } license)
             rows = rows.Where(a => a.Volume.LicenseId == license);
+
+        if (query.VolumeId is { } volume)
+            rows = rows.Where(a => a.VolumeId == volume);
 
         if (query.Status == "active")
             rows = rows.Where(a => a.DeactivationDate == null);

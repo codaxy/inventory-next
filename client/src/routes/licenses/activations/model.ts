@@ -1,6 +1,6 @@
 import { createModel } from "cx/ui";
 
-import type { ActivationItem, ActivationSort, Expiry, Option } from "../../../api/activations";
+import type { ActivationItem, ActivationSort, Expiry, Option, VolumeRef } from "../../../api/activations";
 import { expiryText, formatDate } from "../../../licensing";
 import type { PagerState } from "../../../paging";
 
@@ -25,11 +25,14 @@ export interface Filters {
     softwareText?: string;
     licenseId?: string | null;
     licenseText?: string;
+    /** One volume of a licence: what a licence page's volume links to. */
+    volumeId?: string | null;
+    volumeText?: string;
     status?: "active" | "deactivated" | null;
     expiry?: Expiry | "none" | null;
 }
 
-export type FilterKey = "software" | "license" | "status" | "expiry";
+export type FilterKey = "software" | "license" | "volume" | "status" | "expiry";
 
 export interface Chip {
     key: FilterKey;
@@ -43,6 +46,7 @@ export interface ListState {
     chips: Chip[];
     software: Option[];
     licenses: Option[];
+    volumes: VolumeRef[];
     sort: ActivationSort;
     page: number;
     rows: Row[];
@@ -83,6 +87,7 @@ const expiryFilterText = { ...expiryText, none: "No expiry date" } as const;
 export const toChips = (f: Filters): Chip[] => [
     ...(f.softwareId ? [{ key: "software" as const, text: f.softwareText ?? "Software" }] : []),
     ...(f.licenseId ? [{ key: "license" as const, text: `Licence: ${f.licenseText ?? "…"}` }] : []),
+    ...(f.volumeId ? [{ key: "volume" as const, text: `Volume: ${f.volumeText ?? "…"}` }] : []),
     ...(f.status ? [{ key: "status" as const, text: statusText[f.status] }] : []),
     ...(f.expiry ? [{ key: "expiry" as const, text: `Licence: ${expiryFilterText[f.expiry]}` }] : []),
 ];

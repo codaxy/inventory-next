@@ -22,6 +22,13 @@ const notEmpty = expr(
     (loaded, total, error) => !(loaded && total === 0 && !error),
 );
 
+/** The volumes the chosen licence and software have, so the picker lists the few that can match. */
+const volumeOptions = expr(s.volumes, f.licenseId, f.softwareId, (volumes, license, software) =>
+    (volumes ?? [])
+        .filter((v) => (!license || v.licenseId === license) && (!software || v.softwareId === software))
+        .map((v) => ({ id: v.id, text: v.text })),
+);
+
 const statuses = [
     { value: null, text: "Any" },
     { value: "active", text: "Active" },
@@ -132,6 +139,21 @@ export default createFunctionalComponent(() => {
                                     options={s.licenses}
                                     placeholder="Any licence"
                                     inputAttrs={{ "aria-label": "Licence" }}
+                                />
+                            </div>
+                            <div class="list-filter">
+                                <div
+                                    class="list-filter-label"
+                                    id="licenses-activations-volume-label"
+                                    text="Volume"
+                                />
+                                <LookupField
+                                    id="licenses-activations-volume"
+                                    value={f.volumeId}
+                                    text={f.volumeText}
+                                    options={volumeOptions}
+                                    placeholder="Any volume"
+                                    inputAttrs={{ "aria-label": "Volume" }}
                                 />
                             </div>
                             {segmented("Status", statuses, f.status, "setStatus")}
