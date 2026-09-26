@@ -21,6 +21,8 @@
     --color-ink-soft: #35415a; /* 10.2, 9.0 */
     --color-ink-muted: #5b6779; /* 5.7, 5.1 */
     --color-ink-faint: #616d80; /* 5.2, 4.6 */
+    /* Absence, never content: the "—" of an empty cell. Below AA on purpose — there is nothing to read. */
+    --color-ink-ghost: #c3cddc;
 
     --color-primary: #2a60cf; /* white on it is 5.7 */
     --color-primary-strong: #1c4fb8;

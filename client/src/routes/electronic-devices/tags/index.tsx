@@ -85,8 +85,13 @@ export default createFunctionalComponent(() => {
                                 }}
                                 text={expr(m.$row.description, (d) => d ?? "—")}
                             />
-                            <span class="record-meta">
-                                <span text={m.$row.types} />
+                            <span
+                                class={{
+                                    "record-meta": true,
+                                    "record-blank": expr(m.$row.types, (t) => !t),
+                                }}
+                            >
+                                <span text={expr(m.$row.types, (t) => t ?? "—")} />
                                 <span
                                     class="record-more"
                                     visible={hasValue(m.$row.more)}

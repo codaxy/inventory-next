@@ -14,10 +14,12 @@ export interface Row {
     /** Present only where the type holds licences: a flag, not a column of "No". */
     licences?: string;
     description?: string;
-    tags: string;
+    /** Absent when the type carries none: the cell shows "—", as any empty cell does. */
+    tags?: string;
     /** "+6" when the type carries more tags than the row names. */
     more?: string;
-    devices: string;
+    /** Absent when no device is of the type. */
+    devices?: string;
 }
 
 export interface Filters {
@@ -58,7 +60,7 @@ export interface Model {
 
 export default createModel<Model>();
 
-const devices = (n: number) => (n === 0 ? "No devices" : n === 1 ? "1 device" : `${n} devices`);
+const devices = (n: number) => (n === 0 ? undefined : n === 1 ? "1 device" : `${n} devices`);
 
 export const toRows = (items: TypeItem[]): Row[] =>
     items.map((t) => ({
@@ -67,7 +69,7 @@ export const toRows = (items: TypeItem[]): Row[] =>
         licences: t.holdsLicences ? "Holds licences" : undefined,
         // The original saved an emptied description as "", so blank is absent too.
         description: t.description || undefined,
-        tags: t.tagCount === 0 ? "No tags" : t.firstTags.join(", "),
+        tags: t.tagCount === 0 ? undefined : t.firstTags.join(", "),
         more: t.tagCount > t.firstTags.length ? `+${t.tagCount - t.firstTags.length}` : undefined,
         devices: devices(t.deviceCount),
     }));

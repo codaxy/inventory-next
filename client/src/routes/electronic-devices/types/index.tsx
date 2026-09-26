@@ -183,15 +183,26 @@ export default createFunctionalComponent(() => {
                                 }}
                                 text={expr(m.$row.description, (d) => d ?? "—")}
                             />
-                            <span class="record-meta">
-                                <span text={m.$row.tags} />
+                            <span
+                                class={{
+                                    "record-meta": true,
+                                    "record-blank": expr(m.$row.tags, (t) => !t),
+                                }}
+                            >
+                                <span text={expr(m.$row.tags, (t) => t ?? "—")} />
                                 <span
                                     class="record-more"
                                     visible={hasValue(m.$row.more)}
                                     text={m.$row.more}
                                 />
                             </span>
-                            <span class="record-meta type-devices" text={m.$row.devices} />
+                            <span
+                                class={{
+                                    "record-meta": true,
+                                    "record-blank": expr(m.$row.devices, (d) => !d),
+                                }}
+                                text={expr(m.$row.devices, (d) => d ?? "—")}
+                            />
                         </Link>
                     </Repeater>
                 </div>

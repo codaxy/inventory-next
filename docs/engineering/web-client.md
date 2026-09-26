@@ -186,7 +186,10 @@ browser has already made. A save or a delete releases the guard before it naviga
 **A list of records** — `_records.scss` — is a card per row on a phone and columns from `md`, a header
 that sorts on a tap (`sortHeader`), a row that opens its record, and a *New* button in the toolbar where a screen's
 filters would be. A list cut short — the first three types on a tag, the first fields of an audit
-change — ends in a muted `+N` pill (`record-more`), so the count never reads as another name. A yes/no that
+change — ends in a muted `+N` pill (`record-more`), so the count never reads as another name. **An empty cell is "—"**, far lighter than a
+value (`record-blank`, `ink-ghost` against values in `ink-soft`: a thin dash is judged by weight, not
+colour, so anything short of a ghost reads as one more value), never words like "No tags" that read as one more value; on a phone's card the
+line goes. A yes/no that
 most rows answer no — a type holding licences — is a flag beside the name (`record-flag`), not a column
 of "No".
 
@@ -217,7 +220,8 @@ injection attempt reads as one.
 tells the two applications apart at a glance.
 
 **Every colour and shadow is a token in `src/tailwind.css`**, in `@theme static`, and nothing else in the client
-writes one. Each text token clears AA (4.5:1) on both the card and the page; field and button borders
+writes one. Each text token clears AA (4.5:1) on both the card and the page, but `ink-ghost`, which marks an
+absence and never content; field and button borders
 clear 3:1 on the card. The house values for `ink-faint`, `line-strong` and `warn` fail that, so those values are
 darker here. **Text in a status colour uses its `-text` token**, which equals the fill where the fill
 passes and is darker where it does not: `warn` is 3.4:1 as text, `warn-text` 5.1:1. A status's `-wash` is a

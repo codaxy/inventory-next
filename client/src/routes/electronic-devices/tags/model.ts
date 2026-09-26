@@ -7,7 +7,8 @@ export interface Row {
     id: string;
     name: string;
     description?: string;
-    types: string;
+    /** Absent when no type carries the tag: the cell shows "—", as any empty cell does. */
+    types?: string;
     /** "+6" when more types carry the tag than the row names. */
     more?: string;
 }
@@ -38,6 +39,6 @@ export const toRows = (items: TagItem[]): Row[] =>
         name: t.name,
         // The original saved an emptied description as "", so blank is absent too.
         description: t.description || undefined,
-        types: t.typeCount === 0 ? "No types" : t.firstTypes.join(", "),
+        types: t.typeCount === 0 ? undefined : t.firstTypes.join(", "),
         more: t.typeCount > t.firstTypes.length ? `+${t.typeCount - t.firstTypes.length}` : undefined,
     }));
