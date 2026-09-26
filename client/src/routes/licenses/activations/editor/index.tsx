@@ -30,6 +30,27 @@ const active = expr(a.view, (view) => !!view?.active);
 const ended = expr(a.view, (view) => !!view && !view.active);
 const noVolume = expr(a.draft.volumeId, (id) => !id);
 
+/** A fact naming a record with a page: a link to it where there is one, the plain value otherwise. */
+const linked = (label: string, value: typeof v.software | typeof v.vendor, href: typeof v.vendorHref) => (
+    <cx>
+        <div>
+            <div class="editor-label" text={label} />
+            <Link
+                class="editor-value editor-link"
+                visible={expr(value, href, (x, h) => !!x && !!h)}
+                href={href}
+                url={$app.url}
+                text={value}
+            />
+            <div
+                class={{ "editor-value": true, "editor-empty": expr(value, (x) => !x) }}
+                visible={expr(value, href, (x, h) => !x || !h)}
+                text={expr(value, (x) => x || "—")}
+            />
+        </div>
+    </cx>
+);
+
 /** A label over a value, for the read-only page; absent values show "—". */
 const fact = (label: string, value: typeof v.software | typeof v.deactivated) => (
     <cx>
@@ -98,7 +119,7 @@ export default createFunctionalComponent(() => (
                     <section class="editor-section">
                         <h2 class="editor-section-title" text="Activation" />
                         <div class="editor-grid">
-                            {fact("Software or service", v.software)}
+                            {linked("Software or service", v.software, v.softwareHref)}
                             <div>
                                 <div class="editor-label" text="License" />
                                 <Link
@@ -111,7 +132,14 @@ export default createFunctionalComponent(() => (
                             {fact("Volume", v.volume)}
                             <div>
                                 <div class="editor-label" text={v.assigneeLabel} />
-                                <div class="editor-value" text={v.assignee} />
+                                <Link
+                                    class="editor-value editor-link"
+                                    visible={hasValue(v.assigneeHref)}
+                                    href={v.assigneeHref}
+                                    url={$app.url}
+                                    text={v.assignee}
+                                />
+                                <div class="editor-value" visible={falsy(v.assigneeHref)} text={v.assignee} />
                             </div>
                             {fact("Seats", v.seats)}
                             {fact("Activated", v.activated)}
@@ -132,10 +160,10 @@ export default createFunctionalComponent(() => (
                                     <span class="editor-empty" visible={falsy(v.expiryText)} text="—" />
                                 </div>
                             </div>
-                            {fact("Vendor", v.vendor)}
+                            {linked("Vendor", v.vendor, v.vendorHref)}
                             {fact("Type and model", v.licenseType)}
                             {fact("Expiration model", v.expirationModel)}
-                            {fact("Location", v.location)}
+                            {linked("Location", v.location, v.locationHref)}
                             <div>
                                 <div class="editor-label" text="URL" />
                                 <div class="editor-url">

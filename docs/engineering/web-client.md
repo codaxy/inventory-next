@@ -229,8 +229,10 @@ theirs by name and those on their devices.
 `src/recordController.ts` holds the page's life — the address naming record and mode, the
 unsaved-changes guard, save, and a delete refused with what holds the record — and `recordPage()` in
 `components/recordPage.tsx` its markup; `searchList()` in `components/searchList.tsx` is a list with
-no filter pane. A screen declares its API, draft, fields and columns. A picker naming another record
-reads, in view, as a link to it (`pick(…, { href })`). The city and state a location offers are the
+no filter pane. A screen declares its API, draft, fields and columns. **Whatever names a record with a page
+is a link to it in view** — a picker (`pick(…, { href })`), a fact on a read-only page, a volume's
+software — the assignee, vendor, location, type, manufacturer; a codebook value, which has no page,
+stays text. The city and state a location offers are the
 chosen country's; a form whose only choice is made — one country, its one city — starts with it.
 
 **A printable document is a page of its own with its own print styles** — the handover sheet at

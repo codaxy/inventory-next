@@ -27,6 +27,8 @@ export interface VolumeRow {
     description?: string | null;
     /** An existing volume, shown in parts: its software, then its type and description beneath. */
     software?: string;
+    /** The software's page. */
+    softwareHref?: string;
     detail?: string;
     /** The web address in its description, for the open button. */
     url?: string;
@@ -148,6 +150,7 @@ const toVolumeRow = (v: LicenseDetail["volumes"][number]): VolumeRow => ({
     key: rowKey(),
     id: v.id,
     software: v.software.name,
+    softwareHref: `~/licenses/software-services/${v.software.id}`,
     detail: v.description ? `${v.type.name} · ${v.description}` : v.type.name,
     url: firstUrl(v.description),
     seats: `${v.inUse} / ${v.quantity}`,

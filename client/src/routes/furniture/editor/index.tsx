@@ -65,10 +65,12 @@ export default createFunctionalComponent(() => (
                     <section class="editor-section">
                         <h2 class="editor-section-title" text="Details" />
                         <div class="editor-grid">
-                            {pick("Type", "type", "types")}
+                            {pick("Type", "type", "types", { href: (id) => `~/furniture/types/${id}` })}
                             {text("Model", "model", 300)}
                             {pick("Business entity", "businessEntity", "businessEntities")}
-                            {pick("Location", "location", "locations")}
+                            {pick("Location", "location", "locations", {
+                                href: (id) => `~/company/locations/${id}`,
+                            })}
                             {text("URL", "url", 500, { wide: true, url: true })}
                         </div>
                     </section>

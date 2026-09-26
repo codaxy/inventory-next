@@ -38,6 +38,8 @@ export interface ActivationDetail {
         expiry: Expiry | null;
         location: string | null;
         url: string | null;
+        vendorId: string;
+        locationId: string | null;
     };
     volume: { id: string; type: string; typeId: number; quantity: number; inUse: number };
     person: Named | null;

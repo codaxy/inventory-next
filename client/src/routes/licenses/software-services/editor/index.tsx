@@ -106,7 +106,20 @@ export default createFunctionalComponent(() => (
                                     id="licenses-software-services-editor-manufacturer-label"
                                     text="Manufacturer"
                                 />
+                                {/* In view, the manufacturer is a link to its page. */}
+                                <div class="editor-value" visible={e.viewing}>
+                                    <Link
+                                        class="editor-link"
+                                        href={expr(
+                                            e.draft.manufacturerId,
+                                            (id) => `~/company/manufacturers/${id}`,
+                                        )}
+                                        url={$app.url}
+                                        text={e.draft.manufacturerText}
+                                    />
+                                </div>
                                 <LookupField
+                                    visible={falsy(e.viewing)}
                                     id="licenses-software-services-editor-manufacturer"
                                     value={e.draft.manufacturerId}
                                     text={e.draft.manufacturerText}

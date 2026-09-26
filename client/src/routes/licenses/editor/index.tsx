@@ -114,7 +114,9 @@ export default createFunctionalComponent(() => (
                                 "Does not renew automatically",
                             )}
                             {pick("Business entity", "businessEntity", "businessEntities")}
-                            {pick("Location", "location", "locations")}
+                            {pick("Location", "location", "locations", {
+                                href: (id) => `~/company/locations/${id}`,
+                            })}
                             {text("Registration number", "registrationNumber", 200)}
                             {text("Key identifier", "keyIdentifier", 500)}
                             {text("Management console URL", "managementConsoleUrl", 500, {
@@ -152,7 +154,14 @@ export default createFunctionalComponent(() => (
                                     visible={keptRow}
                                 >
                                     <div class="volume-summary">
-                                        <div class="volume-name" text={m.$volume.software} />
+                                        <div class="volume-name">
+                                            <Link
+                                                class="editor-link"
+                                                href={m.$volume.softwareHref}
+                                                url={$app.url}
+                                                text={m.$volume.software}
+                                            />
+                                        </div>
                                         <div class="volume-detail">
                                             <span text={m.$volume.detail} />
                                             {externalLink(m.$volume.url)}

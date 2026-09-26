@@ -27,21 +27,26 @@ export interface Draft {
 /** An existing activation, as the read-only page shows it. */
 export interface View {
     software: string;
+    softwareHref: string;
     licenseId: string;
     license: string;
     volume: string;
     seats: string;
     assigneeLabel: string;
     assignee: string;
+    /** The person's page, or the device's. */
+    assigneeHref?: string;
     activated: string;
     deactivated?: string;
     active: boolean;
     vendor?: string;
+    vendorHref?: string;
     licenseType?: string;
     expirationModel?: string;
     expiry?: Expiry;
     expiryText?: string;
     location?: string;
+    locationHref?: string;
     url?: string;
 }
 
@@ -113,6 +118,7 @@ export function overWarning(volume: VolumeOption | undefined, quantity: number |
 
 export const toView = (a: ActivationDetail): View => ({
     software: a.software.name,
+    softwareHref: `~/licenses/software-services/${a.software.id}`,
     licenseId: a.license.id,
     license: a.license.number ? `${a.license.name} #${a.license.number}` : a.license.name,
     volume: `${a.volume.type} · ${a.volume.inUse} of ${a.volume.quantity} in use`,
@@ -121,10 +127,16 @@ export const toView = (a: ActivationDetail): View => ({
     assignee:
         a.person?.name ??
         (a.device ? `${a.device.name}${a.device.number ? ` #${a.device.number}` : ""}` : "—"),
+    assigneeHref: a.person
+        ? `~/company/people/${a.person.id}`
+        : a.device
+          ? `~/electronic-devices/${a.device.id}`
+          : undefined,
     activated: formatDate(a.activationDate)!,
     deactivated: formatDate(a.deactivationDate),
     active: !a.deactivationDate,
     vendor: a.license.vendor ?? undefined,
+    vendorHref: `~/company/vendors/${a.license.vendorId}`,
     licenseType: [a.license.type, a.license.model].filter(Boolean).join(" · ") || undefined,
     expirationModel: a.license.expirationModel ?? undefined,
     expiry: a.license.expiry ?? undefined,
@@ -132,5 +144,6 @@ export const toView = (a: ActivationDetail): View => ({
         ? `${expiryText[a.license.expiry]} · ${formatDate(a.license.expirationDate)}`
         : undefined,
     location: a.license.location ?? undefined,
+    locationHref: a.license.locationId ? `~/company/locations/${a.license.locationId}` : undefined,
     url: a.license.url ?? undefined,
 });

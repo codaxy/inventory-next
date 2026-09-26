@@ -38,7 +38,9 @@ public sealed record LicenseSummary(
     DateOnly? ExpirationDate,
     string? Expiry,
     string? Location,
-    string? Url
+    string? Url,
+    Guid VendorId,
+    Guid? LocationId
 );
 
 public sealed record DeviceRef(Guid Id, string Name, int? Number);
@@ -86,6 +88,8 @@ internal static class Activations
                     a.Volume.License.Asset.InventoryNumber,
                     a.Volume.License.Asset.Name,
                     Vendor = a.Volume.License.Asset.Vendor.Name,
+                    a.Volume.License.Asset.VendorId,
+                    a.Volume.License.Asset.LocationId,
                     Type = a.Volume.License.LicenseType.Text,
                     Model = a.Volume.License.LicenseModel.Text,
                     ExpirationModel = a.Volume.License.LicenseExpirationModel.Text,
@@ -126,7 +130,9 @@ internal static class Activations
                     row.License.SubscriptionExpirationDate,
                     Expiry.Status(row.License.SubscriptionExpirationDate, today),
                     row.License.Location,
-                    row.License.URL
+                    row.License.URL,
+                    row.License.VendorId,
+                    row.License.LocationId
                 ),
                 row.Volume,
                 row.Person,
