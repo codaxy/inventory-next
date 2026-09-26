@@ -13,9 +13,17 @@ export interface Row {
     more?: string;
 }
 
+/** Tags are searched, not filtered; the list keeps the shape every list does. */
+export type Filters = Record<string, never>;
+
+export type TagSort = "name" | "-name" | "types" | "-types";
+
 export interface TagListState {
     search?: string | null;
-    sort: "name" | "-name" | "types" | "-types";
+    filters: Filters;
+    filtersOpen: boolean;
+    chips: { key: string; text: string }[];
+    sort: TagSort;
     page: number;
     rows: Row[];
     total: number;

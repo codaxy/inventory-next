@@ -10,6 +10,7 @@ import {
 import { ApiError, fieldErrors } from "../../../../api/http";
 import { confirm } from "../../../../components/confirm";
 import { guardLeaving } from "../../../../leaveGuard";
+import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import m, { devicesText, type TypeDraft, type TypeEditorState, toForm } from "./model";
 
@@ -114,7 +115,7 @@ export default class extends Controller {
             const form = toForm(this.store.get(m.type.draft));
             const saved = await (id ? updateType(id, form) : createType(form));
             // A new type returns to the list it was started from; an edit to the view it came from.
-            this.leave(id ? `${list}/${saved.id}` : list);
+            this.leave(id ? `${list}/${saved.id}` : listReturn(list));
         } catch (error) {
             if (error instanceof ApiError && Object.keys(error.errors).length > 0)
                 this.store.set(m.type.errors, fieldErrors<TypeEditorState["errors"]>(error));
@@ -160,7 +161,7 @@ export default class extends Controller {
 
         try {
             await deleteType(id);
-            this.leave(list);
+            this.leave(listReturn(list));
         } catch (error) {
             this.store.set(
                 m.type.error,

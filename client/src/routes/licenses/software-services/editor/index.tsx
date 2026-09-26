@@ -2,6 +2,7 @@ import { type Config, createFunctionalComponent, expr, falsy, hasValue } from "c
 import { Button, Icon, Link, LinkButton, LookupField, TextField, ValidationGroup } from "cx/widgets";
 
 import { moreActions } from "../../../../components/moreActions";
+import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import Controller from "./Controller";
 import m, { volumesText } from "./model";
@@ -19,7 +20,7 @@ export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
             <div class="page-header">
-                <Link href="~/licenses/software-services" url={$app.url} class="editor-back">
+                <Link href={listReturn("~/licenses/software-services")} url={$app.url} class="editor-back">
                     <Icon name="previous" class="size-4" />
                     <span text="Software & services" />
                 </Link>
@@ -143,7 +144,7 @@ export default createFunctionalComponent(() => (
                                 href={expr(e.id, (id) =>
                                     id
                                         ? `~/licenses/software-services/${id}`
-                                        : "~/licenses/software-services",
+                                        : listReturn("~/licenses/software-services"),
                                 )}
                             />
                             <Button mod="primary" text="Save" onClick="save" disabled={e.saving} />

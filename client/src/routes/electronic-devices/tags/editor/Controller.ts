@@ -4,6 +4,7 @@ import { createTag, deleteTag, getTag, getTagOptions, updateTag } from "../../..
 import { ApiError, fieldErrors } from "../../../../api/http";
 import { confirm } from "../../../../components/confirm";
 import { guardLeaving } from "../../../../leaveGuard";
+import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import m, { type TagDraft, type TagEditorState, toForm } from "./model";
 
@@ -107,7 +108,7 @@ export default class extends Controller {
             const form = toForm(this.store.get(m.tag.draft));
             const saved = await (id ? updateTag(id, form) : createTag(form));
             // A new tag returns to the list it was started from; an edit to the view it came from.
-            this.leave(id ? `${list}/${saved.id}` : list);
+            this.leave(id ? `${list}/${saved.id}` : listReturn(list));
         } catch (error) {
             if (error instanceof ApiError && Object.keys(error.errors).length > 0)
                 this.store.set(m.tag.errors, fieldErrors<TagEditorState["errors"]>(error));
@@ -142,7 +143,7 @@ export default class extends Controller {
 
         try {
             await deleteTag(id);
-            this.leave(list);
+            this.leave(listReturn(list));
         } catch {
             this.store.set(m.tag.error, "The tag could not be deleted.");
         }

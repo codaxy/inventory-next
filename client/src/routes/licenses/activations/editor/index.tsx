@@ -13,6 +13,7 @@ import {
 import { dateValue, numberValue } from "../../../../bindings";
 import { expiryClass } from "../../../../licensing";
 import { moreActions } from "../../../../components/moreActions";
+import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import Controller from "./Controller";
 import m from "./model";
@@ -50,7 +51,7 @@ export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
             <div class="page-header">
-                <Link href="~/licenses/activations" url={$app.url} class="editor-back">
+                <Link href={listReturn("~/licenses/activations")} url={$app.url} class="editor-back">
                     <Icon name="previous" class="size-4" />
                     <span text="Activations" />
                 </Link>
@@ -252,7 +253,11 @@ export default createFunctionalComponent(() => (
                             </div>
                         </div>
                         <div class="editor-actions">
-                            <LinkButton mod="hollow" text="Cancel" href="~/licenses/activations" />
+                            <LinkButton
+                                mod="hollow"
+                                text="Cancel"
+                                href={listReturn("~/licenses/activations")}
+                            />
                             <Button mod="primary" text="Activate" onClick="save" disabled={a.saving} />
                         </div>
                     </section>

@@ -15,6 +15,7 @@ import { ApiError, fieldErrors } from "../../../../api/http";
 import { confirm } from "../../../../components/confirm";
 import { encodeDate } from "../../../../dates";
 import { guardLeaving } from "../../../../leaveGuard";
+import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import { askDeactivationDate } from "./deactivateWindow";
 import m, { deviceText, type EditorState, overWarning, toForm, toView, volumeText } from "./model";
@@ -153,7 +154,7 @@ export default class extends Controller {
 
         try {
             await createActivation(toForm(this.store.get(a.draft), this.store.get(a.forPerson)));
-            this.leave(list);
+            this.leave(listReturn(list));
         } catch (error) {
             if (error instanceof ApiError && Object.keys(error.errors).length > 0)
                 this.store.set(a.errors, fieldErrors<EditorState["errors"]>(error));
@@ -219,7 +220,7 @@ export default class extends Controller {
 
         try {
             await deleteActivation(id);
-            this.leave(list);
+            this.leave(listReturn(list));
         } catch {
             this.store.set(a.error, "The activation could not be deleted.");
         }

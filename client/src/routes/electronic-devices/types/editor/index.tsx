@@ -13,6 +13,7 @@ import {
 } from "cx/widgets";
 
 import { moreActions } from "../../../../components/moreActions";
+import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import Controller from "./Controller";
 import m, { devicesText } from "./model";
@@ -31,7 +32,7 @@ export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
             <div class="page-header">
-                <Link href="~/electronic-devices/types" url={$app.url} class="editor-back">
+                <Link href={listReturn("~/electronic-devices/types")} url={$app.url} class="editor-back">
                     <Icon name="previous" class="size-4" />
                     <span text="Types" />
                 </Link>
@@ -171,7 +172,9 @@ export default createFunctionalComponent(() => (
                                 mod="hollow"
                                 text="Cancel"
                                 href={expr(t.id, (id) =>
-                                    id ? `~/electronic-devices/types/${id}` : "~/electronic-devices/types",
+                                    id
+                                        ? `~/electronic-devices/types/${id}`
+                                        : listReturn("~/electronic-devices/types"),
                                 )}
                             />
                             <Button mod="primary" text="Save" onClick="save" disabled={t.saving} />

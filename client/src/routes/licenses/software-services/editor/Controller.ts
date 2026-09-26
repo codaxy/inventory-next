@@ -10,6 +10,7 @@ import {
 } from "../../../../api/softwareServices";
 import { confirm } from "../../../../components/confirm";
 import { guardLeaving } from "../../../../leaveGuard";
+import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import m, { type Draft, type EditorState, toForm, volumesText } from "./model";
 
@@ -121,7 +122,7 @@ export default class extends Controller {
             const form = toForm(this.store.get(e.draft));
             const saved = await (id ? updateSoftwareService(id, form) : createSoftwareService(form));
             // A new entry returns to the list it was started from; an edit to the view it came from.
-            this.leave(id ? `${list}/${saved.id}` : list);
+            this.leave(id ? `${list}/${saved.id}` : listReturn(list));
         } catch (error) {
             if (error instanceof ApiError && Object.keys(error.errors).length > 0)
                 this.store.set(e.errors, fieldErrors<EditorState["errors"]>(error));
@@ -163,7 +164,7 @@ export default class extends Controller {
 
         try {
             await deleteSoftwareService(id);
-            this.leave(list);
+            this.leave(listReturn(list));
         } catch (error) {
             this.store.set(
                 e.error,

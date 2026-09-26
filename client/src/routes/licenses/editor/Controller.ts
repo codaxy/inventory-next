@@ -11,6 +11,7 @@ import {
 } from "../../../api/licenses";
 import { confirm } from "../../../components/confirm";
 import { guardLeaving } from "../../../leaveGuard";
+import { listReturn, queryOf } from "../../../listAddress";
 import $app from "../../../model";
 import m, { emptyOptions, expiryLine, importanceFor, rowKey, toDraft, toForm, type VolumeRow } from "./model";
 
@@ -48,7 +49,8 @@ export default class extends Controller {
         const id = routed === "new" ? null : routed;
         const url = this.store.get($app.url);
         const viewing = !!id && !url.endsWith("/edit");
-        const from = id ? null : new URLSearchParams(window.location.search).get("from");
+        // From the store, not `window.location`: cx moves the browser's address only once the page has rendered.
+        const from = id ? null : queryOf(url).get("from");
 
         this.store.set(l.id, id);
         this.store.set(l.viewing, viewing);
@@ -129,7 +131,7 @@ export default class extends Controller {
         try {
             const form = toForm(this.store.get(l.draft), this.store.get(l.lastModified));
             const saved = await (id ? updateLicense(id, form) : createLicense(form));
-            this.leave(id ? `${list}/${saved.id}` : list);
+            this.leave(id ? `${list}/${saved.id}` : listReturn(list));
         } catch (error) {
             if (error instanceof ApiError && error.status === 409) {
                 this.store.set(
@@ -188,7 +190,7 @@ export default class extends Controller {
 
         try {
             await deleteLicense(id);
-            this.leave(list);
+            this.leave(listReturn(list));
         } catch (error) {
             this.store.set(
                 l.error,

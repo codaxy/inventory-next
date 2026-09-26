@@ -1,6 +1,6 @@
 import { createModel } from "cx/ui";
 
-import type { AuditAction, AuditEntry } from "../../../api/auditLog";
+import type { AuditSort, AuditAction, AuditEntry } from "../../../api/auditLog";
 import { formatDayHeading, formatTime, encodeDate } from "../../../dates";
 import type { PagerState } from "../../../paging";
 
@@ -58,7 +58,7 @@ export interface AuditLogState {
     filters: Filters;
     filtersOpen: boolean;
     filtersValid: boolean;
-    sort: "-time" | "time";
+    sort: AuditSort;
     page: number;
     pageSize: number;
 

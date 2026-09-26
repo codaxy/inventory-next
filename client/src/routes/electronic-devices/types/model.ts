@@ -75,7 +75,7 @@ export const toRows = (items: TypeItem[]): Row[] =>
     }));
 
 export const toChips = (filters: Filters): Chip[] => [
-    ...(filters.tags ?? []).map((t) => ({ key: `tag:${t.id}` as const, text: `Tag: ${t.text}` })),
+    ...(filters.tags ?? []).map((t) => ({ key: `tag:${t.id}` as const, text: `Tag: ${t.text || "…"}` })),
     ...(filters.holdsLicences == null
         ? []
         : [

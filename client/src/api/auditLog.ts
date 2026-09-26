@@ -3,6 +3,8 @@ import { send } from "./http";
 
 export type AuditAction = "Create" | "Update" | "Delete";
 
+export type AuditSort = "time" | "-time";
+
 export interface AuditEntry {
     id: string;
     time: string;
@@ -55,7 +57,7 @@ export interface AuditQuery {
     to?: string;
     entityId?: string;
     inventoryNumber?: number;
-    sort?: "time" | "-time";
+    sort?: AuditSort;
     page: number;
     pageSize: number;
 }

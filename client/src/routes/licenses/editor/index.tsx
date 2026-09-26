@@ -17,6 +17,7 @@ import {
 import { dateValue, numberValue } from "../../../bindings";
 import { expiryClass } from "../../../licensing";
 import { moreActions } from "../../../components/moreActions";
+import { listReturn } from "../../../listAddress";
 import $app from "../../../model";
 import Controller from "./Controller";
 import m from "./model";
@@ -114,7 +115,7 @@ export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
             <div class="page-header">
-                <Link href="~/licenses" url={$app.url} class="editor-back">
+                <Link href={listReturn("~/licenses")} url={$app.url} class="editor-back">
                     <Icon name="previous" class="size-4" />
                     <span text="Licences" />
                 </Link>
@@ -378,7 +379,7 @@ export default createFunctionalComponent(() => (
                         <LinkButton
                             mod="hollow"
                             text="Cancel"
-                            href={expr(l.id, (id) => (id ? `~/licenses/${id}` : "~/licenses"))}
+                            href={expr(l.id, (id) => (id ? `~/licenses/${id}` : listReturn("~/licenses")))}
                         />
                         <Button mod="primary" text="Save" onClick="save" disabled={truthy(l.saving)} />
                     </div>
