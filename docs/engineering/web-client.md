@@ -282,6 +282,8 @@ which in words, never by colour alone. A record that has ended — a deactivated
 listed as history (`record-row-ended`): the row on the others' white, its text in
 `line-strong` — below AA on purpose, there to be found rather than scanned — its name no longer bold, a
 "Deactivated" flag saying why, and its license's expiry kept but grey, read rather than signalled.
+**A count that holds ended records names its parts** — "3 active · 1 deactivated", a part at zero left
+out — never a part beside the whole: "3 active · 4 in all" reads as two counts that overlap.
 
 ## Dates
 

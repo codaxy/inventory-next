@@ -59,7 +59,10 @@ export function toHoldings(h: Holdings, person: string) {
                 total: h.seats.total,
                 count:
                     h.seats.active !== h.seats.total
-                        ? `${h.seats.active} active · ${h.seats.total} in all`
+                        ? joined(
+                              h.seats.active ? `${h.seats.active} active` : undefined,
+                              `${h.seats.total - h.seats.active} deactivated`,
+                          )
                         : undefined,
                 rows: h.seats.items.map((s) => ({
                     key: s.id,

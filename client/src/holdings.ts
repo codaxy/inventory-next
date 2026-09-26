@@ -22,7 +22,7 @@ export interface HoldingRow {
 export interface HoldingSection {
     key: string;
     title: string;
-    /** "375", or "2 active · 3 in all" for seats. */
+    /** "375", or "2 active · 1 deactivated" for seats. */
     count: string;
     rows: HoldingRow[];
     /** The list filtered to the record, where the section shows only its first rows. */
