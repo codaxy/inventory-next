@@ -33,9 +33,10 @@ RUN mkdir -p /var/lib/inventory/keys /var/lib/inventory/logs && chown -R $APP_UI
 # Not root. The image serves static files and talks to Postgres; it needs nothing it owns.
 USER $APP_UID
 
+# The base image binds 8080 through ASPNETCORE_HTTP_PORTS; setting ASPNETCORE_URLS as well
+# overrides it and logs a warning at every start.
 EXPOSE 8080
-ENV ASPNETCORE_URLS=http://+:8080 \
-    ASPNETCORE_ENVIRONMENT=Production \
+ENV ASPNETCORE_ENVIRONMENT=Production \
     ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 
 ENTRYPOINT ["dotnet", "Codaxy.Inventory.Web.dll"]
