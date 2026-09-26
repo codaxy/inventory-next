@@ -76,6 +76,14 @@ public static class Endpoint
         foreach (var row in rows)
             row.LastModified = row.Modified.UtcDateTime;
 
-        return Excel.File(rows, "Activations.Export.xlsx");
+        var filtered =
+            !string.IsNullOrWhiteSpace(query.Q)
+            || query.SoftwareId is not null
+            || query.LicenseId is not null
+            || query.VolumeId is not null
+            || query.Status is not null
+            || query.Expiry is not null;
+
+        return Excel.File(rows, "Activations.Export", filtered);
     }
 }

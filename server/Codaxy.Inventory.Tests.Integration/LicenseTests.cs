@@ -735,10 +735,14 @@ public class LicenseTests(LicenseApplication app) : IClassFixture<LicenseApplica
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             office.Content.Headers.ContentType?.MediaType
         );
+        static string? Name(HttpResponseMessage r) =>
+            r.Content.Headers.ContentDisposition?.FileNameStar
+            ?? r.Content.Headers.ContentDisposition?.FileName;
+        Assert.Equal("Licenses.Export - Filtered.xlsx", Name(office));
+        Assert.Equal("Licenses.Export.xlsx", Name(all));
         Assert.Equal(
             "Licenses.Export.xlsx",
-            office.Content.Headers.ContentDisposition?.FileNameStar
-                ?? office.Content.Headers.ContentDisposition?.FileName
+            Name(await client.GetAsync($"{Url}/export?sort=name"))
         );
 
         var filtered = await Spreadsheet.TextOf(office);

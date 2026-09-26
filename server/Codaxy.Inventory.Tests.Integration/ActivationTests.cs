@@ -610,6 +610,20 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         Assert.Contains("Office licence", office);
         Assert.Contains("Ana Anić", office);
         Assert.DoesNotContain("Antivirus licence", office);
+        var byVolume = await client.GetAsync(
+            $"{Url}/export?volumeId={ActivationApplication.OfficeLicense.Volume}"
+        );
+        var whole = await client.GetAsync($"{Url}/export?sort=software");
+        Assert.Equal(
+            "Activations.Export - Filtered.xlsx",
+            byVolume.Content.Headers.ContentDisposition?.FileNameStar
+                ?? byVolume.Content.Headers.ContentDisposition?.FileName
+        );
+        Assert.Equal(
+            "Activations.Export.xlsx",
+            whole.Content.Headers.ContentDisposition?.FileNameStar
+                ?? whole.Content.Headers.ContentDisposition?.FileName
+        );
         Assert.Equal(
             HttpStatusCode.BadRequest,
             (await client.GetAsync($"{Url}/export?status=paused")).StatusCode

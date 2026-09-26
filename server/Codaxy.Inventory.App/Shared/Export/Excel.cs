@@ -51,7 +51,16 @@ public static class Excel
         return stream.ToArray();
     }
 
-    /// <summary>The file, downloaded as the name given — the original's names, "Licenses.Export.xlsx".</summary>
-    public static IResult File<TRow>(IReadOnlyCollection<TRow> rows, string name)
-        where TRow : class => Results.File(Write(rows), ContentType, name);
+    /// <summary>
+    /// The file, downloaded as the original named it — "Licenses.Export.xlsx" — or, when a search or a
+    /// filter narrowed the rows, "Licenses.Export - Filtered.xlsx", so a partial list is never taken for
+    /// the whole. The sort does not count: it only orders.
+    /// </summary>
+    public static IResult File<TRow>(IReadOnlyCollection<TRow> rows, string name, bool filtered)
+        where TRow : class =>
+        Results.File(
+            Write(rows),
+            ContentType,
+            filtered ? $"{name} - Filtered.xlsx" : $"{name}.xlsx"
+        );
 }
