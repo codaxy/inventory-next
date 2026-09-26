@@ -68,3 +68,18 @@ body {
         color: var(--color-danger-text);
     }
 }
+
+// The modal backdrop: cx's light grey wash leaves the page behind legible enough to compete with the
+// window. Navy reads as the app dimming, and the blur stops the text behind being followed. cx has no
+// theme variable for it, and injects its stylesheet after ours, hence the doubled class.
+.cxe-window-shadow.cxe-window-shadow {
+    background-color: color-mix(in srgb, var(--color-ink) 55%, transparent);
+    backdrop-filter: blur(3px);
+    animation: window-backdrop-in 70ms ease-out;
+}
+
+@keyframes window-backdrop-in {
+    from {
+        opacity: 0;
+    }
+}
