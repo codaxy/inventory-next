@@ -31,20 +31,22 @@ wrong.
 
 ## The steps
 
-1. **The walking skeleton.** One paged list, one editor, sign-in, the mobile layout, the migration and
+1. ~~**The walking skeleton.**~~ One paged list, one editor, sign-in, the mobile layout, the migration and
    schema-match tests, and a deployable image. Every later step copies its shape, so it is worth
    getting slowly.
 2. **Electronic devices.** The largest list and the richest editor: if paging, filtering and the
    phone layout survive this, they survive everything.
 3. ~~**Licenses, volumes and activations.**~~ The only area with behaviour rather than shape — seat
    counts, activation and its reversal, subscription expiry.
-4. **Furniture, the infrastructure — virtual machines, cloud subscriptions, software — and the remaining asset
-   types.** Shapes already proven by step 2.
-5. **Information and its types, tags and locations.**
-6. **The company.** Many screens, one shape.
-7. **The audit log, the log viewer and Excel export.** The read-only corners, and the ones whose
+4. ~~**Furniture, the infrastructure — virtual machines, cloud subscriptions, software — and the remaining asset
+   types.**~~ Shapes already proven by step 2. Amended: no asset type remained — only licenses,
+   furniture and electronic devices have a table of their own — and these shipped before step 2, on
+   the licenses' proving instead.
+5. ~~**Information and its types, tags and locations.**~~
+6. ~~**The company.**~~ Many screens, one shape.
+7. ~~**The audit log, the log viewer and Excel export.**~~ The read-only corners, and the ones whose
    behaviour is least worth changing. Amended: export lands with each list it belongs to rather than
-   here — licenses and activations have it, electronic devices, furniture and information bring
+   here — licenses, activations, furniture and information have it; electronic devices bring
    theirs. The audit log was built ahead of the rest, at the user's
    request, and is the first list: step 1's paging convention is the one it set, with a search
    modernised rather than kept at parity. The log viewer followed it, reading a daily JSON-lines file
