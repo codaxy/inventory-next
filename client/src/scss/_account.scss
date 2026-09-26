@@ -1,0 +1,74 @@
+// The account menu at the foot of the navigation, and the menu it opens above itself. Both sit on the
+// dark chrome, so both use the `--color-nav-*` set. Selectors are two classes deep plus ours: the
+// theme's `.cxs-focusable > .cxb-menuitem.cxs-cursor:hover` is injected at runtime and wins a tie.
+
+.account-menu .cxb-menuitem.account-trigger,
+.account-dropdown .cxb-menuitem.account-action {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    color: var(--color-nav-ink-muted);
+    transition:
+        background-color 150ms,
+        color 150ms;
+}
+
+.cxs-focusable > .cxb-menuitem.account-trigger:hover,
+.cxs-focusable > .cxb-menuitem.account-trigger.cxs-open,
+.cxs-focusable > .cxb-menuitem.account-trigger:focus-visible,
+.cxs-focusable > .cxb-menuitem.account-action:hover,
+.cxs-focusable.cxs-cursor > .cxb-menuitem.account-action.cxs-cursor {
+    background-color: var(--color-nav-hover);
+    color: var(--color-nav-ink);
+}
+
+// One chevron pointing where the menu opens, turned over while it is open. Rotated rather than
+// swapped, so the change reads as the same control changing state.
+.account-chevron {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    color: var(--color-nav-ink-dim);
+    transition: transform 150ms;
+}
+
+.account-trigger.cxs-open .account-chevron {
+    transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .account-chevron {
+        transition: none;
+    }
+}
+
+.cxb-dropdown.account-dropdown {
+    padding: 0.25rem;
+    border: 1px solid var(--color-nav-line);
+    border-radius: 0.625rem;
+    background-color: var(--color-nav-bar);
+    box-shadow: var(--shadow-overlay);
+}
+
+.account-dropdown .cxb-menuitem.account-action {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+// `--color-danger` is tuned for white and goes muddy on navy, so it is lightened towards white.
+.cxs-focusable > .cxb-menuitem.account-sign-out:hover,
+.cxs-focusable.cxs-cursor > .cxb-menuitem.account-sign-out.cxs-cursor {
+    color: color-mix(in oklch, var(--color-danger) 55%, white);
+}
+
+// Below `lg` the chrome is a drawer on a touch screen, so its targets meet the 44px rule.
+@media (max-width: 1023.98px) {
+    .account-menu .cxb-menuitem.account-trigger,
+    .account-dropdown .cxb-menuitem.account-action {
+        min-height: 44px;
+    }
+
+    .account-dropdown .cxb-menuitem.account-action {
+        display: flex;
+        align-items: center;
+    }
+}

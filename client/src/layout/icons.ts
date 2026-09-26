@@ -1,5 +1,6 @@
 import {
     AppStoreIcon,
+    ArrowUp01Icon,
     Briefcase01Icon,
     Building03Icon,
     CheckmarkBadge01Icon,
@@ -13,6 +14,7 @@ import {
     InformationCircleIcon,
     Key01Icon,
     Location01Icon,
+    Logout01Icon,
     ServerStack01Icon,
     Shapes01Icon,
     SoftwareIcon,
@@ -55,7 +57,9 @@ export const icons = {
     auditLog: HistoryIcon,
     serverLog: CommandLineIcon,
     todo: ConstructionIcon,
+    accountMenu: ArrowUp01Icon,
+    signOut: Logout01Icon,
 } satisfies Record<string, IconData>;
 
 export type IconName = keyof typeof icons;
-export type NavIconName = Exclude<IconName, "todo">;
+export type NavIconName = Exclude<IconName, "todo" | "accountMenu" | "signOut">;

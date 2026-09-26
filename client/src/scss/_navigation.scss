@@ -100,12 +100,6 @@
     color: var(--color-nav-ink);
 }
 
-// `--color-danger` is tuned for white and goes muddy on navy, so it is lightened towards white.
-.cxb-button.cxm-on-dark.cxm-danger:hover,
-.cxb-button.cxm-hollow.cxm-on-dark.cxm-danger:hover {
-    color: color-mix(in oklch, var(--color-danger) 55%, white);
-}
-
 // The menu button: a 44px square, the one control on a phone that must never be missed.
 .cxb-button.cxm-hollow.cxm-on-dark.nav-toggle {
     display: grid;
@@ -120,8 +114,7 @@
 
 // Below `lg` the chrome is a drawer on a touch screen, so its targets meet the 44px rule.
 @media (max-width: 1023.98px) {
-    .nav-link,
-    .nav-footer .cxb-button.cxm-on-dark {
+    .nav-link {
         min-height: 44px;
     }
 }

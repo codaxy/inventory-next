@@ -288,6 +288,14 @@ A `MenuItem` needs `autoClose` or the menu stays open. It calls `preventDefault`
 itself, suppressing the browser's own menu wherever it is attached — attach narrowly. **Never the only
 way to do something**: right-click is absent on a phone, and the phone is the hard case here.
 
+## Dropdown menus
+
+A `MenuItem` with a `<Menu putInto="dropdown">` child is a click-to-open menu with Enter, Escape and
+focus-out closing built in. **Keep its dropdown `inline`** (the default): portaled with
+`dropdownOptions={{ inline: false }}`, Enter opens it but focus cannot move into it, so it is
+unreachable by keyboard. `openOnFocus={false}` stops Tab from popping it open. Content is a `div`, not
+a bare `span` — the theme pads `.cxb-menuitem > span`.
+
 ## Lists: `Repeater`, not `ContentResolver`
 
 ```tsx

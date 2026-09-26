@@ -59,10 +59,12 @@ shell. A screen not built yet routes to `TodoScreen`, which names the programme 
 
 ## The phone is the hard case
 
-**The shell is Pulse's.** From `lg` (1024px) a 220px sidebar holds the navigation and the signed-in
-person; below it the sidebar becomes a drawer over the content, opened by a 44px menu button in a top
-bar that carries only the mark. Any tap in the drawer closes it. A screen fills the content column
-under a header band (`.page-header`) flush with its top and sides; it never sets its own outer padding.
+**The shell is Pulse's.** From `lg` (1024px) a 220px sidebar holds the navigation and, at its foot,
+the signed-in person alone; signing out is in the menu that opens above them. Below `lg` the sidebar
+becomes a drawer over the content, opened by a 44px menu button in a top bar that carries only the
+mark. Any tap in the drawer closes it, except one that opens or works the account menu. A screen fills
+the content column under a header band (`.page-header`) flush with its top and sides; it never sets
+its own outer padding.
 Sign-in, outside the shell, is one centred column that stops growing on a wide display.
 
 Tap targets are at least 44px high wherever the layout is a phone's — the drawer's links included; the

@@ -1,15 +1,10 @@
-import { createFunctionalComponent, expr, falsy } from "cx/ui";
-import { Button, Icon, Link } from "cx/widgets";
+import { createFunctionalComponent, falsy } from "cx/ui";
+import { Icon, Link } from "cx/widgets";
 
 import { Logo } from "../components/Logo";
 import $app from "../model";
+import { AccountMenu } from "./AccountMenu";
 import { navigation } from "./navigation";
-
-/** Initials for the avatar, from the name or, failing that, the address. */
-function initials(name: string | undefined): string {
-    const parts = (name ?? "").split(/[\s.@_-]+/).filter(Boolean);
-    return `${parts[0]?.[0] ?? "?"}${parts[1]?.[0] ?? ""}`.toUpperCase();
-}
 
 const closeDrawer = (_e: unknown, { store }: any) => store.set($app.ui.drawerOpen, false);
 
@@ -67,42 +62,7 @@ export const Sidebar = createFunctionalComponent(() => (
             </nav>
 
             <div class="nav-footer">
-                <div class="flex items-center gap-2.5">
-                    <div
-                        class="grid size-8 shrink-0 place-items-center rounded-full bg-nav-avatar text-[11px] font-bold text-nav-avatar-ink"
-                        text={expr($app.session.user.name, $app.session.user.email, (name, email) =>
-                            initials(name || email),
-                        )}
-                    />
-                    <div class="min-w-0 flex-1">
-                        <div
-                            class="truncate text-[13px] font-semibold text-nav-ink"
-                            text={expr(
-                                $app.session.user.name,
-                                $app.session.user.email,
-                                (name, email) => name || email,
-                            )}
-                        />
-                        <div
-                            class="truncate text-[11px] text-nav-ink-dim"
-                            text={$app.session.user.email}
-                            visible={expr(
-                                $app.session.user.name,
-                                $app.session.user.email,
-                                (name, email) => !!name && name != email,
-                            )}
-                        />
-                    </div>
-                </div>
-
-                <div class="mt-2 flex">
-                    <Button
-                        mod={["hollow", "on-dark", "danger"]}
-                        class="flex-1"
-                        onClick="onSignOut"
-                        text="Sign out"
-                    />
-                </div>
+                <AccountMenu />
             </div>
         </aside>
     </cx>
