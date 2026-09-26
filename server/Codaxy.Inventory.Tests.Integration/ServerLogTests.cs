@@ -21,6 +21,9 @@ public class ServerLogApplication : InventoryApplication
     {
         base.ConfigureWebHost(builder);
         builder.UseSetting("ServerLog:RetentionDays", "100000");
+
+        // Request lines are on in Development only; this fixture reads its own, as Development would.
+        builder.UseSetting("Logging:LogLevel:Microsoft.AspNetCore.HttpLogging", "Information");
     }
 
     public override async Task InitializeAsync()
@@ -307,5 +310,31 @@ public class ServerLogRetentionTests(RetentionApplication app) : IClassFixture<R
             File.Exists(Path.Combine(app.ServerLogPath, RetentionApplication.FileFor(40)))
         );
         Assert.True(File.Exists(Path.Combine(app.ServerLogPath, RetentionApplication.FileFor(5))));
+    }
+
+    [Fact]
+    public async Task Outside_development_a_request_leaves_no_line()
+    {
+        var client = await app.ClientAsync();
+        await client.GetAsync("/api/administration/server-log/days");
+
+        var today = Path.Combine(app.ServerLogPath, RetentionApplication.FileFor(0));
+
+        Assert.DoesNotContain(
+            "HttpLoggingMiddleware",
+            File.Exists(today) ? await ReadSharedAsync(today) : ""
+        );
+    }
+
+    private static async Task<string> ReadSharedAsync(string path)
+    {
+        await using var stream = new FileStream(
+            path,
+            FileMode.Open,
+            FileAccess.Read,
+            FileShare.ReadWrite
+        );
+        using var reader = new StreamReader(stream);
+        return await reader.ReadToEndAsync();
     }
 }

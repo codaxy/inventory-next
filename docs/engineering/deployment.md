@@ -55,9 +55,16 @@ before sending traffic.
 ## Logs
 
 Code logs through the framework's `ILogger`, filtered by `Logging:LogLevel`, to two places: the
-framework's console logger, so `docker compose logs` works, and the server log. Requests are one
-combined line each through the framework's HTTP logging — method, path, status, duration, no headers
-and no bodies, because a request body here is a sign-in attempt.
+framework's console logger, so `docker compose logs` works, and the server log. **Request lines are
+Development's only**: one combined line per request through the framework's HTTP logging — method,
+path, status, duration, no headers and no bodies, because a request body here is a sign-in attempt —
+enabled by `appsettings.Development.json`, while `appsettings.json` holds the category at `Warning`.
+Elsewhere they drown what the log is for. A setting, not an environment check: a deployment that wants
+them sets `Logging__LogLevel__Microsoft.AspNetCore.HttpLogging=Information`.
+
+**One set of levels for every provider.** Serilog's own `MinimumLevel`/`Override` configuration is not
+used: it would be a second vocabulary for the same rules. A level for the file alone goes in the
+framework's provider section, `Logging:Serilog:LogLevel`.
 
 **The server log is Serilog's file sink**, added as a provider directly rather than through
 `AddSerilog`, whose own "everything" filter outranks `Logging:LogLevel`. Nothing outside
