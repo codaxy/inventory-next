@@ -53,6 +53,13 @@ install, so its version is pinned once. The server's restore installs the hook t
 `Codaxy.Inventory.Web.csproj`; `HUSKY=0` turns that off in the image build and CI, which have no
 repository to hook.
 
+**The hook formats moved files too**: Husky.Net's own `${staged}` lists only added and modified
+files, so a file renamed — or renamed and edited — in a commit went through unformatted and failed
+CI, as every file a folder rename touched did. `task-runner.json` defines `${staged-with-renames}`
+(`--diff-filter=ACMR`) and every task uses it. **Prettier is not always stable in one pass** on a
+long SCSS value — a wide `grid-template-columns` — and the hook runs it once: write such a value
+across lines as Prettier's second pass has it, or CI's check disagrees with the committed file.
+
 **Re-staging adds whole files.** A file committed with only some of its hunks staged goes in with all
 of them once the hook has touched it; lint-staged stashes the rest first, Husky.Net does not. EF's migrations are
 excluded — the next `migrations add` would undo it.

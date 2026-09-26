@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Codaxy.Inventory.App.Company.Locations;
-
 using Codaxy.Inventory.App.Persistence;
 
 namespace Codaxy.Inventory.App.Company.Vendors;

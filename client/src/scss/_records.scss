@@ -505,10 +505,9 @@
     }
 
     @media (min-width: 768px) {
-        grid-template-columns: 4.5rem minmax(0, 2fr) minmax(0, 1.3fr) minmax(0, 1.2fr) minmax(
-                0,
-                1.2fr
-            ) minmax(0, 1fr);
+        grid-template-columns:
+            4.5rem minmax(0, 2fr) minmax(0, 1.3fr) minmax(0, 1.2fr) minmax(0, 1.2fr)
+            minmax(0, 1fr);
 
         > .device-number,
         > :nth-child(6) {

@@ -5,7 +5,11 @@
       "name": "csharpier",
       "group": "pre-commit",
       "command": "dotnet",
-      "args": ["csharpier", "format", "${staged}"],
+      "args": [
+        "csharpier",
+        "format",
+        "${staged-with-renames}"
+      ],
       "include": [
         "server/**/*.cs",
         "server/**/*.csproj",
@@ -19,7 +23,11 @@
       "cwd": "client",
       "pathMode": "absolute",
       "command": "node",
-      "args": ["node_modules/prettier/bin/prettier.cjs", "--write", "${staged}"],
+      "args": [
+        "node_modules/prettier/bin/prettier.cjs",
+        "--write",
+        "${staged-with-renames}"
+      ],
       "include": [
         "client/src/**/*.ts",
         "client/src/**/*.tsx",
@@ -33,7 +41,10 @@
       "name": "restage",
       "group": "pre-commit",
       "command": "git",
-      "args": ["add", "${staged}"],
+      "args": [
+        "add",
+        "${staged-with-renames}"
+      ],
       "include": [
         "server/**/*.cs",
         "server/**/*.csproj",
@@ -45,6 +56,19 @@
         "client/src/**/*.html",
         "client/*.json",
         "client/*.js"
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "staged-with-renames",
+      "command": "git",
+      "args": [
+        "diff",
+        "--staged",
+        "--name-only",
+        "--no-ext-diff",
+        "--diff-filter=ACMR"
       ]
     }
   ]
