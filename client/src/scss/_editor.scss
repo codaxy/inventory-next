@@ -180,8 +180,9 @@ a.editor-chip:hover {
     color: var(--color-danger-text);
 }
 
-// The card's footer, as a window's is: tinted, ruled, buttons at the end. Sticky, so a form taller
-// than the screen keeps Save in reach, and it rests at the card's foot on a short one.
+// The card's footer: the card's own white under a rule, buttons at the end — tinted, it takes the
+// page's colour and reads as a hole in the card. Sticky, so a form taller than the screen keeps Save
+// in reach, and it rests at the card's foot on a short one.
 .editor-actions {
     position: sticky;
     bottom: 0;
@@ -193,7 +194,7 @@ a.editor-chip:hover {
     padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
     border-top: 1px solid var(--color-line);
     border-radius: 0 0 11px 11px;
-    background: var(--color-canvas);
+    background: var(--color-surface);
 
     @media (min-width: 640px) {
         margin: 1.25rem -1.25rem -1.25rem;
