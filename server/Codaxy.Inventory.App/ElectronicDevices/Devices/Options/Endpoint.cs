@@ -9,7 +9,7 @@ public static class Endpoint
 {
     public static void Map(RouteGroupBuilder devices) => devices.MapGet("/options", Handle);
 
-    /// <param name="TypeTags">Each type's tags, by the type's id: what a device of it shows.</param>
+    /// <param name="TypeTags">Each type's tags, by the type's id: what a device of it shows, each a link to its tag.</param>
     public sealed record Response(
         IReadOnlyList<AssetOption> Types,
         IReadOnlyList<AssetOption> Tags,
@@ -21,7 +21,7 @@ public static class Endpoint
         IReadOnlyList<WeightedOption> Integrities,
         IReadOnlyList<WeightedOption> Availabilities,
         IReadOnlyList<AssetOption> BusinessEntities,
-        IReadOnlyDictionary<Guid, List<string>> TypeTags
+        IReadOnlyDictionary<Guid, List<AssetOption>> TypeTags
     );
 
     private static async Task<IResult> Handle(
@@ -62,7 +62,10 @@ public static class Endpoint
                             t.Id,
                             Tags = t
                                 .Tags.OrderBy(x => x.ElectronicDeviceTag.Name)
-                                .Select(x => x.ElectronicDeviceTag.Name)
+                                .Select(x => new AssetOption(
+                                    x.ElectronicDeviceTagId,
+                                    x.ElectronicDeviceTag.Name
+                                ))
                                 .ToList(),
                         })
                         .ToListAsync(cancellationToken)

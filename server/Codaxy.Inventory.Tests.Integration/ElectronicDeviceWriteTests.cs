@@ -326,7 +326,10 @@ public class ElectronicDeviceWriteTests(ElectronicDeviceWriteApplication app)
     public async Task Options_carry_each_type_s_tags_for_the_form()
     {
         var o = (await (await Client()).GetFromJsonAsync<Options>($"{Url}/options"))!;
-        Assert.Equal(["HasData"], o.TypeTags[ElectronicDeviceApplication.LaptopType]);
+        Assert.Equal(
+            [(ElectronicDeviceApplication.HasData, "HasData")],
+            o.TypeTags[ElectronicDeviceApplication.LaptopType].Select(t => (t.Id, t.Text))
+        );
         Assert.Equal([1, 2, 3], o.Confidentialities.Select(c => c.Weight));
     }
 }

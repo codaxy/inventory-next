@@ -1,8 +1,9 @@
 import { createFunctionalComponent, expr } from "cx/ui";
-import { Repeater } from "cx/widgets";
+import { Link, Repeater } from "cx/widgets";
 
 import { formFields } from "../../../components/formFields";
 import { recordPage } from "../../../components/recordPage";
+import $app from "../../../model";
 import Controller from "./Controller";
 import m from "./model";
 
@@ -23,7 +24,12 @@ const device = (
                     {label("Tags")}
                     <div class="editor-chips">
                         <Repeater records={d.tags} recordAlias={m.$tag}>
-                            <span class="editor-chip" text={m.$tag.text} />
+                            <Link
+                                class="editor-chip"
+                                href={expr(m.$tag.id, (id) => `~/electronic-devices/tags/${id}`)}
+                                url={$app.url}
+                                text={m.$tag.text}
+                            />
                         </Repeater>
                         <span class="editor-empty" visible={expr(d.tags, (t) => !t?.length)} text="—" />
                     </div>

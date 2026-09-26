@@ -66,10 +66,7 @@ export default class extends RecordController<DeviceDraft, DeviceDetail, DeviceF
             this.store.set(r.importance, draft ? importanceFor(draft, options ?? emptyOptions) : "—"),
         );
         this.addTrigger("type-tags", [r.draft.typeId, r.options], (typeId, options) =>
-            this.store.set(
-                r.tags,
-                (typeId ? (options?.typeTags[typeId] ?? []) : []).map((name) => ({ id: name, text: name })),
-            ),
+            this.store.set(r.tags, typeId ? (options?.typeTags[typeId] ?? []) : []),
         );
 
         getDeviceOptions()

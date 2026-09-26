@@ -81,7 +81,7 @@ export interface DeviceOptions extends AssetOptions {
     tags: Option[];
     manufacturers: Option[];
     /** Each type's tags, by the type's id: what a device of it shows. */
-    typeTags: Record<string, string[]>;
+    typeTags: Record<string, Option[]>;
 }
 
 /** An asset's fields and the device's own, as the server takes them; "warranty" is the entity's "guarantee". */
