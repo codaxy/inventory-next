@@ -368,6 +368,22 @@ public class InformationTests(InformationApplication app) : IClassFixture<Inform
     }
 
     [Fact]
+    public async Task Search_finds_information_by_its_id_and_its_type_s()
+    {
+        var client = await Client();
+        var own = (
+            await client.GetFromJsonAsync<Page<Item>>(
+                $"{Url}/?q={InformationApplication.RocketContract}"
+            )
+        )!;
+        Assert.Equal("Rocket contract", own.Items.Single().Name);
+        var byProject = (
+            await client.GetFromJsonAsync<Page<Item>>($"{Url}/?q={InformationApplication.Rocket}")
+        )!;
+        Assert.Contains(byProject.Items, i => i.Name == "Rocket contract");
+    }
+
+    [Fact]
     public async Task An_unknown_piece_is_not_found()
     {
         var client = await Client();

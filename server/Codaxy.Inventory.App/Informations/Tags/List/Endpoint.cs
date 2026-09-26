@@ -32,6 +32,12 @@ public static class Endpoint
         var rows = context.InformationTags.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                rows = rows.Where(t => t.Id == id);
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
             rows = rows.Where(t =>
                 EF.Functions.ILike(t.Name, pattern, FreeText.Escape)

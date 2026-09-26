@@ -104,6 +104,21 @@ public static class Endpoint
             rows = rows.Where(i => (i.Incomplete == true) == incomplete);
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                rows = rows.Where(i =>
+                    i.Id == id
+                    || i.InformationTypeId == id
+                    || i.PersonId == id
+                    || i.ProjectId == id
+                    || i.ConfidentialityId == id
+                    || i.IntegrityId == id
+                    || i.AvailabilityId == id
+                    || i.ImportanceId == id
+                );
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
             rows = rows.Where(i =>
                 EF.Functions.ILike(i.Name, pattern, FreeText.Escape)

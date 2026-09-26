@@ -51,6 +51,17 @@ public static class Endpoint
         var rows = context.Softwares.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                rows = rows.Where(t =>
+                    t.Id == id
+                    || t.VolumeId == id
+                    || t.Volume.LicenseId == id
+                    || t.Volume.SoftwareOrServiceId == id
+                );
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
             rows = rows.Where(t =>
                 EF.Functions.ILike(t.Name, pattern, FreeText.Escape)

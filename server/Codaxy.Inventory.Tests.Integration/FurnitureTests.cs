@@ -381,6 +381,21 @@ public class FurnitureTests(FurnitureApplication app) : IClassFixture<FurnitureA
     }
 
     [Fact]
+    public async Task Search_finds_a_piece_by_its_id_its_assignee_s_id_and_its_number_as_shown()
+    {
+        var own = Assert.Single((await ListAsync($"q={FurnitureApplication.DeskChair}")).Items);
+        Assert.Equal("Desk chair", own.Name);
+        Assert.Contains(
+            (await ListAsync($"q={FurnitureApplication.Chair}")).Items,
+            i => i.Id == FurnitureApplication.DeskChair
+        );
+        Assert.Contains(
+            (await ListAsync("q=%23500001")).Items,
+            i => i.Id == FurnitureApplication.DeskChair
+        );
+    }
+
+    [Fact]
     public async Task Sorts_by_each_column_and_pages()
     {
         var all = (await ListAsync("pageSize=100")).Items;

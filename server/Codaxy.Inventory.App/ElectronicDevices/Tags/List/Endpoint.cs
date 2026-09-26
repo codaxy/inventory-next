@@ -42,6 +42,12 @@ public static class Endpoint
 
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                tags = tags.Where(t => t.Id == id);
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
             tags = tags.Where(t =>
                 EF.Functions.ILike(t.Name, pattern, FreeText.Escape)

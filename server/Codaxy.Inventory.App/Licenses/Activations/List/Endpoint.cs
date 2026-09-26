@@ -136,6 +136,19 @@ public static class Endpoint
 
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                rows = rows.Where(a =>
+                    a.Id == id
+                    || a.VolumeId == id
+                    || a.PersonId == id
+                    || a.AssetId == id
+                    || a.Volume.LicenseId == id
+                    || a.Volume.SoftwareOrServiceId == id
+                );
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
             rows = rows.Where(a =>
                 EF.Functions.ILike(a.Volume.SoftwareOrService.Name, pattern, FreeText.Escape)

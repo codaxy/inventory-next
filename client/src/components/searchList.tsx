@@ -19,6 +19,8 @@ export interface SearchListState {
     error?: string;
     pager: PagerState;
     totalText: string;
+    /** The search that ran is one id: an empty answer then says no record has it. */
+    idSearch?: boolean;
 }
 
 export interface Column {
@@ -122,8 +124,15 @@ export function searchList(o: SearchList) {
 
             <div class="list-empty" visible={empty}>
                 <Icon name="search" class="size-6" />
-                <p class="list-empty-title" text={`No ${o.noun} match`} />
-                <p class="list-empty-text" text={`Try fewer words, or add one.`} />
+                <p
+                    class="list-empty-title"
+                    text={expr(s.idSearch, (id) => (id ? "No record has this id" : `No ${o.noun} match`))}
+                />
+                <p
+                    class="list-empty-text"
+                    visible={falsy(s.idSearch)}
+                    text={`Try fewer words, or add one.`}
+                />
                 <Button mod="hollow" text="Clear search" onClick="clearSearch" />
             </div>
 

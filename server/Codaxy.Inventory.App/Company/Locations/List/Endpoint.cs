@@ -42,6 +42,12 @@ public static class Endpoint
         var locations = context.Locations.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                locations = locations.Where(l => l.Id == id || l.CityId == id || l.StateId == id);
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
             locations = locations.Where(l =>
                 EF.Functions.ILike(l.Name, pattern, FreeText.Escape)

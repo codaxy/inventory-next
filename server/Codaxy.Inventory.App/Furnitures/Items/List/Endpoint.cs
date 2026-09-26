@@ -107,6 +107,25 @@ public static class Endpoint
 
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                rows = rows.Where(f =>
+                    f.AssetId == id
+                    || f.FurnitureTypeId == id
+                    || f.Asset.VendorId == id
+                    || f.Asset.PersonId == id
+                    || f.Asset.LocationId == id
+                    || f.Asset.BusinessEntityId == id
+                    || f.Asset.AssetTypeId == id
+                    || f.Asset.AssetSubstatusId == id
+                    || f.Asset.ConfidentialityId == id
+                    || f.Asset.IntegrityId == id
+                    || f.Asset.AvailabilityId == id
+                    || f.Asset.ImportanceId == id
+                );
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
             rows = rows.Where(f =>
                 EF.Functions.ILike(f.Asset.InventoryNumber.ToString()!, pattern, FreeText.Escape)

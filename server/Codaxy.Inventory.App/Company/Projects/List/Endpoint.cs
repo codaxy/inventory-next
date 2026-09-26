@@ -46,6 +46,14 @@ public static class Endpoint
             projects = projects.Where(p => p.ProjectOwnerId == person);
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                projects = projects.Where(p =>
+                    p.Id == id || p.ClientId == id || p.ProjectOwnerId == id
+                );
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
             projects = projects.Where(p =>
                 EF.Functions.ILike(p.Name, pattern, FreeText.Escape)

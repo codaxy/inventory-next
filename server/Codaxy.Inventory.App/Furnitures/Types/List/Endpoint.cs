@@ -31,6 +31,12 @@ public static class Endpoint
         var types = context.FurnitureTypes.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                types = types.Where(t => t.Id == id);
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
             types = types.Where(t =>
                 EF.Functions.ILike(t.Name, pattern, FreeText.Escape)

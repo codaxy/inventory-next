@@ -46,6 +46,12 @@ public static class Endpoint
 
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                rows = rows.Where(a => a.Id == id || a.EntityId == id || a.TransactionId == id);
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
 
             rows = rows.Where(a =>

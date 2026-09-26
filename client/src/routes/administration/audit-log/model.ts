@@ -71,6 +71,8 @@ export interface AuditLogState {
     pager: PagerState;
     chips: Chip[];
     totalText: string;
+    /** The search that ran is one id: an empty answer then says no record has it. */
+    idSearch?: boolean;
 
     tables: Option[];
     emails: Option[];

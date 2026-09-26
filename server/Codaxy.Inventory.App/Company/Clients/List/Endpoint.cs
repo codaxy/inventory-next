@@ -31,6 +31,12 @@ public static class Endpoint
         var clients = context.Clients.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                clients = clients.Where(c => c.Id == id);
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
             clients = clients.Where(c => EF.Functions.ILike(c.Name, pattern, FreeText.Escape));
         }

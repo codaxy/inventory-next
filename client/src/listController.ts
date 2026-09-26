@@ -36,9 +36,15 @@ export interface ListState<F, Row, Sort extends string = string, K extends strin
     error?: string;
     pager: PagerState;
     totalText: string;
+    /** The search that ran is one id: an empty answer then says no record has it. */
+    idSearch?: boolean;
 }
 
 const searchDelay = 300;
+
+/** A search that is one GUID, which the server matches against ids alone. */
+export const isId = (q: string | undefined) =>
+    !!q && /^#?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(q.trim());
 
 /**
  * A searchable, filtered, sorted, paged list whose whole state is in the address: read when the list
@@ -214,6 +220,7 @@ export abstract class ListController<
                 s.totalText,
                 result.total === 0 ? none : `${state.summary} ${result.total === 1 ? one : many}`,
             );
+            this.store.set(s.idSearch, isId(q));
             this.store.delete(s.error);
             this.store.set(s.loaded, true);
         } catch (error) {

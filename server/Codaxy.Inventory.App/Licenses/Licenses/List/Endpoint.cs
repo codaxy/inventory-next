@@ -127,6 +127,29 @@ public static class Endpoint
 
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                licenses = licenses.Where(l =>
+                    l.AssetId == id
+                    || l.LicenseTypeId == id
+                    || l.LicenseModelId == id
+                    || l.LicenseExpirationModelId == id
+                    || l.CurrencyId == id
+                    || l.PeriodId == id
+                    || l.Asset.VendorId == id
+                    || l.Asset.PersonId == id
+                    || l.Asset.LocationId == id
+                    || l.Asset.BusinessEntityId == id
+                    || l.Asset.AssetTypeId == id
+                    || l.Asset.AssetSubstatusId == id
+                    || l.Asset.ConfidentialityId == id
+                    || l.Asset.IntegrityId == id
+                    || l.Asset.AvailabilityId == id
+                    || l.Asset.ImportanceId == id
+                );
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
             licenses = licenses.Where(l =>
                 EF.Functions.ILike(l.Asset.InventoryNumber.ToString()!, pattern, FreeText.Escape)

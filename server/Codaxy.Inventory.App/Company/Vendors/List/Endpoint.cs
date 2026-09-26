@@ -40,6 +40,12 @@ public static class Endpoint
         var vendors = context.Vendors.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
+            if (FreeText.Id(term) is { } id)
+            {
+                vendors = vendors.Where(v => v.Id == id);
+                continue;
+            }
+
             var pattern = FreeText.Pattern(term);
             vendors = vendors.Where(v =>
                 EF.Functions.ILike(v.Name, pattern, FreeText.Escape)

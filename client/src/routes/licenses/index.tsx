@@ -217,8 +217,15 @@ export default createFunctionalComponent(() => {
 
                 <div class="list-empty" visible={empty}>
                     <Icon name="search" class="size-6" />
-                    <p class="list-empty-title" text="No licenses match" />
-                    <p class="list-empty-text" text="Try fewer words or filters, or add the license." />
+                    <p
+                        class="list-empty-title"
+                        text={expr(s.idSearch, (id) => (id ? "No record has this id" : "No licenses match"))}
+                    />
+                    <p
+                        class="list-empty-text"
+                        visible={falsy(s.idSearch)}
+                        text="Try fewer words or filters, or add the license."
+                    />
                     <Button mod="hollow" text="Clear search and filters" onClick="clearAll" />
                 </div>
 

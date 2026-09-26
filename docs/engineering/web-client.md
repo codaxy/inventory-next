@@ -109,7 +109,10 @@ bar, so closing the pane hides nothing that is filtering. Filters apply as they 
 and scrolls inside it.
 
 **The toolbar's parts are shared** — `list-*` in `_list.scss`: the bar, search, Filters and its pane,
-chips, the caption line, and the error, empty and loading states. A screen's rows are its own.
+chips, the caption line, and the error, empty and loading states. A screen's rows are its own. **A search for an id that matches
+nothing says "No record has this id"**, without the usual advice to try fewer words, which does not
+apply to an id; any other search keeps its list's own wording. `ListController` knows which it ran
+(`idSearch`).
 
 **A cell says only what its column's header does not**: "6 Aug 2024" under Deactivated, not
 "Deactivated 6 Aug 2024" — but a phone's card, which has no headers, keeps the word.

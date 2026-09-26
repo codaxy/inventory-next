@@ -341,6 +341,17 @@ public class InfrastructureTests(InfrastructureApplication app)
     }
 
     [Fact]
+    public async Task Search_finds_software_by_the_license_it_is_bought_under()
+    {
+        var found = (
+            await (await Client()).GetFromJsonAsync<
+                Page<App.Infrastructure.Softwares.List.Endpoint.Item>
+            >($"{Url}/software/?q={InfrastructureApplication.Azure.License}")
+        )!;
+        Assert.Equal("Tools", found.Items.Single().Name);
+    }
+
+    [Fact]
     public async Task The_options_offer_every_volume_by_name()
     {
         var o = (
