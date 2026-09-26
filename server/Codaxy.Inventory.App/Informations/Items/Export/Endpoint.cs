@@ -58,6 +58,9 @@ public static class Endpoint
             || query.ProjectId is not null
             || query.TagId is not null
             || query.LocationId is not null
+            || query.VirtualMachineId is not null
+            || query.CloudSubscriptionId is not null
+            || query.SoftwareId is not null
             || query.Incomplete is not null;
 
         return Excel.File(rows, "Information.Export", filtered);

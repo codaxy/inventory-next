@@ -11,7 +11,7 @@ public static class Endpoint
 
     /// <param name="Q">Free text over name, author, description, type, assignee and project.</param>
     /// <param name="PersonId">The assignee.</param>
-    /// <param name="LocationId">A physical location it is kept at.</param>
+    /// <param name="LocationId">A physical location it is kept at; the three after it, the same for the others.</param>
     /// <param name="Sort"><c>name</c> (default), <c>type</c>, <c>assignee</c>, <c>author</c>, <c>project</c>; <c>-</c> for descending.</param>
     public sealed record Query(
         string? Q,
@@ -20,6 +20,9 @@ public static class Endpoint
         Guid? ProjectId,
         Guid? TagId,
         Guid? LocationId,
+        Guid? VirtualMachineId,
+        Guid? CloudSubscriptionId,
+        Guid? SoftwareId,
         bool? Incomplete,
         string? Sort,
         int? Page,
@@ -91,6 +94,12 @@ public static class Endpoint
             rows = rows.Where(i =>
                 i.InformationLocations.Any(l => l.PhysicalLocationId == location)
             );
+        if (query.VirtualMachineId is { } machine)
+            rows = rows.Where(i => i.InformationLocations.Any(l => l.VirtualMachineId == machine));
+        if (query.CloudSubscriptionId is { } cloud)
+            rows = rows.Where(i => i.InformationLocations.Any(l => l.CloudId == cloud));
+        if (query.SoftwareId is { } software)
+            rows = rows.Where(i => i.InformationLocations.Any(l => l.SoftwareId == software));
         if (query.Incomplete is { } incomplete)
             rows = rows.Where(i => (i.Incomplete == true) == incomplete);
         foreach (var term in FreeText.Terms(query.Q))

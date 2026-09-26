@@ -116,6 +116,32 @@ public static class InventoryApi
         Informations.Items.Update.Endpoint.Map(information);
         Informations.Items.Delete.Endpoint.Map(information);
 
+        var virtualMachines = api.MapGroup("/infrastructure/virtual-machines");
+
+        Infrastructure.VirtualMachines.List.Endpoint.Map(virtualMachines);
+        Infrastructure.VirtualMachines.Get.Endpoint.Map(virtualMachines);
+        Infrastructure.VirtualMachines.Create.Endpoint.Map(virtualMachines);
+        Infrastructure.VirtualMachines.Update.Endpoint.Map(virtualMachines);
+        Infrastructure.VirtualMachines.Delete.Endpoint.Map(virtualMachines);
+
+        var cloudSubscriptions = api.MapGroup("/infrastructure/cloud-subscriptions");
+
+        Infrastructure.CloudSubscriptions.List.Endpoint.Map(cloudSubscriptions);
+        Infrastructure.CloudSubscriptions.Options.Endpoint.Map(cloudSubscriptions);
+        Infrastructure.CloudSubscriptions.Get.Endpoint.Map(cloudSubscriptions);
+        Infrastructure.CloudSubscriptions.Create.Endpoint.Map(cloudSubscriptions);
+        Infrastructure.CloudSubscriptions.Update.Endpoint.Map(cloudSubscriptions);
+        Infrastructure.CloudSubscriptions.Delete.Endpoint.Map(cloudSubscriptions);
+
+        var software = api.MapGroup("/infrastructure/software");
+
+        Infrastructure.Softwares.List.Endpoint.Map(software);
+        Infrastructure.Softwares.Options.Endpoint.Map(software);
+        Infrastructure.Softwares.Get.Endpoint.Map(software);
+        Infrastructure.Softwares.Create.Endpoint.Map(software);
+        Infrastructure.Softwares.Update.Endpoint.Map(software);
+        Infrastructure.Softwares.Delete.Endpoint.Map(software);
+
         var clients = api.MapGroup("/company/clients");
 
         Company.Clients.List.Endpoint.Map(clients);

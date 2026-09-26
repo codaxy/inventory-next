@@ -137,6 +137,9 @@ export interface InformationQuery {
     projectId?: string;
     tagId?: string;
     locationId?: string;
+    virtualMachineId?: string;
+    cloudSubscriptionId?: string;
+    softwareId?: string;
     incomplete?: boolean;
     sort?: InformationSort;
     page: number;

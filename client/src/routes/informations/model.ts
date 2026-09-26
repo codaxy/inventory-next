@@ -26,10 +26,25 @@ export interface Filters {
     tagText?: string;
     locationId?: string | null;
     locationText?: string;
+    virtualMachineId?: string | null;
+    virtualMachineText?: string;
+    cloudSubscriptionId?: string | null;
+    cloudSubscriptionText?: string;
+    softwareId?: string | null;
+    softwareText?: string;
     incomplete?: boolean | null;
 }
 
-export type FilterKey = "type" | "person" | "project" | "tag" | "location" | "incomplete";
+export type FilterKey =
+    | "type"
+    | "person"
+    | "project"
+    | "tag"
+    | "location"
+    | "virtualMachine"
+    | "cloudSubscription"
+    | "software"
+    | "incomplete";
 
 export interface Chip {
     key: FilterKey;
@@ -87,6 +102,9 @@ export const toChips = (f: Filters): Chip[] => [
     ...pickChip("project", "Project", f.projectId, f.projectText),
     ...pickChip("tag", "Tag", f.tagId, f.tagText),
     ...pickChip("location", "Kept at", f.locationId, f.locationText),
+    ...pickChip("virtualMachine", "Kept on", f.virtualMachineId, f.virtualMachineText),
+    ...pickChip("cloudSubscription", "Kept on", f.cloudSubscriptionId, f.cloudSubscriptionText),
+    ...pickChip("software", "Kept on", f.softwareId, f.softwareText),
     ...(f.incomplete == null
         ? []
         : [{ key: "incomplete" as const, text: f.incomplete ? "Incomplete" : "Complete" }]),

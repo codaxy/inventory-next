@@ -50,6 +50,8 @@ none touches `Sequence`.
 address, and a cloud subscription (`Cloud`) or a software entry belongs to a `Volume`. **A `Cloud` is
 a cloud subscription** — an Azure subscription, an AWS account, a Microsoft 365 tenant: one seat of a
 cloud service, administered at its management URL — and is called that everywhere but the entity.
+A virtual machine, cloud subscription or software entry that information is kept on is not deleted;
+one of the latter two goes with its volume, which is why a volume holding one is not removed.
 
 License seats are modelled by three of them: a `Volume` is a quantity of a `SoftwareOrService` bought
 under a license, and an `Activation` assigns one seat of a volume to a person, a device (an asset) or

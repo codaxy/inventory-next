@@ -33,6 +33,12 @@ import InformationTags from "./informations/tags";
 import InformationTagEditor from "./informations/tags/editor";
 import InformationTypes from "./informations/types";
 import InformationTypeEditor from "./informations/types/editor";
+import CloudSubscriptions from "./infrastructure/cloud-subscriptions";
+import CloudSubscriptionEditor from "./infrastructure/cloud-subscriptions/editor";
+import Softwares from "./infrastructure/software";
+import SoftwareEditor from "./infrastructure/software/editor";
+import VirtualMachines from "./infrastructure/virtual-machines";
+import VirtualMachineEditor from "./infrastructure/virtual-machines/editor";
 import Licenses from "./licenses";
 import ActivationEditor from "./licenses/activations/editor";
 import Activations from "./licenses/activations";
@@ -61,6 +67,9 @@ const screens: Record<string, any> = {
     "~/informations": Informations,
     "~/informations/tags": InformationTags,
     "~/informations/types": InformationTypes,
+    "~/infrastructure/cloud-subscriptions": CloudSubscriptions,
+    "~/infrastructure/software": Softwares,
+    "~/infrastructure/virtual-machines": VirtualMachines,
     "~/licenses": Licenses,
     "~/licenses/activations": Activations,
     "~/licenses/software-services": SoftwareServices,
@@ -171,6 +180,24 @@ export default (
                     </Route>
                     <Route route="~/furniture/:id" url={$app.url}>
                         <FurnitureEditor />
+                    </Route>
+                    <Route route="~/infrastructure/virtual-machines/:id/edit" url={$app.url}>
+                        <VirtualMachineEditor />
+                    </Route>
+                    <Route route="~/infrastructure/virtual-machines/:id" url={$app.url}>
+                        <VirtualMachineEditor />
+                    </Route>
+                    <Route route="~/infrastructure/cloud-subscriptions/:id/edit" url={$app.url}>
+                        <CloudSubscriptionEditor />
+                    </Route>
+                    <Route route="~/infrastructure/cloud-subscriptions/:id" url={$app.url}>
+                        <CloudSubscriptionEditor />
+                    </Route>
+                    <Route route="~/infrastructure/software/:id/edit" url={$app.url}>
+                        <SoftwareEditor />
+                    </Route>
+                    <Route route="~/infrastructure/software/:id" url={$app.url}>
+                        <SoftwareEditor />
                     </Route>
                     {/* Before `~/informations/:id`, which would take `types` and `tags` for an id. */}
                     <Route route="~/informations/types/:id/edit" url={$app.url}>

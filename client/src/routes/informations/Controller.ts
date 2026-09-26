@@ -14,7 +14,16 @@ import m, { type FilterKey, type Filters, type Row, toChips, toRows } from "./mo
 const s = m.list;
 const keys = ["name", "type", "assignee", "author", "project"] as const;
 /** The pickers the pane filters by, each an id in the address and a text from the options. */
-const picks = ["type", "person", "project", "tag", "location"] as const;
+const picks = [
+    "type",
+    "person",
+    "project",
+    "tag",
+    "location",
+    "virtualMachine",
+    "cloudSubscription",
+    "software",
+] as const;
 
 const request = (f: Filters): Partial<InformationQuery> => ({
     typeId: f.typeId ?? undefined,
@@ -22,6 +31,9 @@ const request = (f: Filters): Partial<InformationQuery> => ({
     projectId: f.projectId ?? undefined,
     tagId: f.tagId ?? undefined,
     locationId: f.locationId ?? undefined,
+    virtualMachineId: f.virtualMachineId ?? undefined,
+    cloudSubscriptionId: f.cloudSubscriptionId ?? undefined,
+    softwareId: f.softwareId ?? undefined,
     incomplete: f.incomplete ?? undefined,
 });
 
@@ -62,6 +74,9 @@ export default class extends ListController<Filters, InformationItem, Row, Infor
             projectId: query.get("projectId"),
             tagId: query.get("tagId"),
             locationId: query.get("locationId"),
+            virtualMachineId: query.get("virtualMachineId"),
+            cloudSubscriptionId: query.get("cloudSubscriptionId"),
+            softwareId: query.get("softwareId"),
             incomplete: incomplete === "true" ? true : incomplete === "false" ? false : null,
         };
     }
@@ -72,6 +87,9 @@ export default class extends ListController<Filters, InformationItem, Row, Infor
         projectId: f.projectId,
         tagId: f.tagId,
         locationId: f.locationId,
+        virtualMachineId: f.virtualMachineId,
+        cloudSubscriptionId: f.cloudSubscriptionId,
+        softwareId: f.softwareId,
         incomplete: f.incomplete == null ? undefined : String(f.incomplete),
     });
 
@@ -90,6 +108,9 @@ export default class extends ListController<Filters, InformationItem, Row, Infor
                     project: o.projects,
                     tag: o.tags,
                     location: o.locations,
+                    virtualMachine: o.virtualMachines,
+                    cloudSubscription: o.cloudSubscriptions,
+                    software: o.software,
                 };
                 this.store.set(s.types, o.types);
                 this.store.set(s.people, o.people);

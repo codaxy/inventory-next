@@ -466,3 +466,21 @@
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
     }
 }
+
+// Virtual machines: the name, the address, the count.
+.machine-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 24rem) minmax(0, 16rem) minmax(0, 8rem);
+    }
+}
+
+// Cloud subscriptions and software: the name, the license and software it is bought under, the count.
+.on-volume-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 20rem) minmax(0, 20rem) minmax(0, 16rem) minmax(0, 8rem);
+    }
+}
