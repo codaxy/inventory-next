@@ -4,6 +4,17 @@ One image, built by a three-stage Dockerfile: node builds the client into the pa
 publishes from, the SDK publishes the server, and the ASP.NET runtime image carries the result. It
 runs as `$APP_UID`, not root.
 
+## Publishing
+
+**The image is published by CI, and only once the tests have passed**: the `publish` job in
+`ci.yml` needs the server and the client jobs, and runs on a push to `main` or `production` of
+Codaxy's own repository — a fork or a copy elsewhere cannot push to Codaxy's registry —
+`ghcr.io/codaxy/inventory-next:latest` from `main`, `:stable` from `production`, as the original
+tags its image, and every image also carries its commit's sha, so any one can be run again. The
+original published before any test ran; here a red build publishes nothing. The name is not the
+original's `ghcr.io/codaxy/inventory`, so neither workflow overwrites the other's image and a
+deployment switches between the two by changing one line.
+
 ## Compose
 
 **`docker compose up` brings up infrastructure only** — PostgreSQL and Mailpit — which is what running

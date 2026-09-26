@@ -64,3 +64,32 @@ jobs:
       - run: npm run format:check
       - run: npm run typecheck
       - run: npm run build
+
+  # The image, published only once the server and the client have passed: a push to `main` is
+  # `:latest`, to `production` `:stable`, and every one also carries its commit's sha to roll back to.
+  # Only from Codaxy's repository: a fork or a copy elsewhere cannot push to Codaxy's registry.
+  publish:
+    needs: [server, client]
+    if: >-
+      github.repository_owner == 'codaxy' && github.event_name == 'push'
+      && (github.ref_name == 'main' || github.ref_name == 'production')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/codaxy/inventory-next:${{ github.ref_name == 'production' && 'stable' || 'latest' }}
+            ghcr.io/codaxy/inventory-next:${{ github.sha }}
