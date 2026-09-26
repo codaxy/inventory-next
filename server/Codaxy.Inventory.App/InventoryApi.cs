@@ -142,6 +142,13 @@ public static class InventoryApi
         Infrastructure.Softwares.Update.Endpoint.Map(software);
         Infrastructure.Softwares.Delete.Endpoint.Map(software);
 
+        var devices = api.MapGroup("/electronic-devices");
+
+        ElectronicDevices.Devices.List.Endpoint.Map(devices);
+        ElectronicDevices.Devices.Options.Endpoint.Map(devices);
+        ElectronicDevices.Devices.Export.Endpoint.Map(devices);
+        ElectronicDevices.Devices.Get.Endpoint.Map(devices);
+
         var clients = api.MapGroup("/company/clients");
 
         Company.Clients.List.Endpoint.Map(clients);

@@ -484,3 +484,52 @@
         grid-template-columns: minmax(0, 20rem) minmax(0, 20rem) minmax(0, 16rem) minmax(0, 8rem);
     }
 }
+
+// Electronic devices: on a phone the name, its model, who has it and where. From `md` the number, name,
+// model, assignee, location and type; from `xl` every column — manufacturer, model code, serial number
+// and the change time are the least scanned, and wait for the width.
+.device-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    > .device-number,
+    > :nth-child(6),
+    > :nth-child(7),
+    > :nth-child(8),
+    > :nth-child(9),
+    > :nth-child(10) {
+        display: none;
+    }
+
+    > :nth-child(2) {
+        order: -1;
+    }
+
+    @media (min-width: 768px) {
+        grid-template-columns: 4.5rem minmax(0, 2fr) minmax(0, 1.3fr) minmax(0, 1.2fr) minmax(
+                0,
+                1.2fr
+            ) minmax(0, 1fr);
+
+        > .device-number,
+        > :nth-child(6) {
+            display: block;
+        }
+
+        > :nth-child(2) {
+            order: 0;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        grid-template-columns:
+            4.5rem minmax(0, 1.8fr) minmax(0, 1.2fr) minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(0, 0.9fr)
+            minmax(0, 0.9fr) minmax(0, 0.8fr) minmax(0, 0.9fr) 6.5rem;
+
+        > :nth-child(7),
+        > :nth-child(8),
+        > :nth-child(9),
+        > :nth-child(10) {
+            display: block;
+        }
+    }
+}

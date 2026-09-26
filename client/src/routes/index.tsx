@@ -20,6 +20,8 @@ import ProjectEditor from "./company/projects/editor";
 import Vendors from "./company/vendors";
 import VendorEditor from "./company/vendors/editor";
 import ServerLog from "./administration/server-log";
+import ElectronicDevices from "./electronic-devices";
+import ElectronicDevice from "./electronic-devices/device";
 import TagEditor from "./electronic-devices/tags/editor";
 import Tags from "./electronic-devices/tags";
 import TypeEditor from "./electronic-devices/types/editor";
@@ -60,6 +62,7 @@ const screens: Record<string, any> = {
     "~/company/people": People,
     "~/company/projects": Projects,
     "~/company/vendors": Vendors,
+    "~/electronic-devices": ElectronicDevices,
     "~/electronic-devices/tags": Tags,
     "~/electronic-devices/types": Types,
     "~/furniture": Furniture,
@@ -128,6 +131,10 @@ export default (
                     </Route>
                     <Route route="~/electronic-devices/types/:id" url={$app.url}>
                         <TypeEditor />
+                    </Route>
+                    {/* After the types' and tags', which `:id` would otherwise take. */}
+                    <Route route="~/electronic-devices/:id" url={$app.url}>
+                        <ElectronicDevice />
                     </Route>
                     <Route route="~/company/projects/:id/edit" url={$app.url}>
                         <ProjectEditor />

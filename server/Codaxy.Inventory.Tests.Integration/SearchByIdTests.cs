@@ -46,6 +46,7 @@ public class SearchByIdTests(SearchApplication app) : IClassFixture<SearchApplic
             "/api/company/people/",
             "/api/company/projects/",
             "/api/company/vendors/",
+            "/api/electronic-devices/",
             "/api/electronic-devices/tags/",
             "/api/electronic-devices/types/",
             "/api/furniture/",
