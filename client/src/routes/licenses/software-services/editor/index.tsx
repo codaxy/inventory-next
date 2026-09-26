@@ -147,7 +147,7 @@ export default createFunctionalComponent(() => (
                                         errorTooltip={noErrorText}
                                         inputAttrs={{ "aria-label": "URL", inputMode: "url" }}
                                     />
-                                    {externalLink(e.draft.url)}
+                                    {externalLink(e.draft.url, e.viewing)}
                                 </div>
                                 <p
                                     class="field-message"

@@ -112,7 +112,7 @@ export function formFields(state: FormState, prefix: string) {
                         errorTooltip={noErrorText}
                         inputAttrs={{ "aria-label": text }}
                     />
-                    {opts.url ? externalLink(d[key]) : null}
+                    {opts.url ? externalLink(d[key], state.viewing) : null}
                 </div>
                 {message(key)}
             </div>

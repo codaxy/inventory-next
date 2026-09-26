@@ -8,6 +8,7 @@ import {
     AppStoreIcon,
     ArrowLeft01Icon,
     ArrowRight01Icon,
+    ArrowDown01Icon,
     ArrowUp01Icon,
     Briefcase01Icon,
     Building03Icon,
@@ -81,6 +82,7 @@ const navIcons = {
 const uiIcons = {
     todo: ConstructionIcon,
     accountMenu: ArrowUp01Icon,
+    moreWays: ArrowDown01Icon,
     signOut: Logout01Icon,
     previous: ArrowLeft01Icon,
     next: ArrowRight01Icon,

@@ -232,8 +232,8 @@ unsaved-changes guard, save, and a delete refused with what holds the record —
 no filter pane. A screen declares its API, draft, fields and columns;
 a record checked for an edit made meanwhile names its `lastModified` (a refused save offers Reload), one
 that can be copied names what a copy keeps (`new?from=:id`, Duplicate behind the ⋮), and a new asset
-bought in batches offers **"Save and replicate"** — saved, and the next opened as its copy;
-on a phone it reads "Replicate", with the copy icon, to fit beside Cancel and Save. **Whatever names a record with a page
+bought in batches offers **"Save and replicate"** behind a chevron on Save — Save saves, the
+chevron offers saving and opening the next as its copy — one control at every width. **Whatever names a record with a page
 is a link to it in view** — a picker (`pick(…, { href })`), a fact on a read-only page, a volume's
 software — the assignee, vendor, location, type, manufacturer; a codebook value, which has no page,
 stays text. The city and state a location offers are the
@@ -257,7 +257,7 @@ and can take it back; one added in the same edit goes at once, as nothing is los
 
 **Every web address has an open button** — `externalLink` in `components/`, a small icon anchor
 right after the value, opening it in a new tab — whether the address is a URL field or sits in a
-description. Never inside another link: a row that is itself a link shows it on its record's page.
+description. **In view only**: beside a field being typed into, it would open an address not yet saved. Never inside another link: a row that is itself a link shows it on its record's page.
 
 **Anything that goes somewhere is a link**, an anchor with an address — a row, a chip naming another
 record, a back link, and the New, Edit and Cancel buttons (`LinkButton`) — so it opens in a new tab,

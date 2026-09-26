@@ -1,6 +1,6 @@
 import type { AccessorChain } from "cx/data";
 import { expr, falsy, hasValue, truthy } from "cx/ui";
-import { Button, Icon, Link, LinkButton, ValidationGroup } from "cx/widgets";
+import { Button, Icon, Link, LinkButton, Menu, MenuItem, ValidationGroup } from "cx/widgets";
 
 import { listReturn } from "../listAddress";
 import $app from "../model";
@@ -24,7 +24,7 @@ interface RecordPage {
     more?: MoreAction[];
     /** Duplicate behind the ⋮: `new?from=:id`, which the controller opens as a copy. */
     duplicate?: boolean;
-    /** "Save and replicate" beside Save on a new record: a batch entered one by one. */
+    /** "Save and replicate" behind a chevron on Save, on a new record: a batch entered one by one. */
     another?: boolean;
 }
 
@@ -44,22 +44,53 @@ export function recordPage(o: RecordPage) {
             />
             {o.another ? (
                 <cx>
-                    {/* On a phone, one word and the copy icon, so it fits beside Cancel and Save. */}
+                    {/* A new record saves as Save does; the chevron offers saving it and opening the next like it. */}
+                    <div class="save-split" visible={expr(r.id, (id) => !id)}>
+                        <Button
+                            mod="primary"
+                            class="save-split-main"
+                            text="Save"
+                            onClick="save"
+                            disabled={truthy(r.saving)}
+                        />
+                        <Menu class="save-split-menu">
+                            <MenuItem
+                                class="save-split-trigger"
+                                openOnFocus={false}
+                                arrow={false}
+                                dropdownOptions={{
+                                    placementOrder: "up-left down-left up-right down-right",
+                                    offset: 6,
+                                    class: "more-dropdown",
+                                }}
+                            >
+                                <Icon name="moreWays" class="size-4" />
+                                {/* `MenuItem` passes no attributes through, so its name is text a screen reader reads. */}
+                                <span class="sr-only" text="More ways to save" />
+                                <Menu putInto="dropdown">
+                                    <MenuItem class="more-action" onClick="saveAndAnother" autoClose>
+                                        <div class="more-action-body">
+                                            <Icon name="duplicate" class="size-4" />
+                                            <span text="Save and replicate" />
+                                        </div>
+                                    </MenuItem>
+                                </Menu>
+                            </MenuItem>
+                        </Menu>
+                    </div>
                     <Button
-                        mod="hollow"
-                        class="editor-another"
-                        visible={expr(r.id, (id) => !id)}
-                        onClick="saveAndAnother"
+                        mod="primary"
+                        visible={hasValue(r.id)}
+                        text="Save"
+                        onClick="save"
                         disabled={truthy(r.saving)}
-                        attrs={{ "aria-label": "Save and replicate", title: "Save and replicate" }}
-                    >
-                        <Icon name="duplicate" class="size-4 sm:hidden" />
-                        <span class="sm:hidden" text="Replicate" />
-                        <span class="hidden sm:inline" text="Save and replicate" />
-                    </Button>
+                    />
                 </cx>
-            ) : null}
-            <Button mod="primary" text="Save" onClick="save" disabled={truthy(r.saving)} />
+            ) : (
+                <cx>
+                    <Button mod="primary" text="Save" onClick="save" disabled={truthy(r.saving)} />
+                </cx>
+            )}
         </cx>
     );
     const actions = (

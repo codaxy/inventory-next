@@ -53,7 +53,7 @@ const places = (
                                     text={p.target}
                                 />
                                 <span visible={falsy(p.href)} text={p.target} />
-                                {externalLink(p.external)}
+                                {externalLink(p.external, r.viewing)}
                             </div>
                         </div>
                         <span

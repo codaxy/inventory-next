@@ -164,7 +164,7 @@ export default createFunctionalComponent(() => (
                                         </div>
                                         <div class="volume-detail">
                                             <span text={m.$volume.detail} />
-                                            {externalLink(m.$volume.url)}
+                                            {externalLink(m.$volume.url, l.viewing)}
                                         </div>
                                     </div>
                                     <div

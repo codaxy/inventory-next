@@ -565,8 +565,43 @@ a.volume-row.volume-link {
     }
 }
 
-.cxb-button.editor-another {
+// Save with a chevron beside it, one primary control in two parts: the chevron opens "Save and
+// replicate". Save's own corners square off where the chevron joins it.
+.save-split {
+    display: inline-flex;
+    align-items: stretch;
+}
+
+.cxb-button.save-split-main {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.save-split-menu {
+    display: inline-flex;
+}
+
+.save-split-menu .cxb-menuitem.save-split-trigger {
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
+    justify-content: center;
+    width: 36px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid color-mix(in srgb, var(--color-surface) 35%, transparent);
+    border-radius: 0 var(--cx-button-border-radius) var(--cx-button-border-radius) 0;
+    background: var(--color-primary);
+    color: var(--color-surface);
+    cursor: pointer;
+}
+
+.cxs-focusable > .cxb-menuitem.save-split-trigger:hover,
+.cxs-focusable > .cxb-menuitem.save-split-trigger.cxs-open {
+    background: var(--color-primary-strong);
+}
+
+.cxs-focusable > .cxb-menuitem.save-split-trigger:focus-visible {
+    outline: 2px solid var(--color-primary-text);
+    outline-offset: 2px;
 }
