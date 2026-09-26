@@ -13,7 +13,7 @@ const certificate = {
     cert: path.resolve(__dirname, ".certs/localhost.pem"),
 };
 
-const wwwroot = path.resolve(__dirname, "../server/Codaxy.Inventory/wwwroot");
+const wwwroot = path.resolve(__dirname, "../server/Codaxy.Inventory.Web/wwwroot");
 
 /**
  * In development the page is still served by the server, on its own origin, so the session cookie
@@ -29,7 +29,10 @@ function serverShell(): Plugin {
                 "/index.html",
                 fs.readFileSync(path.resolve(__dirname, "index.html"), "utf8"),
             );
-            fs.writeFileSync(path.join(wwwroot, "index.html"), html.replace(/(src|href)="\//g, `$1="${DEV_SERVER}/`));
+            fs.writeFileSync(
+                path.join(wwwroot, "index.html"),
+                html.replace(/(src|href)="\//g, `$1="${DEV_SERVER}/`),
+            );
         },
     };
 }

@@ -1,5 +1,4 @@
-﻿using Codaxy.Inventory.Auth;
-using Codaxy.Inventory.Setup;
+﻿using Codaxy.Inventory.Web.Auth;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using Microsoft.Extensions.Options;

@@ -1,5 +1,5 @@
-﻿using Codaxy.Inventory.Auth;
-using Codaxy.Inventory.Setup;
+﻿using Codaxy.Inventory.Web.Auth;
+using Codaxy.Inventory.Web.Auth.OneTimeCodes;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;

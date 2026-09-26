@@ -1,4 +1,4 @@
-﻿using Codaxy.Inventory.Persistence;
+﻿using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.Tests.Integration.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -35,8 +35,8 @@ public class MigrationsTests(MigrationsFixture fixture) : IClassFixture<Migratio
 
         Assert.False(
             context.Database.HasPendingModelChanges(),
-            "The model has changed without a migration. Run `dotnet ef migrations add` in "
-                + "server/Codaxy.Inventory."
+            "The model has changed without a migration. Run `dotnet ef migrations add <Name> "
+                + "--project Codaxy.Inventory.App --startup-project Codaxy.Inventory.Web` in server/."
         );
     }
 

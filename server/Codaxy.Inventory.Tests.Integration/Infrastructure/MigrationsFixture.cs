@@ -1,4 +1,4 @@
-using Codaxy.Inventory.Persistence;
+using Codaxy.Inventory.App.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Testcontainers.PostgreSql;

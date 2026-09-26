@@ -1,5 +1,4 @@
-﻿using Codaxy.Inventory.Auth;
-using Codaxy.Inventory.Setup;
+﻿using Codaxy.Inventory.Web.Auth;
 using Microsoft.Extensions.Options;
 
 namespace Codaxy.Inventory.Tests.Unit;

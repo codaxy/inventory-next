@@ -21,6 +21,7 @@ Build and run instructions live in the root `README.md`; the process for doing w
 | [co-existence.md](co-existence.md) | Two applications on one database: what is frozen, what is copied, what is not shared |
 | [domain.md](domain.md) | `Asset` and its one-to-one subtypes, the entities that are not assets, codebooks, the directory, inventory numbers |
 | [persistence.md](persistence.md) | EF Core and Npgsql, UUID v7 keys, migrate-and-seed at startup, the audit log |
+| [server.md](server.md) | The `Web` host and the `App` domain, one folder per menu item, where an entity lives, naming |
 | [auth.md](auth.md) | The session cookie, who may sign in, Google, one-time codes |
 | [web-client.md](web-client.md) | CxJS with TypeScript, the route folder convention, the phone-first layout, the build |
 | [deployment.md](deployment.md) | The image, compose and its profiles, ports, where credentials come from |

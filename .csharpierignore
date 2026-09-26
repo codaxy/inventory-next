@@ -1,3 +1,3 @@
 # EF writes these and rewrites them whenever a migration is added; formatting them would be undone
 # by the next `migrations add`.
-server/Codaxy.Inventory/Persistence/Migrations/
+server/Codaxy.Inventory.App/Persistence/Migrations/

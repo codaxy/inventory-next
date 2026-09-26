@@ -12,7 +12,7 @@ So far it signs you in and does nothing else.
 dotnet dev-certs https --trust                # once per machine
 docker compose up -d                          # PostgreSQL and Mailpit
 cd client && npm install && npm start         # watches and serves the bundles, leave it running
-cd ../server && dotnet run --project Codaxy.Inventory
+cd ../server && dotnet run --project Codaxy.Inventory.Web
 ```
 
 Open **https://localhost:5443** — the server's own origin, in development as in production. The
@@ -34,7 +34,7 @@ The button appears only once a client id and secret are configured, and they nev
 file — the secret manager keeps them outside the repository:
 
 ```
-cd server/Codaxy.Inventory
+cd server/Codaxy.Inventory.Web
 dotnet user-secrets set "Auth:Google:ClientId" "your-id.apps.googleusercontent.com"
 dotnet user-secrets set "Auth:Google:ClientSecret" "your-secret"
 ```

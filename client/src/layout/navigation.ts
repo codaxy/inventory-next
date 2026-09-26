@@ -131,11 +131,16 @@ export const navigation: NavSection[] = [
         ],
     },
     {
-        title: "Logs",
+        title: "Administration",
         step: 7,
         items: [
-            { label: "Audit log", title: "Audit log", href: "~/audit-log", icon: "auditLog" },
-            { label: "Server log", title: "Server log", href: "~/log", icon: "serverLog" },
+            { label: "Audit log", title: "Audit log", href: "~/administration/audit-log", icon: "auditLog" },
+            {
+                label: "Server log",
+                title: "Server log",
+                href: "~/administration/server-log",
+                icon: "serverLog",
+            },
         ],
     },
 ];

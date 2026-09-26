@@ -12,13 +12,14 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS server
 ENV HUSKY=0
 WORKDIR /src
 COPY server/*.slnx ./
-COPY server/Codaxy.Inventory/*.csproj Codaxy.Inventory/
+COPY server/Codaxy.Inventory.App/*.csproj Codaxy.Inventory.App/
+COPY server/Codaxy.Inventory.Web/*.csproj Codaxy.Inventory.Web/
 COPY server/Codaxy.Inventory.Tests.Unit/*.csproj Codaxy.Inventory.Tests.Unit/
 COPY server/Codaxy.Inventory.Tests.Integration/*.csproj Codaxy.Inventory.Tests.Integration/
-RUN dotnet restore Codaxy.Inventory/Codaxy.Inventory.csproj
+RUN dotnet restore Codaxy.Inventory.Web/Codaxy.Inventory.Web.csproj
 COPY server/ ./
-COPY --from=client /src/client/dist/ Codaxy.Inventory/wwwroot/
-RUN dotnet publish Codaxy.Inventory/Codaxy.Inventory.csproj -c Release -o /app --no-restore
+COPY --from=client /src/client/dist/ Codaxy.Inventory.Web/wwwroot/
+RUN dotnet publish Codaxy.Inventory.Web/Codaxy.Inventory.Web.csproj -c Release -o /app --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
@@ -37,4 +38,4 @@ ENV ASPNETCORE_URLS=http://+:8080 \
     ASPNETCORE_ENVIRONMENT=Production \
     ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
 
-ENTRYPOINT ["dotnet", "Codaxy.Inventory.dll"]
+ENTRYPOINT ["dotnet", "Codaxy.Inventory.Web.dll"]

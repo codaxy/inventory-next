@@ -1,4 +1,4 @@
-﻿using Codaxy.Inventory.Persistence;
+﻿using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.Tests.Integration.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 

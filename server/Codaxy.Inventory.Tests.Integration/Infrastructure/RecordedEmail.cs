@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using Codaxy.Inventory.Auth;
+using Codaxy.Inventory.Web.Auth;
 
 namespace Codaxy.Inventory.Tests.Integration.Infrastructure;
 

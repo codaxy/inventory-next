@@ -1,6 +1,6 @@
-using Codaxy.Inventory.Auth;
-using Codaxy.Inventory.Persistence;
-using Codaxy.Inventory.Setup;
+using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.Web.Auth;
+using Codaxy.Inventory.Web.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -98,7 +98,7 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
             "..",
             "..",
             "..",
-            "Codaxy.Inventory",
+            "Codaxy.Inventory.Web",
             "wwwroot",
             "index.html"
         );

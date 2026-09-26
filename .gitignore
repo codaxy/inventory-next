@@ -14,7 +14,7 @@ node_modules
 client/.certs/
 *.sql.gz
 appsettings.Production.json
-server/Codaxy.Inventory/wwwroot/*
-!server/Codaxy.Inventory/wwwroot/.gitkeep
+server/Codaxy.Inventory.Web/wwwroot/*
+!server/Codaxy.Inventory.Web/wwwroot/.gitkeep
 client/dist/
 coverage/

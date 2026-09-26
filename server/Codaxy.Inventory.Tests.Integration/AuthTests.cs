@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using Codaxy.Inventory.Auth;
 using Codaxy.Inventory.Tests.Integration.Infrastructure;
+using Codaxy.Inventory.Web.Auth;
 
 namespace Codaxy.Inventory.Tests.Integration;
 
@@ -14,7 +14,7 @@ public class AuthTests(InventoryApplication app) : IClassFixture<InventoryApplic
     public async Task Options_reports_which_providers_are_configured()
     {
         var options = await Client()
-            .GetFromJsonAsync<AuthEndpoints.AuthOptionsResponse>("/api/auth/options");
+            .GetFromJsonAsync<Web.Auth.Session.Options.Endpoint.Response>("/api/auth/options");
 
         Assert.NotNull(options);
         Assert.True(options.OneTimeCode);
@@ -60,7 +60,9 @@ public class AuthTests(InventoryApplication app) : IClassFixture<InventoryApplic
         );
         Assert.Equal(HttpStatusCode.NoContent, verified.StatusCode);
 
-        var me = await client.GetFromJsonAsync<AuthEndpoints.MeResponse>("/api/auth/me");
+        var me = await client.GetFromJsonAsync<Web.Auth.Session.Me.Endpoint.Response>(
+            "/api/auth/me"
+        );
         Assert.Equal(email, me!.Email);
     }
 

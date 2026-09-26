@@ -1,0 +1,101 @@
+# Server
+
+Two projects. **`Codaxy.Inventory.Web` is the host**: `Program.cs`, `Setup/`, `wwwroot/`, settings,
+launch profiles, and `Auth/` — who may sign in and how is the host's business, beside the cookie and
+Google handlers `Setup/` configures. **`Codaxy.Inventory.App` is the domain**: the menu's items, and the
+persistence they share. `Web` references `App`, never the reverse, so hosting and authentication stay
+out of the domain.
+
+Each project's namespaces start with its name — `Codaxy.Inventory.App.Licenses`,
+`Codaxy.Inventory.Web.Auth` — so a namespace says which project holds it. Moving code between the two
+changes its namespace; for an entity, the migrations have to follow (see Traps).
+
+## Ruled out
+
+- **A `Persistence` project of its own.** The context declares a `DbSet` per entity and the constraint
+  names derive from them (see [persistence.md](persistence.md)), so it must see the entities, which the
+  items also own: a cycle, or an interface repeating every `DbSet` to break it.
+- **Repositories.** The context already is one; a wrapper either passes `IQueryable` through or
+  reinvents paging, filtering and sorting in front of it.
+- **A mediator, handler interfaces, a mapping library.** An endpoint takes the context and the services
+  it needs; mapping is written out where a reader sees what an endpoint exposes.
+
+## One folder per menu item
+
+**The domain is organised as vertical slices, and the slice is the use case**:
+`Activations/Deactivate/` cuts through one screen top to bottom — endpoint, request and response, its
+own logic — and sits in the folder of the menu item it belongs to. What is not a slice is named as
+such: `Shared/`, `Persistence/`, and the host in `Web`. Taken from the pattern: the cut by feature. Not
+taken: boundaries between items enforced by tests, since review holds them; data access or a contracts
+layer per slice, since the schema is one frozen graph and the context is shared.
+
+`App` mirrors the client's menu: a folder per section, and in it a folder per item —
+`Licenses/Activations`, `Directory/Locations` — so a screen has the same path on both sides.
+
+```
+Licenses/
+  Activations/
+    Activation.cs                 the item's entities and their configurations, at its root
+    List/  Create/  Deactivate/   one folder per use case, beside them
+```
+
+An item owns one or two entities, so it holds them directly; a `Domain/`–`Persistence/` pair would be
+two folders of one file each. A configuration exists only where convention is not enough.
+
+A use case holds a static `Endpoint` — a class cannot take its folder's name — with its request and
+response models and any logic only it needs. What several use cases of an item share sits at the item's
+root. A folder exists once there is something in it: none is created ahead of its screen, so
+`Administration/` appears with the first of its screens. `Auth/`, in `Web`, shows the use-case shape, and `MapAuth` is
+the one call `Program.cs` makes for it.
+
+**A setting belongs to the code that reads it**; `Setup/` binds it.
+
+## Where an entity lives
+
+**With the item that shows it**, and a lookup with no screen of its own with the item that uses it:
+countries, cities and states in `Directory/Locations`, currencies and periods in `Licenses/Licenses`.
+
+**`Shared/` holds what several items use and none can own**, each as a folder of things that belong
+together — never a bin sorted by kind:
+
+- **`Shared/Assets`** — `Asset` and its categories, statuses and types, `Sequence`, maintenance
+  contracts, business entities: `Asset` is the base of devices, furniture and licences alike.
+- **`Shared/Classification`** — confidentiality, integrity, availability and importance, which assets
+  and information always carry as a set.
+- **`Shared/Volumes`** — `Volume` and its type. Licences, software and services, clouds, software and
+  activations all point at a volume.
+
+**`Persistence/`** holds the context, the migrations, the seed data, the audit log and its interceptor,
+and `IIdentifiable`. It is neither an item nor shared domain.
+
+Any item may read another's entities and hold a foreign key to them; only the owner writes them. The
+schema is one graph and frozen, so an entity referencing another item's is a foreign key, not a breach.
+What an item's *code* reaches into is review's to hold; nothing enforces it.
+
+## Naming
+
+**No folder takes the name of a class it would shadow.** A namespace wins every lookup from inside
+`Codaxy.Inventory.App`, and entity names are frozen by the audit log. Where the plain name is taken, a
+folder takes the mechanical plural its `DbSet` already uses: `Furnitures/`, `Informations/`,
+`Infrastructure/Softwares/`, `Administration/AuditLogs/`.
+
+## Traps
+
+**Moving an entity changes its namespace, and two things have to follow.** The table-renaming loop in
+`InventoryContext` walks entities by class name — walked in EF's full-name order, a move renames
+constraints; `MigrationsTests` fails on that. The model snapshot and the migration designer files name
+types as strings and follow only by search and replace: **a stale string passes every test**, so grep
+for the old namespace after a move. Designer strings naming entities dropped long ago keep their old
+namespace.
+
+**`Directory/` shadows `System.IO.Directory`** inside `Codaxy.Inventory.App`: `Directory.Exists` there
+resolves to the menu section and fails to compile. Write `System.IO.Directory`. The tests and `Web` sit
+outside that namespace and are unaffected.
+
+**`App` uses the plain SDK, so it declares the implicit usings `Sdk.Web` would add** — `Http`,
+`Routing`, `Builder`, `Logging` and the rest. Without them every endpoint fails on `IResult` and
+`HttpContext`.
+
+**`dotnet ef` needs both projects**: `--project Codaxy.Inventory.App --startup-project
+Codaxy.Inventory.Web`. The migrations live with the context in `App`; the design package and the
+configuration live in `Web`.

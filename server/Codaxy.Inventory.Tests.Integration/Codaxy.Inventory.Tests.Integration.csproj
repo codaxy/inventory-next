@@ -21,6 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Codaxy.Inventory\Codaxy.Inventory.csproj" />
+    <ProjectReference Include="..\Codaxy.Inventory.Web\Codaxy.Inventory.Web.csproj" />
   </ItemGroup>
 </Project>

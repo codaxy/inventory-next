@@ -5,8 +5,8 @@ were taken; correct it where it is wrong rather than working around it.*
 
 PostgreSQL through EF Core and Npgsql. `InventoryContext` exposes one `DbSet` per entity and applies
 every `IEntityTypeConfiguration` in the assembly — the entity classes carry no mapping attributes, so
-mapping lives in `Persistence/Configurations/` or nowhere. Entities not named there run entirely on
-convention.
+mapping lives in a configuration beside its entity or nowhere. Entities without one
+run entirely on convention.
 
 ## Naming
 
@@ -25,6 +25,12 @@ after the naming convention has run, so they come back as `FK_Activation_Asset_A
 them by hand bypasses the uniquifying EF does at PostgreSQL's 63-character limit, where the two
 foreign keys on `electronic_device_type_electronic_device_tag` then collide. Constraint names are not
 worth that, so they are left alone.
+
+**Mostly the `DbSet`, and the loop's order decides which.** Renaming a table re-derives the foreign keys
+still named after it, so a constraint named before its principal is renamed carries `assets`, one named
+after carries `asset` — `fk_activation_assets_asset_id` beside `fk_information_location_cloud_cloud_id`.
+The loop walks entities by class name, the order the schema was built in. EF's own order is by full
+name, and walking that renames constraints whenever an entity changes namespace.
 
 **The convention is applied in `InventoryContext.OnConfiguring`, not beside each `UseNpgsql`.** Three
 places build a context — the app, the integration factory and the migrations fixture — and one that
@@ -45,8 +51,8 @@ The application allocates the id rather than letting the database default it, wh
 asset and its subtype row share one key before either is inserted.
 
 Besides the primary keys, `Asset.InventoryNumber` carries the only unique constraint in the database.
-Names in the codebooks and the directory are not unique: whether two vendors may share one is a product question nobody has
-answered, so the schema does not answer it either.
+Names in the codebooks and the directory are not unique: whether two vendors may share one is a product
+question nobody has answered, so the schema does not answer it either.
 
 ## Migrations
 
@@ -59,14 +65,16 @@ deployment decision, and an application that knows what "Testing" means has a te
 into it. The integration tests turn it off and build their schema from the model; `MigrationsTests`
 is what runs the migrations, against a database of its own.
 
-**The migrations are the original's files, unchanged** — block-scoped namespaces and all, because
-EF Core's generator ignores the file-scoped setting in `.editorconfig` and a converted history would
-diverge from what the next `migrations add` writes. Everything else carried over was converted.
+**The migrations are the original's files, their bodies unchanged** — block-scoped namespaces and
+all, because EF Core's generator ignores the file-scoped setting in `.editorconfig` and a converted
+history would diverge from what the next `migrations add` writes. The namespace itself follows the
+project, `Codaxy.Inventory.App.Persistence.Migrations`, which is what that command generates. Everything
+else carried over was converted.
 
 **Their designer files and the model snapshot are not history.** Each carries the CLR type names of
-the model, so renaming a namespace has to reach them: the snapshot is what EF diffs against, and the
-designers will not compile without it. The migration bodies name nothing but tables and columns and
-never change.
+the model, so renaming a namespace has to reach them: the snapshot is what EF diffs against. They name
+types as strings, so a stale one still compiles and passes every test. The migration bodies name
+nothing but tables and columns.
 
 **The history is copied from the original application and does not grow here** until that application
 is deleted — see [co-existence.md](co-existence.md). A migration added on one side only would leave
@@ -75,8 +83,8 @@ the two describing different schemas with nothing to say which is right.
 ## Seeding
 
 `SeedData()` is idempotent per table — each block runs only when its table is empty — and fills the
-codebooks and a starting directory with the values the product expects. It is safe to run against a populated database, but it
-will not repair or update a table that already has any row in it.
+codebooks and a starting directory with the values the product expects. It is safe to run against a
+populated database, but it will not repair or update a table that already has any row in it.
 
 ## Audit log
 

@@ -26,6 +26,11 @@ real PostgreSQL container and drive it through HTTP, because that is what exerci
 projection and the mapping between models — the places this application is most likely to be wrong.
 Unit tests are for logic that has a shape of its own: seat counts, expiry, allocation.
 
+**The test projects divide by what a test needs to run, not by what it covers.** The unit project
+references `App` and `Web` but needs nothing — no Docker, no host — so it always runs; without the
+host-testing package it cannot boot the application. The integration project references `Web`, starts
+PostgreSQL through Docker and drives the host over HTTP.
+
 ## Formatting
 
 CSharpier formats the server and Prettier the client, both pinned and both checked in CI, so
@@ -34,7 +39,7 @@ tool beside CSharpier, so the repository root carries no `package.json`. It runs
 only, with exactly the globs CI checks — a hook broader than CI rewrites files CI never looks at,
 and a narrower one lets a commit fail CI — then re-stages them. Prettier runs from the client's own
 install, so its version is pinned once. The server's restore installs the hook through a target in
-`Codaxy.Inventory.csproj`; `HUSKY=0` turns that off in the image build and CI, which have no
+`Codaxy.Inventory.Web.csproj`; `HUSKY=0` turns that off in the image build and CI, which have no
 repository to hook.
 
 **Re-staging adds whole files.** A file committed with only some of its hunks staged goes in with all

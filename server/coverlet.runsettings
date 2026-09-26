@@ -7,7 +7,7 @@
           <Format>cobertura</Format>
           <!-- Generated code, composition and the persistence carried over from the original are
                excluded: see docs/engineering/testing.md. -->
-          <Exclude>[*]Codaxy.Inventory.Persistence.Migrations.*,[*]Codaxy.Inventory.Persistence.InventoryContextSeedData,[*]Codaxy.Inventory.Persistence.InventoryContext,[*]Codaxy.Inventory.Db.*</Exclude>
+          <Exclude>[*]Codaxy.Inventory.App.Persistence.Migrations.*,[*]Codaxy.Inventory.App.Persistence.InventoryContextSeedData,[*]Codaxy.Inventory.App.Persistence.InventoryContext,[*]Codaxy.Inventory.Db.*</Exclude>
           <ExcludeByFile>**/Persistence/Migrations/**,**/Program.cs</ExcludeByFile>
           <SkipAutoProps>true</SkipAutoProps>
         </Configuration>

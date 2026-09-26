@@ -1,5 +1,6 @@
 <Solution>
+  <Project Path="Codaxy.Inventory.App/Codaxy.Inventory.App.csproj" />
   <Project Path="Codaxy.Inventory.Tests.Integration/Codaxy.Inventory.Tests.Integration.csproj" />
   <Project Path="Codaxy.Inventory.Tests.Unit/Codaxy.Inventory.Tests.Unit.csproj" />
-  <Project Path="Codaxy.Inventory/Codaxy.Inventory.csproj" />
+  <Project Path="Codaxy.Inventory.Web/Codaxy.Inventory.Web.csproj" />
 </Solution>
