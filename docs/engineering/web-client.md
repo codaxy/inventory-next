@@ -148,17 +148,17 @@ that closed it has already left the screen.
 
 **Every entity has a page of its own**, never a window, **and a row opens it read-only**:
 `~/<item>/:id` shows the record, Delete and Edit in the header beside its name — icons only on a phone,
-named for screen readers; editing is `~/<item>/:id/edit`, Cancel and Save in a bar pinned to the bottom
-of the viewport, where the form ends; `new` opens in editing, there being nothing to show yet. A
+named for screen readers; editing is `~/<item>/:id/edit`, Cancel and Save in the card's footer; `new` opens in editing, there being nothing to show yet. A
 record's actions go where the eye starts, a form's commit where the form finishes. Not everyone will be allowed to edit, and
 a record should not change because someone clicked into it. Cancel and a successful Save of an edit
 return to the read-only page; a new record's Save and Cancel return to the list. Both modes are one form, switched by the `ValidationGroup`'s `viewMode`, which every
 field inside it follows. The routes come after the menu's own, since a menu item's href can share the
 prefix.
 
-The page is the header band with a back link and the record's name, the form as sections in the
-narrow column, and, while editing, the bar spanning the page with its buttons lined up with the
-form. In view mode a field is text lined up with its label, and a list of values — the types on a tag —
+The page is the header band with a back link and the record's name — as tall in every mode as with
+its actions, so switching mode never moves the page — and the form as a card in the narrow column. While editing, the card ends in a footer like a window's — tinted, ruled, buttons at
+the end — sticky at the viewport's foot, so a long form keeps Save in reach and a short one does not
+float a full-width bar over empty canvas. In view mode a field is text lined up with its label, and a list of values — the types on a tag —
 is chips, each a link to its record.
 
 **Anything that goes somewhere is a link**, an anchor with an address — a row, a chip naming another

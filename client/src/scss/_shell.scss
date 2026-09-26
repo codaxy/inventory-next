@@ -68,13 +68,12 @@
 }
 
 .page-header,
-.list-bar,
-.editor-actions {
+.list-bar {
     display: grid;
     grid-template-columns: minmax(0, var(--page-width));
 }
 
-.page-body > :not(.page-header, .list-bar, .editor-actions) {
+.page-body > :not(.page-header, .list-bar) {
     max-width: var(--page-width);
 }
 

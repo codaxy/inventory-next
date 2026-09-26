@@ -1,9 +1,10 @@
-// An editor page: the header band and the action bar span the page like every screen's; the form
-// between them is a column that stops growing on a wide screen, and the bar's buttons line up with it.
-// The bar is pinned to the bottom of the viewport, so Save is in reach however long the form is.
+// An editor page: the header band spans the page like every screen's; the form below it is a card in
+// the narrow column, its commit the card's footer.
 
-// The title and, while viewing, the record's actions on the same line.
+// The title and, while viewing, the record's actions on the same line. As tall as the actions in
+// every mode, so the header does not change height between viewing and editing.
 .editor-heading {
+    min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -162,38 +163,31 @@ a.editor-chip:hover {
     color: var(--color-danger-text);
 }
 
-.editor-actions-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-}
-
+// The card's footer, as a window's is: tinted, ruled, buttons at the end. Sticky, so a form taller
+// than the screen keeps Save in reach, and it rests at the card's foot on a short one.
 .editor-actions {
     position: sticky;
     bottom: 0;
     z-index: 5;
-    margin: 1rem -0.75rem calc(-1.25rem - env(safe-area-inset-bottom));
-    padding: 0.75rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin: 1rem -1rem -1rem;
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
     border-top: 1px solid var(--color-line);
-    background: var(--color-surface);
+    border-radius: 0 0 11px 11px;
+    background: var(--color-canvas);
 
     @media (min-width: 640px) {
-        margin: 1.25rem -1.25rem calc(-1.5rem - env(safe-area-inset-bottom));
+        margin: 1.25rem -1.25rem -1.25rem;
         padding: 0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom));
     }
 
-    .editor-actions-end {
-        display: flex;
-        gap: 0.5rem;
-        margin-left: auto;
+    .cxb-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
     }
-}
-
-.editor-actions .cxb-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
 }
 
 .cxb-button.editor-delete {

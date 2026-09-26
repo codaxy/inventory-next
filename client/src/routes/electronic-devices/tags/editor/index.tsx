@@ -130,24 +130,19 @@ export default createFunctionalComponent(() => (
                                 />
                             </div>
                         </div>
+                        {/* The form's commit, the card's footer; it sticks to the viewport's foot while a long form scrolls. */}
+                        <div class="editor-actions" visible={falsy(t.viewing)}>
+                            <LinkButton
+                                mod="hollow"
+                                text="Cancel"
+                                href={expr(t.id, (id) =>
+                                    id ? `~/electronic-devices/tags/${id}` : "~/electronic-devices/tags",
+                                )}
+                            />
+                            <Button mod="primary" text="Save" onClick="save" disabled={t.saving} />
+                        </div>
                     </section>
                 </ValidationGroup>
-            </div>
-
-            {/* The form's commit, where the form ends; pinned so a long form keeps it in reach. */}
-            <div class="editor-actions" visible={falsy(t.viewing)}>
-                <div class="editor-actions-row">
-                    <div class="editor-actions-end">
-                        <LinkButton
-                            mod="hollow"
-                            text="Cancel"
-                            href={expr(t.id, (id) =>
-                                id ? `~/electronic-devices/tags/${id}` : "~/electronic-devices/tags",
-                            )}
-                        />
-                        <Button mod="primary" text="Save" onClick="save" disabled={t.saving} />
-                    </div>
-                </div>
             </div>
         </div>
     </cx>
