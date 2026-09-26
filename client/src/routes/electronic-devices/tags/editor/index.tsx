@@ -104,8 +104,13 @@ export default createFunctionalComponent(() => (
                                 />
                             </div>
                             <div class="editor-wide">
-                                <div class="editor-label" text="Types with this tag" />
+                                <div
+                                    class="editor-label"
+                                    id="electronic-devices-tags-editor-types-with-this-tag-label"
+                                    text="Types with this tag"
+                                />
                                 <LookupField
+                                    id="electronic-devices-tags-editor-types-with-this-tag"
                                     visible={falsy(t.viewing)}
                                     records={t.draft.types}
                                     options={t.typeOptions}

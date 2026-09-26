@@ -10,6 +10,12 @@ import ServerLog from "./administration/server-log";
 import TagEditor from "./electronic-devices/tags/editor";
 import Tags from "./electronic-devices/tags";
 import TypeEditor from "./electronic-devices/types/editor";
+import Licenses from "./licenses";
+import ActivationEditor from "./licenses/activations/editor";
+import Activations from "./licenses/activations";
+import LicenseEditor from "./licenses/editor";
+import SoftwareServiceEditor from "./licenses/software-services/editor";
+import SoftwareServices from "./licenses/software-services";
 import Types from "./electronic-devices/types";
 import Controller from "./Controller";
 import NotFound from "./not-found";
@@ -21,6 +27,9 @@ const screens: Record<string, any> = {
     "~/administration/server-log": ServerLog,
     "~/electronic-devices/tags": Tags,
     "~/electronic-devices/types": Types,
+    "~/licenses": Licenses,
+    "~/licenses/activations": Activations,
+    "~/licenses/software-services": SoftwareServices,
 };
 
 // The first matching route wins, so order is the routing table: signed in or not is the outermost
@@ -76,6 +85,22 @@ export default (
                     </Route>
                     <Route route="~/electronic-devices/types/:id" url={$app.url}>
                         <TypeEditor />
+                    </Route>
+                    {/* Before `~/licenses/:id`, which would take `activations` and `software-services` for an id. */}
+                    <Route route="~/licenses/activations/:id" url={$app.url}>
+                        <ActivationEditor />
+                    </Route>
+                    <Route route="~/licenses/software-services/:id/edit" url={$app.url}>
+                        <SoftwareServiceEditor />
+                    </Route>
+                    <Route route="~/licenses/software-services/:id" url={$app.url}>
+                        <SoftwareServiceEditor />
+                    </Route>
+                    <Route route="~/licenses/:id/edit" url={$app.url}>
+                        <LicenseEditor />
+                    </Route>
+                    <Route route="~/licenses/:id" url={$app.url}>
+                        <LicenseEditor />
                     </Route>
 
                     <NotFound />

@@ -1,4 +1,5 @@
 import {
+    Undo02Icon,
     Add01Icon,
     AppStoreIcon,
     ArrowLeft01Icon,
@@ -7,9 +8,11 @@ import {
     Briefcase01Icon,
     Building03Icon,
     Cancel01Icon,
+    CancelCircleIcon,
     Chair01Icon,
     CheckmarkBadge01Icon,
     Clock01Icon,
+    Copy01Icon,
     CloudIcon,
     CommandLineIcon,
     ComputerIcon,
@@ -89,6 +92,9 @@ const uiIcons = {
     refresh: RefreshIcon,
     edit: PencilEdit01Icon,
     delete: Delete02Icon,
+    duplicate: Copy01Icon,
+    deactivate: CancelCircleIcon,
+    reactivate: Undo02Icon,
 } satisfies Record<string, IconData>;
 
 export const icons = { ...navIcons, ...uiIcons };

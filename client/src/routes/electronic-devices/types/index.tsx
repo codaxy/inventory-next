@@ -72,8 +72,13 @@ export default createFunctionalComponent(() => {
                     <div id="type-filters" class="list-pane" visible={s.filtersOpen}>
                         <div class="list-pane-grid">
                             <div class="list-filter">
-                                <div class="list-filter-label" text="Tags" />
+                                <div
+                                    class="list-filter-label"
+                                    id="electronic-devices-types-tags-label"
+                                    text="Tags"
+                                />
                                 <LookupField
+                                    id="electronic-devices-types-tags"
                                     records={f.tags}
                                     options={s.tagOptions}
                                     multiple

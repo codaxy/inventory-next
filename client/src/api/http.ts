@@ -42,3 +42,12 @@ export function fieldErrors<T extends object>(error: ApiError): T {
         Object.entries(error.errors).map(([field, messages]) => [field, messages[0]]),
     ) as T;
 }
+
+/** A query string from a query object: empty values left out, an array as the key repeated. */
+export function toQuery(params: object): string {
+    const search = new URLSearchParams();
+    for (const [key, value] of Object.entries(params))
+        if (Array.isArray(value)) for (const v of value) search.append(key, String(v));
+        else if (value !== undefined && value !== null && value !== "") search.set(key, String(value));
+    return search.toString();
+}

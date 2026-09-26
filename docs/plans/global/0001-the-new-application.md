@@ -36,7 +36,7 @@ wrong.
    getting slowly.
 2. **Electronic devices.** The largest list and the richest editor: if paging, filtering and the
    phone layout survive this, they survive everything.
-3. **Licences, volumes and activations.** The only area with behaviour rather than shape — seat
+3. ~~**Licences, volumes and activations.**~~ The only area with behaviour rather than shape — seat
    counts, activation and its reversal, subscription expiry.
 4. **Furniture, the infrastructure — virtual machines, clouds, software — and the remaining asset
    types.** Shapes already proven by step 2.

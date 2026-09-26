@@ -202,3 +202,120 @@
     color: var(--color-primary-text);
     vertical-align: 1px;
 }
+
+// Where a subscription stands: red once it has passed, amber within the fortnight, green after.
+.status-tag {
+    display: inline-block;
+    padding: 0.0625rem 0.5rem;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.status-tag-expired {
+    background: var(--color-danger-wash);
+    color: var(--color-danger-text);
+}
+
+.status-tag-soon {
+    background: var(--color-warn-wash);
+    color: var(--color-warn-text);
+}
+
+.status-tag-regular {
+    background: var(--color-success-wash);
+    color: var(--color-success-text);
+}
+
+// A record that no longer counts — a deactivated activation — stays listed, muted.
+.record-row.record-row-ended > span:not(.record-status) {
+    color: var(--color-ink-faint);
+}
+
+.record-row.record-row-ended .record-title {
+    font-weight: 500;
+}
+
+// Software and services: on a phone the name, category and manufacturer, the volume count; from `md`
+// a column each.
+.software-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns:
+            minmax(0, 20rem) minmax(0, 12rem) minmax(0, 14rem) minmax(0, 26rem)
+            minmax(0, 7rem);
+    }
+}
+
+// Activations: on a phone the software, the licence, who or what holds the seats, when; from `md` a
+// column each, the dates and the count narrow.
+.activation-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns:
+            minmax(0, 16rem) minmax(0, 16rem) minmax(0, 16rem) minmax(0, 5rem) minmax(0, 7rem)
+            minmax(0, 11rem) minmax(0, 13rem);
+    }
+}
+
+// A second fact beside a cell's value — "Device · #100893" — lighter than the value.
+.record-note {
+    margin-left: 0.375rem;
+    font-size: 11.5px;
+    color: var(--color-ink-muted);
+}
+
+.record-row > .record-status {
+    overflow: visible;
+}
+
+// An ended record's tag loses its colour: its licence's expiry no longer matters to it.
+.record-row-ended .status-tag {
+    background: var(--color-raised);
+    color: var(--color-ink-faint);
+}
+
+// Licences: on a phone the name first, then vendor and value, when bought, the subscription; the number
+// and the change time from `md`, where every column shows.
+.license-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    > .license-number,
+    > .license-changed {
+        display: none;
+    }
+
+    > :nth-child(2) {
+        order: -1;
+    }
+
+    @media (min-width: 768px) {
+        grid-template-columns:
+            4.5rem minmax(0, 22rem) minmax(0, 14rem) minmax(0, 9rem) minmax(0, 7rem)
+            minmax(0, 14rem) minmax(0, 7rem);
+
+        > .license-number,
+        > .license-changed {
+            display: block;
+        }
+
+        > :nth-child(2) {
+            order: 0;
+        }
+    }
+}
+
+.license-value {
+    font-variant-numeric: tabular-nums;
+}
+
+// A flag that asks for attention — a record marked incomplete.
+.record-flag.record-flag-warn {
+    border-color: var(--color-warn-edge);
+    background: var(--color-warn-wash);
+    color: var(--color-warn-text);
+}

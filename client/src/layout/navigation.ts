@@ -59,7 +59,7 @@ export const navigation: NavSection[] = [
                 icon: "activations",
             },
             {
-                label: "Software & Services",
+                label: "Software & services",
                 title: "Software and services",
                 href: "~/licenses/software-services",
                 icon: "softwareServices",

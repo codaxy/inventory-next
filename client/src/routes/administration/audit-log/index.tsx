@@ -100,8 +100,13 @@ export default createFunctionalComponent(() => {
                             </div>
 
                             <div class="list-filter">
-                                <div class="list-filter-label" text="Record type" />
+                                <div
+                                    class="list-filter-label"
+                                    id="administration-audit-log-record-type-label"
+                                    text="Record type"
+                                />
                                 <LookupField
+                                    id="administration-audit-log-record-type"
                                     value={f.table}
                                     options={s.tables}
                                     placeholder="Any type"
@@ -110,8 +115,13 @@ export default createFunctionalComponent(() => {
                             </div>
 
                             <div class="list-filter">
-                                <div class="list-filter-label" text="Changed by" />
+                                <div
+                                    class="list-filter-label"
+                                    id="administration-audit-log-changed-by-label"
+                                    text="Changed by"
+                                />
                                 <LookupField
+                                    id="administration-audit-log-changed-by"
                                     value={f.email}
                                     options={s.emails}
                                     placeholder="Anyone"

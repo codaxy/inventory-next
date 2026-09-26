@@ -136,6 +136,10 @@ without borders, so it reads as a caption under the search rather than a second 
 chevrons stay, disabled, when nothing matches, as on a single page; the pager under the list goes. Not
 infinite scroll: it loses the reader's place and cannot reach page 40 without loading 39.
 
+**A list can be opened filtered from the address** — a licence's volume links to
+`~/licenses/activations?licenseId=…&softwareId=…` — read once when the list opens, the filters' names
+filled in once the options arrive. The list does not write its state back to the address.
+
 **Only the latest request writes.** A controller numbers its requests and drops any answer that is not
 the newest, or a slow early answer lands over a later one.
 
@@ -160,7 +164,10 @@ disabled — 44px to a
 finger by padding its margin takes back — and the record's name — as tall in every mode as with
 its actions, so switching mode never moves the page — and the form as a card in the narrow column. While editing, the card ends in a footer — the card's own white under a rule,
 buttons at the end; tinted, it takes the page's colour and reads as a hole in the card — sticky at the viewport's foot, so a long form keeps Save in reach and a short one does not
-float a full-width bar over empty canvas. In view mode a field is text lined up with its label, and a list of values — the types on a tag —
+float a full-width bar over empty canvas. **A form of several cards commits in a bar of its own
+below the last** (`editor-actions-bar`): a footer inside one card sticks only while that card is on
+screen. A view-mode value reads at the input's size whatever the field — cx sets text fields'
+larger than pickers'. In view mode a field is text lined up with its label, and a list of values — the types on a tag —
 is chips, each a link to its record.
 
 **Anything that goes somewhere is a link**, an anchor with an address — a row, a chip naming another
@@ -191,7 +198,10 @@ value (`record-blank`, `ink-ghost` against values in `ink-soft`: a thin dash is 
 colour, so anything short of a ghost reads as one more value), never words like "No tags" that read as one more value; on a phone's card the
 line goes. A yes/no that
 most rows answer no — a type holding licences — is a flag beside the name (`record-flag`), not a column
-of "No".
+of "No". A subscription's status is a tag (`status-tag`) — red once
+expired, amber within the fortnight, green after, grey on a record that has ended — and always says
+which in words, never by colour alone. A record that has ended, a deactivated activation, stays
+listed, muted (`record-row-ended`).
 
 ## Dates
 
@@ -297,6 +307,14 @@ must appear in both the header and every script tag. Script hashes in the header
 that a static shell supports. Worth deciding before there are screens, not after.
 
 ## Traps
+
+**Free text is often a URL, which has nowhere to break**: anything showing a typed value in a flex or
+grid cell sets `overflow-wrap: anywhere`, or one long description widens the page on a phone — and a
+check against records with short text never sees it.
+
+**A closed `LookupField` ignores `inputAttrs`**: its only name is `aria-labelledby="<id>-label"`,
+pointing at a label cx renders only in a labels layout. Give the field an `id` and the visible label
+beside it the matching `<id>-label`; in a `Repeater`, bind both to the row's key.
 
 **Text the original emptied is `""`, not `null`.** Its forms saved a cleared description as an empty
 string, so a list that shows "—" for a missing value tests for blank (`||`), not for `null` (`??`), or

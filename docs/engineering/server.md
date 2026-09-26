@@ -108,6 +108,16 @@ beside `MapAuth`, and each item a group beneath it named after its URL. **An ite
 narrow has its own named policy now**, defined in the host — the server log's `ServerLog`, today any
 session — so restricting it to a role is one line, not a search for every endpoint it covers.
 
+**An asset is written through `Shared/Assets/AssetWrites`**: the inventory number taken from
+`Sequence`, the asset type found by its seeded name on the server, the importance computed, and
+`LastModified` set by the server to the microsecond PostgreSQL keeps.
+
+**An asset's update is checked against the `lastModified` it was loaded with**: the body echoes it,
+and one that no longer matches is a 409 — someone saved since, and their edit is not overwritten.
+
+**A state change is its own endpoint** — `POST …/{id}/deactivate`, `…/reactivate` — never a `PUT` of a
+wide model: it carries only what the change takes, and answers 409 from the wrong state.
+
 **A delete the database would refuse is a 409 that says what holds the record** — "113 devices are of
 this type" — checked before the save, not left to surface as a foreign-key 500.
 
@@ -116,6 +126,10 @@ this type" — checked before the save, not left to surface as a foreign-key 500
 JSON's field names, so a message lands under the field it names).
 
 ## Traps
+
+**A new child added to a tracked parent's collection with its key already set is taken for an
+existing row**, and EF saves it as an update that matches nothing — a concurrency exception. Add it
+to the context as well as to the collection.
 
 **Order on the entity, then project.** EF cannot translate an `OrderBy` over the members of a record
 built in a `Select`; a list sorts its query and projects last.

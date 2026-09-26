@@ -25,6 +25,35 @@ public static class InventoryApi
         ElectronicDevices.Types.Update.Endpoint.Map(types);
         ElectronicDevices.Types.Delete.Endpoint.Map(types);
 
+        var licenses = api.MapGroup("/licenses");
+
+        Licenses.Licenses.List.Endpoint.Map(licenses);
+        Licenses.Licenses.Options.Endpoint.Map(licenses);
+        Licenses.Licenses.Get.Endpoint.Map(licenses);
+        Licenses.Licenses.Create.Endpoint.Map(licenses);
+        Licenses.Licenses.Update.Endpoint.Map(licenses);
+        Licenses.Licenses.Delete.Endpoint.Map(licenses);
+
+        var activations = api.MapGroup("/licenses/activations");
+
+        Licenses.Activations.List.Endpoint.Map(activations);
+        Licenses.Activations.Options.Endpoint.Map(activations);
+        Licenses.Activations.Volumes.Endpoint.Map(activations);
+        Licenses.Activations.Get.Endpoint.Map(activations);
+        Licenses.Activations.Create.Endpoint.Map(activations);
+        Licenses.Activations.Deactivate.Endpoint.Map(activations);
+        Licenses.Activations.Reactivate.Endpoint.Map(activations);
+        Licenses.Activations.Delete.Endpoint.Map(activations);
+
+        var softwareServices = api.MapGroup("/licenses/software-services");
+
+        Licenses.SoftwareServices.List.Endpoint.Map(softwareServices);
+        Licenses.SoftwareServices.Options.Endpoint.Map(softwareServices);
+        Licenses.SoftwareServices.Get.Endpoint.Map(softwareServices);
+        Licenses.SoftwareServices.Create.Endpoint.Map(softwareServices);
+        Licenses.SoftwareServices.Update.Endpoint.Map(softwareServices);
+        Licenses.SoftwareServices.Delete.Endpoint.Map(softwareServices);
+
         var auditLog = api.MapGroup("/administration/audit-log");
 
         Administration.AuditLogs.List.Endpoint.Map(auditLog);

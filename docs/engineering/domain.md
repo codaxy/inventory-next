@@ -48,10 +48,28 @@ under a licence, and an `Activation` assigns one seat of a volume to a person, a
 both. `MaintenanceContract` hangs off an asset, optionally.
 
 **An activation is never edited.** Once created, the only thing that changes is whether it is
-deactivated: `ActivationUpdate` carries a deactivation date and nothing else, and the editor is
-read-only for an existing record. Deactivating is reversible — clearing the date reopens the
-activation, discarding the date it held — so the pair is the whole of its lifecycle. A wrong
-activation is deleted and made again.
+deactivated: two transitions, `deactivate` with a date on or after the activation's and `reactivate`
+clearing it — each refused from the wrong state — and the page is read-only for an existing record.
+Reactivating discards the date the deactivation held, so the pair is the whole of its lifecycle. A
+wrong activation is deleted and made again.
+
+**An activation's assignee follows the volume's type**: a person for a per-user volume, otherwise an
+electronic device whose type holds licences. **Seats past a volume's quantity warn, they are not
+refused** — the original only warned, and over-allocation is recorded rather than prevented. Seats in
+use are the sum of the quantities of the volume's active activations.
+
+**A subscription is expired before its date, expires soon within fifteen days of it, and is current
+after**; a licence without a date has no status. A licence expiring today is still valid today.
+Today is the server's UTC date. Auto-renewal is a recorded flag and changes none of it.
+
+**Importance is computed from the three weights** of confidentiality, integrity and availability —
+3–4 Low, 5–7 Medium, 8–9 High — and is absent unless all three are chosen. The server computes it on
+every save; the original's client did, and sent the result.
+
+**What stands on a volume keeps it**: its activations, clouds and software entries cascade with it, so
+a volume holding any is not removed from its licence, and a licence with such a volume — or with a
+maintenance contract — is not deleted. A software or service a volume is of is not deleted either. An
+existing volume is kept as it is or removed; editing one is not offered, as in the original.
 
 ## Codebooks
 

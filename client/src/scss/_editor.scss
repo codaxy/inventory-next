@@ -95,13 +95,19 @@
     grid-column: 1 / -1;
 }
 
-// A field in view mode is text under its label, lined up with it: the input's padding and height go.
+// A field in view mode is text under its label, lined up with it: the input's padding and height go,
+// and every kind of field reads at one size — cx sets text fields' larger than pickers'.
 .editor-grid .cxs-view-mode {
     min-height: 0;
     padding-left: 0;
     padding-right: 0;
+    font-size: var(--cx-input-font-size);
     white-space: pre-wrap;
     overflow-wrap: anywhere;
+
+    * {
+        font-size: inherit;
+    }
 }
 
 // A value the form shows but no field holds — a count, a yes/no put in words — set as a view-mode
@@ -184,6 +190,19 @@ a.editor-chip:hover {
     color: var(--color-danger-text);
 }
 
+// A form of several cards commits below the last, in a bar of its own: a footer inside one card
+// sticks only while that card is on screen.
+.editor-actions.editor-actions-bar {
+    margin: 1rem 0 0;
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    box-shadow: 0 -6px 16px -12px color-mix(in srgb, var(--color-ink) 35%, transparent);
+
+    @media (min-width: 640px) {
+        margin: 1rem 0 0;
+    }
+}
+
 // The card's footer: the card's own white under a rule, buttons at the end — tinted, it takes the
 // page's colour and reads as a hole in the card. Sticky, so a form taller than the screen keeps Save
 // in reach, and it rests at the card's foot on a short one.
@@ -214,5 +233,116 @@ a.editor-chip:hover {
 
 .cxb-button.editor-delete {
     border-color: var(--color-danger);
+    color: var(--color-danger-text);
+}
+
+// A link standing in for a value — the licence an activation draws on.
+.editor-link {
+    display: inline-block;
+    color: var(--color-primary-text);
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+// What the form lets through but the reader should know: seats past a volume's quantity.
+.editor-warning {
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--color-warn-edge);
+    border-radius: 10px;
+    background: var(--color-warn-wash);
+    font-size: 13px;
+    color: var(--color-warn-text);
+}
+
+// A section title with its own action beside it — "Add volume".
+.editor-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.875rem;
+
+    .editor-section-title {
+        margin: 0;
+    }
+
+    .cxb-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+}
+
+// The record's number beside its name: what it is known by, lighter than the name.
+.page-title-note {
+    margin-left: 0.5rem;
+    font-weight: 500;
+    color: var(--color-ink-muted);
+}
+
+// A licence's volumes: an existing one a line, a new one its four fields; remove at the end of each.
+.volume-list {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.volume-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--color-line);
+    border-radius: 10px;
+    background: var(--color-raised);
+}
+
+.volume-summary {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    min-width: 0;
+    // A description is often a URL, which has nowhere to break and would widen the page.
+    overflow-wrap: anywhere;
+    font-size: 14px;
+    color: var(--color-ink);
+}
+
+.volume-activations {
+    font-size: 13px;
+}
+
+.volume-fields {
+    display: grid;
+    flex: 1;
+    gap: 0.5rem;
+    min-width: 0;
+
+    .cxb-lookupfield,
+    .cxb-numberfield,
+    .cxb-textfield {
+        display: block;
+        width: 100%;
+    }
+
+    @media (min-width: 640px) {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr) minmax(0, 0.8fr);
+
+        > :last-child {
+            grid-column: 1 / -1;
+        }
+    }
+}
+
+.cxb-button.volume-remove {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
     color: var(--color-danger-text);
 }
