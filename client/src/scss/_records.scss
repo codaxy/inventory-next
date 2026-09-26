@@ -229,13 +229,24 @@
     color: var(--color-success-text);
 }
 
-// A record that no longer counts — a deactivated activation — stays listed, muted.
-.record-row.record-row-ended > span:not(.record-status) {
-    color: var(--color-ink-faint);
+// A record that has ended — a deactivated activation — is history: on the rows' own white, its text
+// recedes to `line-strong`, its name no longer bold, and a flag says why, so it is never read as one
+// that counts. Below AA on purpose, as `ink-ghost` is: it is there to be found, not scanned.
+.record-row.record-row-ended {
+    > span,
+    > span * {
+        color: var(--color-line-strong);
+    }
+
+    .record-title {
+        font-weight: 500;
+    }
 }
 
-.record-row.record-row-ended .record-title {
-    font-weight: 500;
+.record-flag.record-flag-ended {
+    border-color: var(--color-line);
+    background: var(--color-surface);
+    color: var(--color-ink-muted);
 }
 
 // Software and services: on a phone the name, category and manufacturer, the volume count; from `md`
@@ -276,7 +287,7 @@
 // An ended record's tag loses its colour: its licence's expiry no longer matters to it.
 .record-row-ended .status-tag {
     background: var(--color-raised);
-    color: var(--color-ink-faint);
+    color: var(--color-line-strong);
 }
 
 // Licences: on a phone the name first, then vendor and value, when bought, the subscription; the number

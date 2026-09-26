@@ -237,7 +237,14 @@ export default createFunctionalComponent(() => {
                             href={expr(m.$row.id, (id) => `~/licenses/activations/${id}`)}
                             url={$app.url}
                         >
-                            <span class="record-title" text={m.$row.software} />
+                            <span class="record-title">
+                                <span text={m.$row.software} />
+                                <span
+                                    class="record-flag record-flag-ended"
+                                    visible={m.$row.ended}
+                                    text="Deactivated"
+                                />
+                            </span>
                             <span class="record-meta" text={m.$row.license} />
                             <span class="record-meta">
                                 <span text={m.$row.assignee} />
@@ -254,8 +261,15 @@ export default createFunctionalComponent(() => {
                                     "record-meta": true,
                                     "record-blank": expr(m.$row.deactivated, (d) => !d),
                                 }}
-                                text={expr(m.$row.deactivated, (d) => (d ? `Deactivated ${d}` : "—"))}
-                            />
+                            >
+                                {/* The column's header says "Deactivated" from `md`; a phone's card has none. */}
+                                <span
+                                    class="md:hidden"
+                                    visible={hasValue(m.$row.deactivated)}
+                                    text="Deactivated "
+                                />
+                                <span text={expr(m.$row.deactivated, (d) => d ?? "—")} />
+                            </span>
                             <span
                                 class={{
                                     "record-status": true,
