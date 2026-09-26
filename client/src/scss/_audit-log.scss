@@ -95,6 +95,9 @@
     color: white;
     font-size: 11px;
     font-weight: 700;
+    // Its own line box: the button's 24px line in a 20px circle pushes the digit low.
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
 }
 
 // The pane drops in beneath the bar and pushes the list down; it never covers what it filters.

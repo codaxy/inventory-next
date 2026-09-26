@@ -1,3 +1,18 @@
+// Double-tap zoom off, pinch zoom kept: pinching is how small text is read by those who need it
+// larger, and blocking it (`user-scalable=no`) fails WCAG's resize-text criterion — which iPhone
+// Safari ignores anyway.
+html {
+    touch-action: manipulation;
+}
+
+// iPhone Safari zooms into any focused input whose text is under 16px, and ours is 14.
+// `renderThemeVariables` sets the variables inline on `<html>`, which only `!important` outranks.
+@media (pointer: coarse) {
+    :root {
+        --cx-input-font-size: 16px !important;
+    }
+}
+
 html,
 body {
     margin: 0;

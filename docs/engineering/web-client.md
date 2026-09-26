@@ -68,13 +68,20 @@ bar that carries only the mark. Any tap in the drawer closes it, except one that
 **The document scrolls, not the content column**: iPhone Safari collapses its toolbars only when the
 document does, so a scrolling `main` keeps the address bar on screen for good. The desktop sidebar and
 the phone's top bar are sticky; the top bar's height is `--shell-top`, 0 from `lg`, and anything else
-that sticks sits beneath it. **The open drawer locks the page behind it** by refusing gestures — `lockScroll()` in
-`src/scrollLock.ts` lets a touch or wheel scroll through only inside the drawer's own list while it can
-still move — and the list does not pass its scroll on (`overscroll-behavior: contain`). The page stays
-scrollable underneath, so Safari's toolbar keeps its state. A screen fills
+that sticks sits beneath it. **Whatever covers the page locks it** — the open drawer and every modal window — by
+refusing gestures: `lockScroll()` in `src/scrollLock.ts` lets a touch or wheel scroll through only
+inside a scrollable element of the overlay, or of a cx window or dropdown over it, while it can still
+move. The page stays scrollable underneath, so Safari's toolbar keeps its state. Modal windows get it
+from `widgetDefaults.ts`, hooked into cx's `overlayDidMount`, so no screen has to ask; the drawer's
+list also does not pass its scroll on (`overscroll-behavior: contain`). A screen fills
 the content column under a header band (`.page-header`) flush with its top and sides; it never sets
 its own outer padding.
 Sign-in, outside the shell, is one centred column that stops growing on a wide display.
+
+**Input text is 16px on a touch screen**, 14px elsewhere: iPhone Safari zooms into a focused field
+whose text is smaller, and the page stays zoomed after it. **Double-tap zoom is off**
+(`touch-action: manipulation`); **pinch zoom is not** — it is how small text is read by those who need
+it larger, blocking it fails WCAG's resize-text criterion, and iPhone Safari ignores the block anyway.
 
 Tap targets are at least 44px high wherever the layout is a phone's — the drawer's links included; the
 desktop sidebar keeps Pulse's denser rows. The page padding respects `env(safe-area-inset-bottom)`.
@@ -86,6 +93,9 @@ desktop sidebar keeps Pulse's denser rows. The page padding respects `env(safe-a
 pushing the list down rather than covering it. Every active filter shows as a removable chip under the
 bar, so closing the pane hides nothing that is filtering. Filters apply as they change; the pane's
 *Done* only closes it.
+
+**A picker searches from seven options**, cx's default, and its list stops at `min(16rem, 40dvh)`
+and scrolls inside it.
 
 **The list is one markup at both widths**: a stacked card on a phone, a row of columns with a header
 from `md`, laid out by CSS grid areas. Not a `Grid` for desktop beside cards for the phone — two
@@ -233,6 +243,11 @@ simple belongs in CSS anyway.
 runs off the bottom of the screen and scrolls the page behind it. A window whose content changes height
 is centred by CSS instead — fixed, translated by half, capped at the viewport — so only its body
 scrolls.
+
+**A cx dropdown closes once its field moves 50px**, and with the document scrolling, Safari moves it
+further than that whenever it lifts a focused search box above the keyboard — the list closed the
+moment one tapped into it. `widgetDefaults.ts` sets `closeOnScrollDistance` to `Infinity`: a dropdown
+follows its field instead, and a tap outside or Escape still closes it.
 
 **Neither `overflow: hidden` nor a fixed body is a scroll lock on an iPhone.** `overflow: hidden` jumps
 the page to the top and Safari still scrolls it on a drag; a body fixed at its offset holds, but makes

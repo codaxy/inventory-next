@@ -4,3 +4,13 @@
 .cxb-numberfield.cxs-error > .cxe-numberfield-input {
     background-color: var(--color-surface);
 }
+
+// A picker's list stops at a height that leaves the field and the page in view, and scrolls inside
+// it. The cap is on the list itself: cx sizes and places the dropdown from that element's height
+// (`onMeasureNaturalContentSize` in `LookupField`), so a cap on any box around it leaves cx sizing
+// the box to all the room on screen — empty space under the list, or a box opened upward and pinned
+// to the top of the screen, away from its field.
+.cxe-lookupfield-scroll-container > :first-child {
+    max-height: min(16rem, 40dvh);
+    overflow-y: auto;
+}

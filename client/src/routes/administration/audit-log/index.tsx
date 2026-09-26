@@ -54,7 +54,6 @@ export default createFunctionalComponent(() => {
                                 showClear
                                 inputAttrs={{
                                     "aria-label": "Search the audit log",
-                                    type: "search",
                                     enterKeyHint: "search",
                                 }}
                             />

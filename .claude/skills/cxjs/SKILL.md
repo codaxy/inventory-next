@@ -224,6 +224,8 @@ side is `DateOnly` — see `persistence.md`.
 - **`LabelsTopLayout` renders a `<table>`**; keep buttons outside it.
 - **A field's own `visited` latches true** (`Field.js:155`) and resetting the group's `visited` does
   not clear it until the field is recreated. Cosmetic; do not debug it as your own bug.
+- **Never `type: "search"` on a `showClear` field.** The browser adds its own clear button, so the
+  field shows two ×. `enterKeyHint: "search"` alone gives a phone keyboard its Search key.
 - **Fields have no `onBlur`.** It is accepted and ignored. Watch the store with `addTrigger` instead.
 
 ## Windows
@@ -273,6 +275,9 @@ export const showNewThingWindow = createHotPromiseWindowFactoryWithProps<Props, 
 );
 ```
 
+- **A modal window locks the page behind it by itself**: `widgetDefaults.ts` wraps
+  `Window.prototype.overlayDidMount`/`overlayWillUnmount` with `lockScroll`. Nothing to add per window;
+  a non-modal one is not locked.
 - **Back must close the window, not leave the screen.** `dismissOnPopState` only closes it on a
   navigation that has already happened. Take `historyEntry()` from `src/historyEntry.ts` when the
   factory runs and resolve through `release` in `onDestroy`, as the audit log's entry window does.
@@ -343,6 +348,9 @@ Decisions and tokens are in `web-client.md` → *Theme*. In practice:
    what no variable expresses. **No `@apply` in SCSS** — it reaches the browser verbatim.
 4. **Tailwind utilities in markup** win over both, because the SCSS loads in `@layer components`.
 
+**The theme's variables themselves are set inline on `<html>`** by `renderThemeVariables`, so a
+stylesheet overrides one (`--cx-input-font-size` in a media query, say) only with `!important`.
+
 **The theme's variable sheet is injected at runtime, so it wins specificity ties**, and its selectors
 are often two classes deep (`.cxb-button.cxm-hollow`). Read the real rule from
 `node_modules/cx-theme-variables/dist/widgets.css` rather than guessing. **`padding` cannot resize a
@@ -351,9 +359,16 @@ in `theme.ts`, or set `height: auto` at `.cxb-button` specificity for a one-off.
 
 **Controls are 44px** — the phone's tap target. Never adopt a density preset that shrinks them.
 
-**Overlays: chrome and height cap go on different elements.** A `LookupField` dropdown is
-`div.cxb-dropdown` (border, radius, shadow) around `div.cxe-lookupfield-dropdown` (`max-height`),
-whose scrolling child needs `min-height: 0`.
+**A dropdown is not closed by scrolling here**: `Dropdown.prototype.closeOnScrollDistance` is
+`Infinity` in `widgetDefaults.ts`, since the phone keyboard scrolls the page under a focused search box.
+Never set it back per field.
+
+**A `LookupField`'s height cap goes on the list itself**, `.cxe-lookupfield-scroll-container >
+:first-child`, with its own `overflow-y: auto`. cx sizes and places the dropdown from that element's
+height (`onMeasureNaturalContentSize`), so a cap on `div.cxb-dropdown` or
+`div.cxe-lookupfield-dropdown` leaves cx sizing the box to all the room on screen: empty space under
+the list, or a box opened upward and pinned to the top of the screen. The house cap is in
+`_fields.scss`. **The search box appears from 7 options** (`minOptionsForSearchField`).
 
 **Grid DOM:** each row is its own `<tbody class="cxe-grid-data cxs-…">` around one `tr`; state
 classes land on the `tbody`. **Grid selects on `mousedown`**, not `click`.
