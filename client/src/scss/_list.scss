@@ -136,12 +136,10 @@
     }
 }
 
+// A switch has the row to itself at every width: sharing it, a picker slides up beside the switch on a
+// wide screen and the pane's order reads differently from one width to the next.
 .list-filter-wide {
     grid-column: 1 / -1;
-
-    @media (min-width: 1280px) {
-        grid-column: auto / span 2;
-    }
 }
 
 .list-filter-label {

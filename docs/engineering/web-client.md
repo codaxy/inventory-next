@@ -108,7 +108,9 @@ a card of empty space. The box is free text, run after a
 300ms pause; the *Filters* button beside it carries the active count and opens the pane beneath the bar,
 pushing the list down rather than covering it. Every active filter shows as a removable chip under the
 bar, so closing the pane hides nothing that is filtering. Filters apply as they change; the pane's
-*Done* only closes it.
+*Done* only closes it. **A switch in the pane has its row to itself at every width** (`list-filter-wide`):
+sharing it, a picker slides up beside the switch on a wide screen, and the pane reads in a different
+order from one width to the next.
 
 **A picker searches from seven options**, cx's default, and cx sizes its list to the room on screen
 and scrolls it.
