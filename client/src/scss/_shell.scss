@@ -14,20 +14,39 @@
 .top-bar {
     height: var(--shell-top);
     box-sizing: border-box;
+
+    // A screen of the bar's navy above it, moving with it: whatever a bounce opens above the bar is
+    // the bar. The root's navy alone is not enough — Safari painted the page colour there when a fast
+    // scroll hit the top, though a finger's pull showed the navy.
+    &::before {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: 100%;
+        left: 0;
+        height: 100vh;
+        background: var(--color-nav-bar);
+    }
 }
 
-// Pulled past the top on a phone, the browser shows the root's background above the page; navy there
-// stretches the top bar instead of opening a light gap under the status bar. The shell carries the
-// page colour itself, so the root shows nowhere else, and casts it one screen further down — a shadow
-// paints without lengthening the page — so pulling past the bottom stays light.
+// Beyond the page — above it and below it, where a bounce opens — is the navy of the chrome: the top
+// bar's on a phone, the sidebar's from `lg`. The shell paints the page colour, so the root shows
+// nowhere else, and the body need not paint at all: a sub-pixel seam shows navy, not a light line.
 .shell {
     background: var(--color-canvas);
-    box-shadow: 0 100vh 0 0 var(--color-canvas);
 }
 
-@media (max-width: 1023.98px) {
-    html:has(.top-bar) {
-        background: var(--color-nav-bar);
+html:has(.shell) {
+    background: var(--color-nav-bar);
+}
+
+html:has(.shell) body {
+    background: transparent;
+}
+
+@media (min-width: 1024px) {
+    html:has(.shell) {
+        background: var(--color-nav);
     }
 }
 

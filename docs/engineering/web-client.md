@@ -69,9 +69,11 @@ bar that carries only the mark. Any tap in the drawer closes it, except one that
 **The document scrolls, not the content column**: iPhone Safari collapses its toolbars only when the
 document does, so a scrolling `main` keeps the address bar on screen for good. The desktop sidebar and
 the phone's top bar are sticky; the top bar's height is `--shell-top`, 0 from `lg`, and anything else
-that sticks sits beneath it. **Pulled past the top, a phone shows the root's background**, so below `lg` it is
-the top bar's navy and the header stretches rather than splitting from the status bar; the shell
-carries the page colour itself, and casts it a screen below its end, so nothing else shows the root. **Whatever covers the page locks it** — the open drawer and every modal window — by
+that sticks sits beneath it. **Beyond the page is the chrome's navy**: a bounce past either end shows the root's
+background, which is the top bar's navy on a phone and the sidebar's from `lg`, so the page reads as
+framed rather than split from the status bar. The shell carries the page colour itself, so the root
+shows nowhere else. The root alone is not enough: Safari painted the page colour above the bar when a
+fast scroll hit the top, so the bar also carries a screen of its navy above itself, which moves with it. **Whatever covers the page locks it** — the open drawer and every modal window — by
 refusing gestures: `lockScroll()` in `src/scrollLock.ts` lets a touch or wheel scroll through only
 inside a scrollable element of the overlay, or of a cx window or dropdown over it, while it can still
 move. The page stays scrollable underneath, so Safari's toolbar keeps its state. Modal windows get it
