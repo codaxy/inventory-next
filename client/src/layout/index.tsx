@@ -1,5 +1,6 @@
 import { createFunctionalComponent } from "cx/ui";
 
+import { pageEnd } from "../pageEnd";
 import Controller from "./Controller";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
@@ -16,14 +17,17 @@ import { TopBar } from "./TopBar";
  * child — a grid, a long unbroken string — would push the column past the viewport instead of scrolling
  * inside it.
  */
-export const AppLayout = createFunctionalComponent(({ children }: { children?: any }) => (
-    <cx>
-        <div class="shell flex min-h-full" controller={Controller}>
-            <Sidebar />
-            <div class="flex min-w-0 flex-1 flex-col">
-                <TopBar />
-                <main class="flex flex-1 flex-col">{children}</main>
+export const AppLayout = createFunctionalComponent(({ children }: { children?: any }) => {
+    const onShellRef = pageEnd();
+    return (
+        <cx>
+            <div class="shell flex min-h-full" controller={Controller} onRef={onShellRef}>
+                <Sidebar />
+                <div class="flex min-w-0 flex-1 flex-col">
+                    <TopBar />
+                    <main class="flex flex-1 flex-col">{children}</main>
+                </div>
             </div>
-        </div>
-    </cx>
-));
+        </cx>
+    );
+});

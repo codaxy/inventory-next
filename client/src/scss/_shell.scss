@@ -29,9 +29,11 @@
     }
 }
 
-// Beyond the page — above it and below it, where a bounce opens — is the navy of the chrome: the top
-// bar's on a phone, the sidebar's from `lg`. The shell paints the page colour, so the root shows
-// nowhere else, and the body need not paint at all: a sub-pixel seam shows navy, not a light line.
+// Above the page, where a bounce opens, is the navy of the chrome: the top bar's on a phone, the
+// sidebar's from `lg`. Below it the page colour carries on — navy there read as a stray band — so on
+// its last screen (`page-end`, `pageEnd.ts`) the root takes the page colour. The shell paints the page
+// colour, so the root shows nowhere else, and the body need not paint at all: a sub-pixel seam shows
+// navy, not a light line.
 .shell {
     background: var(--color-canvas);
 }
@@ -48,6 +50,10 @@ html:has(.shell) body {
     html:has(.shell) {
         background: var(--color-nav);
     }
+}
+
+html.page-end:has(.shell) {
+    background: var(--color-canvas);
 }
 
 // The signed-in page: a header band flush with the top and sides of the content column, the content
