@@ -10,7 +10,7 @@ import {
     ValidationGroup,
 } from "cx/widgets";
 
-import { moreActions } from "../../../../components/moreActions";
+import { historyAction, moreActions } from "../../../../components/moreActions";
 import { listReturn } from "../../../../listAddress";
 import { externalLink } from "../../../../components/externalLink";
 import $app from "../../../../model";
@@ -45,7 +45,10 @@ export default createFunctionalComponent(() => (
                             <Icon name="edit" class="size-4" />
                             <span class="hidden sm:inline" text="Edit" />
                         </LinkButton>
-                        {moreActions([{ text: "Delete", icon: "delete", onClick: "remove", danger: true }])}
+                        {moreActions([
+                            historyAction(e.id),
+                            { text: "Delete", icon: "delete", onClick: "remove", danger: true },
+                        ])}
                     </div>
                 </div>
             </div>

@@ -107,7 +107,9 @@ sharing a sort value otherwise come back in any order, and one appears on two pa
 columns, by `ILIKE` with `%`, `_` and `\` escaped so they match themselves. **A term that is a GUID matches ids, exactly** —
 the record's own and those of what it points at directly (a piece of furniture's assignee, vendor,
 location, type), never a many-to-many link — so a pasted id finds its record in any list. **A
-leading `#` is dropped**, so an inventory number typed as the screens show it matches. Other filters are named
+leading `#` is dropped**, so an inventory number typed as the screens show it matches. **An id filter
+is read as text**: one that is not an id matches nothing and answers an empty page, where binding a
+`Guid` would refuse the whole request with a 400. Other filters are named
 parameters, exact unless their name says otherwise, ANDed. A range is `from` inclusive and `to`
 exclusive, so adjacent ranges neither overlap nor leave a gap.
 

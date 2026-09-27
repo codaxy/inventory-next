@@ -6,7 +6,7 @@ import { listReturn } from "../listAddress";
 import $app from "../model";
 import type { RecordState } from "../recordController";
 import { holdingSections } from "./holdings";
-import { type MoreAction, moreActions } from "./moreActions";
+import { historyAction, type MoreAction, moreActions } from "./moreActions";
 
 interface RecordPage {
     r: AccessorChain<RecordState<any>>;
@@ -122,6 +122,7 @@ export function recordPage(o: RecordPage) {
                             <span class="hidden sm:inline" text="Edit" />
                         </LinkButton>
                         {moreActions([
+                            historyAction(r.id),
                             ...(o.duplicate
                                 ? [
                                       {

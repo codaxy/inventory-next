@@ -5,8 +5,8 @@ import { dateValue } from "../../../bindings";
 import { Pager } from "../../../components/Pager";
 import { stickyBar } from "../../../stickyBar";
 import Controller from "./Controller";
-import m from "./model";
-import { inventoryNumberPattern } from "./utils";
+import m, { type Filters } from "./model";
+import { inventoryNumberPattern, recordIdPattern } from "./utils";
 
 const s = m.auditLog;
 const f = s.filters;
@@ -14,6 +14,24 @@ const f = s.filters;
 const hasChips = isNonEmpty(s.chips);
 const chipCount = expr(s.chips, (chips) => String(chips?.length ?? 0));
 const empty = expr(s.loaded, s.total, s.error, (loaded, total, error) => loaded && total === 0 && !error);
+// One record's history and nothing narrowing it: an empty answer means the log never saw a change.
+const recordOnly = (f: Filters | undefined, q: string | null | undefined) =>
+    !!f?.entityId &&
+    recordIdPattern.test(f.entityId.trim()) &&
+    !q &&
+    !f.action &&
+    !f.table &&
+    !f.email &&
+    !f.from &&
+    !f.to &&
+    !f.inventoryNumber;
+const emptyTitle = expr(s.idSearch, s.filters, s.search, (id, f, q) =>
+    recordOnly(f, q)
+        ? "No changes recorded for this record"
+        : id
+          ? "No record has this id"
+          : "No changes match",
+);
 const notEmpty = expr(
     s.loaded,
     s.total,
@@ -115,6 +133,34 @@ export default createFunctionalComponent(() => {
                             </div>
 
                             <div class="list-filter">
+                                <div class="list-filter-label" text="Record id" />
+                                <TextField
+                                    value={f.entityId}
+                                    placeholder="Paste an id"
+                                    inputAttrs={{
+                                        "aria-label": "Record id",
+                                        spellCheck: false,
+                                        autoComplete: "off",
+                                    }}
+                                    onValidate={(v: string | null) =>
+                                        !v || recordIdPattern.test(v.trim()) ? undefined : "Not a record id."
+                                    }
+                                />
+                            </div>
+
+                            <div class="list-filter">
+                                <div class="list-filter-label" text="Inventory number" />
+                                <TextField
+                                    value={f.inventoryNumber}
+                                    placeholder="e.g. 100893"
+                                    inputAttrs={{ "aria-label": "Inventory number", inputMode: "numeric" }}
+                                    onValidate={(v: string | null) =>
+                                        !v || inventoryNumberPattern.test(v) ? undefined : "Digits only."
+                                    }
+                                />
+                            </div>
+
+                            <div class="list-filter">
                                 <div
                                     class="list-filter-label"
                                     id="administration-audit-log-changed-by-label"
@@ -144,18 +190,6 @@ export default createFunctionalComponent(() => {
                                     value={dateValue(f.to)}
                                     placeholder="Any day"
                                     inputAttrs={{ "aria-label": "To" }}
-                                />
-                            </div>
-
-                            <div class="list-filter">
-                                <div class="list-filter-label" text="Inventory number" />
-                                <TextField
-                                    value={f.inventoryNumber}
-                                    placeholder="e.g. 100893"
-                                    inputAttrs={{ "aria-label": "Inventory number", inputMode: "numeric" }}
-                                    onValidate={(v: string | null) =>
-                                        !v || inventoryNumberPattern.test(v) ? undefined : "Digits only."
-                                    }
                                 />
                             </div>
                         </div>
@@ -280,16 +314,30 @@ export default createFunctionalComponent(() => {
 
                 <div class="list-empty" visible={empty}>
                     <Icon name="search" class="size-6" />
+                    <p class="list-empty-title" text={emptyTitle} />
+                    {/* The log began with its migration; what nobody has changed since has no entry. */}
                     <p
-                        class="list-empty-title"
-                        text={expr(s.idSearch, (id) => (id ? "No record has this id" : "No changes match"))}
+                        class="list-empty-text"
+                        visible={expr(s.filters, s.search, recordOnly)}
+                        text="The log begins on 5 December 2022, and this record has not changed since."
                     />
                     <p
                         class="list-empty-text"
-                        visible={falsy(s.idSearch)}
+                        visible={expr(
+                            s.idSearch,
+                            s.filters,
+                            s.search,
+                            (id, f, q) => !id && !recordOnly(f, q),
+                        )}
                         text="Try fewer words, or loosen a filter."
                     />
-                    <Button mod="hollow" text="Clear search and filters" onClick="clearAll" />
+                    <Button
+                        mod="hollow"
+                        text={expr(s.filters, s.search, (f, q) =>
+                            recordOnly(f, q) ? "Show every change" : "Clear search and filters",
+                        )}
+                        onClick="clearAll"
+                    />
                 </div>
 
                 <div visible={expr(s.total, (t) => t > 0)}>

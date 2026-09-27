@@ -75,6 +75,7 @@ const navIcons = {
     manufacturers: Factory01Icon,
     locations: Location01Icon,
     auditLog: HistoryIcon,
+    history: HistoryIcon,
     serverLog: CommandLineIcon,
 } satisfies Record<string, IconData>;
 

@@ -359,6 +359,29 @@ public class AuditLogTests(AuditLogApplication app) : IClassFixture<AuditLogAppl
         Assert.Equal(3, page.Total);
     }
 
+    [Theory]
+    [InlineData("not-an-id")]
+    [InlineData("0176f745-036f")]
+    public async Task A_record_id_that_is_not_an_id_matches_nothing(string entityId)
+    {
+        var client = await app.ClientAsync();
+
+        var response = await client.GetAsync($"{Url}/?entityId={entityId}");
+        response.EnsureSuccessStatusCode();
+        var page = await response.Content.ReadFromJsonAsync<Page<Entry>>();
+
+        Assert.Equal(0, page!.Total);
+        Assert.Empty(page.Items);
+    }
+
+    [Fact]
+    public async Task A_record_id_is_read_with_the_spaces_around_it()
+    {
+        var page = await List($"entityId=%20{AuditLogApplication.LaptopId}%20");
+
+        Assert.Equal(3, page.Total);
+    }
+
     [Fact]
     public async Task An_inventory_number_finds_the_asset_and_its_subtype_rows()
     {

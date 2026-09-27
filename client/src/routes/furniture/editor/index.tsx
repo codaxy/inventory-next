@@ -2,7 +2,7 @@ import { createFunctionalComponent, expr, hasValue, truthy } from "cx/ui";
 import { Button, Icon, Link, LinkButton, ValidationGroup } from "cx/widgets";
 
 import { formFields } from "../../../components/formFields";
-import { moreActions } from "../../../components/moreActions";
+import { historyAction, moreActions } from "../../../components/moreActions";
 import { listReturn } from "../../../listAddress";
 import $app from "../../../model";
 import Controller from "./Controller";
@@ -42,6 +42,7 @@ export default createFunctionalComponent(() => (
                             <span class="hidden sm:inline" text="Edit" />
                         </LinkButton>
                         {moreActions([
+                            historyAction(f.id),
                             {
                                 text: "Duplicate",
                                 icon: "duplicate",

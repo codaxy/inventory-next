@@ -156,10 +156,11 @@ const range = (from?: string | null, to?: string | null) => {
 export function toChips(filters: Filters): Chip[] {
     const chips: Chip[] = [];
 
-    if (filters.entityId)
+    const id = filters.entityId?.trim();
+    if (id)
         chips.push({
             key: "entityId",
-            text: `Record: ${filters.entityLabel ?? filters.entityId.slice(0, 8)}`,
+            text: `Record: ${filters.entityLabel ?? (recordIdPattern.test(id) ? id.slice(0, 8) : id)}`,
         });
     if (filters.action) chips.push({ key: "action", text: actionText[filters.action] });
     if (filters.table) chips.push({ key: "table", text: humanize(filters.table) });
@@ -171,6 +172,9 @@ export function toChips(filters: Filters): Chip[] {
 }
 
 export const inventoryNumberPattern = /^\d{1,9}$/;
+
+/** A record's id as the log stores it. One that is not still goes to the server, which matches nothing. */
+export const recordIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
  * The request for what the screen holds. Days become the viewer's own midnights, the end one day
@@ -191,7 +195,7 @@ export function toQuery(
         email: filters.email ?? undefined,
         from: filters.from ? startOfDay(filters.from).toISOString() : undefined,
         to: filters.to ? endOfDay(filters.to).toISOString() : undefined,
-        entityId: filters.entityId ?? undefined,
+        entityId: filters.entityId?.trim() || undefined,
         inventoryNumber: number && inventoryNumberPattern.test(number) ? Number(number) : undefined,
         sort,
         page,

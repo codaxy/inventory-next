@@ -24,6 +24,7 @@ export interface Filters {
     inventoryNumber?: string | null;
     /** One record's history, set from an entry rather than typed. */
     entityId?: string | null;
+    /** The record's name, for its chip only; never stored with the filters. */
     entityLabel?: string | null;
 }
 

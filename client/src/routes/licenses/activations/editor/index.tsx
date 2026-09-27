@@ -12,7 +12,7 @@ import {
 
 import { dateValue, numberValue } from "../../../../bindings";
 import { expiryClass } from "../../../../licensing";
-import { moreActions } from "../../../../components/moreActions";
+import { historyAction, moreActions } from "../../../../components/moreActions";
 import { listReturn } from "../../../../listAddress";
 import { externalLink } from "../../../../components/externalLink";
 import $app from "../../../../model";
@@ -104,7 +104,10 @@ export default createFunctionalComponent(() => (
                             <Icon name="reactivate" class="size-4" />
                             <span class="hidden sm:inline" text="Reactivate" />
                         </Button>
-                        {moreActions([{ text: "Delete", icon: "delete", onClick: "remove", danger: true }])}
+                        {moreActions([
+                            historyAction(a.id),
+                            { text: "Delete", icon: "delete", onClick: "remove", danger: true },
+                        ])}
                     </div>
                 </div>
             </div>

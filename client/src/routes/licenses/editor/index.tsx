@@ -14,7 +14,7 @@ import {
 
 import { dateValue, numberValue } from "../../../bindings";
 import { expiryClass } from "../../../licensing";
-import { moreActions } from "../../../components/moreActions";
+import { historyAction, moreActions } from "../../../components/moreActions";
 import { listReturn } from "../../../listAddress";
 import { externalLink } from "../../../components/externalLink";
 import { formFields } from "../../../components/formFields";
@@ -62,6 +62,7 @@ export default createFunctionalComponent(() => (
                             <span class="hidden sm:inline" text="Edit" />
                         </LinkButton>
                         {moreActions([
+                            historyAction(l.id),
                             {
                                 text: "Duplicate",
                                 icon: "duplicate",

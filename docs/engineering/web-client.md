@@ -190,7 +190,7 @@ that closed it has already left the screen.
 **Every entity has a page of its own**, never a window, **and a row opens it read-only**:
 `~/<item>/:id` shows the record, **its primary action in the header beside its name and the rest behind
 a ⋮** (`moreActions` in `components/`, a borderless 44px button with a hover tint and a focus ring): Edit visible — or Deactivate, for a record never edited — and
-Duplicate and Delete a click deeper, Delete last and red, so what destroys is never one mis-click
+View history, Duplicate and Delete a click deeper, Delete last and red, so what destroys is never one mis-click
 away; icons only on a phone, named for screen readers; editing is `~/<item>/:id/edit`, Cancel and Save in the card's footer; `new` opens in editing, there being nothing to show yet. A
 record's actions go where the eye starts, a form's commit where the form finishes. Not everyone will be allowed to edit, and
 a record should not change because someone clicked into it. Cancel and a successful Save of an edit
@@ -224,6 +224,13 @@ project's too, addressed ahead of their screens — and "See all N" to the ownin
 record (`personId`, `clientId`), or a line saying only the first are shown where there is no list yet. The kinds with nothing are one line beneath, not empty cards. A
 seat on a device they hold says which device. On the activations list the filter reads "Held by":
 theirs by name and those on their devices.
+
+**View history leads every record's ⋮** (`historyAction`): the audit log filtered to the
+record's id, which also takes an asset's own row, since a device, a piece of furniture or a license
+shares its asset's id. The address carries the id only; the chip names the record from its first
+entry. A verb first, as beside it — "Change history" reads as an order to change it — and not
+"activity": the log holds saves, never who looked. A record the log has
+never seen says so — the log begins on 5 December 2022 — rather than advising fewer search words.
 
 **A record page and a searched list are made, not copied.** `RecordController` in
 `src/recordController.ts` holds the page's life — the address naming record and mode, the

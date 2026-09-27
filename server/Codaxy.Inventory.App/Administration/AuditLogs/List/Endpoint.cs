@@ -14,6 +14,8 @@ public static class Endpoint
     /// <param name="From">Inclusive.</param>
     /// <param name="To">Exclusive, so consecutive ranges neither overlap nor leave a gap.</param>
     /// <param name="Sort"><c>-time</c>, newest first, or <c>time</c>.</param>
+    /// <param name="EntityId">Text, not <see cref="Guid"/>: one that is not an id matches nothing,
+    /// where binding a <see cref="Guid"/> would refuse the whole request.</param>
     public sealed record Query(
         string? Q,
         string? Action,
@@ -21,7 +23,7 @@ public static class Endpoint
         string? Email,
         DateTimeOffset? From,
         DateTimeOffset? To,
-        Guid? EntityId,
+        string? EntityId,
         int? InventoryNumber,
         string? Sort,
         int? Page,
@@ -78,8 +80,10 @@ public static class Endpoint
         if (query.To is { } to)
             rows = rows.Where(a => a.TimeCreated < to);
 
-        if (query.EntityId is { } entityId)
-            rows = rows.Where(a => a.EntityId == entityId);
+        if (!string.IsNullOrWhiteSpace(query.EntityId))
+            rows = Guid.TryParse(query.EntityId.Trim(), out var entityId)
+                ? rows.Where(a => a.EntityId == entityId)
+                : rows.Where(_ => false);
 
         if (query.InventoryNumber is { } number)
         {

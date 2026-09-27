@@ -1,4 +1,5 @@
-import type { BooleanProp, StringProp } from "cx/ui";
+import type { AccessorChain } from "cx/data";
+import { type BooleanProp, expr, type StringProp } from "cx/ui";
 import { Icon, Link, Menu, MenuItem } from "cx/widgets";
 
 import type { IconName } from "../layout/icons";
@@ -15,6 +16,16 @@ export interface MoreAction {
     danger?: boolean;
     visible?: BooleanProp;
 }
+
+/**
+ * A record's changes: the audit log narrowed to its id. First behind the ⋮ on every record's page. The
+ * log holds saves, never who looked, so no activity feed's name; a verb first, like the actions beside it.
+ */
+export const historyAction = (id: AccessorChain<string | null | undefined>): MoreAction => ({
+    text: "View history",
+    icon: "history",
+    href: expr(id, (id) => `~/administration/audit-log?entityId=${id}`),
+});
 
 /**
  * The record's secondary actions behind a ⋮ beside its primary one — Duplicate, Delete — so the header
