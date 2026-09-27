@@ -105,8 +105,8 @@ pushing the list down rather than covering it. Every active filter shows as a re
 bar, so closing the pane hides nothing that is filtering. Filters apply as they change; the pane's
 *Done* only closes it.
 
-**A picker searches from seven options**, cx's default, and its list stops at `min(16rem, 40dvh)`
-and scrolls inside it.
+**A picker searches from seven options**, cx's default, and cx sizes its list to the room on screen
+and scrolls it.
 
 **The toolbar's parts are shared** — `list-*` in `_list.scss`: the bar, search, Filters and its pane,
 chips, the caption line, and the error, empty and loading states. A screen's rows are its own. **A search for an id that matches
@@ -423,6 +423,12 @@ carried over from Pulse is the likely typo — check `tailwind.css` before reach
 **Free text is often a URL, which has nowhere to break**: anything showing a typed value in a flex or
 grid cell sets `overflow-wrap: anywhere`, or one long description widens the page on a phone — and a
 check against records with short text never sees it.
+
+**Never cap or scroll the list inside a picker's `.cxe-lookupfield-scroll-container`.** cx treats that
+container as the scrolling element: it cancels every wheel on it at either end, so the page does not
+scroll instead, and loads further options when it nears the bottom. A `max-height` and `overflow` on
+the list inside leave the container never scrolling — at both ends at once — so no wheel scrolls the
+list, in any browser, and the options past the first page never load.
 
 **A closed `LookupField` ignores `inputAttrs`**: its only name is `aria-labelledby="<id>-label"`,
 pointing at a label cx renders only in a labels layout. Give the field an `id` and the visible label
