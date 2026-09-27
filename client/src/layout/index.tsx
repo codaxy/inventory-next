@@ -18,7 +18,7 @@ import { TopBar } from "./TopBar";
  */
 export const AppLayout = createFunctionalComponent(({ children }: { children?: any }) => (
     <cx>
-        <div class="flex min-h-full" controller={Controller}>
+        <div class="shell flex min-h-full" controller={Controller}>
             <Sidebar />
             <div class="flex min-w-0 flex-1 flex-col">
                 <TopBar />

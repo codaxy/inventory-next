@@ -16,6 +16,21 @@
     box-sizing: border-box;
 }
 
+// Pulled past the top on a phone, the browser shows the root's background above the page; navy there
+// stretches the top bar instead of opening a light gap under the status bar. The shell carries the
+// page colour itself, so the root shows nowhere else, and casts it one screen further down — a shadow
+// paints without lengthening the page — so pulling past the bottom stays light.
+.shell {
+    background: var(--color-canvas);
+    box-shadow: 0 100vh 0 0 var(--color-canvas);
+}
+
+@media (max-width: 1023.98px) {
+    html:has(.top-bar) {
+        background: var(--color-nav-bar);
+    }
+}
+
 // The signed-in page: a header band flush with the top and sides of the content column, the content
 // padded beneath it. `.page-header` cancels `.page-body`'s padding with negative margins and restores
 // it as its own, so the title aligns with the content: the three numbers move together.
