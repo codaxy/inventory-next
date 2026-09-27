@@ -38,15 +38,15 @@ export const TodoScreen = createFunctionalComponent(({ title, step }: Props) => 
 
             <div class="skeleton" attrs={{ "aria-hidden": "true" }}>
                 <div class="skeleton-head">
-                    <span style="width: 18%" />
-                    <span style="width: 12%" />
+                    <span class="skeleton-bar" style="width: 18%" />
+                    <span class="skeleton-bar" style="width: 12%" />
                 </div>
                 {rows.map((widths) => (
                     <cx>
                         <div class="skeleton-row">
                             {widths.map((width) => (
                                 <cx>
-                                    <span style={`width: ${width}%`} />
+                                    <span class="skeleton-bar" style={`width: ${width}%`} />
                                 </cx>
                             ))}
                         </div>

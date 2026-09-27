@@ -8,6 +8,7 @@ import $app from "../../../model";
 import { stickyBar } from "../../../stickyBar";
 import Controller from "./Controller";
 import m from "./model";
+import { listSkeleton } from "../../../components/listSkeleton";
 
 const s = m.list;
 const f = s.filters;
@@ -245,7 +246,12 @@ export default createFunctionalComponent(() => {
                         <span text="License expiry" />
                     </div>
 
-                    <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />
+                    {listSkeleton({
+                        columns: "activation-columns",
+                        cells: 7,
+                        numeric: [3],
+                        visible: falsy(s.loaded),
+                    })}
 
                     <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
                         <Link

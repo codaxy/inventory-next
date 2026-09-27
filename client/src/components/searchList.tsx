@@ -7,6 +7,7 @@ import type { PagerState } from "../paging";
 import { stickyBar } from "../stickyBar";
 import { Pager } from "./Pager";
 import { sortHeader } from "./sortHeader";
+import { listSkeleton } from "./listSkeleton";
 
 /** What a searchable list's markup binds; `ListController` keeps it. */
 export interface SearchListState {
@@ -120,7 +121,12 @@ export function searchList(o: SearchList) {
                     )}
                 </div>
 
-                <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />
+                {listSkeleton({
+                    columns: o.columns,
+                    cells: o.cells.length,
+                    numeric: o.cells.flatMap((c, i) => (c.numeric ? [i] : [])),
+                    visible: falsy(s.loaded),
+                })}
 
                 <Repeater records={s.rows as any} recordAlias={o.row} keyField="id">
                     <Link class={`record-row ${o.columns}`} href={expr(o.row.id, o.href)} url={$app.url}>

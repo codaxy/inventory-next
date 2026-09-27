@@ -263,7 +263,29 @@ export default createFunctionalComponent(() => {
                         <span text="By" />
                     </div>
 
-                    <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />
+                    {/* The first load: rows in the log's own areas, a bar in each. */}
+                    <div visible={falsy(s.loaded)} attrs={{ role: "status" }}>
+                        <span class="sr-only" text="Loading…" />
+                        {[58, 42, 70, 50, 64, 38, 54, 46].map((width) => (
+                            <cx>
+                                <div class="audit-row audit-row-skeleton" attrs={{ "aria-hidden": "true" }}>
+                                    <span class="audit-time">
+                                        <span class="skeleton-bar" style="width: 3rem" />
+                                    </span>
+                                    <span class="audit-action audit-action-skeleton" />
+                                    <span class="audit-record">
+                                        <span class="skeleton-bar" style={`width: ${width}%`} />
+                                    </span>
+                                    <span class="audit-summary">
+                                        <span class="skeleton-bar" style={`width: ${100 - width}%`} />
+                                    </span>
+                                    <span class="audit-user">
+                                        <span class="skeleton-bar" style="width: 9rem" />
+                                    </span>
+                                </div>
+                            </cx>
+                        ))}
+                    </div>
 
                     <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
                         <div

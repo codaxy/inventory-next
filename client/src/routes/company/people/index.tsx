@@ -8,6 +8,7 @@ import $app from "../../../model";
 import { stickyBar } from "../../../stickyBar";
 import Controller from "./Controller";
 import m from "./model";
+import { listSkeleton } from "../../../components/listSkeleton";
 
 const s = m.people;
 const empty = expr(s.loaded, s.total, s.error, (loaded, total, error) => loaded && total === 0 && !error);
@@ -76,7 +77,12 @@ export default createFunctionalComponent(() => {
                         <span class="record-num" text="Seats" />
                     </div>
 
-                    <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />
+                    {listSkeleton({
+                        columns: "people-columns",
+                        cells: 4,
+                        numeric: [2, 3],
+                        visible: falsy(s.loaded),
+                    })}
 
                     <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
                         <Link

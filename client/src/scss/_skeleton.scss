@@ -1,0 +1,136 @@
+// What a screen shows while its data is on the way: its own layout, with a bar where each text will
+// be, so the data arrives without anything moving. A refetch keeps what it has and dims it instead.
+
+// One line of text to come. A width is set where it is used; the height is a line's x-height, so a
+// bar sits in the line box its text will take.
+.skeleton-bar {
+    display: block;
+    width: 60%;
+    max-width: 100%;
+    height: 0.625rem;
+    border-radius: 999px;
+    background:
+        linear-gradient(90deg, transparent 0%, var(--color-surface) 50%, transparent 100%) no-repeat,
+        var(--color-line-soft);
+    background-size:
+        50% 100%,
+        auto;
+    background-position:
+        -150% 0,
+        0 0;
+    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+// A first load sets the list loading too; its outline is not dimmed like a refetch's rows.
+.record-list-loading:has(.record-row-skeleton),
+.audit-list-loading:has(.audit-row-skeleton) {
+    opacity: 1;
+}
+
+@keyframes skeleton-shimmer {
+    to {
+        background-position:
+            250% 0,
+            0 0;
+    }
+}
+
+// A list's first load: rows in the list's own columns. On a phone a row is its title and one line
+// under it, whatever the list stacks there.
+.record-row-skeleton {
+    align-items: center;
+    cursor: default;
+
+    &:hover {
+        background: none;
+    }
+
+    @media (max-width: 767.98px) {
+        row-gap: 0.625rem;
+
+        > :nth-child(n + 3) {
+            display: none;
+        }
+    }
+}
+
+// The outline of a screen still to be built, under its "to do" card.
+.skeleton {
+    margin-top: 1rem;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+}
+
+.skeleton-head,
+.skeleton-row {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 0.875rem 1.25rem;
+}
+
+.skeleton-head {
+    background: var(--color-canvas);
+    border-bottom: 1px solid var(--color-line);
+
+    .skeleton-bar {
+        height: 0.5rem;
+        background: var(--color-line);
+        animation: none;
+    }
+}
+
+.skeleton-row + .skeleton-row {
+    border-top: 1px solid var(--color-line-soft);
+}
+
+// The audit log's first load: its rows' own areas, the action a blank disc.
+.audit-list .audit-row-skeleton {
+    cursor: default;
+
+    &:hover {
+        background: none;
+    }
+
+    // A disc on a phone; from 768px the pill "Updated" makes, which an empty one would collapse.
+    .audit-action-skeleton {
+        border-radius: 999px;
+        background: var(--color-line-soft);
+
+        @media (min-width: 768px) {
+            width: 5rem;
+            height: 1.375rem;
+        }
+    }
+}
+
+// The dashboard's first load. A bar takes the line box of the text it stands for: the label's, the
+// number's, the line's; the number's is a short, taller bar.
+.dash-tile-skeleton {
+    cursor: default;
+
+    &:hover {
+        background: none;
+    }
+
+    > span {
+        display: flex;
+        align-items: center;
+        min-height: 1lh;
+    }
+
+    .dash-value-bar {
+        width: 2.25rem;
+        height: 0.875rem;
+    }
+}
+
+.dash-detail .holding-row .skeleton-bar {
+    margin-block: 0.3rem;
+}

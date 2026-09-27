@@ -129,10 +129,17 @@ order from one width to the next.
 and scrolls it.
 
 **The toolbar's parts are shared** — `list-*` in `_list.scss`: the bar, search, Filters and its pane,
-chips, the caption line, and the error, empty and loading states. A screen's rows are its own. **A search for an id that matches
+chips, the caption line, and the error and empty states. A screen's rows are its own. **A search for an id that matches
 nothing says "No record has this id"**, without the usual advice to try fewer words, which does not
 apply to an id; any other search keeps its list's own wording. `ListController` knows which it ran
 (`idSearch`).
+
+**A screen loads as its own outline**: its real layout with a `skeleton-bar` for each text
+(`_skeleton.scss`), so the data arrives without anything moving — shown at once, since there is no
+flash to hide. A list's first load is `listSkeleton()`: eight rows in the list's columns under its
+real head, one bar per cell, a phone's row its first two. The dashboard and the audit log outline
+their own layouts. **A refetch keeps the rows it has, dimmed**, never the outline. The bars shimmer
+slowly, and stand still under reduced motion.
 
 **A cell says only what its column's header does not**: "6 Aug 2024" under Deactivated, not
 "Deactivated 6 Aug 2024" — but a phone's card, which has no headers, keeps the word.
@@ -441,6 +448,10 @@ must appear in both the header and every script tag. Script hashes in the header
 that a static shell supports. Worth deciding before there are screens, not after.
 
 ## Traps
+
+**A right-aligned cell shrinks to its content**, so a skeleton bar sized in percent inside one is
+zero wide; its bar has a fixed width. **A list's first load also sets it loading**, whose dimming is
+for a refetch; the outline undoes it with `:has()`.
 
 **Beyond the page a browser paints only the root's background.** A shadow or pseudo-element reaching
 past the page's end is not drawn in a bounce there — Chrome shows the root's colour — so two colours
