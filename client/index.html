@@ -5,6 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <title>Inventory</title>
         <!-- The logo tile: `brand` violet, Lucide's `package` glyph (ISC), as on sign-in and in the sidebar. -->
+        <!-- The home screen's: a phone ignores an SVG icon there. Full bleed, since the platform rounds the
+             corners itself. `display: browser` keeps Safari's pull-to-refresh and its address bar. -->
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="apple-mobile-web-app-title" content="Inventory" />
         <link
             rel="icon"
             type="image/svg+xml"

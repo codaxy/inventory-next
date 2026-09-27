@@ -342,7 +342,10 @@ injection attempt reads as one.
 **The logo tile is violet**, `brand`, wherever it appears: the chrome is Pulse's, and the mark is what
 tells the two applications apart at a glance. The favicon is the same tile, an SVG inline in `index.html` — the one place the
 colour and the glyph are written out rather than taken from `tailwind.css` and `_brand.scss`, since a
-browser reads it before any stylesheet.
+browser reads it before any stylesheet. **A home screen ignores an SVG icon**, so the tile is also a PNG in `client/public`:
+`apple-touch-icon.png` (180px) for iPhone and 192 and 512px ones in `manifest.json` for Android —
+full bleed, since the platform rounds the corners and iOS turns transparency black. The manifest's
+`display` is `browser`: standalone would drop Safari's address bar and, with it, pull-to-refresh.
 
 **Every colour and shadow is a token in `src/tailwind.css`**, in `@theme static`, and nothing else in the client
 writes one. Each text token clears AA (4.5:1) on both the card and the page, but `ink-ghost`, which marks an
