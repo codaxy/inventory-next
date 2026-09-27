@@ -51,10 +51,23 @@ on every load.
 
 **`src/layout/navigation.ts` is both the menu and the routing table of the screens in it**: sections
 and items as the original's menu has them, flat, with no collapsing — except that its directory is
-**Company**, and first: the people and organisations everything else is assigned to. `~/` redirects
-to the first item — there is no home screen, as in the original — and an unmatched URL shows a not-found page inside the
-shell. `screens` in `routes/index.tsx` maps an item's href to its screen; an item without one routes to
-`TodoScreen`, which names the programme step that builds it.
+**Company**, and first: the people and organisations everything else is assigned to. `~/` lands on the
+**Dashboard**, the first item and in no section. An unmatched URL shows a not-found page inside the
+shell. `screens` in `routes/index.tsx` maps an item's href to its screen; an item without one routes
+to `TodoScreen`, which names the programme step that builds it.
+
+**The Dashboard is one screen**, after Pulse's home: a lede, one card "Worth a look" holding a tile
+per rule in [domain.md](domain.md) — its count and what it counts — and beneath it the selected tile's
+rows as `holdingSections`, restyled to the card: an uppercase label with the count bold beside it,
+rows edge to edge. Tiles are divided by hairlines and tinted on hover; the selected one keeps the tint
+with the accent along its foot, and the first with anything is selected. An empty tile is dimmed and
+inert. Red for over-allocated seats and seats on disposed devices, wrong whenever there are any; amber
+for what ends soon; ink for the rest, whose weight depends. Two tiles to a row on a phone, half the
+count from 34rem, never all in one — that reads as a strip — so the page is `page-narrow`. From 34rem
+a tile stacks label, 19px bold number and line as subgrid rows of its row, so numbers align whichever
+label wraps. On a phone a tile is label and medium-weight number on one line: the line goes, the
+list's title carries the window, the header goes, the lede says it, and the gutter is 1rem — so the
+list starts on the first screen.
 
 **Icons are HugeIcons' free set** (`@hugeicons/core-free-icons`, MIT), registered by name against cx's
 `Icon` in `src/layout/registerIcons.tsx`; a view binds `<Icon name=… />`. One name per use, not per glyph.
@@ -351,7 +364,8 @@ full bleed, since the platform rounds the corners and iOS turns transparency bla
 
 **Every colour and shadow is a token in `src/tailwind.css`**, in `@theme static`, and nothing else in the client
 writes one. Each text token clears AA (4.5:1) on both the card and the page, but `ink-ghost`, which marks an
-absence and never content; field and button borders
+absence and never content, and `ink-label`, the uppercase label of a card, which clears it on the card
+only and is used nowhere else; field and button borders
 clear 3:1 on the card. The house values for `ink-faint`, `line-strong` and `warn` fail that, so those values are
 darker here. **Text in a status colour uses its `-text` token**, which equals the fill where the fill
 passes and is darker where it does not: `warn` is 3.4:1 as text, `warn-text` 5.1:1. A status's `-wash` is a

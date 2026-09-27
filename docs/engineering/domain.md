@@ -86,6 +86,25 @@ a volume holding any is not removed from its license, and a license with such a 
 maintenance contract — is not deleted. A software or service a volume is of is not deleted either. An
 existing volume is kept as it is or removed; editing one is not offered, as in the original.
 
+## What the dashboard counts
+
+Each a query over what exists. Only over-allocation and seats on a disposed device are wrong by
+definition; the rest depend. The four windows are settings (`Dashboard:*Days`, see
+[deployment.md](deployment.md)); the values below are their defaults.
+
+- **A subscription expired recently** within the last 45 days, the day it lapsed included; one older
+  has been dealt with or never will be. One with seats still in use is the more pressing: live
+  software on a lapsed license. **It is expiring** within 15 days — the dashboard's own window; the
+  licenses list's "expiring soon" keeps the rule above, so the dashboard links to no list for it.
+- **A volume is over-allocated** once its seats in use exceed its quantity, and **has unused seats**
+  while they are fewer — unless its subscription has expired, since nothing is paid for them then.
+- **A warranty is ending** within 30 days of its date and not after it: time to have a fault
+  repaired under it. **It ended recently** within the last 45 days, as a subscription does.
+- **A device is disposed of** when it sits at a location a deployment names as such
+  (`Dashboard:DisposedLocations`): the data marks disposal only this way — an asset's status is never
+  set — and a seat still active on one is freed by no one.
+- **A record is incomplete** when an asset or a piece of information carries its `Incomplete` flag.
+
 ## Codebooks
 
 The lookup tables — countries, cities, states, currencies, periods, confidentiality, integrity,

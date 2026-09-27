@@ -21,6 +21,8 @@
     --color-ink-soft: #35415a; /* 10.2, 9.0 */
     --color-ink-muted: #5b6779; /* 5.7, 5.1 */
     --color-ink-faint: #616d80; /* 5.2, 4.6 */
+    /* A card's uppercase label: the lightest ink that still passes, so on `surface` only. */
+    --color-ink-label: #6b7789; /* 4.5 */
     /* Absence, never content: the "—" of an empty cell. Below AA on purpose — there is nothing to read. */
     --color-ink-ghost: #c3cddc;
 

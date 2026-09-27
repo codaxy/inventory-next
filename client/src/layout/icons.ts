@@ -20,6 +20,7 @@ import {
     Copy01Icon,
     CloudIcon,
     CommandLineIcon,
+    DashboardSquare01Icon,
     ComputerIcon,
     ConstructionIcon,
     Delete02Icon,
@@ -54,6 +55,7 @@ export type IconData = readonly (readonly [string, Readonly<Record<string, strin
  * never silently changes the other.
  */
 const navIcons = {
+    dashboard: DashboardSquare01Icon,
     electronicDevices: ComputerIcon,
     electronicDeviceTypes: Shapes01Icon,
     electronicDeviceTags: Tag01Icon,

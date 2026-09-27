@@ -42,6 +42,14 @@ Google is off until a client id and secret arrive, which in compose is through t
 GOOGLE_CLIENT_ID=… GOOGLE_CLIENT_SECRET=… docker compose --profile app up
 ```
 
+**`Dashboard:DisposedLocations` names the locations assets are moved to when written off or sold**,
+by name, since names differ between databases; empty by default, and then the dashboard has no section
+for seats left on them. Development names the restored database's `Otpisano` and `Prodano`.
+
+**`Dashboard:SubscriptionsExpiredDays`, `SubscriptionsExpiringDays`, `WarrantiesEndedDays` and
+`WarrantiesEndingDays` are the dashboard's windows**, each on its own — 45, 15, 45 and 30 in
+`appsettings.json`. One below 1 stops the app at start.
+
 `appsettings.Development.json` is committed and holds no secret: the compose connection string,
 Mailpit and one-time codes on, so a fresh checkout runs. Development credentials live in user
 secrets; see [auth.md](auth.md).

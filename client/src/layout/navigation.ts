@@ -18,6 +18,11 @@ export interface NavSection {
 /** The menu, and the routing table of every screen in it. */
 export const navigation: NavSection[] = [
     {
+        // Above every section and in none: where the day starts.
+        step: 1,
+        items: [{ label: "Dashboard", title: "Dashboard", href: "~/dashboard", icon: "dashboard" }],
+    },
+    {
         title: "Company",
         step: 6,
         items: [

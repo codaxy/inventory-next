@@ -49,11 +49,13 @@ import SoftwareServiceEditor from "./licenses/software-services/editor";
 import SoftwareServices from "./licenses/software-services";
 import Types from "./electronic-devices/types";
 import Controller from "./Controller";
+import Dashboard from "./dashboard";
 import NotFound from "./not-found";
 import SignIn from "./sign-in";
 
 /** The menu items that have a screen; the rest route to a placeholder naming the step that builds them. */
 const screens: Record<string, any> = {
+    "~/dashboard": Dashboard,
     "~/administration/audit-log": AuditLog,
     "~/administration/server-log": ServerLog,
     "~/company/clients": Clients,

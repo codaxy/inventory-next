@@ -30,7 +30,8 @@ taken: boundaries between items enforced by tests, since review holds them; data
 layer per slice, since the schema is one frozen graph and the context is shared.
 
 `App` mirrors the client's menu: a folder per section, and in it a folder per item —
-`Licenses/Activations`, `Company/Locations` — so a screen has the same path on both sides.
+`Licenses/Activations`, `Company/Locations` — so a screen has the same path on both sides. An item in
+no section, the Dashboard, is a folder at the top.
 
 ```
 Licenses/

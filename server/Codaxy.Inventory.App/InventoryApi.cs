@@ -7,6 +7,8 @@ public static class InventoryApi
     {
         var api = app.MapGroup("/api").RequireAuthorization();
 
+        Dashboard.Get.Endpoint.Map(api.MapGroup("/dashboard"));
+
         var tags = api.MapGroup("/electronic-devices/tags");
 
         ElectronicDevices.Tags.List.Endpoint.Map(tags);

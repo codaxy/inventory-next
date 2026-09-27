@@ -1,0 +1,227 @@
+// The dashboard: one card of tiles — one per rule — and the chosen tile's rows beneath, as Pulse's
+// "Where you stand".
+
+.dash-tiles-frame {
+    container-type: inline-size;
+    margin-top: 1.5rem;
+
+    // The cards' side gutter: a phone's page gutter, Pulse's from 34rem.
+    > * {
+        --dash-gutter: 1rem;
+
+        @container (min-width: 34rem) {
+            --dash-gutter: 1.5rem;
+        }
+    }
+}
+
+.dash-card {
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+}
+
+// A phone has the lede just above, and no room for a label saying it again.
+.dash-card-header {
+    display: none;
+    padding: 1rem var(--dash-gutter);
+    border-bottom: 1px solid var(--color-line);
+
+    @container (min-width: 34rem) {
+        display: block;
+    }
+}
+
+// Two to a row on a phone, an odd last one across both; wider, two even rows — never one row, which
+// reads as a strip, not a card, and the page stops widening before tiles would want it. The view sets
+// the count, which CSS cannot take from the children. Every tile
+// draws its right and bottom edge, and the grid overhangs the card by a pixel so the card clips those
+// at its own edge; a cell a short row leaves empty is blank surface.
+.dash-tiles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0 -1px -1px 0;
+
+    > .dash-tile:last-child:nth-child(odd) {
+        grid-column: span 2;
+    }
+
+    @container (min-width: 34rem) {
+        grid-template-columns: repeat(var(--dash-half), minmax(0, 1fr));
+
+        > .dash-tile:last-child:nth-child(odd) {
+            grid-column: auto;
+        }
+    }
+}
+
+// A phone's tile is its label and its number on one line: the window is in the list's title, and a
+// line of it per tile cost the screen the list. From 34rem the tile stacks label, number and line as
+// subgrid rows shared across its row, so the numbers align whichever label wraps.
+.dash-tile {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 0.75rem;
+    min-height: 44px;
+    padding: 0.875rem var(--dash-gutter);
+    border: 0;
+    border-right: 1px solid var(--color-line-soft);
+    border-bottom: 1px solid var(--color-line-soft);
+    background: transparent;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    transition: background-color 120ms ease;
+
+    .dash-tile-sub {
+        display: none;
+    }
+
+    @container (min-width: 34rem) {
+        grid-template-columns: none;
+        grid-row: span 3;
+        grid-template-rows: subgrid;
+        row-gap: 0.375rem;
+        align-content: start;
+        align-items: stretch;
+        padding-block: 1.25rem;
+
+        .dash-tile-sub {
+            display: block;
+        }
+    }
+
+    &:hover:not(:disabled) {
+        background: var(--color-hover);
+
+        .dash-tile-sub {
+            color: var(--color-ink-soft);
+        }
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-primary-text);
+        outline-offset: -2px;
+    }
+}
+
+.dash-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-ink-label);
+}
+
+.dash-tile-value {
+    // Beside its label on a phone the number needs no weight to be found; stacked under it, from
+    // 34rem, it carries the tile.
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink);
+
+    @container (min-width: 34rem) {
+        font-size: 19px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+    }
+}
+
+// Red: wrong whenever there are any. Amber: due soon.
+.dash-tile-alert .dash-tile-value {
+    color: var(--color-danger-text);
+}
+
+.dash-tile-warn .dash-tile-value {
+    color: var(--color-warn-text);
+}
+
+.dash-tile-sub {
+    font-size: 12px;
+    color: var(--color-ink-muted);
+}
+
+// Nothing to show: muted, and it opens nothing.
+.dash-tile-empty {
+    cursor: default;
+
+    .dash-tile-value {
+        color: var(--color-ink-ghost);
+    }
+}
+
+// The tile whose rows are open beneath: the hover's tint, held, and the accent along its foot.
+.dash-tile-on,
+.dash-tile-on:hover:not(:disabled) {
+    background: var(--color-hover);
+    box-shadow: inset 0 -2px 0 var(--color-primary);
+}
+
+// The selected tile's rows: `holdingSections` as the tiles' card has it — the title a label over a
+// hairline, rows edge to edge and tinted on hover, Pulse's list sizes.
+.dash-detail {
+    margin-top: 0.75rem;
+
+    .holding-section {
+        overflow: hidden;
+        padding: 0 0 0.5rem;
+        border-radius: 0.75rem;
+    }
+
+    .editor-section-head {
+        margin: 0;
+        padding: 1rem var(--dash-gutter);
+        border-bottom: 1px solid var(--color-line);
+    }
+
+    .editor-section-title {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--color-ink-label);
+    }
+
+    // How many there are, which the label only names: prominent beside it.
+    .holding-count {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0;
+        font-variant-numeric: tabular-nums;
+        color: var(--color-ink);
+    }
+
+    .holding-list {
+        margin: 0;
+    }
+
+    .holding-row {
+        padding: 0.75rem var(--dash-gutter);
+        border-radius: 0;
+        font-size: 13.5px;
+    }
+
+    .holding-row + .holding-row {
+        border-radius: 0;
+    }
+
+    .holding-meta {
+        font-size: 12px;
+        color: var(--color-ink-muted);
+    }
+
+    a.holding-row:hover .holding-meta {
+        color: var(--color-ink-soft);
+    }
+
+    .holding-more,
+    .editor-hint {
+        margin-inline: var(--dash-gutter);
+    }
+}

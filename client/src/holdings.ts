@@ -54,6 +54,8 @@ export interface Kind {
     moreHref?: string;
     /** In place of the total, as the title's count. */
     count?: string;
+    /** How the first rows were chosen, where a section is cut short: "by name" unless said. */
+    order?: string;
 }
 
 /**
@@ -82,7 +84,7 @@ export function toSections(kinds: Kind[], nothing: string, missing: (kinds: stri
             moreText: more && kind.moreHref ? `See all ${kind.total}` : undefined,
             limitNote:
                 more && !kind.moreHref
-                    ? `The first ${kind.rows.length} of ${kind.total}, by name.`
+                    ? `The first ${kind.rows.length} of ${kind.total}, ${kind.order ?? "by name"}.`
                     : undefined,
         });
     }
