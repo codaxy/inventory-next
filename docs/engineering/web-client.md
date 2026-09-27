@@ -285,7 +285,11 @@ stays text. **A name that titles something else is not that link**: a volume has
 row is titled by its software's name on its license's page and by its license's on its software's —
 either, as a link, would read as opening the volume. The title is text under the menu's icon for
 what it names, the item's own mark saying which record it is, and the row's links carry
-the way on — its activations, Activate, "View software" or "View license" — a muted dot between each. The city and state a location offers are the
+the way on — its activations, Activate, "View software" or "View license" — a muted dot between each. Away from
+its license, a line under the section's label says so — "License volumes cannot be managed here,
+only in the license editor", pointing to "View license" for a volume's own license and to Licenses, a
+link, for adding one to another license or a new one — in view and in the form alike, since the form is where one would look; there the volumes are read-only and keep
+only "View license". The city and state a location offers are the
 chosen country's; a form whose only choice is made — one country, its one city — starts with it.
 
 **A printable document is a page of its own with its own print styles** — the handover sheet at

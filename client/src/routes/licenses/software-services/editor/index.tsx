@@ -158,8 +158,21 @@ export default createFunctionalComponent(() => (
                                     text={e.errors.url}
                                 />
                             </div>
-                            <div class="editor-wide" visible={expr(e.viewing, e.loading, (v, l) => v && !l)}>
+                            {/* In the form too, read-only: it is where someone looks to change them, and learns where to. */}
+                            <div class="editor-wide" visible={expr(e.id, e.loading, (id, l) => !!id && !l)}>
                                 <div class="editor-label" text="License volumes" />
+                                {/* Nothing here edits them, and the page gives no other sign of where to. */}
+                                <p class="editor-hint volumes-owner">
+                                    License volumes cannot be managed here, only in the license editor. Click
+                                    a volume’s “View license” to manage it, or open{" "}
+                                    <Link
+                                        class="editor-link"
+                                        href="~/licenses"
+                                        url={$app.url}
+                                        text="Licenses"
+                                    />{" "}
+                                    to add one to another license, or to create a new license.
+                                </p>
                                 <div
                                     class="editor-value"
                                     visible={expr(e.volumes, (v) => !v?.length)}
@@ -209,16 +222,22 @@ export default createFunctionalComponent(() => (
                                                     />
                                                 </div>
                                             </div>
+                                            {/* "View license" in the form too: the hint above sends the reader there. */}
                                             <div class="volume-links">
                                                 <Link
                                                     class="editor-link volume-activations"
-                                                    visible={hasValue(m.$volume.activationsHref)}
+                                                    visible={expr(
+                                                        e.viewing,
+                                                        m.$volume.activationsHref,
+                                                        (v, href) => !!v && !!href,
+                                                    )}
                                                     href={m.$volume.activationsHref}
                                                     url={$app.url}
                                                     text={m.$volume.activationsText}
                                                 />
                                                 <Link
                                                     class="editor-link volume-activations"
+                                                    visible={e.viewing}
                                                     href={m.$volume.activateHref}
                                                     url={$app.url}
                                                     text={m.$volume.activateText}
