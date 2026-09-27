@@ -340,7 +340,9 @@ download. A marker the server put in place of a character that would have acted 
 injection attempt reads as one.
 
 **The logo tile is violet**, `brand`, wherever it appears: the chrome is Pulse's, and the mark is what
-tells the two applications apart at a glance.
+tells the two applications apart at a glance. The favicon is the same tile, an SVG inline in `index.html` — the one place the
+colour and the glyph are written out rather than taken from `tailwind.css` and `_brand.scss`, since a
+browser reads it before any stylesheet.
 
 **Every colour and shadow is a token in `src/tailwind.css`**, in `@theme static`, and nothing else in the client
 writes one. Each text token clears AA (4.5:1) on both the card and the page, but `ink-ghost`, which marks an
