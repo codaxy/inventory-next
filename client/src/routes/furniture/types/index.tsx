@@ -70,7 +70,7 @@ export default createFunctionalComponent(() => {
                     <div class="record-head furniture-type-columns">
                         {sortHeader(s.sort, "name", "Name")}
                         <span text="Description" />
-                        {sortHeader(s.sort, "furniture", "Furniture")}
+                        {sortHeader(s.sort, "furniture", "Furniture", "record-num")}
                     </div>
 
                     <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />
@@ -92,6 +92,7 @@ export default createFunctionalComponent(() => {
                             <span
                                 class={{
                                     "record-meta": true,
+                                    "record-num": true,
                                     "record-blank": expr(m.$row.furniture, (f) => !f),
                                 }}
                             >

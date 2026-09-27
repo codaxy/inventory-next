@@ -121,6 +121,11 @@ apply to an id; any other search keeps its list's own wording. `ListController` 
 **A cell says only what its column's header does not**: "6 Aug 2024" under Deactivated, not
 "Deactivated 6 Aug 2024" — but a phone's card, which has no headers, keeps the word.
 
+**A quantity is right-aligned, a label that is a number is not**: counts, seats and money — and their
+headers — sit right in tabular figures from `md` (`record-num`; `countCell` carries it, a `searchList`
+column says `numeric`), so a column reads by size. Inventory, invoice, serial and phone numbers stay
+left: nobody compares their size.
+
 **The list is one markup at both widths**: a stacked card on a phone, a row of columns with a header
 from `md`, laid out by CSS grid areas. Not a `Grid` for desktop beside cards for the phone — two
 renderings of every row, drifting apart. **A wide list's columns are shares (`fr`), not fixed widths**:

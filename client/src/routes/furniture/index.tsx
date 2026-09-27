@@ -180,7 +180,7 @@ export default createFunctionalComponent(() => {
                         {sortHeader(s.sort, "location", "Location")}
                         {sortHeader(s.sort, "type", "Type")}
                         {sortHeader(s.sort, "vendor", "Vendor")}
-                        {sortHeader(s.sort, "value", "Value")}
+                        {sortHeader(s.sort, "value", "Value", "record-num")}
                         {sortHeader(s.sort, "modified", "Changed")}
                     </div>
 
@@ -205,7 +205,7 @@ export default createFunctionalComponent(() => {
                             {optional(m.$row.location)}
                             {optional(m.$row.type)}
                             <span class="record-meta" text={m.$row.vendor} />
-                            <span class="record-meta furniture-value" text={m.$row.value} />
+                            <span class="record-meta record-num furniture-value" text={m.$row.value} />
                             <span class="record-meta furniture-changed" text={m.$row.modified} />
                         </Link>
                     </Repeater>

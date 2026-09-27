@@ -166,7 +166,7 @@ export default createFunctionalComponent(() => {
                         {sortHeader(s.sort, "name", "Name")}
                         <span text="Description" />
                         {sortHeader(s.sort, "tags", "Tags")}
-                        {sortHeader(s.sort, "devices", "Devices")}
+                        {sortHeader(s.sort, "devices", "Devices", "record-num")}
                     </div>
 
                     <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />
@@ -208,6 +208,7 @@ export default createFunctionalComponent(() => {
                             <span
                                 class={{
                                     "record-meta": true,
+                                    "record-num": true,
                                     "record-blank": expr(m.$row.devices, (d) => !d),
                                 }}
                                 text={expr(m.$row.devices, (d) => d ?? "—")}

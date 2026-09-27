@@ -33,7 +33,12 @@ export default createFunctionalComponent(() => (
                     { header: "Contact", cell: optionalCell(r.contact) },
                     { header: "Email", cell: optionalCell(r.email) },
                     { header: "Phone", cell: optionalCell(r.phone) },
-                    { header: "Assets", sort: "assets", cell: countCell(r.assets, r.assetsWord) },
+                    {
+                        header: "Assets",
+                        sort: "assets",
+                        numeric: true,
+                        cell: countCell(r.assets, r.assetsWord),
+                    },
                 ],
             })}
         </div>

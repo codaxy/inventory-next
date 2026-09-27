@@ -137,7 +137,7 @@ export default createFunctionalComponent(() => {
                         {sortHeader(s.sort, "name", "Name")}
                         {sortHeader(s.sort, "client", "Client")}
                         {sortHeader(s.sort, "owner", "Led by")}
-                        <span text="Information" />
+                        <span class="record-num" text="Information" />
                     </div>
 
                     <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />

@@ -51,6 +51,7 @@ export default createFunctionalComponent(() => (
                         header: "Information",
                         sort: "information",
                         cell: countCell(r.information, r.informationWord),
+                        numeric: true,
                     },
                 ],
             })}

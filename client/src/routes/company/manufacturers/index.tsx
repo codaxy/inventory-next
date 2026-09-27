@@ -31,8 +31,18 @@ export default createFunctionalComponent(() => (
                         ),
                     },
                     { header: "URL", cell: optionalCell(r.url, "record-muted") },
-                    { header: "Devices", sort: "devices", cell: countCell(r.devices, r.devicesWord) },
-                    { header: "Software", sort: "software", cell: countCell(r.software, r.softwareWord) },
+                    {
+                        header: "Devices",
+                        sort: "devices",
+                        numeric: true,
+                        cell: countCell(r.devices, r.devicesWord),
+                    },
+                    {
+                        header: "Software",
+                        sort: "software",
+                        numeric: true,
+                        cell: countCell(r.software, r.softwareWord),
+                    },
                 ],
             })}
         </div>

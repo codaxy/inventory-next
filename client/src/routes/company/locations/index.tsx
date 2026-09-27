@@ -40,7 +40,12 @@ export default createFunctionalComponent(() => (
                         ),
                     },
                     { header: "Room", cell: optionalCell(r.room) },
-                    { header: "Assets", sort: "assets", cell: countCell(r.assets, r.assetsWord) },
+                    {
+                        header: "Assets",
+                        sort: "assets",
+                        numeric: true,
+                        cell: countCell(r.assets, r.assetsWord),
+                    },
                 ],
             })}
         </div>

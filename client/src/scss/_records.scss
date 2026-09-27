@@ -104,6 +104,20 @@
     color: var(--color-ink-soft);
 }
 
+// A quantity — a count, seats, money — and its header, right-aligned in tabular figures where the
+// columns show, so digits line up by place value and a column reads by size. A number that is a label
+// — an inventory, invoice or serial number — stays left: nobody compares its size.
+.record-num {
+    font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 768px) {
+    .record-num {
+        justify-self: end;
+        text-align: right;
+    }
+}
+
 .list-sort-header {
     display: inline-flex;
     align-items: center;

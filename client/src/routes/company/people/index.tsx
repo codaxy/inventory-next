@@ -1,8 +1,8 @@
-import type { AccessorChain } from "cx/data";
 import { createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
 import { Button, Icon, Link, LinkButton, Repeater, TextField } from "cx/widgets";
 
 import { Pager } from "../../../components/Pager";
+import { countCell } from "../../../components/searchList";
 import { sortHeader } from "../../../components/sortHeader";
 import $app from "../../../model";
 import { stickyBar } from "../../../stickyBar";
@@ -19,15 +19,6 @@ const notEmpty = expr(
 );
 
 /** A count under its header from `md`; a phone's card, which has none, keeps the word. */
-const count = (value: AccessorChain<string | undefined>, word: AccessorChain<string>) => (
-    <cx>
-        <span class={{ "record-meta": true, "record-blank": expr(value, (v) => !v) }}>
-            <span text={expr(value, (v) => v ?? "—")} />
-            <span class="md:hidden" visible={hasValue(value)} text={expr(word, (w) => ` ${w}`)} />
-        </span>
-    </cx>
-);
-
 /** People: A to Z, each with how much they hold. */
 export default createFunctionalComponent(() => {
     const onBarRef = stickyBar();
@@ -81,8 +72,8 @@ export default createFunctionalComponent(() => {
                     <div class="record-head people-columns">
                         {sortHeader(s.sort, "name", "Name")}
                         {sortHeader(s.sort, "email", "Email")}
-                        {sortHeader(s.sort, "assets", "Assets")}
-                        <span text="Seats" />
+                        {sortHeader(s.sort, "assets", "Assets", "record-num")}
+                        <span class="record-num" text="Seats" />
                     </div>
 
                     <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />
@@ -95,8 +86,8 @@ export default createFunctionalComponent(() => {
                         >
                             <span class="record-title" text={m.$row.name} />
                             <span class="record-meta" text={m.$row.email} />
-                            {count(m.$row.assets, m.$row.assetsWord)}
-                            {count(m.$row.seats, m.$row.seatsWord)}
+                            {countCell(m.$row.assets, m.$row.assetsWord)}
+                            {countCell(m.$row.seats, m.$row.seatsWord)}
                         </Link>
                     </Repeater>
                 </div>

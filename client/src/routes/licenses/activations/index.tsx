@@ -239,7 +239,7 @@ export default createFunctionalComponent(() => {
                         {sortHeader(s.sort, "software", "Software")}
                         {sortHeader(s.sort, "license", "License")}
                         {sortHeader(s.sort, "assignee", "User or device")}
-                        <span text="Seats" />
+                        <span class="record-num" text="Seats" />
                         {sortHeader(s.sort, "activated", "Activated")}
                         {sortHeader(s.sort, "deactivated", "Deactivated")}
                         <span text="License expiry" />
@@ -274,7 +274,7 @@ export default createFunctionalComponent(() => {
                                     text={m.$row.assigneeNote}
                                 />
                             </span>
-                            <span class="record-meta" text={m.$row.seats} />
+                            <span class="record-meta record-num" text={m.$row.seats} />
                             <span class="record-meta" text={m.$row.activated} />
                             <span
                                 class={{

@@ -1,8 +1,8 @@
-import type { AccessorChain } from "cx/data";
 import { createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
 import { Button, Icon, Link, LinkButton, Repeater, TextField } from "cx/widgets";
 
 import { Pager } from "../../../components/Pager";
+import { countCell } from "../../../components/searchList";
 import { sortHeader } from "../../../components/sortHeader";
 import $app from "../../../model";
 import { stickyBar } from "../../../stickyBar";
@@ -19,15 +19,6 @@ const notEmpty = expr(
 );
 
 /** A count under its header from `md`; a phone's card, which has none, keeps the word. */
-const count = (value: AccessorChain<string | undefined>, word: AccessorChain<string>) => (
-    <cx>
-        <span class={{ "record-meta": true, "record-blank": expr(value, (v) => !v) }}>
-            <span text={expr(value, (v) => v ?? "—")} />
-            <span class="md:hidden" visible={hasValue(value)} text={expr(word, (w) => ` ${w}`)} />
-        </span>
-    </cx>
-);
-
 /** Clients: A to Z, each with its projects. */
 export default createFunctionalComponent(() => {
     const onBarRef = stickyBar();
@@ -80,7 +71,7 @@ export default createFunctionalComponent(() => {
                 <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head client-columns">
                         {sortHeader(s.sort, "name", "Name")}
-                        {sortHeader(s.sort, "projects", "Projects")}
+                        {sortHeader(s.sort, "projects", "Projects", "record-num")}
                     </div>
 
                     <div class="list-loading" visible={falsy(s.loaded)} text="Loading…" />
@@ -92,7 +83,7 @@ export default createFunctionalComponent(() => {
                             url={$app.url}
                         >
                             <span class="record-title" text={m.$row.name} />
-                            {count(m.$row.projects, m.$row.projectsWord)}
+                            {countCell(m.$row.projects, m.$row.projectsWord)}
                         </Link>
                     </Repeater>
                 </div>

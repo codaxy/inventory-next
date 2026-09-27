@@ -6,11 +6,11 @@ import { expr } from "cx/ui";
  * says whether the column is in force and which way. A function, not a component — it is called while
  * the markup is built, once per column.
  */
-export const sortHeader = (sort: AccessorChain<string>, key: string, text: string) => (
+export const sortHeader = (sort: AccessorChain<string>, key: string, text: string, cls?: string) => (
     <cx>
         <button
             type="button"
-            class="list-sort-header"
+            class={cls ? `list-sort-header ${cls}` : "list-sort-header"}
             onClick={(_e: unknown, { controller }: any) => controller.sortBy(key)}
         >
             <span text={text} />

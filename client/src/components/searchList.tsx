@@ -29,6 +29,8 @@ export interface Column {
     sort?: string;
     /** The cell, bound to the row's alias. */
     cell: any;
+    /** A quantity — a count, seats, money: its header right-aligned over digits that are. */
+    numeric?: boolean;
 }
 
 interface SearchList {
@@ -109,10 +111,10 @@ export function searchList(o: SearchList) {
                 <div class={`record-head ${o.columns}`}>
                     {o.cells.map((c) =>
                         c.sort ? (
-                            sortHeader(s.sort as any, c.sort, c.header)
+                            sortHeader(s.sort as any, c.sort, c.header, c.numeric ? "record-num" : undefined)
                         ) : (
                             <cx>
-                                <span text={c.header} />
+                                <span class={c.numeric ? "record-num" : undefined} text={c.header} />
                             </cx>
                         ),
                     )}
@@ -161,7 +163,7 @@ export const optionalCell = (value: AccessorChain<string | undefined>, cls = "re
 /** A count under its header from `md`; a phone's card, which has none, keeps the word. */
 export const countCell = (value: AccessorChain<string | undefined>, word: AccessorChain<string>) => (
     <cx>
-        <span class={{ "record-meta": true, "record-blank": expr(value, (v) => !v) }}>
+        <span class={{ "record-meta": true, "record-num": true, "record-blank": expr(value, (v) => !v) }}>
             <span text={expr(value, (v) => v ?? "—")} />
             <span class="md:hidden" visible={hasValue(value)} text={expr(word, (w) => ` ${w}`)} />
         </span>
