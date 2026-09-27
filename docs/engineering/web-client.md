@@ -390,6 +390,9 @@ full list of variables is `cx-theme-variables/build/presets/default.js`; the doc
 one partial per component in `src/scss/`, for what no variable expresses. The theme's SCSS and ours
 load inside `@layer components`, so a Tailwind utility in markup wins over both.
 
+**A card's padding is never smaller below its content than above it**: lighter at the foot, the
+content reads as sinking in it.
+
 **An invalid field is its red border**, never a tinted fill: CxJS's pink wash is overridden in
 `src/scss/_fields.scss`. A message beneath it is for what the field cannot show — the server
 refusing the address — never for "required" or "not a valid address", which say what the red

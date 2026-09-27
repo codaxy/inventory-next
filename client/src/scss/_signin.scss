@@ -21,7 +21,8 @@
 
 .sign-in {
     max-width: 360px;
-    padding: 32px 28px 28px;
+    // Never less below than above: a card lighter at its foot reads as content sinking in it.
+    padding: 32px 28px;
     text-align: center;
     // Centred lines of unequal length strand a short last word; balance evens them out.
     text-wrap: balance;
