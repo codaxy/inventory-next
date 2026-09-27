@@ -65,9 +65,10 @@ inert. Red for over-allocated seats and seats on disposed devices, wrong wheneve
 for what ends soon; ink for the rest, whose weight depends. Two tiles to a row on a phone, half the
 count from 34rem, never all in one — that reads as a strip — so the page is `page-narrow`. From 34rem
 a tile stacks label, 19px bold number and line as subgrid rows of its row, so numbers align whichever
-label wraps. On a phone a tile is label and medium-weight number on one line: the line goes, the
-list's title carries the window, the header goes, the lede says it, and the gutter is 1rem — so the
-list starts on the first screen.
+label wraps, and label and line each hold two lines, so every row of tiles is as tall as the fullest —
+never a stubby row under a full one. On a phone a tile is label and medium-weight number on one line:
+the line goes, the list's title carries the window, the header goes, the lede says it, and the gutter
+is 1rem — so the list starts on the first screen.
 
 **Icons are HugeIcons' free set** (`@hugeicons/core-free-icons`, MIT), registered by name against cx's
 `Icon` in `src/layout/registerIcons.tsx`; a view binds `<Icon name=… />`. One name per use, not per glyph.

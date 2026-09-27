@@ -63,7 +63,6 @@ interface Rule {
 
 function rules(d: Dashboard): Rule[] {
     const withSeats = d.expired.items.filter((l) => l.activeSeats).length;
-    const overBy = d.overAllocated.items.reduce((sum, v) => sum + v.inUse - v.quantity, 0);
 
     return [
         {
@@ -120,9 +119,7 @@ function rules(d: Dashboard): Rule[] {
         {
             label: "Over-allocated",
             tone: "alert" as const,
-            sub: overBy
-                ? `${plural(overBy, "seat", "seats")} past what was bought`
-                : "Seats past what was bought",
+            sub: "More seats than bought",
             kind: {
                 key: "over",
                 title: "Over-allocated volumes",

@@ -89,6 +89,13 @@
         align-items: stretch;
         padding-block: 1.25rem;
 
+        // Two lines each for label and line, the most either wraps to, so every row of tiles is as
+        // tall as the tallest: a row of short texts otherwise stands stubby under a full one.
+        .dash-label,
+        .dash-tile-sub {
+            min-height: 2lh;
+        }
+
         .dash-tile-sub {
             display: block;
         }
