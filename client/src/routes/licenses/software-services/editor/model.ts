@@ -21,7 +21,7 @@ export interface EditorState {
     draft: Draft;
     /** How many license volumes are of it: what keeps it from being deleted. */
     volumeCount: number;
-    /** Its license volumes, each a link to its license. */
+    /** Its license volumes, each with a link to its license. */
     volumes: VolumeRow[];
     categories: Option[];
     manufacturers: Option[];
@@ -33,11 +33,15 @@ export interface EditorState {
     visited: boolean;
 }
 
-/** A license volume as a row: its license, its type and description, its seats metered. */
+/** A license volume as a row: its license, its type and description, its seats metered, its links. */
 export interface VolumeRow {
     id: string;
-    href: string;
+    licenseHref: string;
     license: string;
+    activationsHref?: string;
+    activationsText: string;
+    activateHref: string;
+    activateText: string;
     detail: string;
     seats: string;
     fill: number;
@@ -70,7 +74,11 @@ export const volumesText = (n: number) =>
 export const toVolumeRows = (volumes: VolumeLine[]): VolumeRow[] =>
     volumes.map((v) => ({
         id: v.id,
-        href: `~/licenses/${v.licenseId}`,
+        licenseHref: `~/licenses/${v.licenseId}`,
+        activationsHref: v.activationCount > 0 ? `~/licenses/activations?volumeId=${v.id}` : undefined,
+        activationsText: v.activationCount === 1 ? "1 activation" : `${v.activationCount} activations`,
+        activateHref: `~/licenses/activations/new?volumeId=${v.id}&from=software`,
+        activateText: v.inUse < v.quantity ? "Activate" : "Over-activate",
         license: v.licenseNumber ? `${v.license} #${v.licenseNumber}` : v.license,
         detail: v.description ? `${v.type} · ${v.description}` : v.type,
         seats: `${v.inUse} / ${v.quantity}`,

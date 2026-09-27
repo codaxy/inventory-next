@@ -50,6 +50,7 @@ export interface VolumeRow {
     /** A new activation of this volume; absent when every seat is taken, as the shortcut would only
      *  lead past the quantity — still possible, deliberately, from the activations form. */
     activateHref?: string;
+    activateText?: string;
 }
 
 /** The form, as the fields bind it: the asset's fields, then the license's own. */
@@ -159,8 +160,9 @@ const toVolumeRow = (v: LicenseDetail["volumes"][number]): VolumeRow => ({
     held: v.held ?? undefined,
     activationsHref: v.activationCount > 0 ? `~/licenses/activations?volumeId=${v.id}` : undefined,
     activationsText: v.activationCount === 1 ? "1 activation" : `${v.activationCount} activations`,
-    activateHref:
-        v.inUse < v.quantity ? `~/licenses/activations/new?volumeId=${v.id}&from=license` : undefined,
+    activateHref: `~/licenses/activations/new?volumeId=${v.id}&from=license`,
+    // Past the quantity a seat is still allowed, with a warning; the link says which it will be.
+    activateText: v.inUse < v.quantity ? "Activate" : "Over-activate",
 });
 
 /** What the server is sent. */

@@ -24,6 +24,7 @@ export interface VolumeLine {
     description: string | null;
     quantity: number;
     inUse: number;
+    activationCount: number;
 }
 
 export interface SoftwareServiceDetail {

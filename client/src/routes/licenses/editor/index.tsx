@@ -155,13 +155,22 @@ export default createFunctionalComponent(() => (
                                     visible={keptRow}
                                 >
                                     <div class="volume-summary">
+                                        {/*
+                                            The software's name titles the volume, under the menu's mark for
+                                            software; a link here would read as opening the volume.
+                                        */}
                                         <div class="volume-name">
-                                            <Link
-                                                class="editor-link"
-                                                href={m.$volume.softwareHref}
-                                                url={$app.url}
-                                                text={m.$volume.software}
-                                            />
+                                            <span
+                                                class="volume-kind"
+                                                attrs={{
+                                                    role: "img",
+                                                    "aria-label": "Software",
+                                                    title: "Software",
+                                                }}
+                                            >
+                                                <Icon name="softwareServices" class="size-4" />
+                                            </span>
+                                            <span text={m.$volume.software} />
                                         </div>
                                         <div class="volume-detail">
                                             <span text={m.$volume.detail} />
@@ -205,7 +214,14 @@ export default createFunctionalComponent(() => (
                                             )}
                                             href={m.$volume.activateHref}
                                             url={$app.url}
-                                            text="Activate"
+                                            text={m.$volume.activateText}
+                                        />
+                                        <Link
+                                            class="editor-link volume-activations"
+                                            visible={l.viewing}
+                                            href={m.$volume.softwareHref}
+                                            url={$app.url}
+                                            text="View software"
                                         />
                                         <span
                                             class="editor-hint"

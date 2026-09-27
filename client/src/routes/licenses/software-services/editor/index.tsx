@@ -165,16 +165,27 @@ export default createFunctionalComponent(() => (
                                     visible={expr(e.volumes, (v) => !v?.length)}
                                     text={expr(e.volumeCount, (n) => volumesText(n ?? 0))}
                                 />
-                                {/* Each a link to its license, read in the same parts as on the license's page. */}
+                                {/*
+                                    Read in the same parts as on the license's page. A volume has no page of
+                                    its own, so the row is not a link: its license is "View license".
+                                */}
                                 <div class="volume-list">
                                     <Repeater records={e.volumes} recordAlias={m.$volume} keyField="id">
-                                        <Link
-                                            class="volume-row volume-kept volume-link"
-                                            href={m.$volume.href}
-                                            url={$app.url}
-                                        >
+                                        <div class="volume-row volume-kept">
                                             <div class="volume-summary">
-                                                <div class="volume-name" text={m.$volume.license} />
+                                                <div class="volume-name">
+                                                    <span
+                                                        class="volume-kind"
+                                                        attrs={{
+                                                            role: "img",
+                                                            "aria-label": "License",
+                                                            title: "License",
+                                                        }}
+                                                    >
+                                                        <Icon name="licenses" class="size-4" />
+                                                    </span>
+                                                    <span text={m.$volume.license} />
+                                                </div>
                                                 <div class="volume-detail" text={m.$volume.detail} />
                                             </div>
                                             <div
@@ -198,7 +209,28 @@ export default createFunctionalComponent(() => (
                                                     />
                                                 </div>
                                             </div>
-                                        </Link>
+                                            <div class="volume-links">
+                                                <Link
+                                                    class="editor-link volume-activations"
+                                                    visible={hasValue(m.$volume.activationsHref)}
+                                                    href={m.$volume.activationsHref}
+                                                    url={$app.url}
+                                                    text={m.$volume.activationsText}
+                                                />
+                                                <Link
+                                                    class="editor-link volume-activations"
+                                                    href={m.$volume.activateHref}
+                                                    url={$app.url}
+                                                    text={m.$volume.activateText}
+                                                />
+                                                <Link
+                                                    class="editor-link volume-activations"
+                                                    href={m.$volume.licenseHref}
+                                                    url={$app.url}
+                                                    text="View license"
+                                                />
+                                            </div>
+                                        </div>
                                     </Repeater>
                                 </div>
                             </div>

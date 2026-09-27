@@ -28,6 +28,7 @@ public sealed record SoftwareOrServiceDetail(
 );
 
 /// <summary>One license volume of the entry: which license, its type and description, its seats.</summary>
+/// <param name="ActivationCount">Every activation of it, ended ones too, as a license's volume counts them.</param>
 public sealed record VolumeLine(
     Guid Id,
     Guid LicenseId,
@@ -36,7 +37,8 @@ public sealed record VolumeLine(
     string Type,
     string? Description,
     int Quantity,
-    int InUse
+    int InUse,
+    int ActivationCount
 );
 
 public sealed record Ref(Guid Id, string Name);
@@ -119,7 +121,8 @@ internal static class SoftwareServices
                         v.VolumeType.Text,
                         v.Description,
                         v.Quantity,
-                        v.Activations.Where(a => a.DeactivationDate == null).Sum(a => a.Quantity)
+                        v.Activations.Where(a => a.DeactivationDate == null).Sum(a => a.Quantity),
+                        v.Activations.Count
                     ))
                     .ToList()
             ))

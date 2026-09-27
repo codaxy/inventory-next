@@ -135,12 +135,19 @@ export default class extends Controller {
     private choosePreselected() {
         const ref = this.volumeRefs.find((v) => v.id === this.preselect);
         if (!ref) return;
-        // Started from a license's volume (`from=license`): that license is where the reader goes back
-        // to. Started from the activations list filtered to the volume, the list is, as it was left.
-        if (queryOf(this.store.get($app.url)).get("from") === "license")
+        // Started from a volume on its license's page (`from=license`) or its software's
+        // (`from=software`): that page is where the reader goes back to. Started from the activations
+        // list filtered to the volume, the list is, as it was left.
+        const from = queryOf(this.store.get($app.url)).get("from");
+        if (from === "license")
             this.store.set(a.origin, {
                 href: `~/licenses/${ref.licenseId}`,
                 text: this.licenses.find((l) => l.id === ref.licenseId)?.text ?? "License",
+            });
+        if (from === "software")
+            this.store.set(a.origin, {
+                href: `~/licenses/software-services/${ref.softwareId}`,
+                text: ref.software,
             });
         if (this.store.get(a.draft.softwareId) === ref.softwareId) return;
         this.store.set(a.draft.softwareId, ref.softwareId);

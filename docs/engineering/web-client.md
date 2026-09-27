@@ -203,10 +203,11 @@ activations link by `volumeId`, not by its license and software, which a license
 shares five ways — and say how many they lead to ("2 activations"). A form opened on a choice the address already makes — `activations/new?volumeId=…` — shows it,
 and what follows from it, as text rather than asking again: the volume and its software fixed, and
 the next field the one its type calls for, a user or a device. The activations list filtered to one volume
-opens such a form from its Activate button too. Such a form returns where it was started: from a license's
-volume (`from=license`), its back link names the license and Cancel and a save go back to it; from
-the list, to the list as it was left. A shortcut is offered only where it leads
-somewhere ordinary: a volume's "Activate" shows while a seat is free, not once all are taken. `ListController` in `src/listController.ts` holds all of this
+opens such a form from its Activate button too. Such a form returns where it was started: from a volume on
+its license's page (`from=license`) or its software's (`from=software`), its back link names that page
+and Cancel and a save go back to it; from the list, to the list as it was left. A volume always offers its shortcut, and says
+what it leads to: "Activate" while a seat is free, "Over-activate" once none is — past the quantity a
+seat is allowed with a warning, not refused. `ListController` in `src/listController.ts` holds all of this
 with the search's pause, the chips, the sort and the latest-request rule; a list declares its path,
 its filters to and from the address, and its fetch. Not a history entry per change: Back would step
 through every filter click before leaving.
@@ -279,9 +280,12 @@ a record checked for an edit made meanwhile names its `lastModified` (a refused 
 that can be copied names what a copy keeps (`new?from=:id`, Duplicate behind the ⋮), and a new asset
 bought in batches offers **"Save and replicate"** behind a chevron on Save — Save saves, the
 chevron offers saving and opening the next as its copy — one control at every width. **Whatever names a record with a page
-is a link to it in view** — a picker (`pick(…, { href })`), a fact on a read-only page, a volume's
-software — the assignee, vendor, location, type, manufacturer; a codebook value, which has no page,
-stays text. The city and state a location offers are the
+is a link to it in view** — a picker (`pick(…, { href })`), a fact on a read-only page — the assignee, vendor, location, type, manufacturer; a codebook value, which has no page,
+stays text. **A name that titles something else is not that link**: a volume has no page of its own, and its
+row is titled by its software's name on its license's page and by its license's on its software's —
+either, as a link, would read as opening the volume. The title is text under the menu's icon for
+what it names, the item's own mark saying which record it is, and the row's links carry
+the way on — its activations, Activate, "View software" or "View license" — a muted dot between each. The city and state a location offers are the
 chosen country's; a form whose only choice is made — one country, its one city — starts with it.
 
 **A printable document is a page of its own with its own print styles** — the handover sheet at

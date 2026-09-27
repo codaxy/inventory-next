@@ -317,8 +317,8 @@ public class SoftwareOrServiceTests(SoftwareOrServiceApplication app)
         );
         var volume = Assert.Single(entry.Volumes);
         Assert.Equal(
-            ("Seed license", "Per user", 5, 0),
-            (volume.License, volume.Type, volume.Quantity, volume.InUse)
+            ("Seed license", "Per user", 5, 0, 0),
+            (volume.License, volume.Type, volume.Quantity, volume.InUse, volume.ActivationCount)
         );
     }
 
