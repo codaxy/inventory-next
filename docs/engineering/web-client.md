@@ -142,9 +142,10 @@ the total, previous and next, and from `sm` the first, last and current page wit
 A phone gets "3 / 40" in place of the links. Paging scrolls the page back to the top. **A list
 shows 20 per page** (`pageSize` in `paging.ts`), so a page fits a 1440px-tall display without
 scrolling; with Windows scaling at 125% it still scrolls. The server log's lines are denser, and it
-shows 25. In the bar the
-pager is compact — bare chevrons drawn at 32px, touched at 44 — and the line it sits on is small type
-without borders, so it reads as a caption under the search rather than a second toolbar. The bar's
+shows 25. **Both pagers are captions, not toolbars**: steps and page numbers are
+text drawn at 32px and touched at 44, with no border or fill; the current page is a small pill of the
+accent, as the menu marks where the reader is. In the bar the chevrons close up and the line they
+sit on is small type, so it reads as a caption under the search. The bar's
 chevrons stay, disabled, when nothing matches, as on a single page; the pager under the list goes. Not
 infinite scroll: it loses the reader's place and cannot reach page 40 without loading 39.
 
