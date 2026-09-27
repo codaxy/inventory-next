@@ -64,12 +64,15 @@ export const toForm = (d: Draft) => ({
     url: d.url?.trim() || null,
 });
 
-export const volumesText = (n: number) =>
-    n === 0
-        ? "No license volume is of it."
+/** How many license volumes are of this software, named: "it" would not say what. */
+export const volumesText = (n: number, name?: string | null) => {
+    const of = name ? `of ${name}` : "of this software";
+    return n === 0
+        ? `No license has a volume ${of}.`
         : n === 1
-          ? "1 license volume is of it."
-          : `${n} license volumes are of it.`;
+          ? `1 license volume is ${of}.`
+          : `${n} license volumes are ${of}.`;
+};
 
 export const toVolumeRows = (volumes: VolumeLine[]): VolumeRow[] =>
     volumes.map((v) => ({
