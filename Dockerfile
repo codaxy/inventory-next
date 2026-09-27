@@ -36,7 +36,10 @@ USER $APP_UID
 # The base image binds 8080 through ASPNETCORE_HTTP_PORTS; setting ASPNETCORE_URLS as well
 # overrides it and logs a warning at every start.
 EXPOSE 8080
+# The server log in the folder the image made writable: the default, `logs` under /app, is root's,
+# and the file sink fails without a word.
 ENV ASPNETCORE_ENVIRONMENT=Production \
-    ASPNETCORE_FORWARDEDHEADERS_ENABLED=true
+    ASPNETCORE_FORWARDEDHEADERS_ENABLED=true \
+    ServerLog__Path=/var/lib/inventory/logs
 
 ENTRYPOINT ["dotnet", "Codaxy.Inventory.Web.dll"]

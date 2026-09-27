@@ -89,7 +89,8 @@ overwrite each other's lines into fragments.
 
 **`ServerLog:Path` is outside `wwwroot`, and startup refuses otherwise.** The files are read only
 through the API, behind its own policy; a folder the static-file middleware serves would hand them to
-anyone. Compose puts it on the `server_logs` volume, beside the key ring, so a deploy keeps it; a
+anyone. The image sets it to `/var/lib/inventory/logs`, which it creates and hands to the application's
+user, and compose puts that on the `server_logs` volume beside the key ring, so a deploy keeps it; a
 checkout writes to `logs/` under the content root.
 
 ## Traps
@@ -103,6 +104,10 @@ the connection string it cannot find.
 at this stack's own PostgreSQL, which is empty until something restores into it — it is not the
 original's database. Pointing both at one database is the co-existence arrangement, and it needs the
 migration histories to be identical; see [co-existence.md](co-existence.md).
+
+**A log folder the process cannot write is an empty server log, not an error.** Serilog's file sink
+swallows the failure, so the screen shows nothing and startup succeeds; `logs/` under the image's
+`/app` is root's.
 
 **Mailpit accepts everything and delivers nothing.** One-time codes in development are read from its
 web interface on 8025, never from a mailbox.
