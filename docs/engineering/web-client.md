@@ -103,7 +103,11 @@ and content share the one left-aligned column, so the search is never wider than
 a list's columns are capped so a spare width stays in the page, not between the cells. Past the column
 the page fills the viewport's height with the primary glow and dot grid of sign-in, fading in from
 its left: a bare canvas reads as unfinished. The server log follows the same rule — no pane is special.
-Sign-in, outside the shell, is one centred column that stops growing on a wide display.
+Sign-in, outside the shell, is one centred column that stops growing on a wide display. From 768px
+its right half is Pulse's dark panel, `nav-lift` settling into `nav-bar` and `nav`, and the card
+sits across the seam; a phone keeps the light page, since behind a card that fills its width the
+halves would be two strips. "Built by" ends at the page's centre and Codaxy's wordmark starts there,
+on the text's baseline — its letters stand at 67 of its 80, so it is shifted down, not centred.
 
 **Input text is 16px on a touch screen**, 14px elsewhere: iPhone Safari zooms into a focused field
 whose text is smaller, and the page stays zoomed after it. **Double-tap zoom is off**
@@ -367,7 +371,8 @@ colour and the glyph are written out rather than taken from `tailwind.css` and `
 browser reads it before any stylesheet. **A home screen ignores an SVG icon**, so the tile is also a PNG in `client/public`:
 `apple-touch-icon.png` (180px) for iPhone and 192 and 512px ones in `manifest.json` for Android —
 full bleed, since the platform rounds the corners and iOS turns transparency black. The manifest's
-`display` is `browser`: standalone would drop Safari's address bar and, with it, pull-to-refresh.
+`display` is `browser`: standalone would drop Safari's address bar and, with it, pull-to-refresh. **Codaxy's wordmark is codaxy.com's
+white logo as a mask** in `_brand.scss`, its two tones kept (`axy` at 55%), its colour a token.
 
 **Every colour and shadow is a token in `src/tailwind.css`**, in `@theme static`, and nothing else in the client
 writes one. Each text token clears AA (4.5:1) on both the card and the page, but `ink-ghost`, which marks an

@@ -135,9 +135,15 @@ export default createFunctionalComponent(() => (
                 </div>
             </div>
 
+            {/* Split at the page's centre: the words on the light half, the logo on the dark. */}
             <p class="sign-in-footer">
-                <span text="Built by " />
-                <a href="https://www.codaxy.com" target="_blank" rel="noopener" text="Codaxy" />
+                <span text="Built by" />
+                <a
+                    href="https://www.codaxy.com"
+                    target="_blank"
+                    rel="noopener"
+                    attrs={{ "aria-label": "Codaxy" }}
+                />
             </p>
         </div>
     </cx>
