@@ -79,25 +79,16 @@ export default class extends ListController<Filters, ActivationItem, Row, Activa
     onInit() {
         super.onInit();
 
-        // A license and a software sit side by side, one covering the other when the license has a
-        // volume of it: whichever the reader changes last wins, and the other is cleared if it no
-        // longer fits. The volumes, from the options, are what say which license covers which.
-        let license = this.store.get(s.filters.licenseId) ?? null;
-        let software = this.store.get(s.filters.softwareId) ?? null;
+        // A software is broader than a license: a license with no volume of it is cleared, whether the
+        // software changed or both came in the address. The volumes, from the options, say which
+        // license covers which software; the software is never cleared by a license.
         this.addTrigger(
-            "license-covers-software",
+            "license-fits",
             [s.filters.licenseId, s.filters.softwareId, s.volumes],
-            (l, sw, volumes) => {
-                const changedSoftware = (sw ?? null) !== software;
-                license = l ?? null;
-                software = sw ?? null;
+            (license, software, volumes) => {
                 if (!license || !software || !volumes?.length) return;
                 if (volumes.some((v) => v.licenseId === license && v.softwareId === software)) return;
-                this.store.update(s.filters, (f) =>
-                    changedSoftware
-                        ? { ...f, licenseId: undefined, licenseText: undefined }
-                        : { ...f, softwareId: undefined, softwareText: undefined },
-                );
+                this.store.update(s.filters, (f) => ({ ...f, licenseId: undefined, licenseText: undefined }));
             },
         );
 

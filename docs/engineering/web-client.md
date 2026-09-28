@@ -216,11 +216,10 @@ its pause, **replacing the history entry, never adding one**: Back leaves the li
 stepping through every filter. A record's back link, Cancel, and the return after saving a new record
 or deleting one go to the list as it was left (`listReturn`). **Filters nested in one another stay consistent**: a narrower one the broader contradicts is cleared —
 a volume when a license or software it does not belong to is chosen, or arrives in the address — and
-its picker lists only what the broader ones allow. Filters side by side that can exclude each
-other — a license and a software, one covering the other when the license has a volume of it — keep
-whichever was changed last and clear the other, so neither picker has to be narrowed to reach a
-choice outside the other. Nothing is locked or filled in: the narrower filter's chip already names
-what it implies. Links into a list use the same parameters and **name the narrowest record they mean** — a volume's
+its picker lists only what the broader ones allow. On activations a software is broader than a
+license: the License picker lists the licenses with a volume of it. Not the other way as well — a
+license covering several products would leave each picker blocking the other; a license narrows only
+the volumes. Nothing is locked or filled in: the narrower filter's chip already names what it implies. Links into a list use the same parameters and **name the narrowest record they mean** — a volume's
 activations link by `volumeId`, not by its license and software, which a license of five Rider volumes
 shares five ways — and say how many they lead to ("2 activations"). A form opened on a choice the address already makes — `activations/new?volumeId=…` — shows it,
 and what follows from it, as text rather than asking again: the volume and its software fixed, and

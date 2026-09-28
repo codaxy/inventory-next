@@ -31,6 +31,15 @@ const volumeOptions = expr(s.volumes, f.licenseId, f.softwareId, (volumes, licen
         .map((v) => ({ id: v.id, text: v.text })),
 );
 
+/** The licenses with a volume of the chosen software, every one while none is chosen. */
+const licenseOptions = expr(s.licenses, s.volumes, f.softwareId, (licenses, volumes, software) =>
+    software
+        ? (licenses ?? []).filter((l) =>
+              (volumes ?? []).some((v) => v.licenseId === l.id && v.softwareId === software),
+          )
+        : (licenses ?? []),
+);
+
 /** A new activation, of the volume the list is filtered to when it is: that choice is already made. */
 const newHref = expr(f.volumeId, (id) =>
     id ? `~/licenses/activations/new?volumeId=${id}` : "~/licenses/activations/new",
@@ -175,7 +184,7 @@ export default createFunctionalComponent(() => {
                                 id="licenses-activations-license"
                                 value={f.licenseId}
                                 text={f.licenseText}
-                                options={s.licenses}
+                                options={licenseOptions}
                                 placeholder="Any license"
                                 inputAttrs={{ "aria-label": "License" }}
                             />
