@@ -135,11 +135,7 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div
-                    class={{ "record-list": true, "record-list-loading": s.loading }}
-                    visible={notEmpty}
-                    onRef={paging.onRowsRef}
-                >
+                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head software-columns">
                         {sortHeader(s.sort, "name", "Name")}
                         {sortHeader(s.sort, "category", "Category")}
@@ -148,38 +144,40 @@ export default createFunctionalComponent(() => {
                         {sortHeader(s.sort, "volumes", "Volumes", "record-num")}
                     </div>
 
-                    {listSkeleton({
-                        columns: "software-columns",
-                        cells: 5,
-                        numeric: [4],
-                        visible: falsy(s.loaded),
-                    })}
+                    <div class="list-rows" onRef={paging.onRowsRef}>
+                        {listSkeleton({
+                            columns: "software-columns",
+                            cells: 5,
+                            numeric: [4],
+                            visible: falsy(s.loaded),
+                        })}
 
-                    <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <Link
-                            class="record-row software-columns"
-                            href={expr(m.$row.id, (id) => `~/licenses/software-services/${id}`)}
-                            url={$app.url}
-                        >
-                            <span class="record-title record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.name} />
-                                    {copyButton(m.$row.name, "name")}
+                        <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
+                            <Link
+                                class="record-row software-columns"
+                                href={expr(m.$row.id, (id) => `~/licenses/software-services/${id}`)}
+                                url={$app.url}
+                            >
+                                <span class="record-title record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.name} />
+                                        {copyButton(m.$row.name, "name")}
+                                    </span>
                                 </span>
-                            </span>
-                            {copyCell(m.$row.category, "category")}
-                            {copyCell(m.$row.manufacturer, "manufacturer")}
-                            {copyCell(m.$row.url, "URL")}
-                            <span
-                                class={{
-                                    "record-meta": true,
-                                    "record-num": true,
-                                    "record-blank": expr(m.$row.volumes, (v) => !v),
-                                }}
-                                text={expr(m.$row.volumes, (v) => v ?? "—")}
-                            />
-                        </Link>
-                    </Repeater>
+                                {copyCell(m.$row.category, "category")}
+                                {copyCell(m.$row.manufacturer, "manufacturer")}
+                                {copyCell(m.$row.url, "URL")}
+                                <span
+                                    class={{
+                                        "record-meta": true,
+                                        "record-num": true,
+                                        "record-blank": expr(m.$row.volumes, (v) => !v),
+                                    }}
+                                    text={expr(m.$row.volumes, (v) => v ?? "—")}
+                                />
+                            </Link>
+                        </Repeater>
+                    </div>
                 </div>
 
                 <div class="list-empty" visible={empty}>

@@ -8,10 +8,8 @@
 
 // `clip` rather than `hidden`: it rounds the corners without becoming a scroll container, which
 // would stop the day headings sticking to the page where it scrolls. From `md` the list fills its page
-// and scrolls itself (`list-fill`), and they stick inside it.
+// and its rows scroll (`list-rows`), and they stick inside them.
 .audit-list {
-    --audit-head-height: 2.125rem;
-
     overflow: clip;
     border: 1px solid var(--color-line);
     border-radius: 12px;
@@ -28,7 +26,7 @@
 }
 
 // Sticks beneath the page's pinned block where the page scrolls — on a phone, or with the filters pane
-// open. From `md` the list scrolls itself, and the heading sticks beneath its column header.
+// open. From `md` the rows scroll inside the card, and the heading sticks to the top of them.
 .audit-day {
     position: sticky;
     top: calc(var(--shell-top) + var(--page-top-height, 0px));
@@ -180,13 +178,9 @@
         gap: 1rem;
     }
 
-    // A height of its own, so a day's heading can stick exactly beneath it while the list scrolls.
     .audit-list-head {
         display: grid;
-        align-items: center;
-        box-sizing: border-box;
-        height: var(--audit-head-height);
-        padding: 0 1rem;
+        padding: 0.5rem 1rem;
         border-bottom: 1px solid var(--color-line);
         background: var(--color-raised);
         font-size: 11px;
@@ -215,6 +209,6 @@
 
 @media (min-width: 768px) {
     .list-fill:not(:has(.list-pane)) .audit-day {
-        top: var(--audit-head-height);
+        top: 0;
     }
 }

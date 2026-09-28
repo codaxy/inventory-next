@@ -243,12 +243,13 @@
     }
 }
 
-// Where the columns show, the document holds still and the rows scroll inside the card — the
-// server log's terminal — under its pinned header, the pager at the window's foot. Below `md` the
-// document scrolls, as everywhere, for Safari's toolbars — and at every width while the filters pane
-// is open: in a page of fixed height the pane pushes the rows out of it, so the page scrolls as a
-// phone's does, nothing pinned. cx renders the pane only while it is open. A card squeezed under
-// 10rem in a short window lets the document scroll after all rather than hide the rows.
+// Where the columns show, the document holds still: the card — the server log's terminal — fills the
+// window down to the pager, its header row stays, and only its rows (`list-rows`) scroll, so the
+// scrollbar starts beneath the header. Below `md` the document scrolls, as everywhere, for Safari's
+// toolbars — and at every width while the filters pane is open: in a page of fixed height the pane
+// pushes the rows out of it, so the page scrolls as a phone's does. cx renders the pane only while
+// it is open. A card squeezed under 10rem in a short window lets the document scroll after all rather
+// than hide the rows.
 @media (min-width: 768px) {
     .shell:has(.list-fill):not(:has(.list-pane)) {
         height: 100dvh;
@@ -267,18 +268,17 @@
         > .record-list,
         > .audit-list,
         > .term {
+            display: flex;
+            flex-direction: column;
             flex: 1 1 0;
             min-height: 10rem;
-            overflow-y: auto;
-            overscroll-behavior: contain;
         }
 
-        .record-head,
-        .audit-list-head,
-        .term-bar {
-            position: sticky;
-            top: 0;
-            z-index: 1;
+        .list-rows {
+            flex: 1 1 0;
+            min-height: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
         }
     }
 }

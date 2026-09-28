@@ -233,11 +233,7 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div
-                    class={{ "audit-list": true, "audit-list-loading": s.loading }}
-                    visible={notEmpty}
-                    onRef={paging.onRowsRef}
-                >
+                <div class={{ "audit-list": true, "audit-list-loading": s.loading }} visible={notEmpty}>
                     <div class="audit-list-head">
                         {sortHeader(s.sort, "time", "Time")}
                         <span text="Change" />
@@ -246,75 +242,80 @@ export default createFunctionalComponent(() => {
                         <span text="By" />
                     </div>
 
-                    {/* The first load: rows in the log's own areas, a bar in each. */}
-                    <div visible={falsy(s.loaded)} attrs={{ role: "status" }}>
-                        <span class="sr-only" text="Loading…" />
-                        {[58, 42, 70, 50, 64, 38, 54, 46].map((width) => (
-                            <cx>
-                                <div class="audit-row audit-row-skeleton" attrs={{ "aria-hidden": "true" }}>
-                                    <span class="audit-time">
-                                        <span class="skeleton-bar" style="width: 3rem" />
-                                    </span>
-                                    <span class="audit-action audit-action-skeleton" />
-                                    <span class="audit-record">
-                                        <span class="skeleton-bar" style={`width: ${width}%`} />
-                                    </span>
-                                    <span class="audit-summary">
-                                        <span class="skeleton-bar" style={`width: ${100 - width}%`} />
-                                    </span>
-                                    <span class="audit-user">
-                                        <span class="skeleton-bar" style="width: 9rem" />
-                                    </span>
-                                </div>
-                            </cx>
-                        ))}
-                    </div>
+                    <div class="list-rows" onRef={paging.onRowsRef}>
+                        {/* The first load: rows in the log's own areas, a bar in each. */}
+                        <div visible={falsy(s.loaded)} attrs={{ role: "status" }}>
+                            <span class="sr-only" text="Loading…" />
+                            {[58, 42, 70, 50, 64, 38, 54, 46].map((width) => (
+                                <cx>
+                                    <div
+                                        class="audit-row audit-row-skeleton"
+                                        attrs={{ "aria-hidden": "true" }}
+                                    >
+                                        <span class="audit-time">
+                                            <span class="skeleton-bar" style="width: 3rem" />
+                                        </span>
+                                        <span class="audit-action audit-action-skeleton" />
+                                        <span class="audit-record">
+                                            <span class="skeleton-bar" style={`width: ${width}%`} />
+                                        </span>
+                                        <span class="audit-summary">
+                                            <span class="skeleton-bar" style={`width: ${100 - width}%`} />
+                                        </span>
+                                        <span class="audit-user">
+                                            <span class="skeleton-bar" style="width: 9rem" />
+                                        </span>
+                                    </div>
+                                </cx>
+                            ))}
+                        </div>
 
-                    <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <div
-                            class="audit-day"
-                            visible={hasValue(m.$row.dayHeading)}
-                            text={m.$row.dayHeading}
-                        />
-                        <button
-                            type="button"
-                            class="audit-row"
-                            onClick={(_e: unknown, { store, controller }: any) =>
-                                controller.openEntry(store.get(m.$row))
-                            }
-                        >
-                            <span class="audit-time" text={m.$row.time} />
-                            <span
-                                class={{
-                                    "audit-action": true,
-                                    "audit-action-create": equal(m.$row.action, "Create"),
-                                    "audit-action-update": equal(m.$row.action, "Update"),
-                                    "audit-action-delete": equal(m.$row.action, "Delete"),
-                                }}
+                        <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
+                            <div
+                                class="audit-day"
+                                visible={hasValue(m.$row.dayHeading)}
+                                text={m.$row.dayHeading}
+                            />
+                            <button
+                                type="button"
+                                class="audit-row"
+                                onClick={(_e: unknown, { store, controller }: any) =>
+                                    controller.openEntry(store.get(m.$row))
+                                }
                             >
-                                <Icon name={m.$row.actionIcon} class="size-3.5" />
-                                <span text={m.$row.actionText} />
-                            </span>
-                            <span class="audit-record">
-                                <span class="audit-type" text={m.$row.type} />
-                                <span class="audit-label" text={m.$row.label} />
+                                <span class="audit-time" text={m.$row.time} />
                                 <span
-                                    class="audit-number"
-                                    visible={hasValue(m.$row.inventoryNumber)}
-                                    text={m.$row.inventoryNumber}
-                                />
-                            </span>
-                            <span class="audit-summary">
-                                <span text={m.$row.summary} />
-                                <span
-                                    class="record-more"
-                                    visible={hasValue(m.$row.more)}
-                                    text={m.$row.more}
-                                />
-                            </span>
-                            <span class="audit-user" text={m.$row.email} />
-                        </button>
-                    </Repeater>
+                                    class={{
+                                        "audit-action": true,
+                                        "audit-action-create": equal(m.$row.action, "Create"),
+                                        "audit-action-update": equal(m.$row.action, "Update"),
+                                        "audit-action-delete": equal(m.$row.action, "Delete"),
+                                    }}
+                                >
+                                    <Icon name={m.$row.actionIcon} class="size-3.5" />
+                                    <span text={m.$row.actionText} />
+                                </span>
+                                <span class="audit-record">
+                                    <span class="audit-type" text={m.$row.type} />
+                                    <span class="audit-label" text={m.$row.label} />
+                                    <span
+                                        class="audit-number"
+                                        visible={hasValue(m.$row.inventoryNumber)}
+                                        text={m.$row.inventoryNumber}
+                                    />
+                                </span>
+                                <span class="audit-summary">
+                                    <span text={m.$row.summary} />
+                                    <span
+                                        class="record-more"
+                                        visible={hasValue(m.$row.more)}
+                                        text={m.$row.more}
+                                    />
+                                </span>
+                                <span class="audit-user" text={m.$row.email} />
+                            </button>
+                        </Repeater>
+                    </div>
                 </div>
 
                 <div class="list-empty" visible={empty}>

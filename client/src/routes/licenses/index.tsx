@@ -154,11 +154,7 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div
-                    class={{ "record-list": true, "record-list-loading": s.loading }}
-                    visible={notEmpty}
-                    onRef={paging.onRowsRef}
-                >
+                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head license-columns">
                         {sortHeader(s.sort, "number", "No.")}
                         {sortHeader(s.sort, "name", "Name")}
@@ -169,53 +165,55 @@ export default createFunctionalComponent(() => {
                         {sortHeader(s.sort, "modified", "Changed")}
                     </div>
 
-                    {listSkeleton({
-                        columns: "license-columns",
-                        cells: 7,
-                        numeric: [3],
-                        visible: falsy(s.loaded),
-                    })}
+                    <div class="list-rows" onRef={paging.onRowsRef}>
+                        {listSkeleton({
+                            columns: "license-columns",
+                            cells: 7,
+                            numeric: [3],
+                            visible: falsy(s.loaded),
+                        })}
 
-                    <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <Link
-                            class="record-row license-columns"
-                            href={expr(m.$row.id, (id) => `~/licenses/${id}`)}
-                            url={$app.url}
-                        >
-                            <span class="record-meta license-number record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.number} />
-                                    {copyButton(m.$row.number, "number")}
-                                </span>
-                            </span>
-                            <span class="record-title record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.name} />
-                                    <span
-                                        class="record-flag record-flag-warn"
-                                        visible={hasValue(m.$row.incomplete)}
-                                        text={m.$row.incomplete}
-                                    />
-                                    {copyButton(m.$row.name, "name")}
-                                </span>
-                            </span>
-                            {copyCell(m.$row.vendor, "vendor")}
-                            <span class="record-meta record-num license-value" text={m.$row.value} />
-                            <span class="record-meta" text={m.$row.purchased} />
-                            <span
-                                class={{
-                                    "record-status": true,
-                                    "record-blank": expr(m.$row.expiry, (x) => !x),
-                                }}
+                        <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
+                            <Link
+                                class="record-row license-columns"
+                                href={expr(m.$row.id, (id) => `~/licenses/${id}`)}
+                                url={$app.url}
                             >
+                                <span class="record-meta license-number record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.number} />
+                                        {copyButton(m.$row.number, "number")}
+                                    </span>
+                                </span>
+                                <span class="record-title record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.name} />
+                                        <span
+                                            class="record-flag record-flag-warn"
+                                            visible={hasValue(m.$row.incomplete)}
+                                            text={m.$row.incomplete}
+                                        />
+                                        {copyButton(m.$row.name, "name")}
+                                    </span>
+                                </span>
+                                {copyCell(m.$row.vendor, "vendor")}
+                                <span class="record-meta record-num license-value" text={m.$row.value} />
+                                <span class="record-meta" text={m.$row.purchased} />
                                 <span
-                                    class={expr(m.$row.expiry, (x) => `status-tag ${expiryClass(x)}`)}
-                                    text={expr(m.$row.expiryText, (t) => t ?? "—")}
-                                />
-                            </span>
-                            <span class="record-meta license-changed" text={m.$row.modified} />
-                        </Link>
-                    </Repeater>
+                                    class={{
+                                        "record-status": true,
+                                        "record-blank": expr(m.$row.expiry, (x) => !x),
+                                    }}
+                                >
+                                    <span
+                                        class={expr(m.$row.expiry, (x) => `status-tag ${expiryClass(x)}`)}
+                                        text={expr(m.$row.expiryText, (t) => t ?? "—")}
+                                    />
+                                </span>
+                                <span class="record-meta license-changed" text={m.$row.modified} />
+                            </Link>
+                        </Repeater>
+                    </div>
                 </div>
 
                 <div class="list-empty" visible={empty}>

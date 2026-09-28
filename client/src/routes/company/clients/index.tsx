@@ -56,38 +56,36 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div
-                    class={{ "record-list": true, "record-list-loading": s.loading }}
-                    visible={notEmpty}
-                    onRef={paging.onRowsRef}
-                >
+                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head client-columns">
                         {sortHeader(s.sort, "name", "Name")}
                         {sortHeader(s.sort, "projects", "Projects", "record-num")}
                     </div>
 
-                    {listSkeleton({
-                        columns: "client-columns",
-                        cells: 2,
-                        numeric: [1],
-                        visible: falsy(s.loaded),
-                    })}
+                    <div class="list-rows" onRef={paging.onRowsRef}>
+                        {listSkeleton({
+                            columns: "client-columns",
+                            cells: 2,
+                            numeric: [1],
+                            visible: falsy(s.loaded),
+                        })}
 
-                    <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <Link
-                            class="record-row client-columns"
-                            href={expr(m.$row.id, (id) => `~/company/clients/${id}`)}
-                            url={$app.url}
-                        >
-                            <span class="record-title record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.name} />
-                                    {copyButton(m.$row.name, "name")}
+                        <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
+                            <Link
+                                class="record-row client-columns"
+                                href={expr(m.$row.id, (id) => `~/company/clients/${id}`)}
+                                url={$app.url}
+                            >
+                                <span class="record-title record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.name} />
+                                        {copyButton(m.$row.name, "name")}
+                                    </span>
                                 </span>
-                            </span>
-                            {countCell(m.$row.projects, m.$row.projectsWord)}
-                        </Link>
-                    </Repeater>
+                                {countCell(m.$row.projects, m.$row.projectsWord)}
+                            </Link>
+                        </Repeater>
+                    </div>
                 </div>
 
                 <div class="list-empty" visible={empty}>

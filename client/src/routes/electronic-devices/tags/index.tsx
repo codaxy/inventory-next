@@ -54,47 +54,45 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div
-                    class={{ "record-list": true, "record-list-loading": s.loading }}
-                    visible={notEmpty}
-                    onRef={paging.onRowsRef}
-                >
+                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head tag-columns">
                         {sortHeader(s.sort, "name", "Name")}
                         <span text="Description" />
                         {sortHeader(s.sort, "types", "Types")}
                     </div>
 
-                    {listSkeleton({ columns: "tag-columns", cells: 3, visible: falsy(s.loaded) })}
+                    <div class="list-rows" onRef={paging.onRowsRef}>
+                        {listSkeleton({ columns: "tag-columns", cells: 3, visible: falsy(s.loaded) })}
 
-                    <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <Link
-                            class="record-row tag-columns"
-                            href={expr(m.$row.id, (id) => `~/electronic-devices/tags/${id}`)}
-                            url={$app.url}
-                        >
-                            <span class="record-title record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.name} />
-                                    {copyButton(m.$row.name, "name")}
-                                </span>
-                            </span>
-                            {copyCell(m.$row.description, "description", "record-muted")}
-                            <span
-                                class={{
-                                    "record-meta": true,
-                                    "record-blank": expr(m.$row.types, (t) => !t),
-                                }}
+                        <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
+                            <Link
+                                class="record-row tag-columns"
+                                href={expr(m.$row.id, (id) => `~/electronic-devices/tags/${id}`)}
+                                url={$app.url}
                             >
-                                <span text={expr(m.$row.types, (t) => t ?? "—")} />
+                                <span class="record-title record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.name} />
+                                        {copyButton(m.$row.name, "name")}
+                                    </span>
+                                </span>
+                                {copyCell(m.$row.description, "description", "record-muted")}
                                 <span
-                                    class="record-more"
-                                    visible={hasValue(m.$row.more)}
-                                    text={m.$row.more}
-                                />
-                            </span>
-                        </Link>
-                    </Repeater>
+                                    class={{
+                                        "record-meta": true,
+                                        "record-blank": expr(m.$row.types, (t) => !t),
+                                    }}
+                                >
+                                    <span text={expr(m.$row.types, (t) => t ?? "—")} />
+                                    <span
+                                        class="record-more"
+                                        visible={hasValue(m.$row.more)}
+                                        text={m.$row.more}
+                                    />
+                                </span>
+                            </Link>
+                        </Repeater>
+                    </div>
                 </div>
 
                 <div class="list-empty" visible={empty}>

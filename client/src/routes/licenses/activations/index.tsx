@@ -224,11 +224,7 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div
-                    class={{ "record-list": true, "record-list-loading": s.loading }}
-                    visible={notEmpty}
-                    onRef={paging.onRowsRef}
-                >
+                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head activation-columns">
                         {sortHeader(s.sort, "software", "Software")}
                         {sortHeader(s.sort, "license", "License")}
@@ -239,77 +235,79 @@ export default createFunctionalComponent(() => {
                         <span text="License expiry" />
                     </div>
 
-                    {listSkeleton({
-                        columns: "activation-columns",
-                        cells: 7,
-                        numeric: [3],
-                        visible: falsy(s.loaded),
-                    })}
+                    <div class="list-rows" onRef={paging.onRowsRef}>
+                        {listSkeleton({
+                            columns: "activation-columns",
+                            cells: 7,
+                            numeric: [3],
+                            visible: falsy(s.loaded),
+                        })}
 
-                    <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <Link
-                            class={{
-                                "record-row": true,
-                                "activation-columns": true,
-                                "record-row-ended": m.$row.ended,
-                            }}
-                            href={expr(m.$row.id, (id) => `~/licenses/activations/${id}`)}
-                            url={$app.url}
-                        >
-                            <span class="record-title record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.software} />
-                                    <span
-                                        class="record-flag record-flag-ended"
-                                        visible={m.$row.ended}
-                                        text="Deactivated"
-                                    />
-                                    {copyButton(m.$row.software, "software")}
-                                </span>
-                            </span>
-                            {copyCell(m.$row.license, "license")}
-                            <span class="record-meta record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.assignee} />
-                                    <span
-                                        class="record-note"
-                                        visible={hasValue(m.$row.assigneeNote)}
-                                        text={m.$row.assigneeNote}
-                                    />
-                                    {copyButton(m.$row.assignee, "assignee")}
-                                </span>
-                            </span>
-                            <span class="record-meta record-num" text={m.$row.seats} />
-                            <span class="record-meta" text={m.$row.activated} />
-                            <span
+                        <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
+                            <Link
                                 class={{
-                                    "record-meta": true,
-                                    "record-blank": expr(m.$row.deactivated, (d) => !d),
+                                    "record-row": true,
+                                    "activation-columns": true,
+                                    "record-row-ended": m.$row.ended,
                                 }}
+                                href={expr(m.$row.id, (id) => `~/licenses/activations/${id}`)}
+                                url={$app.url}
                             >
-                                {/* The column's header says "Deactivated" from `md`; a phone's card has none. */}
+                                <span class="record-title record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.software} />
+                                        <span
+                                            class="record-flag record-flag-ended"
+                                            visible={m.$row.ended}
+                                            text="Deactivated"
+                                        />
+                                        {copyButton(m.$row.software, "software")}
+                                    </span>
+                                </span>
+                                {copyCell(m.$row.license, "license")}
+                                <span class="record-meta record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.assignee} />
+                                        <span
+                                            class="record-note"
+                                            visible={hasValue(m.$row.assigneeNote)}
+                                            text={m.$row.assigneeNote}
+                                        />
+                                        {copyButton(m.$row.assignee, "assignee")}
+                                    </span>
+                                </span>
+                                <span class="record-meta record-num" text={m.$row.seats} />
+                                <span class="record-meta" text={m.$row.activated} />
                                 <span
-                                    class="md:hidden"
-                                    visible={hasValue(m.$row.deactivated)}
-                                    text="Deactivated "
-                                />
-                                <span text={expr(m.$row.deactivated, (d) => d ?? "—")} />
-                            </span>
-                            <span
-                                class={{
-                                    "record-status": true,
-                                    "record-blank": expr(m.$row.expiry, (x) => !x),
-                                }}
-                            >
+                                    class={{
+                                        "record-meta": true,
+                                        "record-blank": expr(m.$row.deactivated, (d) => !d),
+                                    }}
+                                >
+                                    {/* The column's header says "Deactivated" from `md`; a phone's card has none. */}
+                                    <span
+                                        class="md:hidden"
+                                        visible={hasValue(m.$row.deactivated)}
+                                        text="Deactivated "
+                                    />
+                                    <span text={expr(m.$row.deactivated, (d) => d ?? "—")} />
+                                </span>
                                 <span
-                                    class={expr(m.$row.expiry, m.$row.ended, (x, ended) =>
-                                        ended ? "status-tag" : `status-tag ${expiryClass(x)}`,
-                                    )}
-                                    text={expr(m.$row.expiryText, (t) => t ?? "—")}
-                                />
-                            </span>
-                        </Link>
-                    </Repeater>
+                                    class={{
+                                        "record-status": true,
+                                        "record-blank": expr(m.$row.expiry, (x) => !x),
+                                    }}
+                                >
+                                    <span
+                                        class={expr(m.$row.expiry, m.$row.ended, (x, ended) =>
+                                            ended ? "status-tag" : `status-tag ${expiryClass(x)}`,
+                                        )}
+                                        text={expr(m.$row.expiryText, (t) => t ?? "—")}
+                                    />
+                                </span>
+                            </Link>
+                        </Repeater>
+                    </div>
                 </div>
 
                 <div class="list-empty" visible={empty}>

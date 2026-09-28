@@ -148,11 +148,7 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div
-                    class={{ "record-list": true, "record-list-loading": s.loading }}
-                    visible={notEmpty}
-                    onRef={paging.onRowsRef}
-                >
+                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head type-columns">
                         {sortHeader(s.sort, "name", "Name")}
                         <span text="Description" />
@@ -160,54 +156,56 @@ export default createFunctionalComponent(() => {
                         {sortHeader(s.sort, "devices", "Devices", "record-num")}
                     </div>
 
-                    {listSkeleton({
-                        columns: "type-columns",
-                        cells: 4,
-                        numeric: [3],
-                        visible: falsy(s.loaded),
-                    })}
+                    <div class="list-rows" onRef={paging.onRowsRef}>
+                        {listSkeleton({
+                            columns: "type-columns",
+                            cells: 4,
+                            numeric: [3],
+                            visible: falsy(s.loaded),
+                        })}
 
-                    <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <Link
-                            class="record-row type-columns"
-                            href={expr(m.$row.id, (id) => `~/electronic-devices/types/${id}`)}
-                            url={$app.url}
-                        >
-                            <span class="record-title record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.name} />
-                                    <span
-                                        class="record-flag"
-                                        visible={hasValue(m.$row.licenses)}
-                                        text={m.$row.licenses}
-                                    />
-                                    {copyButton(m.$row.name, "name")}
-                                </span>
-                            </span>
-                            {copyCell(m.$row.description, "description", "record-muted")}
-                            <span
-                                class={{
-                                    "record-meta": true,
-                                    "record-blank": expr(m.$row.tags, (t) => !t),
-                                }}
+                        <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
+                            <Link
+                                class="record-row type-columns"
+                                href={expr(m.$row.id, (id) => `~/electronic-devices/types/${id}`)}
+                                url={$app.url}
                             >
-                                <span text={expr(m.$row.tags, (t) => t ?? "—")} />
+                                <span class="record-title record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.name} />
+                                        <span
+                                            class="record-flag"
+                                            visible={hasValue(m.$row.licenses)}
+                                            text={m.$row.licenses}
+                                        />
+                                        {copyButton(m.$row.name, "name")}
+                                    </span>
+                                </span>
+                                {copyCell(m.$row.description, "description", "record-muted")}
                                 <span
-                                    class="record-more"
-                                    visible={hasValue(m.$row.more)}
-                                    text={m.$row.more}
+                                    class={{
+                                        "record-meta": true,
+                                        "record-blank": expr(m.$row.tags, (t) => !t),
+                                    }}
+                                >
+                                    <span text={expr(m.$row.tags, (t) => t ?? "—")} />
+                                    <span
+                                        class="record-more"
+                                        visible={hasValue(m.$row.more)}
+                                        text={m.$row.more}
+                                    />
+                                </span>
+                                <span
+                                    class={{
+                                        "record-meta": true,
+                                        "record-num": true,
+                                        "record-blank": expr(m.$row.devices, (d) => !d),
+                                    }}
+                                    text={expr(m.$row.devices, (d) => d ?? "—")}
                                 />
-                            </span>
-                            <span
-                                class={{
-                                    "record-meta": true,
-                                    "record-num": true,
-                                    "record-blank": expr(m.$row.devices, (d) => !d),
-                                }}
-                                text={expr(m.$row.devices, (d) => d ?? "—")}
-                            />
-                        </Link>
-                    </Repeater>
+                            </Link>
+                        </Repeater>
+                    </div>
                 </div>
 
                 <div class="list-empty" visible={empty}>

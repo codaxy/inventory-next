@@ -146,11 +146,7 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div
-                    class={{ "record-list": true, "record-list-loading": s.loading }}
-                    visible={notEmpty}
-                    onRef={paging.onRowsRef}
-                >
+                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head device-columns">
                         {sortHeader(s.sort, "number", "No.")}
                         {sortHeader(s.sort, "name", "Name")}
@@ -164,41 +160,43 @@ export default createFunctionalComponent(() => {
                         {sortHeader(s.sort, "modified", "Changed")}
                     </div>
 
-                    {listSkeleton({ columns: "device-columns", cells: 10, visible: falsy(s.loaded) })}
+                    <div class="list-rows" onRef={paging.onRowsRef}>
+                        {listSkeleton({ columns: "device-columns", cells: 10, visible: falsy(s.loaded) })}
 
-                    <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <Link
-                            class="record-row device-columns"
-                            href={expr(m.$row.id, (id) => `~/electronic-devices/${id}`)}
-                            url={$app.url}
-                        >
-                            <span class="record-meta device-number record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.number} />
-                                    {copyButton(m.$row.number, "number")}
+                        <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
+                            <Link
+                                class="record-row device-columns"
+                                href={expr(m.$row.id, (id) => `~/electronic-devices/${id}`)}
+                                url={$app.url}
+                            >
+                                <span class="record-meta device-number record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.number} />
+                                        {copyButton(m.$row.number, "number")}
+                                    </span>
                                 </span>
-                            </span>
-                            <span class="record-title record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.name} />
-                                    <span
-                                        class="record-flag record-flag-warn"
-                                        visible={hasValue(m.$row.incomplete)}
-                                        text={m.$row.incomplete}
-                                    />
-                                    {copyButton(m.$row.name, "name")}
+                                <span class="record-title record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.name} />
+                                        <span
+                                            class="record-flag record-flag-warn"
+                                            visible={hasValue(m.$row.incomplete)}
+                                            text={m.$row.incomplete}
+                                        />
+                                        {copyButton(m.$row.name, "name")}
+                                    </span>
                                 </span>
-                            </span>
-                            {copyCell(m.$row.model, "model")}
-                            {copyCell(m.$row.assignee, "assignee")}
-                            {copyCell(m.$row.location, "location")}
-                            {copyCell(m.$row.type, "type")}
-                            {copyCell(m.$row.manufacturer, "manufacturer")}
-                            {copyCell(m.$row.modelCode, "model code")}
-                            {copyCell(m.$row.serial, "serial number")}
-                            <span class="record-meta device-changed" text={m.$row.modified} />
-                        </Link>
-                    </Repeater>
+                                {copyCell(m.$row.model, "model")}
+                                {copyCell(m.$row.assignee, "assignee")}
+                                {copyCell(m.$row.location, "location")}
+                                {copyCell(m.$row.type, "type")}
+                                {copyCell(m.$row.manufacturer, "manufacturer")}
+                                {copyCell(m.$row.modelCode, "model code")}
+                                {copyCell(m.$row.serial, "serial number")}
+                                <span class="record-meta device-changed" text={m.$row.modified} />
+                            </Link>
+                        </Repeater>
+                    </div>
                 </div>
 
                 <div class="list-empty" visible={empty}>

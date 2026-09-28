@@ -63,7 +63,7 @@ export function listHeading(o: ListHeading) {
 
 /**
  * Paging for a `list-fill` list: the controller's page, and the card's rows back to their top, since
- * from `md` they scroll inside it. `onRowsRef` goes on the `record-list`, `onPage` on both pagers.
+ * from `md` they scroll inside it. `onRowsRef` goes on the card's `list-rows`, `onPage` on both pagers.
  */
 export function listPaging() {
     let rows: HTMLElement | null = null;

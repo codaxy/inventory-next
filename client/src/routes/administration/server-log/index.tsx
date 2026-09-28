@@ -117,11 +117,7 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div
-                    class={{ term: true, "term-loading": s.loading }}
-                    visible={notEmpty}
-                    onRef={paging.onRowsRef}
-                >
+                <div class={{ term: true, "term-loading": s.loading }} visible={notEmpty}>
                     <div class="term-bar" aria-hidden="true">
                         <span class="term-dot" />
                         <span class="term-dot" />
@@ -132,39 +128,47 @@ export default createFunctionalComponent(() => {
                         />
                     </div>
 
-                    <div class="term-empty" visible={falsy(s.loaded)} text="Loading…" />
+                    <div class="list-rows" onRef={paging.onRowsRef}>
+                        <div class="term-empty" visible={falsy(s.loaded)} text="Loading…" />
 
-                    <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <div
-                            class={{
-                                "term-entry": true,
-                                "term-info": equal(m.$row.tone, "info"),
-                                "term-warn": equal(m.$row.tone, "warn"),
-                                "term-error": equal(m.$row.tone, "error"),
-                                "term-debug": equal(m.$row.tone, "debug"),
-                                "term-raw": equal(m.$row.tone, "raw"),
-                            }}
-                        >
-                            <span class="term-time" text={m.$row.time} />
-                            <span class="term-tag" text={m.$row.tag} />
-                            <span class="term-category" text={m.$row.category} title={m.$row.categoryFull} />
-                            <span class="term-message">
-                                {Text(m.$row.message)}
-                                <button
-                                    type="button"
-                                    class="term-toggle"
-                                    visible={hasValue(m.$row.exception)}
-                                    onClick={(_e: unknown, { store }: any) => store.toggle(m.$row.expanded)}
-                                    text={expr(m.$row.expanded, (open) =>
-                                        open ? "hide exception" : "show exception",
-                                    )}
+                        <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
+                            <div
+                                class={{
+                                    "term-entry": true,
+                                    "term-info": equal(m.$row.tone, "info"),
+                                    "term-warn": equal(m.$row.tone, "warn"),
+                                    "term-error": equal(m.$row.tone, "error"),
+                                    "term-debug": equal(m.$row.tone, "debug"),
+                                    "term-raw": equal(m.$row.tone, "raw"),
+                                }}
+                            >
+                                <span class="term-time" text={m.$row.time} />
+                                <span class="term-tag" text={m.$row.tag} />
+                                <span
+                                    class="term-category"
+                                    text={m.$row.category}
+                                    title={m.$row.categoryFull}
                                 />
-                            </span>
-                            <pre class="term-exception" visible={m.$row.expanded}>
-                                {Text(m.$row.exception as any)}
-                            </pre>
-                        </div>
-                    </Repeater>
+                                <span class="term-message">
+                                    {Text(m.$row.message)}
+                                    <button
+                                        type="button"
+                                        class="term-toggle"
+                                        visible={hasValue(m.$row.exception)}
+                                        onClick={(_e: unknown, { store }: any) =>
+                                            store.toggle(m.$row.expanded)
+                                        }
+                                        text={expr(m.$row.expanded, (open) =>
+                                            open ? "hide exception" : "show exception",
+                                        )}
+                                    />
+                                </span>
+                                <pre class="term-exception" visible={m.$row.expanded}>
+                                    {Text(m.$row.exception as any)}
+                                </pre>
+                            </div>
+                        </Repeater>
+                    </div>
                 </div>
 
                 <div class="list-empty" visible={empty}>

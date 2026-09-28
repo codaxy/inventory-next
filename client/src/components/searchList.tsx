@@ -93,11 +93,7 @@ export function searchList(o: SearchList) {
                 <Button mod="hollow" text="Try again" onClick="load" />
             </div>
 
-            <div
-                class={{ "record-list": true, "record-list-loading": s.loading }}
-                visible={notEmpty}
-                onRef={paging.onRowsRef}
-            >
+            <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                 <div class={`record-head ${o.columns}`}>
                     {o.cells.map((c) =>
                         c.sort ? (
@@ -110,18 +106,20 @@ export function searchList(o: SearchList) {
                     )}
                 </div>
 
-                {listSkeleton({
-                    columns: o.columns,
-                    cells: o.cells.length,
-                    numeric: o.cells.flatMap((c, i) => (c.numeric ? [i] : [])),
-                    visible: falsy(s.loaded),
-                })}
+                <div class="list-rows" onRef={paging.onRowsRef}>
+                    {listSkeleton({
+                        columns: o.columns,
+                        cells: o.cells.length,
+                        numeric: o.cells.flatMap((c, i) => (c.numeric ? [i] : [])),
+                        visible: falsy(s.loaded),
+                    })}
 
-                <Repeater records={s.rows as any} recordAlias={o.row} keyField="id">
-                    <Link class={`record-row ${o.columns}`} href={expr(o.row.id, o.href)} url={$app.url}>
-                        {o.cells.map((c) => c.cell)}
-                    </Link>
-                </Repeater>
+                    <Repeater records={s.rows as any} recordAlias={o.row} keyField="id">
+                        <Link class={`record-row ${o.columns}`} href={expr(o.row.id, o.href)} url={$app.url}>
+                            {o.cells.map((c) => c.cell)}
+                        </Link>
+                    </Repeater>
+                </div>
             </div>
 
             <div class="list-empty" visible={empty}>

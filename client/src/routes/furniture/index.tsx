@@ -144,11 +144,7 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div
-                    class={{ "record-list": true, "record-list-loading": s.loading }}
-                    visible={notEmpty}
-                    onRef={paging.onRowsRef}
-                >
+                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head furniture-columns">
                         {sortHeader(s.sort, "number", "No.")}
                         {sortHeader(s.sort, "name", "Name")}
@@ -160,44 +156,46 @@ export default createFunctionalComponent(() => {
                         {sortHeader(s.sort, "modified", "Changed")}
                     </div>
 
-                    {listSkeleton({
-                        columns: "furniture-columns",
-                        cells: 8,
-                        numeric: [6],
-                        visible: falsy(s.loaded),
-                    })}
+                    <div class="list-rows" onRef={paging.onRowsRef}>
+                        {listSkeleton({
+                            columns: "furniture-columns",
+                            cells: 8,
+                            numeric: [6],
+                            visible: falsy(s.loaded),
+                        })}
 
-                    <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <Link
-                            class="record-row furniture-columns"
-                            href={expr(m.$row.id, (id) => `~/furniture/${id}`)}
-                            url={$app.url}
-                        >
-                            <span class="record-meta furniture-number record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.number} />
-                                    {copyButton(m.$row.number, "number")}
+                        <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
+                            <Link
+                                class="record-row furniture-columns"
+                                href={expr(m.$row.id, (id) => `~/furniture/${id}`)}
+                                url={$app.url}
+                            >
+                                <span class="record-meta furniture-number record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.number} />
+                                        {copyButton(m.$row.number, "number")}
+                                    </span>
                                 </span>
-                            </span>
-                            <span class="record-title record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.name} />
-                                    <span
-                                        class="record-flag record-flag-warn"
-                                        visible={hasValue(m.$row.incomplete)}
-                                        text={m.$row.incomplete}
-                                    />
-                                    {copyButton(m.$row.name, "name")}
+                                <span class="record-title record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.name} />
+                                        <span
+                                            class="record-flag record-flag-warn"
+                                            visible={hasValue(m.$row.incomplete)}
+                                            text={m.$row.incomplete}
+                                        />
+                                        {copyButton(m.$row.name, "name")}
+                                    </span>
                                 </span>
-                            </span>
-                            {copyCell(m.$row.assignee, "assignee")}
-                            {copyCell(m.$row.location, "location")}
-                            {copyCell(m.$row.type, "type")}
-                            {copyCell(m.$row.vendor, "vendor")}
-                            <span class="record-meta record-num furniture-value" text={m.$row.value} />
-                            <span class="record-meta furniture-changed" text={m.$row.modified} />
-                        </Link>
-                    </Repeater>
+                                {copyCell(m.$row.assignee, "assignee")}
+                                {copyCell(m.$row.location, "location")}
+                                {copyCell(m.$row.type, "type")}
+                                {copyCell(m.$row.vendor, "vendor")}
+                                <span class="record-meta record-num furniture-value" text={m.$row.value} />
+                                <span class="record-meta furniture-changed" text={m.$row.modified} />
+                            </Link>
+                        </Repeater>
+                    </div>
                 </div>
 
                 <div class="list-empty" visible={empty}>

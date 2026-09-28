@@ -54,54 +54,52 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div
-                    class={{ "record-list": true, "record-list-loading": s.loading }}
-                    visible={notEmpty}
-                    onRef={paging.onRowsRef}
-                >
+                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head furniture-type-columns">
                         {sortHeader(s.sort, "name", "Name")}
                         <span text="Description" />
                         {sortHeader(s.sort, "furniture", "Furniture", "record-num")}
                     </div>
 
-                    {listSkeleton({
-                        columns: "furniture-type-columns",
-                        cells: 3,
-                        numeric: [2],
-                        visible: falsy(s.loaded),
-                    })}
+                    <div class="list-rows" onRef={paging.onRowsRef}>
+                        {listSkeleton({
+                            columns: "furniture-type-columns",
+                            cells: 3,
+                            numeric: [2],
+                            visible: falsy(s.loaded),
+                        })}
 
-                    <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <Link
-                            class="record-row furniture-type-columns"
-                            href={expr(m.$row.id, (id) => `~/furniture/types/${id}`)}
-                            url={$app.url}
-                        >
-                            <span class="record-title record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.name} />
-                                    {copyButton(m.$row.name, "name")}
-                                </span>
-                            </span>
-                            {copyCell(m.$row.description, "description", "record-muted")}
-                            <span
-                                class={{
-                                    "record-meta": true,
-                                    "record-num": true,
-                                    "record-blank": expr(m.$row.furniture, (f) => !f),
-                                }}
+                        <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
+                            <Link
+                                class="record-row furniture-type-columns"
+                                href={expr(m.$row.id, (id) => `~/furniture/types/${id}`)}
+                                url={$app.url}
                             >
-                                <span text={expr(m.$row.furniture, (f) => f ?? "—")} />
-                                {/* The column's header says "Furniture" from `md`; a phone's card has none. */}
+                                <span class="record-title record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.name} />
+                                        {copyButton(m.$row.name, "name")}
+                                    </span>
+                                </span>
+                                {copyCell(m.$row.description, "description", "record-muted")}
                                 <span
-                                    class="md:hidden"
-                                    visible={hasValue(m.$row.furniture)}
-                                    text={expr(m.$row.furnitureWord, (w) => ` ${w}`)}
-                                />
-                            </span>
-                        </Link>
-                    </Repeater>
+                                    class={{
+                                        "record-meta": true,
+                                        "record-num": true,
+                                        "record-blank": expr(m.$row.furniture, (f) => !f),
+                                    }}
+                                >
+                                    <span text={expr(m.$row.furniture, (f) => f ?? "—")} />
+                                    {/* The column's header says "Furniture" from `md`; a phone's card has none. */}
+                                    <span
+                                        class="md:hidden"
+                                        visible={hasValue(m.$row.furniture)}
+                                        text={expr(m.$row.furnitureWord, (w) => ` ${w}`)}
+                                    />
+                                </span>
+                            </Link>
+                        </Repeater>
+                    </div>
                 </div>
 
                 <div class="list-empty" visible={empty}>

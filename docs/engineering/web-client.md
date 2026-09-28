@@ -165,8 +165,9 @@ vendor and change time; a device's manufacturer, model code, serial number and c
 wait for the record's page.
 
 **Every list fills its page** (`list-fill`) — the lists of records and both logs. Where its columns
-show, the document holds still: the rows scroll inside the card — the server log's terminal — under
-its pinned column header, and the pager stays at the window's foot. A card squeezed under 10rem in a
+show, the document holds still: the card — the server log's terminal — fills the window down to the
+pager, and only its rows scroll (`list-rows`), beneath its header row, so the scrollbar starts there
+rather than running beside the header. A card squeezed under 10rem in a
 short window lets the document scroll after all rather than hide the rows. Below `md` the document
 scrolls, for Safari's toolbars. **With the filter pane open the page scrolls at every width**, as a
 phone's does: the pane pushes the list down, and in a page of fixed height that pushes the rows off

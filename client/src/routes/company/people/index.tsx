@@ -56,11 +56,7 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div
-                    class={{ "record-list": true, "record-list-loading": s.loading }}
-                    visible={notEmpty}
-                    onRef={paging.onRowsRef}
-                >
+                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
                     <div class="record-head people-columns">
                         {sortHeader(s.sort, "name", "Name")}
                         {sortHeader(s.sort, "email", "Email")}
@@ -68,30 +64,32 @@ export default createFunctionalComponent(() => {
                         <span class="record-num" text="Seats" />
                     </div>
 
-                    {listSkeleton({
-                        columns: "people-columns",
-                        cells: 4,
-                        numeric: [2, 3],
-                        visible: falsy(s.loaded),
-                    })}
+                    <div class="list-rows" onRef={paging.onRowsRef}>
+                        {listSkeleton({
+                            columns: "people-columns",
+                            cells: 4,
+                            numeric: [2, 3],
+                            visible: falsy(s.loaded),
+                        })}
 
-                    <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
-                        <Link
-                            class="record-row people-columns"
-                            href={expr(m.$row.id, (id) => `~/company/people/${id}`)}
-                            url={$app.url}
-                        >
-                            <span class="record-title record-copy">
-                                <span class="record-copy-line">
-                                    <span text={m.$row.name} />
-                                    {copyButton(m.$row.name, "name")}
+                        <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
+                            <Link
+                                class="record-row people-columns"
+                                href={expr(m.$row.id, (id) => `~/company/people/${id}`)}
+                                url={$app.url}
+                            >
+                                <span class="record-title record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={m.$row.name} />
+                                        {copyButton(m.$row.name, "name")}
+                                    </span>
                                 </span>
-                            </span>
-                            {copyCell(m.$row.email, "email")}
-                            {countCell(m.$row.assets, m.$row.assetsWord)}
-                            {countCell(m.$row.seats, m.$row.seatsWord)}
-                        </Link>
-                    </Repeater>
+                                {copyCell(m.$row.email, "email")}
+                                {countCell(m.$row.assets, m.$row.assetsWord)}
+                                {countCell(m.$row.seats, m.$row.seatsWord)}
+                            </Link>
+                        </Repeater>
+                    </div>
                 </div>
 
                 <div class="list-empty" visible={empty}>
