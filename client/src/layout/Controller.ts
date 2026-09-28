@@ -1,4 +1,4 @@
-import { Controller } from "cx/ui";
+import { Controller, History } from "cx/ui";
 
 import { signOut } from "../api/auth";
 import $app from "../model";
@@ -9,6 +9,7 @@ const drawerWidth = window.matchMedia("(max-width: 1023.98px)");
 
 export default class extends Controller {
     private unlock?: () => void;
+    private unsubscribe?: () => void;
 
     /**
      * The document scrolls, so while the drawer is open the page behind it is locked: otherwise a drag
@@ -20,10 +21,18 @@ export default class extends Controller {
             if (open && drawer && drawerWidth.matches) this.unlock ??= lockScroll(drawer);
             else this.release();
         });
+
+        // The document scrolls, so it keeps its position from page to page: a new page opens at its
+        // top. Only a navigation forward — `replaceState` is a list writing its own address, and Back
+        // sends nothing, leaving the browser to restore where the reader was.
+        this.unsubscribe = History.subscribe((_url, op) => {
+            if (op === "pushState") window.scrollTo({ top: 0 });
+        });
     }
 
     onDestroy() {
         this.release();
+        this.unsubscribe?.();
     }
 
     private release() {

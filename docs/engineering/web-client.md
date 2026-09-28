@@ -42,7 +42,9 @@ can both import it. A screen is a `createFunctionalComponent`; the root is a `<c
 `src/api/*` is one module per resource, over `send` in `src/api/http.ts` — `fetch` with `credentials: "same-origin"` — the session
 is a cookie, so nothing attaches a token by hand.
 
-Routing is declarative and the first matching route wins, so order in the JSX is the routing table.
+Routing is declarative and the first matching route wins, so order in the JSX is the routing table. **A navigation forward opens its page at the top** — the document scrolls, so it would otherwise keep
+the last page's position: the shell scrolls up on cx's `pushState`, never on `replaceState`, which is
+a list writing its own address, nor on Back, where the browser restores the reader's place.
 The outermost split is whether there is a session; everything below it can assume the answer.
 
 **The session is resolved once, at the root.** Until it arrives the app shows neither the sign-in
