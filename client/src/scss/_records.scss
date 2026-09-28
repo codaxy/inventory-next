@@ -186,6 +186,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
+    max-width: 100%;
     padding: 0;
     border: 0;
     background: none;
@@ -198,6 +199,12 @@
     &:hover {
         color: var(--color-ink);
     }
+}
+
+.list-sort-header > :first-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .list-sort-mark {
@@ -224,6 +231,14 @@
         letter-spacing: 0.05em;
         text-transform: uppercase;
         color: var(--color-ink-muted);
+
+        // A label keeps to one line and its column: cut short, never over its neighbour.
+        > * {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 
     .record-row {
@@ -625,8 +640,8 @@
 
     @media (min-width: 1280px) {
         grid-template-columns:
-            4.5rem minmax(0, 1.8fr) minmax(0, 1.2fr) minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(0, 0.9fr)
-            minmax(0, 0.9fr) minmax(0, 0.8fr) minmax(0, 0.9fr) 6.5rem;
+            4.5rem minmax(0, 1.6fr) minmax(0, 1.2fr) minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(0, 0.9fr)
+            minmax(0, 1.1fr) minmax(0, 0.8fr) minmax(0, 0.9fr) 6.5rem;
 
         > :nth-child(7),
         > :nth-child(8),

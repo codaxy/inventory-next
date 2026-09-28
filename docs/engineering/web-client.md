@@ -169,7 +169,8 @@ left: nobody compares their size.
 from `md`, laid out by CSS grid areas. Not a `Grid` for desktop beside cards for the phone — two
 renderings of every row, drifting apart. **A wide list's columns are shares (`fr`), not fixed widths**:
 fixed widths that overflow the page shrink every column alike, and the name — which needs the room —
-is cut first. Where the columns do not fit below `xl`, the least scanned go until then — furniture's
+is cut first. **A header's label keeps to one line and its column**, cut short rather than run over the
+next one; the shares are set so the labels fit where the columns show. Where the columns do not fit below `xl`, the least scanned go until then — furniture's
 vendor and change time; a device's manufacturer, model code, serial number and change time — and
 wait for the record's page.
 
