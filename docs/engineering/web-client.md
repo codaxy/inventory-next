@@ -538,7 +538,9 @@ open of the drawer, so the drawer's backdrop is clear.
 
 **Free text is often a URL, which has nowhere to break**: anything showing a typed value in a flex or
 grid cell sets `overflow-wrap: anywhere`, or one long description widens the page on a phone — and a
-check against records with short text never sees it.
+check against records with short text never sees it. **A grid of fields declares its one column too**
+(`minmax(0, 1fr)`): left implicit below its breakpoint, the column is `auto`, and a picker's long
+value widens it past the screen, however it truncates.
 
 **Never cap or scroll the list inside a picker's `.cxe-lookupfield-scroll-container`.** cx treats that
 container as the scrolling element: it cancels every wheel on it at either end, so the page does not

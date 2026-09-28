@@ -94,8 +94,11 @@
     box-shadow: var(--shadow-card);
 }
 
+// One column is still declared: an implicit one is `auto`, which a long picker value widens past
+// the screen.
 .list-pane-grid {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.875rem 1rem;
 
     @media (min-width: 640px) {
