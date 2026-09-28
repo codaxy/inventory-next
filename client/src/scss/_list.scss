@@ -277,6 +277,96 @@
     color: var(--color-danger-text);
 }
 
-.list-bar + .list-error {
+.list-bar + .list-error,
+.list-top + .list-error {
     margin-top: 0.375rem;
+}
+
+// A list that fills its page (`list-fill`), the electronic devices list alone. No caption line: its
+// header band carries Excel and Add, and the pager under the list the range and the steps.
+//
+// The header band and the toolbar are one block (`list-top`), pinned beneath the shell's top bar
+// wherever the document scrolls, except while the filters pane is open, which is too tall to hold. The
+// block spans the page's padding itself, so neither part pulls into it with negative margins.
+.list-top {
+    position: sticky;
+    top: var(--shell-top);
+    z-index: 5;
+    margin: -1rem calc(-1 * var(--page-pad)) 0;
+
+    > .page-header {
+        margin: 0;
+    }
+
+    > .list-bar {
+        position: static;
+        margin: 0;
+        padding-top: 1rem;
+    }
+
+    @media (min-width: 640px) {
+        margin-top: -1.25rem;
+
+        > .list-bar {
+            padding-top: 1.25rem;
+        }
+    }
+}
+
+.list-top-static {
+    position: static;
+}
+
+.list-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+// Icons only on a phone, so Excel keeps the width of a control to be touched.
+.list-heading-actions {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.5rem;
+
+    .list-export {
+        justify-content: center;
+        min-width: var(--control);
+    }
+}
+
+// Where the columns show, the document holds still and the rows scroll inside the card under its
+// pinned header, the pager at the window's foot. Below `md` the document scrolls, as everywhere, for
+// Safari's toolbars. A card squeezed under 10rem — the filters pane open in a short window — lets the
+// document scroll after all rather than hide the rows.
+@media (min-width: 768px) {
+    .shell:has(.list-fill) {
+        height: 100dvh;
+
+        main {
+            min-height: 0;
+        }
+    }
+
+    .list-fill {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 0;
+        min-height: 0;
+
+        > .record-list {
+            flex: 1 1 0;
+            min-height: 10rem;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+        }
+
+        .record-head {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+    }
 }

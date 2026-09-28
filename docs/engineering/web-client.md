@@ -168,11 +168,20 @@ on every list is too much height to spend on it. `stickyBar()` in `src/stickyBar
 pins it beneath `--shell-top` and publishes its height as `--sticky-bar-height`, which headings in the
 list stick beneath. Below `md` it slides away while scrolling down and returns on the first scroll up,
 since a bar pinned for good takes a fifth of a phone's screen. With the filter pane open it is not
-pinned: the pane is too tall to hold on screen.
+pinned: the pane is too tall to hold on screen. **The electronic devices list fills the window
+from `md`** (`list-fill`): the document holds still, the rows scroll inside the card under a pinned
+header, and the pager stays at the window's foot. A card squeezed under 10rem lets the document scroll
+after all. **It has no caption line at any width**: the pager under the list gives the range, the
+count and the steps — on a phone only at the list's end — and the header band, empty beside the title,
+takes Excel and Add at its far end as a record's actions are, icons only on a phone; the toolbar keeps
+search and Filters. **Header band and toolbar are pinned together** wherever the document scrolls,
+and on a phone they stay rather than sliding away: with the list's own chevrons gone, they are
+the whole of its controls. Other lists do not.
 
 **`components/Pager`** also sits under every list, driven by `pager()` in `src/paging.ts`: the range and
 the total, previous and next, and from `sm` the first, last and current page with a neighbour each side.
-A phone gets "3 / 40" in place of the links. Paging scrolls the page back to the top. **A list
+A phone gets "3 / 40" in place of the links. Paging scrolls the page back to the top, and a
+`list-fill` list's rows too. **A list
 shows 20 per page** (`pageSize` in `paging.ts`), so a page fits a 1440px-tall display without
 scrolling; with Windows scaling at 125% it still scrolls. The server log's lines are denser, and it
 shows 25. **Both pagers are captions, not toolbars**: steps and page numbers are

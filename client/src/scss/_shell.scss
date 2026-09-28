@@ -113,7 +113,7 @@ html.page-end:has(.shell) {
     grid-template-columns: minmax(0, var(--page-width));
 }
 
-.page-body > :not(.page-header, .list-bar) {
+.page-body > :not(.page-header, .list-bar, .list-top) {
     max-width: var(--page-width);
 }
 
