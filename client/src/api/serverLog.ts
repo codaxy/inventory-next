@@ -21,7 +21,6 @@ export interface LogQuery {
     to: string;
     level?: LogLevel;
     q?: string;
-    sort?: "time" | "-time";
     page: number;
     pageSize: number;
 }

@@ -1,8 +1,8 @@
 import { createFunctionalComponent, equal, expr, falsy, hasValue } from "cx/ui";
 import { Button, Icon, Repeater, TextField } from "cx/widgets";
 
+import { listHeading, listPaging } from "../../../components/listHeading";
 import { Pager } from "../../../components/Pager";
-import { stickyBar } from "../../../stickyBar";
 import Controller from "./Controller";
 import m from "./model";
 import { levels } from "./utils";
@@ -16,8 +16,6 @@ const notEmpty = expr(
     s.error,
     (loaded, total, error) => !(loaded && total === 0 && !error),
 );
-const newestFirst = equal(s.sort, "-time");
-const oldestFirst = equal(s.sort, "time");
 
 /** A message or an exception: text, with the server's markers shown as what they stand for. */
 const Text = (pieces: typeof m.$row.message) => (
@@ -32,62 +30,48 @@ const Text = (pieces: typeof m.$row.message) => (
 );
 
 /**
- * The server log: one day's entries in a terminal, the day picked from a strip of the days that have
- * a file. The toolbar is the list convention's.
+ * The server log: one day's entries in a terminal, newest first, the day picked from a strip of the
+ * days that have a file. The header and toolbar are the list convention's.
  */
 export default createFunctionalComponent(() => {
-    const onBarRef = stickyBar();
+    const paging = listPaging();
 
     return (
         <cx>
-            <div class="page-body page-wide server-log" controller={Controller}>
-                <h1 class="page-header page-title" text="Server log" />
+            <div class="page-body page-wide server-log list-fill" controller={Controller}>
+                <div class="list-top">
+                    {listHeading({
+                        title: "Server log",
+                        actions: (
+                            <cx>
+                                <button
+                                    type="button"
+                                    class="list-export"
+                                    onClick="refresh"
+                                    attrs={{ "aria-label": "Refresh", title: "Load what was logged since" }}
+                                >
+                                    <Icon name="refresh" class={{ "size-4": true, "term-spin": s.loading }} />
+                                    <span class="hidden sm:inline" text="Refresh" />
+                                </button>
+                            </cx>
+                        ),
+                    })}
 
-                <div class="list-bar" onRef={onBarRef}>
-                    <div class="list-toolbar">
-                        <div class="list-search">
-                            <Icon name="search" class="list-search-icon" />
-                            <TextField
-                                class="list-search-field"
-                                value={s.search}
-                                placeholder="Search messages…"
-                                showClear
-                                inputAttrs={{ "aria-label": "Search the server log", enterKeyHint: "search" }}
-                            />
-                        </div>
-                    </div>
-
-                    <div class="list-results-head">
-                        <span class="list-total" text={s.totalText} />
-                        <Button
-                            mod="hollow"
-                            class="list-sort"
-                            onClick="refresh"
-                            attrs={{ "aria-label": "Refresh", title: "Refresh" }}
-                        >
-                            <Icon name="refresh" class={{ "size-3.5": true, "term-spin": s.loading }} />
-                        </Button>
-                        <Button
-                            mod="hollow"
-                            class="list-sort"
-                            onClick="toggleSort"
-                            attrs={{ "aria-label": "Change the order" }}
-                        >
-                            <Icon name="newestFirst" class="size-3.5" visible={newestFirst} />
-                            <Icon name="oldestFirst" class="size-3.5" visible={oldestFirst} />
-                            <span
-                                class="hidden sm:inline"
-                                text={expr(s.sort, (sort) =>
-                                    sort === "time" ? "Oldest first" : "Newest first",
-                                )}
-                            />
-                        </Button>
-                        <div>
-                            <Pager
-                                state={s.pager}
-                                compact
-                                onPage={(page, instance) => instance.controller.goTo(page, true)}
-                            />
+                    <div class="list-bar">
+                        <div class="list-toolbar">
+                            <div class="list-search">
+                                <Icon name="search" class="list-search-icon" />
+                                <TextField
+                                    class="list-search-field"
+                                    value={s.search}
+                                    placeholder="Search messages…"
+                                    showClear
+                                    inputAttrs={{
+                                        "aria-label": "Search the server log",
+                                        enterKeyHint: "search",
+                                    }}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -133,7 +117,11 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div class={{ term: true, "term-loading": s.loading }} visible={notEmpty}>
+                <div
+                    class={{ term: true, "term-loading": s.loading }}
+                    visible={notEmpty}
+                    onRef={paging.onRowsRef}
+                >
                     <div class="term-bar" aria-hidden="true">
                         <span class="term-dot" />
                         <span class="term-dot" />
@@ -187,10 +175,7 @@ export default createFunctionalComponent(() => {
                 </div>
 
                 <div visible={expr(s.total, (t) => t > 0)}>
-                    <Pager
-                        state={s.pager}
-                        onPage={(page, instance) => instance.controller.goTo(page, true)}
-                    />
+                    <Pager state={s.pager} onPage={paging.onPage} />
                 </div>
             </div>
         </cx>

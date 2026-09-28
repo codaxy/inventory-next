@@ -34,7 +34,6 @@ export default class extends Controller {
         this.store.set(m.serverLog.loaded, false);
         this.store.delete(m.serverLog.error);
         this.store.set(m.serverLog.pager, pager(1, pageSize, 0));
-        this.store.set(m.serverLog.totalText, "");
         this.apply(queryOf(this.store.get($app.url)), today, false);
 
         this.addTrigger("search", [m.serverLog.search], (value) => {
@@ -63,7 +62,7 @@ export default class extends Controller {
 
     /**
      * The address's state into the store: the day (today when absent, so a bookmark means "today's
-     * log"), the level, the search, the order and the page.
+     * log"), the level, the search and the page.
      */
     private apply(query: URLSearchParams, today: string, reload: boolean) {
         this.applying = true;
@@ -74,7 +73,6 @@ export default class extends Controller {
         else this.store.delete(m.serverLog.search);
         this.store.set(m.serverLog.level, oneOf(query, "level", levels));
         this.store.set(m.serverLog.day, day && /^\d{4}-\d{2}-\d{2}$/.test(day) ? day : today);
-        this.store.set(m.serverLog.sort, query.get("sort") === "time" ? "time" : "-time");
         this.store.set(m.serverLog.page, intParam(query, "page", 1));
         this.applying = false;
         if (reload) this.load();
@@ -114,12 +112,10 @@ export default class extends Controller {
 
         this.store.set(m.serverLog.loading, true);
 
-        const sort = this.store.get(m.serverLog.sort);
         const address = {
             day: day === encodeDate(new Date()) ? undefined : day,
             level: this.store.get(m.serverLog.level),
             q: this.search?.trim() || undefined,
-            sort: sort === "-time" ? undefined : sort,
             page: page > 1 ? page : undefined,
         };
         this.written = toQueryString(address);
@@ -131,7 +127,6 @@ export default class extends Controller {
                 to: endOfDay(day).toISOString(),
                 level: this.store.get(m.serverLog.level) ?? undefined,
                 q: this.search?.trim() || undefined,
-                sort: this.store.get(m.serverLog.sort),
                 page,
                 pageSize,
             });
@@ -146,12 +141,6 @@ export default class extends Controller {
             this.store.set(m.serverLog.rows, toRows(result.items, page));
             this.store.set(m.serverLog.total, result.total);
             this.store.set(m.serverLog.pager, state);
-            this.store.set(
-                m.serverLog.totalText,
-                result.total === 0
-                    ? "No entries"
-                    : `${state.summary} ${result.total === 1 ? "entry" : "entries"}`,
-            );
             this.store.delete(m.serverLog.error);
             this.store.set(m.serverLog.loaded, true);
         } catch (error) {
@@ -163,11 +152,6 @@ export default class extends Controller {
         } finally {
             if (request === this.request) this.store.set(m.serverLog.loading, false);
         }
-    }
-
-    toggleSort() {
-        this.store.update(m.serverLog.sort, (sort) => (sort === "time" ? "-time" : "time"));
-        this.goTo(1);
     }
 
     clearAll() {

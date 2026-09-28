@@ -132,7 +132,7 @@ order from one width to the next.
 and scrolls it.
 
 **The toolbar's parts are shared** — `list-*` in `_list.scss`: the pinned block and its heading, the bar,
-search, Filters and its pane, chips, the logs' caption line, and the error and empty states. A screen's rows are its own. **A search for an id that matches
+search, Filters and its pane, chips, the audit log's caption line, and the error and empty states. A screen's rows are its own. **A search for an id that matches
 nothing says "No record has this id"**, without the usual advice to try fewer words, which does not
 apply to an id; any other search keeps its list's own wording. `ListController` knows which it ran
 (`idSearch`).
@@ -160,14 +160,16 @@ is cut first. Where the columns do not fit below `xl`, the least scanned go unti
 vendor and change time; a device's manufacturer, model code, serial number and change time — and
 wait for the record's page.
 
-**A list of records fills its page** (`list-fill`). Where its columns show, the document holds
-still: the rows scroll inside the card under its pinned column header, and the pager stays at the
+**A list fills its page** (`list-fill`) — every list of records, and the server log. Where its
+columns show, the document holds still: the rows scroll inside the card — the log's terminal — under
+its pinned header, and the pager stays at the
 window's foot. A card squeezed under 10rem in a short window lets the document scroll after all
 rather than hide the rows. Below `md` the document scrolls, for Safari's toolbars. **With the filter
 pane open the page scrolls at every width**, as a phone's does: the pane pushes the list down, and in
 a page of fixed height that pushes the rows off it. **The header band and the toolbar are one block, pinned** beneath `--shell-top` wherever the
 document scrolls (`list-top`): the band carries the title and, at its far end, Excel and Add
-(`listHeading()`), as a record's page carries its actions, icons only on a phone; the toolbar is
+(`listHeading()`) — the server log's Refresh — as a record's page carries its actions, icons only on
+a phone; the toolbar is
 search and *Filters*. Not pinned with the filter pane open: the pane is too tall to hold on screen.
 Not a pane covering the rows instead: it needs capping to the room left, which moves as chips wrap,
 and a scrim to keep a tap from opening a record behind it.
@@ -176,10 +178,10 @@ a phone only at the list's end, which is the price of a toolbar that never moves
 the pane with the filters and shows as a chip when it is not the default: it changes rarely, and a
 second line of controls on every list is too much height to spend on it.
 
-**The logs keep a pinned bar with a caption line**: search, filters and a compact previous/next,
-with the range beside them from `md`, a caption above the list below it. `stickyBar()` in
-`src/stickyBar.ts` pins it and publishes its height as `--sticky-bar-height`, which the audit log's
-day headings stick beneath; below `md` it slides away while scrolling down and returns on the first
+**The audit log keeps a pinned bar with a caption line**: search, filters, its order and a compact
+previous/next, with the range beside them from `md`, a caption above the list below it. `stickyBar()` in
+`src/stickyBar.ts` pins it and publishes its height as `--sticky-bar-height`, which its day headings
+stick beneath; below `md` it slides away while scrolling down and returns on the first
 scroll up, since a bar pinned for good takes a fifth of a phone's screen.
 
 **`components/Pager`** also sits under every list, driven by `pager()` in `src/paging.ts`: the range and
@@ -188,9 +190,9 @@ A phone gets "3 / 40" in place of the links. Paging scrolls the page back to the
 rows inside their card (`listPaging()`). **A list
 shows 20 per page** (`pageSize` in `paging.ts`), so a page fits a 1440px-tall display without
 scrolling; with Windows scaling at 125% it still scrolls. The server log's lines are denser, and it
-shows 25. **Both pagers are captions, not toolbars**: steps and page numbers are
+shows 25, always newest first: a log is read from what just happened, so it offers no order. **Both pagers are captions, not toolbars**: steps and page numbers are
 text drawn at 32px and touched at 44, with no border or fill; the current page is a small pill of the
-accent, as the menu marks where the reader is. In a log's bar the chevrons close up and the line they
+accent, as the menu marks where the reader is. In the audit log's bar the chevrons close up and the line they
 sit on is small type, so it reads as a caption under the search. They stay, disabled, when nothing
 matches, as on a single page; the pager under the list goes. Not
 infinite scroll: it loses the reader's place and cannot reach page 40 without loading 39.

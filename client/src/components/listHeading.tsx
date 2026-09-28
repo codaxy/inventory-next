@@ -3,17 +3,21 @@ import { Icon, LinkButton } from "cx/widgets";
 
 interface ListHeading {
     title: string;
+    /** What else the list does, before Excel: the server log's Refresh. */
+    actions?: any;
     /** The spreadsheet of what the list selects, for a list that has one. */
     exportHref?: Prop<string | undefined>;
-    addHref: StringProp;
+    /** Where Add leads, for a list whose records are added here. */
+    addHref?: StringProp;
     /** "Add"; "Activate" for a seat. */
     addText?: string;
     /** "Add vendor": the button's name for a screen reader and its tooltip. */
-    addLabel: string;
+    addLabel?: string;
 }
 
 /**
- * A `list-fill` list's header band: the title, and Excel and Add at its far end, icons only on a phone.
+ * A `list-fill` list's header band: the title, and its actions — Excel and Add — at its far end, icons
+ * only on a phone.
  * It opens the list's `list-top` block, the toolbar after it.
  */
 export function listHeading(o: ListHeading) {
@@ -23,6 +27,7 @@ export function listHeading(o: ListHeading) {
                 <div class="list-heading">
                     <h1 class="page-title" text={o.title} />
                     <div class="list-heading-actions">
+                        {o.actions}
                         {o.exportHref && (
                             // A plain anchor: cx's Link would route it inside the app instead of downloading.
                             <a
@@ -38,15 +43,17 @@ export function listHeading(o: ListHeading) {
                                 <span class="hidden sm:inline" text="Excel" />
                             </a>
                         )}
-                        <LinkButton
-                            mod="primary"
-                            class="list-new"
-                            attrs={{ "aria-label": o.addLabel, title: o.addLabel }}
-                            href={o.addHref}
-                        >
-                            <Icon name="created" class="size-4" />
-                            <span class="hidden sm:inline" text={o.addText ?? "Add"} />
-                        </LinkButton>
+                        {o.addHref && (
+                            <LinkButton
+                                mod="primary"
+                                class="list-new"
+                                attrs={{ "aria-label": o.addLabel, title: o.addLabel }}
+                                href={o.addHref}
+                            >
+                                <Icon name="created" class="size-4" />
+                                <span class="hidden sm:inline" text={o.addText ?? "Add"} />
+                            </LinkButton>
+                        )}
                     </div>
                 </div>
             </div>

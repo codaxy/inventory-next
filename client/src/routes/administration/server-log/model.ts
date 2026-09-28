@@ -33,7 +33,6 @@ export interface Day {
 export interface ServerLogState {
     search?: string | null;
     level?: LogLevel | null;
-    sort: "-time" | "time";
     page: number;
     /** `YYYY-MM-DD`, read as the viewer's own day. */
     day: string;
@@ -45,7 +44,6 @@ export interface ServerLogState {
     loaded: boolean;
     error?: string;
     pager: PagerState;
-    totalText: string;
     /** The search that ran is one id: an empty answer then says no record has it. */
     idSearch?: boolean;
 }
