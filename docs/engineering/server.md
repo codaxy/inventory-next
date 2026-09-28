@@ -35,6 +35,7 @@ no section, the Dashboard, is a folder at the top.
 
 ```
 Licenses/
+  Endpoints.cs                    the section's items
   Activations/
     Activation.cs                 the item's entities and their configurations, at its root
     Endpoints.cs                  its group and the use cases mapped into it
@@ -116,9 +117,10 @@ parameters, exact unless their name says otherwise, ANDed. A range is `from` inc
 exclusive, so adjacent ranges neither overlap nor leave a gap.
 
 **The menu's endpoints are one `/api` group that requires a session**, mapped by `MapInventoryApi`
-beside `MapAuth`. It lists the items in the menu's order and nothing else: each item's `Endpoints`
-maps its own group beneath it, named after its URL, and its use cases, so a new use case touches only
-its item. **An item whose readers will
+beside `MapAuth`. Each level of the menu lists only its children, in the menu's order:
+`MapInventoryApi` the sections and the Dashboard, a section's `Endpoints` its items, and an item's
+`Endpoints` its group beneath `/api`, named after its URL, and its use cases. A new use case touches
+only its item. **An item whose readers will
 narrow has its own named policy now**, defined in the host — the server log's `ServerLog`, today any
 session — so restricting it to a role is one line, not a search for every endpoint it covers.
 
