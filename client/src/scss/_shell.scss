@@ -31,6 +31,21 @@
     }
 }
 
+// The drawer's contents stop at the dynamic viewport's foot, above Safari's floating toolbar, so the
+// account menu stays where a finger can reach it; beneath them it reaches on with a screen of its
+// navy, down under the toolbar.
+@media (max-width: 1023.98px) {
+    .nav-drawer::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        height: 100vh;
+        background: var(--color-nav);
+    }
+}
+
 @media (min-width: 1024px) {
     .nav-drawer::before,
     .page-top::before {
