@@ -77,7 +77,8 @@ is 1rem — so the list starts on the first screen.
 
 **The shell is Pulse's.** From `lg` (1024px) a 260px sidebar holds the navigation and, at its foot,
 the signed-in person alone; signing out is in the menu that opens above them. Below `lg` the sidebar
-becomes a drawer over the content, as wide and never closer than 56px to the far edge. The drawer is
+becomes a drawer over the content, as wide and never closer than 56px to the far edge, the page beside
+it not dimmed. The drawer is
 opened by a 44px menu button in a top
 bar that carries only the mark. Any tap in the drawer closes it, except one that opens or works the account menu.
 **The document scrolls, not the content column**: iPhone Safari collapses its toolbars only when the
@@ -522,6 +523,10 @@ reads the page it came from in `window.location` — a duplicate opened empty fo
 **A `var()` naming a token that does not exist voids the whole declaration**, silently: `border: 1px
 solid var(--color-typo)` computes to no border, not to a border of some default colour. A name
 carried over from Pulse is the likely typo — check `tailwind.css` before reaching for `!important`.
+
+**iOS Safari tints its toolbars from a fixed layer at the screen's edge, and keeps the tint once the
+layer is gone** — until a reload. A dimmed full-screen backdrop left the page's foot grey after every
+open of the drawer, so the drawer's backdrop is clear.
 
 **Free text is often a URL, which has nowhere to break**: anything showing a typed value in a flex or
 grid cell sets `overflow-wrap: anywhere`, or one long description widens the page on a phone — and a

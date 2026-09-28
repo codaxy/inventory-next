@@ -18,9 +18,11 @@ const closeDrawer = (_e: unknown, { store }: any) => store.set($app.ui.drawerOpe
  */
 export const Sidebar = createFunctionalComponent(() => (
     <cx>
-        {/* A sibling, not a wrapper, so the drawer slides over the content. Tapping it dismisses. */}
+        {/* A sibling, not a wrapper, so the drawer slides over the content. Tapping it dismisses. Clear,
+            not dimmed: iOS Safari tints its toolbars from a fixed layer at the screen's edge and keeps
+            the tint after the layer goes, so a dimmed one left the page's foot grey until a reload. */}
         <div
-            class="fixed inset-0 z-40 touch-none bg-ink/30 lg:hidden"
+            class="fixed inset-0 z-40 touch-none lg:hidden"
             visible={$app.ui.drawerOpen}
             onClick={closeDrawer}
         />
