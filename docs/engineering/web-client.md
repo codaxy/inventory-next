@@ -131,8 +131,8 @@ order from one width to the next.
 **A picker searches from seven options**, cx's default, and cx sizes its list to the room on screen
 and scrolls it.
 
-**The toolbar's parts are shared** — `list-*` in `_list.scss`: the bar, search, Filters and its pane,
-chips, the caption line, and the error and empty states. A screen's rows are its own. **A search for an id that matches
+**The toolbar's parts are shared** — `list-*` in `_list.scss`: the pinned block and its heading, the bar,
+search, Filters and its pane, chips, the logs' caption line, and the error and empty states. A screen's rows are its own. **A search for an id that matches
 nothing says "No record has this id"**, without the usual advice to try fewer words, which does not
 apply to an id; any other search keeps its list's own wording. `ListController` knows which it ran
 (`idSearch`).
@@ -160,35 +160,36 @@ is cut first. Where the columns do not fit below `xl`, the least scanned go unti
 vendor and change time; a device's manufacturer, model code, serial number and change time — and
 wait for the record's page.
 
-**The toolbar is one row, pinned** — search, *Filters* and a compact previous/next, with the range
-beside them from `md` — so nothing needs a scroll back up, and it costs a phone one 44px row. Below
-`md` the range is a caption above the list that scrolls away. The order is set in the pane with the
-filters and shows as a chip when it is not the default: it changes rarely, and a second line of controls
-on every list is too much height to spend on it. `stickyBar()` in `src/stickyBar.ts`
-pins it beneath `--shell-top` and publishes its height as `--sticky-bar-height`, which headings in the
-list stick beneath. Below `md` it slides away while scrolling down and returns on the first scroll up,
-since a bar pinned for good takes a fifth of a phone's screen. With the filter pane open it is not
-pinned: the pane is too tall to hold on screen. **The electronic devices list fills the window
-from `md`** (`list-fill`): the document holds still, the rows scroll inside the card under a pinned
-header, and the pager stays at the window's foot. A card squeezed under 10rem lets the document scroll
-after all. **It has no caption line at any width**: the pager under the list gives the range, the
-count and the steps — on a phone only at the list's end — and the header band, empty beside the title,
-takes Excel and Add at its far end as a record's actions are, icons only on a phone; the toolbar keeps
-search and Filters. **Header band and toolbar are pinned together** wherever the document scrolls,
-and on a phone they stay rather than sliding away: with the list's own chevrons gone, they are
-the whole of its controls. Other lists do not.
+**A list of records fills its page** (`list-fill`). Where its columns show, the document holds
+still: the rows scroll inside the card under its pinned column header, and the pager stays at the
+window's foot. A card squeezed under 10rem — the filter pane open in a short window — lets the
+document scroll after all rather than hide the rows. Below `md` the document scrolls, for Safari's
+toolbars. **The header band and the toolbar are one block, pinned** beneath `--shell-top` wherever the
+document scrolls (`list-top`): the band carries the title and, at its far end, Excel and Add
+(`listHeading()`), as a record's page carries its actions, icons only on a phone; the toolbar is
+search and *Filters*. Not pinned with the filter pane open: the pane is too tall to hold on screen.
+**There is no caption line**: the pager under the list gives the range, the total and the steps — on
+a phone only at the list's end, which is the price of a toolbar that never moves. The order is set in
+the pane with the filters and shows as a chip when it is not the default: it changes rarely, and a
+second line of controls on every list is too much height to spend on it.
+
+**The logs keep a pinned bar with a caption line**: search, filters and a compact previous/next,
+with the range beside them from `md`, a caption above the list below it. `stickyBar()` in
+`src/stickyBar.ts` pins it and publishes its height as `--sticky-bar-height`, which the audit log's
+day headings stick beneath; below `md` it slides away while scrolling down and returns on the first
+scroll up, since a bar pinned for good takes a fifth of a phone's screen.
 
 **`components/Pager`** also sits under every list, driven by `pager()` in `src/paging.ts`: the range and
 the total, previous and next, and from `sm` the first, last and current page with a neighbour each side.
-A phone gets "3 / 40" in place of the links. Paging scrolls the page back to the top, and a
-`list-fill` list's rows too. **A list
+A phone gets "3 / 40" in place of the links. Paging scrolls the page back to the top, and a list's
+rows inside their card (`listPaging()`). **A list
 shows 20 per page** (`pageSize` in `paging.ts`), so a page fits a 1440px-tall display without
 scrolling; with Windows scaling at 125% it still scrolls. The server log's lines are denser, and it
 shows 25. **Both pagers are captions, not toolbars**: steps and page numbers are
 text drawn at 32px and touched at 44, with no border or fill; the current page is a small pill of the
-accent, as the menu marks where the reader is. In the bar the chevrons close up and the line they
-sit on is small type, so it reads as a caption under the search. The bar's
-chevrons stay, disabled, when nothing matches, as on a single page; the pager under the list goes. Not
+accent, as the menu marks where the reader is. In a log's bar the chevrons close up and the line they
+sit on is small type, so it reads as a caption under the search. They stay, disabled, when nothing
+matches, as on a single page; the pager under the list goes. Not
 infinite scroll: it loses the reader's place and cannot reach page 40 without loading 39.
 
 **Every list is deep-linkable: its whole state is in the address** — the search, every filter, the
@@ -219,7 +220,7 @@ with the search's pause, the chips, the sort and the latest-request rule; a list
 its filters to and from the address, and its fetch. Not a history entry per change: Back would step
 through every filter click before leaving.
 
-**A list that has a spreadsheet offers it on its caption line** — "Excel", beside the order — as a
+**A list that has a spreadsheet offers it in its header band** — "Excel", before Add — as a
 plain anchor to the export of its current request, filters and all: cx's `Link` would route it inside
 the application instead of downloading.
 
@@ -349,10 +350,9 @@ selected, and a row that selects on a click stops opening its record on one. Not
 an `<a>` may not hold; it stops its own click so the row does not open as well.
 
 **A list of records** — `_records.scss` — is a card per row on a phone and columns from `md`, a header
-on `raised` — the page's own tint dissolves the card's top edge — that sorts on a tap (`sortHeader`), a row that opens its record, and an **Add** button in the toolbar — "+ Add" whatever the list,
+on `raised` — the page's own tint dissolves the card's top edge — that sorts on a tap (`sortHeader`), a row that opens its record, and an **Add** button in the header band — "+ Add" whatever the list,
 since its title names what is added, and "Add vendor" as its accessible name; activations keep
-"Activate", the verb for a seat — where a screen's
-filters would be. A list cut short — the first three types on a tag, the first fields of an audit
+"Activate", the verb for a seat, named "Activate a seat". A list cut short — the first three types on a tag, the first fields of an audit
 change — ends in a muted `+N` pill (`record-more`), so the count never reads as another name. **An empty cell is "—"**, far lighter than a
 value (`record-blank`, `ink-ghost` against values in `ink-soft`: a thin dash is judged by weight, not
 colour, so anything short of a ghost reads as one more value), never words like "No tags" that read as one more value; on a phone's card the

@@ -1,10 +1,10 @@
 import type { AccessorChain } from "cx/data";
 import { expr, falsy, hasValue } from "cx/ui";
-import { Button, Icon, Link, LinkButton, Repeater, TextField } from "cx/widgets";
+import { Button, Icon, Link, Repeater, TextField } from "cx/widgets";
 
 import $app from "../model";
 import type { PagerState } from "../paging";
-import { stickyBar } from "../stickyBar";
+import { listHeading, listPaging } from "./listHeading";
 import { Pager } from "./Pager";
 import { sortHeader } from "./sortHeader";
 import { listSkeleton } from "./listSkeleton";
@@ -19,7 +19,6 @@ export interface SearchListState {
     loaded: boolean;
     error?: string;
     pager: PagerState;
-    totalText: string;
     /** The search that ran is one id: an empty answer then says no record has it. */
     idSearch?: boolean;
 }
@@ -53,12 +52,12 @@ interface SearchList {
 }
 
 /**
- * A list that is searched, not filtered — the directory's shape: the pinned bar with search, New and
- * the compact pager, sortable columns, a row opening its record, and the empty and error states.
- * Called inside the screen's component, which holds the `ListController`.
+ * A list that is searched, not filtered — the directory's shape: the header band with Add, the pinned
+ * search, sortable columns, a row opening its record, and the empty and error states. Called inside
+ * the screen's `list-fill` page body, which holds the `ListController`.
  */
 export function searchList(o: SearchList) {
-    const onBarRef = stickyBar();
+    const paging = listPaging();
     const s = o.s;
     const empty = expr(s.loaded, s.total, s.error, (loaded, total, error) => loaded && total === 0 && !error);
     const notEmpty = expr(
@@ -70,35 +69,21 @@ export function searchList(o: SearchList) {
 
     return (
         <cx>
-            <h1 class="page-header page-title" text={o.title} />
+            <div class="list-top">
+                {listHeading({ title: o.title, addHref: o.newHref, addLabel: o.addText })}
 
-            <div class="list-bar" onRef={onBarRef}>
-                <div class="list-toolbar">
-                    <div class="list-search">
-                        <Icon name="search" class="list-search-icon" />
-                        <TextField
-                            class="list-search-field"
-                            value={s.search}
-                            placeholder={o.placeholder}
-                            showClear
-                            inputAttrs={{ "aria-label": `Search ${o.noun}`, enterKeyHint: "search" }}
-                        />
-                    </div>
-                    <LinkButton
-                        mod="primary"
-                        class="list-new"
-                        href={o.newHref}
-                        attrs={{ "aria-label": o.addText, title: o.addText }}
-                    >
-                        <Icon name="created" class="size-4" />
-                        <span class="hidden sm:inline" text="Add" />
-                    </LinkButton>
-                </div>
-
-                <div class="list-results-head">
-                    <span class="list-total" text={s.totalText} />
-                    <div>
-                        <Pager state={s.pager} compact onPage={(page, i) => i.controller.goTo(page, true)} />
+                <div class="list-bar">
+                    <div class="list-toolbar">
+                        <div class="list-search">
+                            <Icon name="search" class="list-search-icon" />
+                            <TextField
+                                class="list-search-field"
+                                value={s.search}
+                                placeholder={o.placeholder}
+                                showClear
+                                inputAttrs={{ "aria-label": `Search ${o.noun}`, enterKeyHint: "search" }}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -108,7 +93,11 @@ export function searchList(o: SearchList) {
                 <Button mod="hollow" text="Try again" onClick="load" />
             </div>
 
-            <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
+            <div
+                class={{ "record-list": true, "record-list-loading": s.loading }}
+                visible={notEmpty}
+                onRef={paging.onRowsRef}
+            >
                 <div class={`record-head ${o.columns}`}>
                     {o.cells.map((c) =>
                         c.sort ? (
@@ -150,7 +139,7 @@ export function searchList(o: SearchList) {
             </div>
 
             <div visible={expr(s.total, (t) => t > 0)}>
-                <Pager state={s.pager} onPage={(page, i) => i.controller.goTo(page, true)} />
+                <Pager state={s.pager} onPage={paging.onPage} />
             </div>
         </cx>
     );

@@ -10,7 +10,7 @@ const r = m.$row;
 /** Cloud subscriptions: A to Z, each with how much information is kept on it. */
 export default createFunctionalComponent(() => (
     <cx>
-        <div class="page-body page-wide" controller={Controller}>
+        <div class="page-body page-wide list-fill" controller={Controller}>
             {searchList({
                 s: m.list,
                 row: r,

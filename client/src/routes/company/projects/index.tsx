@@ -1,12 +1,12 @@
 import type { AccessorChain } from "cx/data";
 import { createFunctionalComponent, expr, falsy, hasValue, isNonEmpty } from "cx/ui";
-import { Button, Icon, Link, LinkButton, LookupField, Repeater, TextField } from "cx/widgets";
+import { Button, Icon, Link, LookupField, Repeater, TextField } from "cx/widgets";
 
 import { Pager } from "../../../components/Pager";
 import { countCell } from "../../../components/searchList";
 import { sortHeader } from "../../../components/sortHeader";
 import $app from "../../../model";
-import { stickyBar } from "../../../stickyBar";
+import { listHeading, listPaging } from "../../../components/listHeading";
 import Controller from "./Controller";
 import m from "./model";
 import { listSkeleton } from "../../../components/listSkeleton";
@@ -44,86 +44,80 @@ const filterPick = (label: string, key: string, options: AccessorChain<unknown[]
 
 /** Projects: A to Z, with their client and who leads them. */
 export default createFunctionalComponent(() => {
-    const onBarRef = stickyBar();
+    const paging = listPaging();
 
     return (
         <cx>
-            <div class="page-body page-wide" controller={Controller}>
-                <h1 class="page-header page-title" text="Projects" />
+            <div class="page-body page-wide list-fill" controller={Controller}>
+                <div class={{ "list-top": true, "list-top-static": s.filtersOpen }}>
+                    {listHeading({
+                        title: "Projects",
+                        addHref: "~/company/projects/new",
+                        addLabel: "Add project",
+                    })}
 
-                <div class={{ "list-bar": true, "list-bar-static": s.filtersOpen }} onRef={onBarRef}>
-                    <div class="list-toolbar">
-                        <div class="list-search">
-                            <Icon name="search" class="list-search-icon" />
-                            <TextField
-                                class="list-search-field"
-                                value={s.search}
-                                placeholder="Search name, client, owner…"
-                                showClear
-                                inputAttrs={{ "aria-label": "Search projects", enterKeyHint: "search" }}
-                            />
-                        </div>
-                        <Button
-                            mod="hollow"
-                            class={{ "list-filters-toggle": true, "list-filters-toggle-open": s.filtersOpen }}
-                            attrs={{ "aria-controls": "project-filters" }}
-                            onClick="toggleFilters"
-                        >
-                            <Icon name="filters" class="size-4" />
-                            <span class="hidden sm:inline" text="Filters" />
-                            <span class="list-count" visible={hasChips} text={chipCount} />
-                        </Button>
-                        <LinkButton
-                            mod="primary"
-                            class="list-new"
-                            attrs={{ "aria-label": "Add project", title: "Add project" }}
-                            href="~/company/projects/new"
-                        >
-                            <Icon name="created" class="size-4" />
-                            <span class="hidden sm:inline" text="Add" />
-                        </LinkButton>
-                    </div>
-
-                    <div id="project-filters" class="list-pane" visible={s.filtersOpen}>
-                        <div class="list-pane-grid">
-                            {filterPick("Client", "client", s.clients, "Any client")}
-                            {filterPick("Led by", "person", s.people, "Anyone")}
-                        </div>
-                        <div class="list-pane-footer">
+                    <div class="list-bar">
+                        <div class="list-toolbar">
+                            <div class="list-search">
+                                <Icon name="search" class="list-search-icon" />
+                                <TextField
+                                    class="list-search-field"
+                                    value={s.search}
+                                    placeholder="Search name, client, owner…"
+                                    showClear
+                                    inputAttrs={{ "aria-label": "Search projects", enterKeyHint: "search" }}
+                                />
+                            </div>
                             <Button
                                 mod="hollow"
-                                text="Clear filters"
-                                onClick="clearFilters"
-                                visible={hasChips}
-                            />
-                            <Button mod="primary" text="Done" onClick="closeFilters" />
+                                class={{
+                                    "list-filters-toggle": true,
+                                    "list-filters-toggle-open": s.filtersOpen,
+                                }}
+                                attrs={{ "aria-controls": "project-filters" }}
+                                onClick="toggleFilters"
+                            >
+                                <Icon name="filters" class="size-4" />
+                                <span class="hidden sm:inline" text="Filters" />
+                                <span class="list-count" visible={hasChips} text={chipCount} />
+                            </Button>
                         </div>
-                    </div>
 
-                    <div class="list-chips" visible={hasChips}>
-                        <Repeater records={s.chips} recordAlias={m.$chip}>
+                        <div id="project-filters" class="list-pane" visible={s.filtersOpen}>
+                            <div class="list-pane-grid">
+                                {filterPick("Client", "client", s.clients, "Any client")}
+                                {filterPick("Led by", "person", s.people, "Anyone")}
+                            </div>
+                            <div class="list-pane-footer">
+                                <Button
+                                    mod="hollow"
+                                    text="Clear filters"
+                                    onClick="clearFilters"
+                                    visible={hasChips}
+                                />
+                                <Button mod="primary" text="Done" onClick="closeFilters" />
+                            </div>
+                        </div>
+
+                        <div class="list-chips" visible={hasChips}>
+                            <Repeater records={s.chips} recordAlias={m.$chip}>
+                                <button
+                                    type="button"
+                                    class="chip"
+                                    onClick={(_e: unknown, { store, controller }: any) =>
+                                        controller.removeFilter(store.get(m.$chip.key))
+                                    }
+                                >
+                                    <span text={m.$chip.text} />
+                                    <Icon name="close" class="size-3.5" />
+                                    <span class="sr-only" text="Remove filter" />
+                                </button>
+                            </Repeater>
                             <button
                                 type="button"
-                                class="chip"
-                                onClick={(_e: unknown, { store, controller }: any) =>
-                                    controller.removeFilter(store.get(m.$chip.key))
-                                }
-                            >
-                                <span text={m.$chip.text} />
-                                <Icon name="close" class="size-3.5" />
-                                <span class="sr-only" text="Remove filter" />
-                            </button>
-                        </Repeater>
-                        <button type="button" class="chip-clear" onClick="clearFilters" text="Clear all" />
-                    </div>
-
-                    <div class="list-results-head">
-                        <span class="list-total" text={s.totalText} />
-                        <div>
-                            <Pager
-                                state={s.pager}
-                                compact
-                                onPage={(page, i) => i.controller.goTo(page, true)}
+                                class="chip-clear"
+                                onClick="clearFilters"
+                                text="Clear all"
                             />
                         </div>
                     </div>
@@ -134,7 +128,11 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
+                <div
+                    class={{ "record-list": true, "record-list-loading": s.loading }}
+                    visible={notEmpty}
+                    onRef={paging.onRowsRef}
+                >
                     <div class="record-head project-columns">
                         {sortHeader(s.sort, "name", "Name")}
                         {sortHeader(s.sort, "client", "Client")}
@@ -183,7 +181,7 @@ export default createFunctionalComponent(() => {
                 </div>
 
                 <div visible={expr(s.total, (t) => t > 0)}>
-                    <Pager state={s.pager} onPage={(page, i) => i.controller.goTo(page, true)} />
+                    <Pager state={s.pager} onPage={paging.onPage} />
                 </div>
             </div>
         </cx>

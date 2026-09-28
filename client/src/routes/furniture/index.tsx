@@ -1,13 +1,13 @@
 import type { AccessorChain } from "cx/data";
 import { createFunctionalComponent, expr, falsy, hasValue, isNonEmpty } from "cx/ui";
-import { Button, DateField, Icon, Link, LinkButton, LookupField, Repeater, TextField } from "cx/widgets";
+import { Button, DateField, Icon, Link, LookupField, Repeater, TextField } from "cx/widgets";
 
 import { dateValue } from "../../bindings";
 import { Pager } from "../../components/Pager";
 import { completeness, segmented } from "../../components/segmented";
 import { sortHeader } from "../../components/sortHeader";
 import $app from "../../model";
-import { stickyBar } from "../../stickyBar";
+import { listHeading, listPaging } from "../../components/listHeading";
 import Controller from "./Controller";
 import m from "./model";
 import { listSkeleton } from "../../components/listSkeleton";
@@ -45,115 +45,100 @@ const filterPick = (label: string, key: string, options: AccessorChain<unknown[]
 
 /** Furniture: most recently changed first. */
 export default createFunctionalComponent(() => {
-    const onBarRef = stickyBar();
+    const paging = listPaging();
 
     return (
         <cx>
-            <div class="page-body page-wide" controller={Controller}>
-                <h1 class="page-header page-title" text="Furniture" />
+            <div class="page-body page-wide list-fill" controller={Controller}>
+                <div class={{ "list-top": true, "list-top-static": s.filtersOpen }}>
+                    {listHeading({
+                        title: "Furniture",
+                        exportHref: s.exportHref,
+                        addHref: "~/furniture/new",
+                        addLabel: "Add furniture",
+                    })}
 
-                <div class={{ "list-bar": true, "list-bar-static": s.filtersOpen }} onRef={onBarRef}>
-                    <div class="list-toolbar">
-                        <div class="list-search">
-                            <Icon name="search" class="list-search-icon" />
-                            <TextField
-                                class="list-search-field"
-                                value={s.search}
-                                placeholder="Search number, name, model, assignee…"
-                                showClear
-                                inputAttrs={{ "aria-label": "Search furniture", enterKeyHint: "search" }}
-                            />
-                        </div>
-                        <Button
-                            mod="hollow"
-                            class={{ "list-filters-toggle": true, "list-filters-toggle-open": s.filtersOpen }}
-                            attrs={{ "aria-controls": "furniture-filters" }}
-                            onClick="toggleFilters"
-                        >
-                            <Icon name="filters" class="size-4" />
-                            <span class="hidden sm:inline" text="Filters" />
-                            <span class="list-count" visible={hasChips} text={chipCount} />
-                        </Button>
-                        <LinkButton
-                            mod="primary"
-                            class="list-new"
-                            attrs={{ "aria-label": "Add furniture", title: "Add furniture" }}
-                            href="~/furniture/new"
-                        >
-                            <Icon name="created" class="size-4" />
-                            <span class="hidden sm:inline" text="Add" />
-                        </LinkButton>
-                    </div>
-
-                    <div id="furniture-filters" class="list-pane" visible={s.filtersOpen}>
-                        <div class="list-pane-grid">
-                            {filterPick("Type", "type", s.types, "Any type")}
-                            {filterPick("Assignee", "person", s.people, "Anyone")}
-                            {filterPick("Location", "location", s.locations, "Anywhere")}
-                            {filterPick("Vendor", "vendor", s.vendors, "Any vendor")}
-                            <div class="list-filter">
-                                <div class="list-filter-label" text="Bought from" />
-                                <DateField
-                                    value={dateValue(s.filters.from)}
-                                    placeholder="Any day"
-                                    inputAttrs={{ "aria-label": "Bought from" }}
+                    <div class="list-bar">
+                        <div class="list-toolbar">
+                            <div class="list-search">
+                                <Icon name="search" class="list-search-icon" />
+                                <TextField
+                                    class="list-search-field"
+                                    value={s.search}
+                                    placeholder="Search number, name, model, assignee…"
+                                    showClear
+                                    inputAttrs={{ "aria-label": "Search furniture", enterKeyHint: "search" }}
                                 />
                             </div>
-                            <div class="list-filter">
-                                <div class="list-filter-label" text="Bought to" />
-                                <DateField
-                                    value={dateValue(s.filters.to)}
-                                    placeholder="Any day"
-                                    inputAttrs={{ "aria-label": "Bought to" }}
-                                />
-                            </div>
-                            {segmented("Record", completeness, s.filters.incomplete, "setIncomplete")}
-                        </div>
-                        <div class="list-pane-footer">
                             <Button
                                 mod="hollow"
-                                text="Clear filters"
-                                onClick="clearFilters"
-                                visible={hasChips}
-                            />
-                            <Button mod="primary" text="Done" onClick="closeFilters" />
+                                class={{
+                                    "list-filters-toggle": true,
+                                    "list-filters-toggle-open": s.filtersOpen,
+                                }}
+                                attrs={{ "aria-controls": "furniture-filters" }}
+                                onClick="toggleFilters"
+                            >
+                                <Icon name="filters" class="size-4" />
+                                <span class="hidden sm:inline" text="Filters" />
+                                <span class="list-count" visible={hasChips} text={chipCount} />
+                            </Button>
                         </div>
-                    </div>
 
-                    <div class="list-chips" visible={hasChips}>
-                        <Repeater records={s.chips} recordAlias={m.$chip}>
+                        <div id="furniture-filters" class="list-pane" visible={s.filtersOpen}>
+                            <div class="list-pane-grid">
+                                {filterPick("Type", "type", s.types, "Any type")}
+                                {filterPick("Assignee", "person", s.people, "Anyone")}
+                                {filterPick("Location", "location", s.locations, "Anywhere")}
+                                {filterPick("Vendor", "vendor", s.vendors, "Any vendor")}
+                                <div class="list-filter">
+                                    <div class="list-filter-label" text="Bought from" />
+                                    <DateField
+                                        value={dateValue(s.filters.from)}
+                                        placeholder="Any day"
+                                        inputAttrs={{ "aria-label": "Bought from" }}
+                                    />
+                                </div>
+                                <div class="list-filter">
+                                    <div class="list-filter-label" text="Bought to" />
+                                    <DateField
+                                        value={dateValue(s.filters.to)}
+                                        placeholder="Any day"
+                                        inputAttrs={{ "aria-label": "Bought to" }}
+                                    />
+                                </div>
+                                {segmented("Record", completeness, s.filters.incomplete, "setIncomplete")}
+                            </div>
+                            <div class="list-pane-footer">
+                                <Button
+                                    mod="hollow"
+                                    text="Clear filters"
+                                    onClick="clearFilters"
+                                    visible={hasChips}
+                                />
+                                <Button mod="primary" text="Done" onClick="closeFilters" />
+                            </div>
+                        </div>
+
+                        <div class="list-chips" visible={hasChips}>
+                            <Repeater records={s.chips} recordAlias={m.$chip}>
+                                <button
+                                    type="button"
+                                    class="chip"
+                                    onClick={(_e: unknown, { store, controller }: any) =>
+                                        controller.removeFilter(store.get(m.$chip.key))
+                                    }
+                                >
+                                    <span text={m.$chip.text} />
+                                    <Icon name="close" class="size-3.5" />
+                                    <span class="sr-only" text="Remove filter" />
+                                </button>
+                            </Repeater>
                             <button
                                 type="button"
-                                class="chip"
-                                onClick={(_e: unknown, { store, controller }: any) =>
-                                    controller.removeFilter(store.get(m.$chip.key))
-                                }
-                            >
-                                <span text={m.$chip.text} />
-                                <Icon name="close" class="size-3.5" />
-                                <span class="sr-only" text="Remove filter" />
-                            </button>
-                        </Repeater>
-                        <button type="button" class="chip-clear" onClick="clearFilters" text="Clear all" />
-                    </div>
-
-                    <div class="list-results-head">
-                        <span class="list-total" text={s.totalText} />
-                        {/* A plain anchor: cx's Link would route it inside the app instead of downloading. */}
-                        <a
-                            class="list-export"
-                            href={s.exportHref}
-                            download
-                            attrs={{ title: "Download what the list shows, every page, as Excel" }}
-                        >
-                            <Icon name="download" class="size-3.5" />
-                            <span text="Excel" />
-                        </a>
-                        <div>
-                            <Pager
-                                state={s.pager}
-                                compact
-                                onPage={(page, i) => i.controller.goTo(page, true)}
+                                class="chip-clear"
+                                onClick="clearFilters"
+                                text="Clear all"
                             />
                         </div>
                     </div>
@@ -164,7 +149,11 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
+                <div
+                    class={{ "record-list": true, "record-list-loading": s.loading }}
+                    visible={notEmpty}
+                    onRef={paging.onRowsRef}
+                >
                     <div class="record-head furniture-columns">
                         {sortHeader(s.sort, "number", "No.")}
                         {sortHeader(s.sort, "name", "Name")}
@@ -233,7 +222,7 @@ export default createFunctionalComponent(() => {
                 </div>
 
                 <div visible={expr(s.total, (t) => t > 0)}>
-                    <Pager state={s.pager} onPage={(page, i) => i.controller.goTo(page, true)} />
+                    <Pager state={s.pager} onPage={paging.onPage} />
                 </div>
             </div>
         </cx>

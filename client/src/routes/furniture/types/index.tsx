@@ -1,10 +1,10 @@
 import { createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
-import { Button, Icon, Link, LinkButton, Repeater, TextField } from "cx/widgets";
+import { Button, Icon, Link, Repeater, TextField } from "cx/widgets";
 
 import { Pager } from "../../../components/Pager";
 import { sortHeader } from "../../../components/sortHeader";
 import $app from "../../../model";
-import { stickyBar } from "../../../stickyBar";
+import { listHeading, listPaging } from "../../../components/listHeading";
 import Controller from "./Controller";
 import m from "./model";
 import { listSkeleton } from "../../../components/listSkeleton";
@@ -21,44 +21,30 @@ const notEmpty = expr(
 
 /** Furniture types: a searchable list, each row opening the type's page. */
 export default createFunctionalComponent(() => {
-    const onBarRef = stickyBar();
+    const paging = listPaging();
 
     return (
         <cx>
-            <div class="page-body page-wide" controller={Controller}>
-                <h1 class="page-header page-title" text="Furniture types" />
+            <div class="page-body page-wide list-fill" controller={Controller}>
+                <div class="list-top">
+                    {listHeading({
+                        title: "Furniture types",
+                        addHref: "~/furniture/types/new",
+                        addLabel: "Add type",
+                    })}
 
-                <div class="list-bar" onRef={onBarRef}>
-                    <div class="list-toolbar">
-                        <div class="list-search">
-                            <Icon name="search" class="list-search-icon" />
-                            <TextField
-                                class="list-search-field"
-                                value={s.search}
-                                placeholder="Search types…"
-                                showClear
-                                inputAttrs={{ "aria-label": "Search types", enterKeyHint: "search" }}
-                            />
-                        </div>
-                        <LinkButton
-                            mod="primary"
-                            class="list-new"
-                            attrs={{ "aria-label": "Add type", title: "Add type" }}
-                            href="~/furniture/types/new"
-                        >
-                            <Icon name="created" class="size-4" />
-                            <span class="hidden sm:inline" text="Add" />
-                        </LinkButton>
-                    </div>
-
-                    <div class="list-results-head">
-                        <span class="list-total" text={s.totalText} />
-                        <div>
-                            <Pager
-                                state={s.pager}
-                                compact
-                                onPage={(page, i) => i.controller.goTo(page, true)}
-                            />
+                    <div class="list-bar">
+                        <div class="list-toolbar">
+                            <div class="list-search">
+                                <Icon name="search" class="list-search-icon" />
+                                <TextField
+                                    class="list-search-field"
+                                    value={s.search}
+                                    placeholder="Search types…"
+                                    showClear
+                                    inputAttrs={{ "aria-label": "Search types", enterKeyHint: "search" }}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -68,7 +54,11 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div class={{ "record-list": true, "record-list-loading": s.loading }} visible={notEmpty}>
+                <div
+                    class={{ "record-list": true, "record-list-loading": s.loading }}
+                    visible={notEmpty}
+                    onRef={paging.onRowsRef}
+                >
                     <div class="record-head furniture-type-columns">
                         {sortHeader(s.sort, "name", "Name")}
                         <span text="Description" />
@@ -129,7 +119,7 @@ export default createFunctionalComponent(() => {
                 </div>
 
                 <div visible={expr(s.total, (t) => t > 0)}>
-                    <Pager state={s.pager} onPage={(page, i) => i.controller.goTo(page, true)} />
+                    <Pager state={s.pager} onPage={paging.onPage} />
                 </div>
             </div>
         </cx>

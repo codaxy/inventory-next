@@ -1,8 +1,9 @@
 import type { AccessorChain } from "cx/data";
 import { createFunctionalComponent, expr, falsy, hasValue, isNonEmpty } from "cx/ui";
-import { Button, DateField, Icon, Link, LinkButton, LookupField, Repeater, TextField } from "cx/widgets";
+import { Button, DateField, Icon, Link, LookupField, Repeater, TextField } from "cx/widgets";
 
 import { dateValue } from "../../bindings";
+import { listHeading, listPaging } from "../../components/listHeading";
 import { Pager } from "../../components/Pager";
 import { completeness, segmented } from "../../components/segmented";
 import { sortHeader } from "../../components/sortHeader";
@@ -44,46 +45,18 @@ const filterPick = (label: string, key: string, options: AccessorChain<unknown[]
 
 /** Electronic devices: most recently changed first. */
 export default createFunctionalComponent(() => {
-    // From `md` the rows scroll inside the card (`list-fill`), so paging returns the card to its top too.
-    let rowsEl: HTMLElement | null = null;
-    const goTo = (page: number, instance: any) => {
-        instance.controller.goTo(page, true);
-        rowsEl?.scrollTo({ top: 0 });
-    };
+    const paging = listPaging();
 
     return (
         <cx>
             <div class="page-body page-wide list-fill" controller={Controller}>
                 <div class={{ "list-top": true, "list-top-static": s.filtersOpen }}>
-                    <div class="page-header">
-                        <div class="list-heading">
-                            <h1 class="page-title" text="Electronic devices" />
-                            <div class="list-heading-actions">
-                                {/* A plain anchor: cx's Link would route it inside the app instead of downloading. */}
-                                <a
-                                    class="list-export"
-                                    href={s.exportHref}
-                                    download
-                                    attrs={{
-                                        "aria-label": "Download as Excel",
-                                        title: "Download what the list shows, every page, as Excel",
-                                    }}
-                                >
-                                    <Icon name="download" class="size-4" />
-                                    <span class="hidden sm:inline" text="Excel" />
-                                </a>
-                                <LinkButton
-                                    mod="primary"
-                                    class="list-new"
-                                    attrs={{ "aria-label": "Add device", title: "Add device" }}
-                                    href="~/electronic-devices/new"
-                                >
-                                    <Icon name="created" class="size-4" />
-                                    <span class="hidden sm:inline" text="Add" />
-                                </LinkButton>
-                            </div>
-                        </div>
-                    </div>
+                    {listHeading({
+                        title: "Electronic devices",
+                        exportHref: s.exportHref,
+                        addHref: "~/electronic-devices/new",
+                        addLabel: "Add device",
+                    })}
 
                     <div class="list-bar">
                         <div class="list-toolbar">
@@ -186,7 +159,7 @@ export default createFunctionalComponent(() => {
                 <div
                     class={{ "record-list": true, "record-list-loading": s.loading }}
                     visible={notEmpty}
-                    onRef={(el: HTMLElement | null) => (rowsEl = el)}
+                    onRef={paging.onRowsRef}
                 >
                     <div class="record-head device-columns">
                         {sortHeader(s.sort, "number", "No.")}
@@ -253,7 +226,7 @@ export default createFunctionalComponent(() => {
                 </div>
 
                 <div visible={expr(s.total, (t) => t > 0)}>
-                    <Pager state={s.pager} onPage={goTo} />
+                    <Pager state={s.pager} onPage={paging.onPage} />
                 </div>
             </div>
         </cx>
