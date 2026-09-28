@@ -4,8 +4,8 @@ import { defaultPreset, densityComfortable } from "cx-theme-variables";
  * CxJS's theme variables mapped onto the tokens in `tailwind.css`, so widgets and hand-written
  * markup draw from one palette. Values point at the tokens rather than repeating hex codes.
  *
- * Controls are 44px — the tap target `web-client.md` requires — which no density preset reaches:
- * `densityComfortable`'s 24px line height plus 9px padding each side and the 1px borders.
+ * Controls are 36px: `densityComfortable`'s 24px line height, 5px padding each side and the 1px
+ * borders. A touch screen raises the padding to 9px, the 44px tap target, in `_surfaces.scss`.
  */
 export const theme = {
     ...defaultPreset,
@@ -37,15 +37,15 @@ export const theme = {
 
     inputColor: "var(--color-ink)",
     inputBackgroundColor: "var(--color-surface)",
-    inputBorderColor: "var(--color-line-strong)",
+    inputBorderColor: "var(--color-line-field)",
     inputPaddingX: "12px",
-    inputPaddingY: "9px",
+    inputPaddingY: "5px",
 
     buttonBackgroundColor: "var(--color-raised)",
     buttonColor: "var(--color-ink)",
-    buttonBorderColor: "var(--color-line-strong)",
+    buttonBorderColor: "var(--color-line-field)",
     buttonFontWeight: "600",
-    buttonPaddingY: "9px",
+    buttonPaddingY: "5px",
 
     itemHoverBackgroundColor: "var(--color-hover)",
     cursorBoxShadow: "none",
@@ -70,6 +70,10 @@ export const theme = {
     gridBackground: "var(--color-surface)",
     gridHeaderBackgroundColor: "var(--color-canvas)",
     gridHeaderColor: "var(--color-ink-muted)",
+    // A row is read, not touched: it keeps its height when the controls shrink, which the preset's
+    // derivation from the input padding would not.
+    gridHeaderPaddingY: "9px",
+    gridDataPaddingY: "9px",
     gridHeaderBorderColor: "var(--color-line)",
     gridDataBorderColor: "var(--color-line-soft)",
     gridDataAlternateBackgroundColor: "transparent",

@@ -4,3 +4,11 @@
 .cxb-numberfield.cxs-error > .cxe-numberfield-input {
     background-color: var(--color-surface);
 }
+
+// A field's edge darkens under the pointer. Set on the widget, the variable outranks the one on
+// `<html>` by inheritance, with no selector racing the theme's.
+:is(.cxb-textfield, .cxb-numberfield, .cxb-textarea, .cxb-datefield, .cxb-lookupfield):hover:not(
+        .cxs-disabled
+    ) {
+    --cx-input-border-color: var(--color-line-strong);
+}

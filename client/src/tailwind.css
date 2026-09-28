@@ -37,7 +37,10 @@
 
     --color-line: #dfe4ed;
     --color-line-soft: #e9edf4;
-    --color-line-strong: #8492a6; /* 3.2 — a field's edge */
+    --color-line-strong: #8492a6; /* 3.2 — a hovered field's edge */
+    /* A field's and a button's edge at rest: 1.8, under the 3:1 of WCAG's non-text contrast by
+       choice — at 3.2 every field shouted. The white fill on the tinted page carries the rest. */
+    --color-line-field: #b8c1ce;
     /* Decoration only: the sign-in backdrop's dot grid. */
     --color-dot: #c3cddc;
 

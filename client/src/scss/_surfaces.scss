@@ -5,11 +5,20 @@ html {
     touch-action: manipulation;
 }
 
+// A control's height: 36px under a mouse, 44px — the tap target — on a touch screen. Hand-built
+// controls take `--control`; CxJS's take it from the padding, 9px here against 5px in `theme.ts`.
 // iPhone Safari zooms into any focused input whose text is under 16px, and ours is 14.
 // `renderThemeVariables` sets the variables inline on `<html>`, which only `!important` outranks.
+:root {
+    --control: 36px;
+}
+
 @media (pointer: coarse) {
     :root {
+        --control: 44px;
         --cx-input-font-size: 16px !important;
+        --cx-input-padding-y: 9px !important;
+        --cx-button-padding-y: 9px !important;
     }
 }
 

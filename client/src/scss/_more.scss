@@ -8,10 +8,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
+    width: var(--control);
+    height: var(--control);
     padding: 0;
-    // A ghost button: no border, the glyph alone beside the primary action; its 44px target and its
+    // A ghost button: no border, the glyph alone beside the primary action; its full-size target and its
     // hover and focus states are what make it a button.
     border: 0;
     border-radius: var(--cx-button-border-radius);

@@ -75,12 +75,12 @@
 
 // Hollow buttons are borderless in the theme; beside a bordered search box this one needs its edge.
 .cxb-button.cxm-hollow.list-filters-toggle {
-    border-color: var(--color-line-strong);
+    border-color: var(--color-line-field);
     background: var(--color-surface);
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    min-width: 44px;
+    min-width: var(--control);
     justify-content: center;
 }
 

@@ -113,7 +113,7 @@ whose text is smaller, and the page stays zoomed after it. **Double-tap zoom is 
 (`touch-action: manipulation`); **pinch zoom is not** — it is how small text is read by those who need
 it larger, blocking it fails WCAG's resize-text criterion, and iPhone Safari ignores the block anyway.
 
-Tap targets are at least 44px high wherever the layout is a phone's — the drawer's links included; the
+Tap targets are at least 44px high on a touch screen — the drawer's links included; the
 desktop sidebar keeps Pulse's denser rows. The page padding respects `env(safe-area-inset-bottom)`.
 
 ## Lists
@@ -226,7 +226,7 @@ that closed it has already left the screen.
 
 **Every entity has a page of its own**, never a window, **and a row opens it read-only**:
 `~/<item>/:id` shows the record, **its primary action in the header beside its name and the rest behind
-a ⋮** (`moreActions` in `components/`, a borderless 44px button with a hover tint and a focus ring): Edit visible — or Deactivate, for a record never edited — and
+a ⋮** (`moreActions` in `components/`, a borderless square button of the controls' height with a hover tint and a focus ring): Edit visible — or Deactivate, for a record never edited — and
 View history, Duplicate and Delete a click deeper, Delete last and red, so what destroys is never one mis-click
 away; icons only on a phone, named for screen readers; editing is `~/<item>/:id/edit`, Cancel and Save in the card's footer; `new` opens in editing, there being nothing to show yet. A
 record's actions go where the eye starts, a form's commit where the form finishes. Not everyone will be allowed to edit, and
@@ -384,9 +384,10 @@ white logo as a mask** in `_brand.scss`, its two tones kept (`axy` at 55%), its 
 **Every colour and shadow is a token in `src/tailwind.css`**, in `@theme static`, and nothing else in the client
 writes one. Each text token clears AA (4.5:1) on both the card and the page, but `ink-ghost`, which marks an
 absence and never content, and `ink-label`, the uppercase label of a card, which clears it on the card
-only and is used nowhere else; field and button borders
-clear 3:1 on the card. The house values for `ink-faint`, `line-strong` and `warn` fail that, so those values are
-darker here. **Text in a status colour uses its `-text` token**, which equals the fill where the fill
+only and is used nowhere else. **Field and button edges are `line-field`, 1.8:1**, under WCAG's 3:1 for
+non-text contrast by choice: at 3:1 every field shouted. The white fill on the tinted page carries the
+rest, and a field's edge darkens to `line-strong` (3.2) under the pointer. The house values for
+`ink-faint`, `line-strong` and `warn` fail AA, so those values are darker here. **Text in a status colour uses its `-text` token**, which equals the fill where the fill
 passes and is darker where it does not: `warn` is 3.4:1 as text, `warn-text` 5.1:1. A status's `-wash` is a
 background its `-text` clears 4.5:1 on; `-mark` highlights the words a change touched, under `ink`.
 
@@ -411,9 +412,12 @@ refusing the address — never for "required" or "not a valid address", which sa
 border and an empty field already do. Sign-in's button is disabled until the address is
 well-formed, and empty is not an error.
 
-**Controls are 44px by padding, not by a density preset.** The largest preset stops at 40px, so
-`theme.ts` takes `densityComfortable`'s 24px line and sets 9px vertical padding on inputs and buttons.
-`densityCompact` (32px) is desktop sizing and wrong here.
+**Controls are 36px under a mouse and 44px on a touch screen, by padding, not by a density preset.**
+`theme.ts` takes `densityComfortable`'s 24px line with 5px vertical padding on inputs and buttons;
+`(pointer: coarse)` raises it to 9px in `_surfaces.scss`, which also sets `--control` — the height
+every hand-built control takes. The breakpoint is the pointer, not the width: a narrow desktop window
+has a mouse. Grid rows keep 9px at every size — a row is read, not touched. `densityCompact` (32px)
+is too dense even under a mouse.
 
 ## Build
 

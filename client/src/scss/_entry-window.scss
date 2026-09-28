@@ -95,7 +95,7 @@
     display: inline-grid;
     flex-shrink: 0;
     place-items: center;
-    width: 44px;
+    width: var(--control);
     margin: -0.5rem -0.75rem 0 0;
     padding: 0;
     border-color: transparent;
@@ -275,7 +275,7 @@
 }
 
 .entry-toggle-button {
-    min-height: 44px;
+    min-height: var(--control);
     padding: 0;
     border: 0;
     background: none;
@@ -350,7 +350,7 @@
 
     // A secondary action, not a link: it gets the edge the theme's hollow button leaves off.
     .cxb-button.cxm-hollow {
-        border-color: var(--color-line-strong);
+        border-color: var(--color-line-field);
         background: var(--color-surface);
     }
 }

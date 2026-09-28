@@ -364,7 +364,8 @@ are often two classes deep (`.cxb-button.cxm-hollow`). Read the real rule from
 `Button`** — its height is computed from the line-height, padding and border variables; change those
 in `theme.ts`, or set `height: auto` at `.cxb-button` specificity for a one-off.
 
-**Controls are 44px** — the phone's tap target. Never adopt a density preset that shrinks them.
+**Controls are 36px under a mouse, 44px on touch** — a hand-built one takes `var(--control)`, never a
+literal height. Never adopt a density preset that shrinks them further.
 
 **A dropdown is not closed by scrolling here**: `Dropdown.prototype.closeOnScrollDistance` is
 `Infinity` in `widgetDefaults.ts`, since the phone keyboard scrolls the page under a focused search box.
@@ -426,5 +427,5 @@ classes land on the `tbody`. **Grid selects on `mousedown`**, not `click`.
 
 A CxJS screen can return 200 and paint nothing, which no build or type check catches. After a change,
 load it in a real browser at phone width (390×844) and desktop, and assert on the **DOM** — the
-element exists, the control measures 44px, `.cxs-error` appears on an empty required field — not on a
+element exists, a control measures 44px at phone width with touch emulation, `.cxs-error` appears on an empty required field — not on a
 screenshot alone.
