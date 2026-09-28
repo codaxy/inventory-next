@@ -162,12 +162,15 @@ wait for the record's page.
 
 **A list of records fills its page** (`list-fill`). Where its columns show, the document holds
 still: the rows scroll inside the card under its pinned column header, and the pager stays at the
-window's foot. A card squeezed under 10rem — the filter pane open in a short window — lets the
-document scroll after all rather than hide the rows. Below `md` the document scrolls, for Safari's
-toolbars. **The header band and the toolbar are one block, pinned** beneath `--shell-top` wherever the
+window's foot. A card squeezed under 10rem in a short window lets the document scroll after all
+rather than hide the rows. Below `md` the document scrolls, for Safari's toolbars. **With the filter
+pane open the page scrolls at every width**, as a phone's does: the pane pushes the list down, and in
+a page of fixed height that pushes the rows off it. **The header band and the toolbar are one block, pinned** beneath `--shell-top` wherever the
 document scrolls (`list-top`): the band carries the title and, at its far end, Excel and Add
 (`listHeading()`), as a record's page carries its actions, icons only on a phone; the toolbar is
 search and *Filters*. Not pinned with the filter pane open: the pane is too tall to hold on screen.
+Not a pane covering the rows instead: it needs capping to the room left, which moves as chips wrap,
+and a scrim to keep a tap from opening a record behind it.
 **There is no caption line**: the pager under the list gives the range, the total and the steps — on
 a phone only at the list's end, which is the price of a toolbar that never moves. The order is set in
 the pane with the filters and shows as a chip when it is not the default: it changes rarely, and a
