@@ -1,4 +1,5 @@
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Volumes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codaxy.Inventory.App.Licenses.Activations.Volumes;
@@ -8,6 +9,7 @@ public static class Endpoint
     public static void Map(RouteGroupBuilder activations) => activations.MapGet("/volumes", Handle);
 
     /// <param name="InUse">Seats taken by activations still active.</param>
+    /// <param name="Designator">What tells volumes of one license and software apart (<see cref="VolumeNames.Designator"/>).</param>
     public sealed record Volume(
         Guid Id,
         Guid LicenseId,
@@ -17,7 +19,7 @@ public static class Endpoint
         int TypeId,
         int Quantity,
         int InUse,
-        string? Description
+        string Designator
     );
 
     /// <summary>The volumes of one software or service, each with its seats in use: what the form picks from.</summary>
@@ -45,7 +47,7 @@ public static class Endpoint
                     v.VolumeTypeId,
                     v.Quantity,
                     v.Activations.Where(a => a.DeactivationDate == null).Sum(a => a.Quantity),
-                    v.Description
+                    VolumeNames.Designator(v.Description, v.VolumeType.Text)
                 ))
                 .ToListAsync(cancellationToken)
         );

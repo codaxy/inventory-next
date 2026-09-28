@@ -534,7 +534,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
                 SoftwareOrServiceId = ActivationApplication.Office,
                 VolumeTypeId = Seed.PerUser,
                 Quantity = 1,
-                Description = "Second invoice",
+                Description = "Second invoice · https://example.com/seats",
             };
             c.Volumes.Add(volume);
             await c.SaveChangesAsync();
@@ -559,13 +559,13 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         ).GetFromJsonAsync<App.Licenses.Activations.Options.Endpoint.Response>($"{Url}/options");
         Assert.Contains(
             options!.Volumes,
-            v => v.Id == second && v.Text == "Office · Office license · Second invoice"
+            v => v.Id == second && v.Text == "Office license · Second invoice"
         );
         Assert.Contains(
             options.Volumes,
             v =>
                 v.Id == ActivationApplication.OfficeLicense.Volume
-                && v.Text == "Office · Office license · Per user"
+                && v.Text == "Office license · Per user"
         );
     }
 
@@ -657,8 +657,8 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         var volume = volumes!.Single(v => v.Id == ActivationApplication.OfficeLicense.Volume);
 
         Assert.Equal(
-            ("Office license", "Per user", 5),
-            (volume.License, volume.Type, volume.Quantity)
+            ("Office license", "Per user", "Per user", 5),
+            (volume.License, volume.Type, volume.Designator, volume.Quantity)
         );
         Assert.True(volume.InUse >= 2);
         Assert.Equal(

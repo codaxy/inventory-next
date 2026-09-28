@@ -2,7 +2,7 @@ import type { Page } from "../paging";
 import type { Option } from "./assets";
 import { send, toQuery } from "./http";
 
-/** "Rider · JetBrains All Products · Per user", and the license it is under. */
+/** "JetBrains All Products · Per user", and the license it is under. */
 export interface VolumeRef {
     id: string;
     text: string;

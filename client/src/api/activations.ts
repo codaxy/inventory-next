@@ -111,8 +111,8 @@ export interface VolumeOption {
     typeId: number;
     quantity: number;
     inUse: number;
-    /** What tells volumes of one license and software apart. */
-    description: string | null;
+    /** What tells volumes of one license and software apart: the description without its web addresses, else the type. */
+    designator: string;
 }
 
 /** The seeded id of the per-user volume type: the one activated for a person. */

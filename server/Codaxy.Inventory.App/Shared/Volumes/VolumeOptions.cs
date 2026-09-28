@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Codaxy.Inventory.App.Shared.Volumes;
 
-/// <param name="Text">"Rider · JetBrains All Products · Per user": the software, the license, and the volume's description or type.</param>
+/// <param name="Text">"JetBrains All Products #100231 · Per user": the license with its inventory number, and the volume's designator.</param>
 public sealed record VolumeRef(Guid Id, string Text, Guid LicenseId, string License);
 
 /// <summary>Every volume, named as the activations name one, for a picker of the volume something is bought under.</summary>
@@ -20,15 +20,12 @@ public static class VolumeOptions
             .ThenBy(v => v.License.Asset.Name)
             .Select(v => new AssetOption(
                 v.Id,
-                v.SoftwareOrService.Name
-                    + " · "
-                    + v.License.Asset.Name
-                    + " · "
-                    + (
-                        v.Description != null && v.Description != ""
-                            ? v.Description
-                            : v.VolumeType.Text
-                    )
+                VolumeNames.Text(
+                    v.License.Asset.Name,
+                    v.License.Asset.InventoryNumber,
+                    v.Description,
+                    v.VolumeType.Text
+                )
             ))
             .ToListAsync(cancellationToken);
 
@@ -42,15 +39,12 @@ public static class VolumeOptions
             .Where(v => v.Id == id)
             .Select(v => new VolumeRef(
                 v.Id,
-                v.SoftwareOrService.Name
-                    + " · "
-                    + v.License.Asset.Name
-                    + " · "
-                    + (
-                        v.Description != null && v.Description != ""
-                            ? v.Description
-                            : v.VolumeType.Text
-                    ),
+                VolumeNames.Text(
+                    v.License.Asset.Name,
+                    v.License.Asset.InventoryNumber,
+                    v.Description,
+                    v.VolumeType.Text
+                ),
                 v.LicenseId,
                 v.License.Asset.Name
             ))

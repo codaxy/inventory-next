@@ -103,7 +103,7 @@ export const toForm = (d: Draft, forPerson: boolean) => ({
 });
 
 export const volumeText = (v: VolumeOption) =>
-    `${v.license}${v.licenseNumber ? ` #${v.licenseNumber}` : ""} · ${v.description || v.type} · ${v.inUse} of ${v.quantity} in use`;
+    `${v.license}${v.licenseNumber ? ` #${v.licenseNumber}` : ""} · ${v.designator} · ${v.inUse} of ${v.quantity} in use`;
 
 export const deviceText = (d: DeviceOption) =>
     [d.text, d.number ? `#${d.number}` : null, d.holder].filter(Boolean).join(" · ");

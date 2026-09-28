@@ -1,4 +1,6 @@
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Assets;
+using Codaxy.Inventory.App.Shared.Volumes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codaxy.Inventory.App.Licenses.Activations.Options;
@@ -12,7 +14,7 @@ public static class Endpoint
     /// <param name="Number">The device's inventory number, which a picker searches as well as the name.</param>
     public sealed record DeviceOption(Guid Id, string Text, int? Number, string? Holder);
 
-    /// <param name="Text">What tells one volume from another of the same license and software: its description, else its type.</param>
+    /// <param name="Text">"JetBrains All Products #100231 · Per user" (<see cref="VolumeNames.Text"/>).</param>
     public sealed record VolumeOption(
         Guid Id,
         string Text,
@@ -48,7 +50,10 @@ public static class Endpoint
             await context
                 .Licenses.AsNoTracking()
                 .OrderBy(l => l.Asset.Name)
-                .Select(l => new Option(l.AssetId, l.Asset.Name))
+                .Select(l => new Option(
+                    l.AssetId,
+                    AssetNames.WithNumber(l.Asset.Name, l.Asset.InventoryNumber)
+                ))
                 .ToListAsync(cancellationToken),
             await context
                 .Persons.AsNoTracking()
@@ -72,15 +77,12 @@ public static class Endpoint
                 .ThenBy(v => v.License.Asset.Name)
                 .Select(v => new VolumeOption(
                     v.Id,
-                    v.SoftwareOrService.Name
-                        + " · "
-                        + v.License.Asset.Name
-                        + " · "
-                        + (
-                            v.Description != null && v.Description != ""
-                                ? v.Description
-                                : v.VolumeType.Text
-                        ),
+                    VolumeNames.Text(
+                        v.License.Asset.Name,
+                        v.License.Asset.InventoryNumber,
+                        v.Description,
+                        v.VolumeType.Text
+                    ),
                     v.SoftwareOrServiceId,
                     v.SoftwareOrService.Name,
                     v.LicenseId
