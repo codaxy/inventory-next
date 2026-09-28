@@ -104,11 +104,9 @@ and content share the one left-aligned column, so the search is never wider than
 a list's columns are capped so a spare width stays in the page, not between the cells. Past the column
 the page fills the viewport's height with the primary glow and dot grid of sign-in, fading in from
 its left: a bare canvas reads as unfinished. The server log follows the same rule — no pane is special.
-Sign-in, outside the shell, is one centred column that stops growing on a wide display. From 768px
-its right half is Pulse's dark panel, `nav-lift` settling into `nav-bar` and `nav`, and the card
-sits across the seam; a phone keeps the light page, since behind a card that fills its width the
-halves would be two strips. "Built by" ends at the page's centre and Codaxy's wordmark starts there,
-on the text's baseline — its letters stand at 67 of its 80, so it is shifted down, not centred.
+Sign-in, outside the shell, is one centred column that stops growing on a wide display. Its footer
+is "Built by" and Codaxy's wordmark on the text's baseline — the letters stand at 67 of its 80, so
+it is shifted down, not centred.
 
 **Input text is 16px on a touch screen**, 14px elsewhere: iPhone Safari zooms into a focused field
 whose text is smaller, and the page stays zoomed after it. **Double-tap zoom is off**

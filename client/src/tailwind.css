@@ -68,10 +68,6 @@
     --color-nav-active: #2a60cf;
     --color-nav-avatar: #232d4a;
     --color-nav-avatar-ink: #c3d3f5;
-    /* Decoration only: the sign-in page's dark half, Pulse's panel. Its gradient starts at the
-       lifted navy and settles into `nav-bar` and `nav`, the chrome the person is about to see. */
-    --color-nav-lift: #24365e;
-    --color-nav-dot: rgb(165 192 245 / 16%);
     --color-nav-scroll: rgb(255 255 255 / 22%);
 
     /* The server log's terminal: its own dark palette, as the chrome has one. Ratios are against

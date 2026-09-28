@@ -19,30 +19,6 @@
         var(--color-canvas);
 }
 
-// From 768px the right half is dark, Pulse's panel, and the card sits across the seam: the light
-// half is where the person is, the dark one the chrome they are about to enter. A phone keeps the
-// light page — behind a card that fills its width, the halves would be two strips and a flag.
-@media (min-width: 768px) {
-    .sign-in-page {
-        position: relative;
-        isolation: isolate;
-
-        &::after {
-            content: "";
-            position: absolute;
-            inset: 0 0 0 50%;
-            z-index: -1;
-            background:
-                radial-gradient(var(--color-nav-dot) 1px, transparent 0) 0 0 / 22px 22px,
-                linear-gradient(
-                    158deg,
-                    var(--color-nav-lift) 0%,
-                    var(--color-nav-bar) 52%,
-                    var(--color-nav) 100%
-                );
-        }
-    }
-}
 .sign-in {
     max-width: 360px;
     // Never less below than above: a card lighter at its foot reads as content sinking in it.
@@ -75,27 +51,18 @@
     }
 }
 
-// Two halves meeting at the page's centre, which on a wide screen is the seam: "Built by" ends on
-// the light side, the logo starts on the dark one.
 .sign-in-footer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
     align-items: baseline;
-    column-gap: 0.5rem;
-    align-self: stretch;
+    gap: 0.5rem;
     margin: 0;
     color: var(--color-ink-muted);
     font-size: 13px;
-
-    > span {
-        justify-self: end;
-    }
 
     // The wordmark is 238 by 80, its letters standing on y 67 with the "y" hanging below. Having no
     // text, the link's baseline is its bottom edge, so it stands on the words' baseline; moving it
     // down by the 13 below the letters puts them there — centring the box would sit them low.
     a {
-        justify-self: start;
         width: calc(1.25rem * 238 / 80);
         height: 1.25rem;
         position: relative;
@@ -106,14 +73,6 @@
 
         &:hover {
             background: var(--color-primary-text);
-        }
-
-        @media (min-width: 768px) {
-            background: var(--color-nav-ink-muted);
-
-            &:hover {
-                background: var(--color-nav-ink);
-            }
         }
     }
 }
