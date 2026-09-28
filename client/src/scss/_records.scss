@@ -67,6 +67,69 @@
     font-weight: 600;
 }
 
+// A cell with a copy button (`copyButton`), which shows while the pointer is over the cell. Its
+// content is one line (`record-copy-line`) — the cell's own `display` belongs to the column rules,
+// which show and hide cells by it. The value truncates first; a badge and the button keep their width
+// after it, so a badge is never clipped by a long name and moves only when the name is already cut.
+// Only where there is hover: on a touch screen the line is a plain inline span, as the cell was.
+.copy-button {
+    display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .record-copy-line {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+
+        > :first-child {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        > :not(:first-child) {
+            flex-shrink: 0;
+        }
+    }
+
+    .record-copy:hover .copy-button {
+        display: inline-grid;
+    }
+}
+
+.copy-button {
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    margin: -2px 0 -2px 0.25rem;
+    border-radius: 5px;
+    color: var(--color-ink-muted);
+    cursor: pointer;
+
+    &:hover {
+        background: var(--color-hover);
+        color: var(--color-primary-text);
+    }
+
+    .copy-button-copied {
+        display: none;
+    }
+
+    &.copy-button-done {
+        color: var(--color-success-text);
+
+        .copy-button-copy {
+            display: none;
+        }
+
+        .copy-button-copied {
+            display: block;
+        }
+    }
+}
+
 .record-muted {
     font-size: 13px;
     color: var(--color-ink-soft);

@@ -330,6 +330,15 @@ only —
 prompt for a reload or a closed tab. Browser Back leaves without asking: cx cannot hold a navigation the
 browser has already made. A save or a delete releases the guard before it navigates.
 
+**A row is a link, so its text cannot be selected; the values worth copying have a copy button
+instead** (`copyButton` and `copyCell` in `components/`) on every text value of every list — names,
+numbers, codes, people, places, descriptions, addresses; not counts, dates, money, status tags or a
+"+N" list, whose text is not the value. Shown only while the pointer is over the cell, after any badge,
+and never on a touch screen, which has no hover. It copies the value as shown and ticks for 1.5s.
+Under a mouse the value truncates before its badges, so a long name never hides one. Not text selection: a link is dragged, not
+selected, and a row that selects on a click stops opening its record on one. Not a `<button>`, which
+an `<a>` may not hold; it stops its own click so the row does not open as well.
+
 **A list of records** — `_records.scss` — is a card per row on a phone and columns from `md`, a header
 on `raised` — the page's own tint dissolves the card's top edge — that sorts on a tap (`sortHeader`), a row that opens its record, and an **Add** button in the toolbar — "+ Add" whatever the list,
 since its title names what is added, and "Add vendor" as its accessible name; activations keep
@@ -485,6 +494,10 @@ has left the document, and a window's re-mount releases the lock it already hold
 **What a form fills in for itself is where it starts, not an edit**: a value the address preselects
 once the options arrive must be counted into the unsaved-changes baseline, or Cancel asks to discard
 changes nobody made.
+
+**A list cell's `display` belongs to its columns**: `*-columns` show and hide cells by width through
+`display`, so a rule restyling a cell's `display` — flex for its content — shows a hidden column or
+loses to them. Lay the content out inside the cell.
 
 **Read the address from `$app.url`, never `window.location`**: cx updates the store as it navigates
 and moves the browser's address only once the new page has rendered, so a controller opening on a link

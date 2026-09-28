@@ -156,16 +156,6 @@ export function searchList(o: SearchList) {
     );
 }
 
-/** A cell that may be empty: "—" in the ghost's colour when it is. */
-export const optionalCell = (value: AccessorChain<string | undefined>, cls = "record-meta") => (
-    <cx>
-        <span
-            class={{ [cls]: true, "record-blank": expr(value, (v) => !v) }}
-            text={expr(value, (v) => v ?? "—")}
-        />
-    </cx>
-);
-
 /** A count under its header from `md`; a phone's card, which has none, keeps the word. */
 export const countCell = (value: AccessorChain<string | undefined>, word: AccessorChain<string>) => (
     <cx>

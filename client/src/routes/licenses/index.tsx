@@ -11,6 +11,7 @@ import { stickyBar } from "../../stickyBar";
 import Controller from "./Controller";
 import m from "./model";
 import { listSkeleton } from "../../components/listSkeleton";
+import { copyButton, copyCell } from "../../components/copyButton";
 
 const s = m.list;
 const f = s.filters;
@@ -197,16 +198,24 @@ export default createFunctionalComponent(() => {
                             href={expr(m.$row.id, (id) => `~/licenses/${id}`)}
                             url={$app.url}
                         >
-                            <span class="record-meta license-number" text={m.$row.number} />
-                            <span class="record-title">
-                                <span text={m.$row.name} />
-                                <span
-                                    class="record-flag record-flag-warn"
-                                    visible={hasValue(m.$row.incomplete)}
-                                    text={m.$row.incomplete}
-                                />
+                            <span class="record-meta license-number record-copy">
+                                <span class="record-copy-line">
+                                    <span text={m.$row.number} />
+                                    {copyButton(m.$row.number, "number")}
+                                </span>
                             </span>
-                            <span class="record-meta" text={m.$row.vendor} />
+                            <span class="record-title record-copy">
+                                <span class="record-copy-line">
+                                    <span text={m.$row.name} />
+                                    <span
+                                        class="record-flag record-flag-warn"
+                                        visible={hasValue(m.$row.incomplete)}
+                                        text={m.$row.incomplete}
+                                    />
+                                    {copyButton(m.$row.name, "name")}
+                                </span>
+                            </span>
+                            {copyCell(m.$row.vendor, "vendor")}
                             <span class="record-meta record-num license-value" text={m.$row.value} />
                             <span class="record-meta" text={m.$row.purchased} />
                             <span

@@ -10,6 +10,7 @@ import { stickyBar } from "../../../stickyBar";
 import Controller from "./Controller";
 import m from "./model";
 import { listSkeleton } from "../../../components/listSkeleton";
+import { copyButton, copyCell } from "../../../components/copyButton";
 
 const s = m.list;
 const f = s.filters as any;
@@ -154,9 +155,14 @@ export default createFunctionalComponent(() => {
                             href={expr(m.$row.id, (id) => `~/company/projects/${id}`)}
                             url={$app.url}
                         >
-                            <span class="record-title" text={m.$row.name} />
-                            <span class="record-meta" text={m.$row.client} />
-                            <span class="record-meta" text={m.$row.owner} />
+                            <span class="record-title record-copy">
+                                <span class="record-copy-line">
+                                    <span text={m.$row.name} />
+                                    {copyButton(m.$row.name, "name")}
+                                </span>
+                            </span>
+                            {copyCell(m.$row.client, "client")}
+                            {copyCell(m.$row.owner, "owner")}
                             {countCell(m.$row.information, m.$row.informationWord)}
                         </Link>
                     </Repeater>

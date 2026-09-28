@@ -1,8 +1,9 @@
 import { createFunctionalComponent } from "cx/ui";
 
-import { countCell, optionalCell, searchList } from "../../../components/searchList";
+import { countCell, searchList } from "../../../components/searchList";
 import Controller from "./Controller";
 import m from "./model";
+import { copyButton, copyCell } from "../../../components/copyButton";
 
 const r = m.$row;
 
@@ -26,20 +27,21 @@ export default createFunctionalComponent(() => (
                         sort: "name",
                         cell: (
                             <cx>
-                                <span class="record-title" text={r.name} />
+                                <span class="record-title record-copy">
+                                    <span class="record-copy-line">
+                                        <span text={r.name} />
+                                        {copyButton(r.name, "name")}
+                                    </span>
+                                </span>
                             </cx>
                         ),
                     },
                     {
                         header: "Address",
                         sort: "city",
-                        cell: (
-                            <cx>
-                                <span class="record-meta" text={r.address} />
-                            </cx>
-                        ),
+                        cell: <cx>{copyCell(r.address, "IP address")}</cx>,
                     },
-                    { header: "Room", cell: optionalCell(r.room) },
+                    { header: "Room", cell: copyCell(r.room, "room") },
                     {
                         header: "Assets",
                         sort: "assets",

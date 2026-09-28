@@ -41,6 +41,7 @@ import {
     SoftwareIcon,
     Store01Icon,
     Tag01Icon,
+    Tick02Icon,
     UserIcon,
 } from "@hugeicons/core-free-icons";
 
@@ -102,6 +103,8 @@ const uiIcons = {
     edit: PencilEdit01Icon,
     delete: Delete02Icon,
     duplicate: Copy01Icon,
+    copy: Copy01Icon,
+    copied: Tick02Icon,
     more: MoreVerticalIcon,
     download: Download04Icon,
     print: PrinterIcon,

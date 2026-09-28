@@ -9,6 +9,7 @@ import { stickyBar } from "../../../stickyBar";
 import Controller from "./Controller";
 import m from "./model";
 import { listSkeleton } from "../../../components/listSkeleton";
+import { copyButton } from "../../../components/copyButton";
 
 const s = m.clients;
 const empty = expr(s.loaded, s.total, s.error, (loaded, total, error) => loaded && total === 0 && !error);
@@ -88,7 +89,12 @@ export default createFunctionalComponent(() => {
                             href={expr(m.$row.id, (id) => `~/company/clients/${id}`)}
                             url={$app.url}
                         >
-                            <span class="record-title" text={m.$row.name} />
+                            <span class="record-title record-copy">
+                                <span class="record-copy-line">
+                                    <span text={m.$row.name} />
+                                    {copyButton(m.$row.name, "name")}
+                                </span>
+                            </span>
                             {countCell(m.$row.projects, m.$row.projectsWord)}
                         </Link>
                     </Repeater>

@@ -11,6 +11,7 @@ import { stickyBar } from "../../stickyBar";
 import Controller from "./Controller";
 import m from "./model";
 import { listSkeleton } from "../../components/listSkeleton";
+import { copyButton, copyCell } from "../../components/copyButton";
 
 const s = m.list;
 const f = s.filters as any;
@@ -39,16 +40,6 @@ const filterPick = (label: string, key: string, options: AccessorChain<unknown[]
                 inputAttrs={{ "aria-label": label }}
             />
         </div>
-    </cx>
-);
-
-/** A cell that may be empty: "—" in the ghost's colour when it is. */
-const optional = (value: AccessorChain<string | undefined>) => (
-    <cx>
-        <span
-            class={{ "record-meta": true, "record-blank": expr(value, (v) => !v) }}
-            text={expr(value, (v) => v ?? "—")}
-        />
     </cx>
 );
 
@@ -198,19 +189,27 @@ export default createFunctionalComponent(() => {
                             href={expr(m.$row.id, (id) => `~/furniture/${id}`)}
                             url={$app.url}
                         >
-                            <span class="record-meta furniture-number" text={m.$row.number} />
-                            <span class="record-title">
-                                <span text={m.$row.name} />
-                                <span
-                                    class="record-flag record-flag-warn"
-                                    visible={hasValue(m.$row.incomplete)}
-                                    text={m.$row.incomplete}
-                                />
+                            <span class="record-meta furniture-number record-copy">
+                                <span class="record-copy-line">
+                                    <span text={m.$row.number} />
+                                    {copyButton(m.$row.number, "number")}
+                                </span>
                             </span>
-                            <span class="record-meta" text={m.$row.assignee} />
-                            {optional(m.$row.location)}
-                            {optional(m.$row.type)}
-                            <span class="record-meta" text={m.$row.vendor} />
+                            <span class="record-title record-copy">
+                                <span class="record-copy-line">
+                                    <span text={m.$row.name} />
+                                    <span
+                                        class="record-flag record-flag-warn"
+                                        visible={hasValue(m.$row.incomplete)}
+                                        text={m.$row.incomplete}
+                                    />
+                                    {copyButton(m.$row.name, "name")}
+                                </span>
+                            </span>
+                            {copyCell(m.$row.assignee, "assignee")}
+                            {copyCell(m.$row.location, "location")}
+                            {copyCell(m.$row.type, "type")}
+                            {copyCell(m.$row.vendor, "vendor")}
                             <span class="record-meta record-num furniture-value" text={m.$row.value} />
                             <span class="record-meta furniture-changed" text={m.$row.modified} />
                         </Link>

@@ -9,6 +9,7 @@ import { stickyBar } from "../../../stickyBar";
 import Controller from "./Controller";
 import m from "./model";
 import { listSkeleton } from "../../../components/listSkeleton";
+import { copyButton, copyCell } from "../../../components/copyButton";
 
 const s = m.list;
 const f = s.filters;
@@ -263,22 +264,28 @@ export default createFunctionalComponent(() => {
                             href={expr(m.$row.id, (id) => `~/licenses/activations/${id}`)}
                             url={$app.url}
                         >
-                            <span class="record-title">
-                                <span text={m.$row.software} />
-                                <span
-                                    class="record-flag record-flag-ended"
-                                    visible={m.$row.ended}
-                                    text="Deactivated"
-                                />
+                            <span class="record-title record-copy">
+                                <span class="record-copy-line">
+                                    <span text={m.$row.software} />
+                                    <span
+                                        class="record-flag record-flag-ended"
+                                        visible={m.$row.ended}
+                                        text="Deactivated"
+                                    />
+                                    {copyButton(m.$row.software, "software")}
+                                </span>
                             </span>
-                            <span class="record-meta" text={m.$row.license} />
-                            <span class="record-meta">
-                                <span text={m.$row.assignee} />
-                                <span
-                                    class="record-note"
-                                    visible={hasValue(m.$row.assigneeNote)}
-                                    text={m.$row.assigneeNote}
-                                />
+                            {copyCell(m.$row.license, "license")}
+                            <span class="record-meta record-copy">
+                                <span class="record-copy-line">
+                                    <span text={m.$row.assignee} />
+                                    <span
+                                        class="record-note"
+                                        visible={hasValue(m.$row.assigneeNote)}
+                                        text={m.$row.assigneeNote}
+                                    />
+                                    {copyButton(m.$row.assignee, "assignee")}
+                                </span>
                             </span>
                             <span class="record-meta record-num" text={m.$row.seats} />
                             <span class="record-meta" text={m.$row.activated} />

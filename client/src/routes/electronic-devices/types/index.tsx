@@ -8,6 +8,7 @@ import { stickyBar } from "../../../stickyBar";
 import Controller from "./Controller";
 import m from "./model";
 import { listSkeleton } from "../../../components/listSkeleton";
+import { copyButton, copyCell } from "../../../components/copyButton";
 
 const s = m.types;
 const f = s.filters;
@@ -183,21 +184,18 @@ export default createFunctionalComponent(() => {
                             href={expr(m.$row.id, (id) => `~/electronic-devices/types/${id}`)}
                             url={$app.url}
                         >
-                            <span class="record-title">
-                                <span text={m.$row.name} />
-                                <span
-                                    class="record-flag"
-                                    visible={hasValue(m.$row.licenses)}
-                                    text={m.$row.licenses}
-                                />
+                            <span class="record-title record-copy">
+                                <span class="record-copy-line">
+                                    <span text={m.$row.name} />
+                                    <span
+                                        class="record-flag"
+                                        visible={hasValue(m.$row.licenses)}
+                                        text={m.$row.licenses}
+                                    />
+                                    {copyButton(m.$row.name, "name")}
+                                </span>
                             </span>
-                            <span
-                                class={{
-                                    "record-muted": true,
-                                    "record-blank": expr(m.$row.description, (d) => !d),
-                                }}
-                                text={expr(m.$row.description, (d) => d ?? "—")}
-                            />
+                            {copyCell(m.$row.description, "description", "record-muted")}
                             <span
                                 class={{
                                     "record-meta": true,
