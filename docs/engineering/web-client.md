@@ -82,13 +82,15 @@ it not dimmed. The drawer is
 opened by a 44px menu button in a top
 bar that carries only the mark. Any tap in the drawer closes it, except one that opens or works the account menu.
 **The document scrolls, not the content column**: iPhone Safari collapses its toolbars only when the
-document does, so a scrolling `main` keeps the address bar on screen for good. The desktop sidebar and
-the phone's top bar are sticky; the top bar's height is `--shell-top`, 0 from `lg`, and anything else
-that sticks sits beneath it. **Above the page is the chrome's colour, below it the page colour**: the root is the page colour,
+document does, so a scrolling `main` keeps the address bar on screen for good. The desktop sidebar is
+sticky; **the phone's top bar is fixed**, `main` padded by its height, `--shell-top`, 0 from `lg`, and
+anything else that sticks sits beneath it. Not sticky: on a hard fling iOS Safari dropped a sticky bar
+for a moment and the rows showed through where it stood; a fixed one it places against the screen. **Above the page is the chrome's colour, below it the page colour**: the root is the page colour,
 always, so a bounce past the bottom carries the page on and the scrollbar's track is always light;
 above the top, each band there reaches up with a screen of its own colour that moves with it — the
 top bar's navy on a phone, the sidebar's navy and the header band's white from `lg` — so a bounce
-stretches the band rather than splitting it from the status bar. **Whatever covers the page locks it** — the open drawer and every modal window — by
+stretches the band rather than splitting it from the status bar. The phone's fixed bar holds still in
+a pull at the top, which opens the page colour beneath it. **Whatever covers the page locks it** — the open drawer and every modal window — by
 refusing gestures: `lockScroll()` in `src/scrollLock.ts` lets a touch or wheel scroll through only
 inside a scrollable element of the overlay, or of a cx window or dropdown over it, while it can still
 move. The page stays scrollable underneath, so Safari's toolbar keeps its state. Modal windows get it

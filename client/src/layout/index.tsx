@@ -10,7 +10,8 @@ import { TopBar } from "./TopBar";
  *
  * The document scrolls, not the content column: iPhone Safari collapses its toolbars only when the
  * document does, so a scrolling `main` leaves the address bar on screen for good. The desktop sidebar
- * and the phone's top bar are sticky instead.
+ * is sticky instead, and the phone's top bar fixed, `main` padded by its height: a sticky one iOS
+ * Safari dropped for a moment on a hard fling.
  *
  * `min-w-0` on the content column is load-bearing: a flex child defaults to `min-width: auto`, so a wide
  * child — a grid, a long unbroken string — would push the column past the viewport instead of scrolling
@@ -22,7 +23,7 @@ export const AppLayout = createFunctionalComponent(({ children }: { children?: a
             <Sidebar />
             <div class="flex min-w-0 flex-1 flex-col">
                 <TopBar />
-                <main class="flex flex-1 flex-col">{children}</main>
+                <main class="flex flex-1 flex-col pt-(--shell-top)">{children}</main>
             </div>
         </div>
     </cx>
