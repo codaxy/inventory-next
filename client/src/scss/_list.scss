@@ -282,9 +282,14 @@
         }
 
         // Where a short list leaves room beneath its last row, the room is the header's tint, not a
-        // row's white, so it reads as no more rows. The terminal stays dark to its foot.
+        // row's white, so it reads as no more rows, and the last row keeps its rule to edge it. The
+        // terminal stays dark to its foot.
         :is(.record-list, .audit-list) > .list-rows {
             background: var(--color-raised);
+
+            > :last-child {
+                border-bottom: 1px solid var(--color-line-soft);
+            }
         }
     }
 }
