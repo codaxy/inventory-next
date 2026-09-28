@@ -46,7 +46,7 @@
     cursor: default;
 
     &:hover {
-        background: none;
+        background: var(--color-surface);
     }
 
     @media (max-width: 767.98px) {
@@ -95,7 +95,7 @@
     cursor: default;
 
     &:hover {
-        background: none;
+        background: var(--color-surface);
     }
 
     // A disc on a phone; from 768px the pill "Updated" makes, which an empty one would collapse.

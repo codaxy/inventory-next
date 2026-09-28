@@ -280,5 +280,11 @@
             overflow-y: auto;
             overscroll-behavior: contain;
         }
+
+        // Where a short list leaves room beneath its last row, the room is the header's tint, not a
+        // row's white, so it reads as no more rows. The terminal stays dark to its foot.
+        :is(.record-list, .audit-list) > .list-rows {
+            background: var(--color-raised);
+        }
     }
 }

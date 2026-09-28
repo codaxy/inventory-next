@@ -167,7 +167,8 @@ wait for the record's page.
 **Every list fills its page** (`list-fill`) — the lists of records and both logs. Where its columns
 show, the document holds still: the card — the server log's terminal — fills the window down to the
 pager, and only its rows scroll (`list-rows`), beneath its header row, so the scrollbar starts there
-rather than running beside the header. A card squeezed under 10rem in a
+rather than running beside the header. The room a short list leaves beneath its last row is the
+header's `raised`, not a row's white, so it reads as no more rows. A card squeezed under 10rem in a
 short window lets the document scroll after all rather than hide the rows. Below `md` the document
 scrolls, for Safari's toolbars. **With the filter pane open the page scrolls at every width**, as a
 phone's does: the pane pushes the list down, and in a page of fixed height that pushes the rows off
