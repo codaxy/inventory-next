@@ -18,6 +18,8 @@ export interface Row {
     type?: string;
     manufacturer?: string;
     modelCode?: string;
+    /** "Laptop · ThinkPad E16 Gen 3": what the device is, for a phone's card, which has no columns. */
+    kind?: string;
     serial?: string;
     modified: string;
 }
@@ -96,6 +98,7 @@ export const toRows = (items: DeviceItem[]): Row[] =>
         modelCode: d.modelCode || undefined,
         serial: d.serialNumber || undefined,
         modified: formatDay(new Date(d.lastModified)),
+        kind: [d.type, d.modelName].filter(Boolean).join(" · ") || undefined,
     }));
 
 const pickChip = (key: FilterKey, label: string, id?: string | null, text?: string): Chip[] =>

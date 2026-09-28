@@ -194,6 +194,11 @@ export default createFunctionalComponent(() => {
                                 {copyCell(m.$row.modelCode, "model code")}
                                 {copyCell(m.$row.serial, "serial number")}
                                 <span class="record-meta device-changed" text={m.$row.modified} />
+                                <span
+                                    class="record-meta device-kind"
+                                    visible={hasValue(m.$row.kind)}
+                                    text={m.$row.kind}
+                                />
                             </Link>
                         </Repeater>
                     </div>

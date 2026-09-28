@@ -569,7 +569,10 @@
 .device-columns {
     grid-template-columns: minmax(0, 1fr);
 
+    // A phone's card says what the device is — its type and model on one line — where the columns show
+    // them apart.
     > .device-number,
+    > :nth-child(3),
     > :nth-child(6),
     > :nth-child(7),
     > :nth-child(8),
@@ -578,7 +581,8 @@
         display: none;
     }
 
-    > :nth-child(2) {
+    > :nth-child(2),
+    > .device-kind {
         order: -1;
     }
 
@@ -588,8 +592,13 @@
             minmax(0, 1fr);
 
         > .device-number,
+        > :nth-child(3),
         > :nth-child(6) {
             display: block;
+        }
+
+        > .device-kind {
+            display: none;
         }
 
         > :nth-child(2) {
