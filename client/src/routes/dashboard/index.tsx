@@ -81,7 +81,9 @@ const skeleton = (visible: BooleanProp) => (
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
-            <h1 class="page-header page-title" text="Dashboard" />
+            <div class="page-top">
+                <h1 class="page-header page-title" text="Dashboard" />
+            </div>
             <p
                 class="page-lede"
                 text="What has run out, what is about to, and whatever is quietly slipping."

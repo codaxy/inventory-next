@@ -17,26 +17,28 @@ const noProjects = expr(c.loaded, c.projectCount, c.viewing, (loaded, n, v) => !
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
-            <div class="page-header">
-                <Link href={listReturn("~/company/clients")} url={$app.url} class="editor-back">
-                    <Icon name="previous" class="size-4" />
-                    <span text="Clients" />
-                </Link>
-                <div class="editor-heading">
-                    <h1 class="page-title" text={c.title} />
-                    <div class="editor-heading-actions" visible={c.viewing}>
-                        <LinkButton
-                            mod="primary"
-                            href={expr(c.id, (id) => `~/company/clients/${id}/edit`)}
-                            attrs={{ "aria-label": "Edit", title: "Edit" }}
-                        >
-                            <Icon name="edit" class="size-4" />
-                            <span class="hidden sm:inline" text="Edit" />
-                        </LinkButton>
-                        {moreActions([
-                            historyAction(c.id),
-                            { text: "Delete", icon: "delete", onClick: "remove", danger: true },
-                        ])}
+            <div class="page-top">
+                <div class="page-header">
+                    <Link href={listReturn("~/company/clients")} url={$app.url} class="editor-back">
+                        <Icon name="previous" class="size-4" />
+                        <span text="Clients" />
+                    </Link>
+                    <div class="editor-heading">
+                        <h1 class="page-title" text={c.title} />
+                        <div class="editor-heading-actions" visible={c.viewing}>
+                            <LinkButton
+                                mod="primary"
+                                href={expr(c.id, (id) => `~/company/clients/${id}/edit`)}
+                                attrs={{ "aria-label": "Edit", title: "Edit" }}
+                            >
+                                <Icon name="edit" class="size-4" />
+                                <span class="hidden sm:inline" text="Edit" />
+                            </LinkButton>
+                            {moreActions([
+                                historyAction(c.id),
+                                { text: "Delete", icon: "delete", onClick: "remove", danger: true },
+                            ])}
+                        </div>
                     </div>
                 </div>
             </div>

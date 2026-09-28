@@ -30,7 +30,7 @@ export default createFunctionalComponent(() => {
     return (
         <cx>
             <div class="page-body page-wide list-fill" controller={Controller}>
-                <div class={{ "list-top": true, "list-top-static": s.filtersOpen }}>
+                <div class="page-top">
                     {listHeading({
                         title: "Software & services",
                         addHref: "~/licenses/software-services/new",
@@ -67,50 +67,6 @@ export default createFunctionalComponent(() => {
                             </Button>
                         </div>
 
-                        <div id="software-filters" class="list-pane" visible={s.filtersOpen}>
-                            <div class="list-pane-grid">
-                                <div class="list-filter">
-                                    <div
-                                        class="list-filter-label"
-                                        id="licenses-software-services-category-label"
-                                        text="Category"
-                                    />
-                                    <LookupField
-                                        id="licenses-software-services-category"
-                                        value={f.categoryId}
-                                        text={f.categoryText}
-                                        options={s.categories}
-                                        placeholder="Any category"
-                                        inputAttrs={{ "aria-label": "Category" }}
-                                    />
-                                </div>
-                                <div class="list-filter">
-                                    <div
-                                        class="list-filter-label"
-                                        id="licenses-software-services-manufacturer-label"
-                                        text="Manufacturer"
-                                    />
-                                    <LookupField
-                                        id="licenses-software-services-manufacturer"
-                                        value={f.manufacturerId}
-                                        text={f.manufacturerText}
-                                        options={s.manufacturers}
-                                        placeholder="Any manufacturer"
-                                        inputAttrs={{ "aria-label": "Manufacturer" }}
-                                    />
-                                </div>
-                            </div>
-                            <div class="list-pane-footer">
-                                <Button
-                                    mod="hollow"
-                                    text="Clear filters"
-                                    onClick="clearFilters"
-                                    visible={hasChips}
-                                />
-                                <Button mod="primary" text="Done" onClick="closeFilters" />
-                            </div>
-                        </div>
-
                         <div class="list-chips" visible={hasChips}>
                             <Repeater records={s.chips} recordAlias={m.$chip}>
                                 <button
@@ -132,6 +88,45 @@ export default createFunctionalComponent(() => {
                                 text="Clear all"
                             />
                         </div>
+                    </div>
+                </div>
+
+                <div id="software-filters" class="list-pane" visible={s.filtersOpen}>
+                    <div class="list-pane-grid">
+                        <div class="list-filter">
+                            <div
+                                class="list-filter-label"
+                                id="licenses-software-services-category-label"
+                                text="Category"
+                            />
+                            <LookupField
+                                id="licenses-software-services-category"
+                                value={f.categoryId}
+                                text={f.categoryText}
+                                options={s.categories}
+                                placeholder="Any category"
+                                inputAttrs={{ "aria-label": "Category" }}
+                            />
+                        </div>
+                        <div class="list-filter">
+                            <div
+                                class="list-filter-label"
+                                id="licenses-software-services-manufacturer-label"
+                                text="Manufacturer"
+                            />
+                            <LookupField
+                                id="licenses-software-services-manufacturer"
+                                value={f.manufacturerId}
+                                text={f.manufacturerText}
+                                options={s.manufacturers}
+                                placeholder="Any manufacturer"
+                                inputAttrs={{ "aria-label": "Manufacturer" }}
+                            />
+                        </div>
+                    </div>
+                    <div class="list-pane-footer">
+                        <Button mod="hollow" text="Clear filters" onClick="clearFilters" visible={hasChips} />
+                        <Button mod="primary" text="Done" onClick="closeFilters" />
                     </div>
                 </div>
 

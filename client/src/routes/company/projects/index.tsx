@@ -49,7 +49,7 @@ export default createFunctionalComponent(() => {
     return (
         <cx>
             <div class="page-body page-wide list-fill" controller={Controller}>
-                <div class={{ "list-top": true, "list-top-static": s.filtersOpen }}>
+                <div class="page-top">
                     {listHeading({
                         title: "Projects",
                         addHref: "~/company/projects/new",
@@ -83,22 +83,6 @@ export default createFunctionalComponent(() => {
                             </Button>
                         </div>
 
-                        <div id="project-filters" class="list-pane" visible={s.filtersOpen}>
-                            <div class="list-pane-grid">
-                                {filterPick("Client", "client", s.clients, "Any client")}
-                                {filterPick("Led by", "person", s.people, "Anyone")}
-                            </div>
-                            <div class="list-pane-footer">
-                                <Button
-                                    mod="hollow"
-                                    text="Clear filters"
-                                    onClick="clearFilters"
-                                    visible={hasChips}
-                                />
-                                <Button mod="primary" text="Done" onClick="closeFilters" />
-                            </div>
-                        </div>
-
                         <div class="list-chips" visible={hasChips}>
                             <Repeater records={s.chips} recordAlias={m.$chip}>
                                 <button
@@ -120,6 +104,17 @@ export default createFunctionalComponent(() => {
                                 text="Clear all"
                             />
                         </div>
+                    </div>
+                </div>
+
+                <div id="project-filters" class="list-pane" visible={s.filtersOpen}>
+                    <div class="list-pane-grid">
+                        {filterPick("Client", "client", s.clients, "Any client")}
+                        {filterPick("Led by", "person", s.people, "Anyone")}
+                    </div>
+                    <div class="list-pane-footer">
+                        <Button mod="hollow" text="Clear filters" onClick="clearFilters" visible={hasChips} />
+                        <Button mod="primary" text="Done" onClick="closeFilters" />
                     </div>
                 </div>
 

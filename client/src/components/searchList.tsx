@@ -69,7 +69,7 @@ export function searchList(o: SearchList) {
 
     return (
         <cx>
-            <div class="list-top">
+            <div class="page-top">
                 {listHeading({ title: o.title, addHref: o.newHref, addLabel: o.addText })}
 
                 <div class="list-bar">

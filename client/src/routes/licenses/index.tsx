@@ -41,7 +41,7 @@ export default createFunctionalComponent(() => {
     return (
         <cx>
             <div class="page-body page-wide list-fill" controller={Controller}>
-                <div class={{ "list-top": true, "list-top-static": s.filtersOpen }}>
+                <div class="page-top">
                     {listHeading({
                         title: "Licenses",
                         exportHref: s.exportHref,
@@ -76,64 +76,6 @@ export default createFunctionalComponent(() => {
                             </Button>
                         </div>
 
-                        <div id="license-filters" class="list-pane" visible={s.filtersOpen}>
-                            <div class="list-pane-grid">
-                                <div class="list-filter">
-                                    <div class="list-filter-label" id="licenses-vendor-label" text="Vendor" />
-                                    <LookupField
-                                        id="licenses-vendor"
-                                        value={f.vendorId}
-                                        text={f.vendorText}
-                                        options={s.vendors}
-                                        placeholder="Any vendor"
-                                        inputAttrs={{ "aria-label": "Vendor" }}
-                                    />
-                                </div>
-                                <div class="list-filter">
-                                    <div
-                                        class="list-filter-label"
-                                        id="licenses-person-label"
-                                        text="Assignee"
-                                    />
-                                    <LookupField
-                                        id="licenses-person"
-                                        value={f.personId}
-                                        text={f.personText}
-                                        options={s.people}
-                                        placeholder="Anyone"
-                                        inputAttrs={{ "aria-label": "Assignee" }}
-                                    />
-                                </div>
-                                <div class="list-filter">
-                                    <div class="list-filter-label" text="Bought from" />
-                                    <DateField
-                                        value={dateValue(f.from)}
-                                        placeholder="Any day"
-                                        inputAttrs={{ "aria-label": "Bought from" }}
-                                    />
-                                </div>
-                                <div class="list-filter">
-                                    <div class="list-filter-label" text="Bought to" />
-                                    <DateField
-                                        value={dateValue(f.to)}
-                                        placeholder="Any day"
-                                        inputAttrs={{ "aria-label": "Bought to" }}
-                                    />
-                                </div>
-                                {segmented("Subscription", expiries, f.expiry, "setExpiry")}
-                                {segmented("Record", completeness, f.incomplete, "setIncomplete")}
-                            </div>
-                            <div class="list-pane-footer">
-                                <Button
-                                    mod="hollow"
-                                    text="Clear filters"
-                                    onClick="clearFilters"
-                                    visible={hasChips}
-                                />
-                                <Button mod="primary" text="Done" onClick="closeFilters" />
-                            </div>
-                        </div>
-
                         <div class="list-chips" visible={hasChips}>
                             <Repeater records={s.chips} recordAlias={m.$chip}>
                                 <button
@@ -155,6 +97,55 @@ export default createFunctionalComponent(() => {
                                 text="Clear all"
                             />
                         </div>
+                    </div>
+                </div>
+
+                <div id="license-filters" class="list-pane" visible={s.filtersOpen}>
+                    <div class="list-pane-grid">
+                        <div class="list-filter">
+                            <div class="list-filter-label" id="licenses-vendor-label" text="Vendor" />
+                            <LookupField
+                                id="licenses-vendor"
+                                value={f.vendorId}
+                                text={f.vendorText}
+                                options={s.vendors}
+                                placeholder="Any vendor"
+                                inputAttrs={{ "aria-label": "Vendor" }}
+                            />
+                        </div>
+                        <div class="list-filter">
+                            <div class="list-filter-label" id="licenses-person-label" text="Assignee" />
+                            <LookupField
+                                id="licenses-person"
+                                value={f.personId}
+                                text={f.personText}
+                                options={s.people}
+                                placeholder="Anyone"
+                                inputAttrs={{ "aria-label": "Assignee" }}
+                            />
+                        </div>
+                        <div class="list-filter">
+                            <div class="list-filter-label" text="Bought from" />
+                            <DateField
+                                value={dateValue(f.from)}
+                                placeholder="Any day"
+                                inputAttrs={{ "aria-label": "Bought from" }}
+                            />
+                        </div>
+                        <div class="list-filter">
+                            <div class="list-filter-label" text="Bought to" />
+                            <DateField
+                                value={dateValue(f.to)}
+                                placeholder="Any day"
+                                inputAttrs={{ "aria-label": "Bought to" }}
+                            />
+                        </div>
+                        {segmented("Subscription", expiries, f.expiry, "setExpiry")}
+                        {segmented("Record", completeness, f.incomplete, "setIncomplete")}
+                    </div>
+                    <div class="list-pane-footer">
+                        <Button mod="hollow" text="Clear filters" onClick="clearFilters" visible={hasChips} />
+                        <Button mod="primary" text="Done" onClick="closeFilters" />
                     </div>
                 </div>
 

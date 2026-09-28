@@ -39,7 +39,7 @@ export default createFunctionalComponent(() => {
     return (
         <cx>
             <div class="page-body page-wide server-log list-fill" controller={Controller}>
-                <div class="list-top">
+                <div class="page-top">
                     {listHeading({
                         title: "Server log",
                         actions: (

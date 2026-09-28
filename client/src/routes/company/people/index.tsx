@@ -28,7 +28,7 @@ export default createFunctionalComponent(() => {
     return (
         <cx>
             <div class="page-body page-wide list-fill" controller={Controller}>
-                <div class="list-top">
+                <div class="page-top">
                     {listHeading({
                         title: "People",
                         addHref: "~/company/people/new",

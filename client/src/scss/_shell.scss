@@ -56,15 +56,28 @@ html.page-end:has(.shell) {
     background: var(--color-canvas);
 }
 
-// The signed-in page: a header band flush with the top and sides of the content column, the content
-// padded beneath it. `.page-header` cancels `.page-body`'s padding with negative margins and restores
-// it as its own, so the title aligns with the content: the three numbers move together.
+// The signed-in page: its head (`page-top`) flush with the top and sides of the content column and
+// pinned beneath the shell's top bar wherever the document scrolls, on every page — the header band,
+// and on a list its toolbar and chips. The block cancels `.page-body`'s padding with negative margins
+// and the header band restores it as its own, so the title aligns with the content: the three numbers
+// move together. The gap beneath is the block's margin, none on a list, whose toolbar pads itself.
+// Its height is `--page-top-height` where something sticks beneath it (`pageTop.ts`).
 .page-body {
     padding: 1rem 0.75rem calc(1.25rem + env(safe-area-inset-bottom));
 }
 
-.page-header {
+.page-top {
+    position: sticky;
+    top: var(--shell-top);
+    z-index: 5;
     margin: -1rem -0.75rem 1rem;
+
+    &:has(> .list-bar) {
+        margin-bottom: 0;
+    }
+}
+
+.page-header {
     padding: 1rem 0.75rem;
     background: var(--color-surface);
     border-bottom: 1px solid var(--color-line);
@@ -75,8 +88,11 @@ html.page-end:has(.shell) {
         padding: 1.25rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom));
     }
 
-    .page-header {
+    .page-top {
         margin: -1.25rem -1.25rem 1.25rem;
+    }
+
+    .page-header {
         padding: 1.25rem;
     }
 }
@@ -113,7 +129,7 @@ html.page-end:has(.shell) {
     grid-template-columns: minmax(0, var(--page-width));
 }
 
-.page-body > :not(.page-header, .list-top) {
+.page-body > :not(.page-top) {
     max-width: var(--page-width);
 }
 

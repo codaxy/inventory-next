@@ -5,7 +5,7 @@ import { dateValue } from "../../../bindings";
 import { listHeading, listPaging } from "../../../components/listHeading";
 import { Pager } from "../../../components/Pager";
 import { sortHeader } from "../../../components/sortHeader";
-import { listTop } from "../../../listTop";
+import { pageTop } from "../../../pageTop";
 import Controller from "./Controller";
 import m, { type Filters } from "./model";
 import { inventoryNumberPattern, recordIdPattern } from "./utils";
@@ -53,13 +53,13 @@ const actions = [
  * stays visible as chips, so the pane can close without hiding it.
  */
 export default createFunctionalComponent(() => {
-    const onTopRef = listTop();
+    const onTopRef = pageTop();
     const paging = listPaging();
 
     return (
         <cx>
             <div class="page-body page-wide audit-log list-fill" controller={Controller}>
-                <div class={{ "list-top": true, "list-top-static": s.filtersOpen }} onRef={onTopRef}>
+                <div class="page-top" onRef={onTopRef}>
                     {listHeading({ title: "Audit log" })}
 
                     <div class="list-bar">
@@ -92,125 +92,6 @@ export default createFunctionalComponent(() => {
                             </Button>
                         </div>
 
-                        <div id="audit-filters" class="list-pane" visible={s.filtersOpen}>
-                            <div class="list-pane-grid">
-                                <div class="list-filter list-filter-wide">
-                                    <div class="list-filter-label" text="Change" />
-                                    <div class="segmented" role="group" aria-label="Change">
-                                        {actions.map((a) => (
-                                            <cx>
-                                                <Button
-                                                    mod="hollow"
-                                                    class={{
-                                                        "segmented-item": true,
-                                                        "segmented-item-on": expr(
-                                                            f.action,
-                                                            (v) => (v ?? null) === a.value,
-                                                        ),
-                                                    }}
-                                                    text={a.text}
-                                                    onClick={(_e: unknown, { controller }: any) =>
-                                                        controller.setAction(a.value)
-                                                    }
-                                                />
-                                            </cx>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div class="list-filter">
-                                    <div
-                                        class="list-filter-label"
-                                        id="administration-audit-log-record-type-label"
-                                        text="Record type"
-                                    />
-                                    <LookupField
-                                        id="administration-audit-log-record-type"
-                                        value={f.table}
-                                        options={s.tables}
-                                        placeholder="Any type"
-                                        inputAttrs={{ "aria-label": "Record type" }}
-                                    />
-                                </div>
-
-                                <div class="list-filter">
-                                    <div class="list-filter-label" text="Record id" />
-                                    <TextField
-                                        value={f.entityId}
-                                        placeholder="Paste an id"
-                                        inputAttrs={{
-                                            "aria-label": "Record id",
-                                            spellCheck: false,
-                                            autoComplete: "off",
-                                        }}
-                                        onValidate={(v: string | null) =>
-                                            !v || recordIdPattern.test(v.trim())
-                                                ? undefined
-                                                : "Not a record id."
-                                        }
-                                    />
-                                </div>
-
-                                <div class="list-filter">
-                                    <div class="list-filter-label" text="Inventory number" />
-                                    <TextField
-                                        value={f.inventoryNumber}
-                                        placeholder="e.g. 100893"
-                                        inputAttrs={{
-                                            "aria-label": "Inventory number",
-                                            inputMode: "numeric",
-                                        }}
-                                        onValidate={(v: string | null) =>
-                                            !v || inventoryNumberPattern.test(v) ? undefined : "Digits only."
-                                        }
-                                    />
-                                </div>
-
-                                <div class="list-filter">
-                                    <div
-                                        class="list-filter-label"
-                                        id="administration-audit-log-changed-by-label"
-                                        text="Changed by"
-                                    />
-                                    <LookupField
-                                        id="administration-audit-log-changed-by"
-                                        value={f.email}
-                                        options={s.emails}
-                                        placeholder="Anyone"
-                                        inputAttrs={{ "aria-label": "Changed by" }}
-                                    />
-                                </div>
-
-                                <div class="list-filter">
-                                    <div class="list-filter-label" text="From" />
-                                    <DateField
-                                        value={dateValue(f.from)}
-                                        placeholder="Any day"
-                                        inputAttrs={{ "aria-label": "From" }}
-                                    />
-                                </div>
-
-                                <div class="list-filter">
-                                    <div class="list-filter-label" text="To" />
-                                    <DateField
-                                        value={dateValue(f.to)}
-                                        placeholder="Any day"
-                                        inputAttrs={{ "aria-label": "To" }}
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="list-pane-footer">
-                                <Button
-                                    mod="hollow"
-                                    text="Clear filters"
-                                    onClick="clearFilters"
-                                    visible={hasChips}
-                                />
-                                <Button mod="primary" text="Done" onClick="closeFilters" />
-                            </div>
-                        </div>
-
                         <div class="list-chips" visible={hasChips}>
                             <Repeater records={s.chips} recordAlias={m.$chip}>
                                 <button
@@ -232,6 +113,118 @@ export default createFunctionalComponent(() => {
                                 text="Clear all"
                             />
                         </div>
+                    </div>
+                </div>
+
+                <div id="audit-filters" class="list-pane" visible={s.filtersOpen}>
+                    <div class="list-pane-grid">
+                        <div class="list-filter list-filter-wide">
+                            <div class="list-filter-label" text="Change" />
+                            <div class="segmented" role="group" aria-label="Change">
+                                {actions.map((a) => (
+                                    <cx>
+                                        <Button
+                                            mod="hollow"
+                                            class={{
+                                                "segmented-item": true,
+                                                "segmented-item-on": expr(
+                                                    f.action,
+                                                    (v) => (v ?? null) === a.value,
+                                                ),
+                                            }}
+                                            text={a.text}
+                                            onClick={(_e: unknown, { controller }: any) =>
+                                                controller.setAction(a.value)
+                                            }
+                                        />
+                                    </cx>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div class="list-filter">
+                            <div
+                                class="list-filter-label"
+                                id="administration-audit-log-record-type-label"
+                                text="Record type"
+                            />
+                            <LookupField
+                                id="administration-audit-log-record-type"
+                                value={f.table}
+                                options={s.tables}
+                                placeholder="Any type"
+                                inputAttrs={{ "aria-label": "Record type" }}
+                            />
+                        </div>
+
+                        <div class="list-filter">
+                            <div class="list-filter-label" text="Record id" />
+                            <TextField
+                                value={f.entityId}
+                                placeholder="Paste an id"
+                                inputAttrs={{
+                                    "aria-label": "Record id",
+                                    spellCheck: false,
+                                    autoComplete: "off",
+                                }}
+                                onValidate={(v: string | null) =>
+                                    !v || recordIdPattern.test(v.trim()) ? undefined : "Not a record id."
+                                }
+                            />
+                        </div>
+
+                        <div class="list-filter">
+                            <div class="list-filter-label" text="Inventory number" />
+                            <TextField
+                                value={f.inventoryNumber}
+                                placeholder="e.g. 100893"
+                                inputAttrs={{
+                                    "aria-label": "Inventory number",
+                                    inputMode: "numeric",
+                                }}
+                                onValidate={(v: string | null) =>
+                                    !v || inventoryNumberPattern.test(v) ? undefined : "Digits only."
+                                }
+                            />
+                        </div>
+
+                        <div class="list-filter">
+                            <div
+                                class="list-filter-label"
+                                id="administration-audit-log-changed-by-label"
+                                text="Changed by"
+                            />
+                            <LookupField
+                                id="administration-audit-log-changed-by"
+                                value={f.email}
+                                options={s.emails}
+                                placeholder="Anyone"
+                                inputAttrs={{ "aria-label": "Changed by" }}
+                            />
+                        </div>
+
+                        <div class="list-filter">
+                            <div class="list-filter-label" text="From" />
+                            <DateField
+                                value={dateValue(f.from)}
+                                placeholder="Any day"
+                                inputAttrs={{ "aria-label": "From" }}
+                            />
+                        </div>
+
+                        <div class="list-filter">
+                            <div class="list-filter-label" text="To" />
+                            <DateField
+                                value={dateValue(f.to)}
+                                placeholder="Any day"
+                                inputAttrs={{ "aria-label": "To" }}
+                            />
+                        </div>
+                    </div>
+
+                    <div class="list-pane-footer">
+                        <Button mod="hollow" text="Clear filters" onClick="clearFilters" visible={hasChips} />
+                        <Button mod="primary" text="Done" onClick="closeFilters" />
                     </div>
                 </div>
 

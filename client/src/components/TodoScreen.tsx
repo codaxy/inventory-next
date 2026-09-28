@@ -20,7 +20,9 @@ const rows = [
 export const TodoScreen = createFunctionalComponent(({ title, step }: Props) => (
     <cx>
         <div class="page-body page-wide">
-            <h1 class="page-header page-title" text={title} />
+            <div class="page-top">
+                <h1 class="page-header page-title" text={title} />
+            </div>
 
             <div class="todo">
                 <div class="todo-badge">

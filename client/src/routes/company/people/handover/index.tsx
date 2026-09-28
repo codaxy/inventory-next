@@ -15,18 +15,24 @@ const h = m.handover;
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
-            <div class="page-header handover-screen">
-                <Link href={expr(h.id, (id) => `~/company/people/${id}`)} url={$app.url} class="editor-back">
-                    <Icon name="previous" class="size-4" />
-                    <span text={expr(h.name, (n) => n || "Person")} />
-                </Link>
-                <div class="editor-heading">
-                    <h1 class="page-title" text="Handover sheet" />
-                    <div class="editor-heading-actions">
-                        <Button mod="primary" onClick="print" disabled={h.loading}>
-                            <Icon name="print" class="size-4" />
-                            <span text="Print" />
-                        </Button>
+            <div class="page-top handover-screen">
+                <div class="page-header">
+                    <Link
+                        href={expr(h.id, (id) => `~/company/people/${id}`)}
+                        url={$app.url}
+                        class="editor-back"
+                    >
+                        <Icon name="previous" class="size-4" />
+                        <span text={expr(h.name, (n) => n || "Person")} />
+                    </Link>
+                    <div class="editor-heading">
+                        <h1 class="page-title" text="Handover sheet" />
+                        <div class="editor-heading-actions">
+                            <Button mod="primary" onClick="print" disabled={h.loading}>
+                                <Icon name="print" class="size-4" />
+                                <span text="Print" />
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

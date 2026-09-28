@@ -102,39 +102,41 @@ export function recordPage(o: RecordPage) {
     );
     return (
         <cx>
-            <div class="page-header">
-                <Link href={listReturn(o.path)} url={$app.url} class="editor-back">
-                    <Icon name="previous" class="size-4" />
-                    <span text={o.back} />
-                </Link>
-                <div class="editor-heading">
-                    <h1 class="page-title">
-                        <span text={r.title} />
-                        <span class="page-title-note" visible={hasValue(r.number)} text={r.number} />
-                    </h1>
-                    <div class="editor-heading-actions" visible={r.viewing}>
-                        <LinkButton
-                            mod="primary"
-                            href={expr(r.id, (id) => `${o.path}/${id}/edit`)}
-                            attrs={{ "aria-label": "Edit", title: "Edit" }}
-                        >
-                            <Icon name="edit" class="size-4" />
-                            <span class="hidden sm:inline" text="Edit" />
-                        </LinkButton>
-                        {moreActions([
-                            historyAction(r.id),
-                            ...(o.duplicate
-                                ? [
-                                      {
-                                          text: "Duplicate",
-                                          icon: "duplicate",
-                                          href: expr(r.id, (id) => `${o.path}/new?from=${id}`),
-                                      } satisfies MoreAction,
-                                  ]
-                                : []),
-                            ...(o.more ?? []),
-                            { text: "Delete", icon: "delete", onClick: "remove", danger: true },
-                        ])}
+            <div class="page-top">
+                <div class="page-header">
+                    <Link href={listReturn(o.path)} url={$app.url} class="editor-back">
+                        <Icon name="previous" class="size-4" />
+                        <span text={o.back} />
+                    </Link>
+                    <div class="editor-heading">
+                        <h1 class="page-title">
+                            <span text={r.title} />
+                            <span class="page-title-note" visible={hasValue(r.number)} text={r.number} />
+                        </h1>
+                        <div class="editor-heading-actions" visible={r.viewing}>
+                            <LinkButton
+                                mod="primary"
+                                href={expr(r.id, (id) => `${o.path}/${id}/edit`)}
+                                attrs={{ "aria-label": "Edit", title: "Edit" }}
+                            >
+                                <Icon name="edit" class="size-4" />
+                                <span class="hidden sm:inline" text="Edit" />
+                            </LinkButton>
+                            {moreActions([
+                                historyAction(r.id),
+                                ...(o.duplicate
+                                    ? [
+                                          {
+                                              text: "Duplicate",
+                                              icon: "duplicate",
+                                              href: expr(r.id, (id) => `${o.path}/new?from=${id}`),
+                                          } satisfies MoreAction,
+                                      ]
+                                    : []),
+                                ...(o.more ?? []),
+                                { text: "Delete", icon: "delete", onClick: "remove", danger: true },
+                            ])}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -96,7 +96,11 @@ from `widgetDefaults.ts`, hooked into cx's `overlayDidMount`, so no screen has t
 list also does not pass its scroll on (`overscroll-behavior: contain`, below `lg` only — the desktop
 sidebar would swallow the wheel). A screen fills
 the content column under a header band (`.page-header`) flush with its top and sides; it never sets
-its own outer padding.
+its own outer padding. **The page's head is pinned on every page** beneath `--shell-top` wherever the
+document scrolls, on a phone as on the desktop: one block, `page-top`, opens every screen — the header
+band, and on a list its toolbar and chips. The block spans the page's padding, so nothing in it pulls
+into the padding with negative margins; what sticks beneath it reads its height from
+`--page-top-height` (`pageTop()`).
 
 **A page's width is set by its kind, not by the display** — `page-wide` (96rem, Tailwind's `2xl`) for
 lists and logs, `page-narrow` (52rem) for a record's page, in `_shell.scss`. Header band, pinned bars
@@ -121,9 +125,9 @@ desktop sidebar keeps Pulse's denser rows. The page padding respects `env(safe-a
 **One search box, and every other filter in a pane it drops open** — or inline, where a screen has a
 single filter: the server log's level switch sits beside its day strip, since a pane for one switch is
 a card of empty space. The box is free text, run after a
-300ms pause; the *Filters* button beside it carries the active count and opens the pane beneath the bar,
-pushing the list down rather than covering it. Every active filter shows as a removable chip under the
-bar, so closing the pane hides nothing that is filtering. Filters apply as they change; the pane's
+300ms pause; the *Filters* button beside it carries the active count and opens the pane beneath the pinned block,
+scrolling with the page and pushing the list down rather than covering it. Every active filter shows as a removable chip under the
+bar, pinned with it, so closing the pane hides nothing that is filtering. Filters apply as they change; the pane's
 *Done* only closes it. **A switch in the pane has its row to itself at every width** (`list-filter-wide`):
 sharing it, a picker slides up beside the switch on a wide screen, and the pane reads in a different
 order from one width to the next.
@@ -169,13 +173,11 @@ phone's does: the pane pushes the list down, and in a page of fixed height that 
 it. Not a pane covering the rows instead: it needs capping to the room left, which moves as chips
 wrap, and a scrim to keep a tap from opening a record behind it.
 
-**The header band and the toolbar are one block, pinned** beneath `--shell-top` wherever the document
-scrolls (`list-top`), except with the filter pane open, which is too tall to hold on screen. The band
-carries the title and, at its far end, the list's actions (`listHeading()`) — Excel, Add, the server
+**A list's pinned block holds its header band, toolbar and chips**; the pane opens beneath it,
+since held on screen it would be too tall. The band carries the title and, at its far end, the list's actions (`listHeading()`) — Excel, Add, the server
 log's Refresh — as a record's page carries its own, icons only on a phone; the toolbar is search and
-*Filters*. On a phone it stays rather than sliding away: it is the whole of the list's controls. What
-sticks beneath it where the page scrolls — the audit log's day headings — reads its height from
-`--list-top-height` (`listTop()`). **There is no caption line**: the pager under the list gives the
+*Filters*. On a phone it stays rather than sliding away: it is the whole of the list's controls; the
+audit log's day headings stick beneath it. **There is no caption line**: the pager under the list gives the
 range, the total and the steps — on a phone only at the list's end, which is the price of a toolbar
 that never moves. **The order is a column header's** (`sortHeader`), the audit log's Time included; a
 phone, which shows no header, keeps the default or the address's.

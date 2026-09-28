@@ -42,34 +42,36 @@ const keptRow = expr(m.$volume.id, (id) => !!id);
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
-            <div class="page-header">
-                <Link href={listReturn("~/licenses")} url={$app.url} class="editor-back">
-                    <Icon name="previous" class="size-4" />
-                    <span text="Licenses" />
-                </Link>
-                <div class="editor-heading">
-                    <h1 class="page-title">
-                        <span text={l.title} />
-                        <span class="page-title-note" visible={hasValue(l.number)} text={l.number} />
-                    </h1>
-                    <div class="editor-heading-actions" visible={l.viewing}>
-                        <LinkButton
-                            mod="primary"
-                            href={expr(l.id, (id) => `~/licenses/${id}/edit`)}
-                            attrs={{ "aria-label": "Edit", title: "Edit" }}
-                        >
-                            <Icon name="edit" class="size-4" />
-                            <span class="hidden sm:inline" text="Edit" />
-                        </LinkButton>
-                        {moreActions([
-                            historyAction(l.id),
-                            {
-                                text: "Duplicate",
-                                icon: "duplicate",
-                                href: expr(l.id, (id) => `~/licenses/new?from=${id}`),
-                            },
-                            { text: "Delete", icon: "delete", onClick: "remove", danger: true },
-                        ])}
+            <div class="page-top">
+                <div class="page-header">
+                    <Link href={listReturn("~/licenses")} url={$app.url} class="editor-back">
+                        <Icon name="previous" class="size-4" />
+                        <span text="Licenses" />
+                    </Link>
+                    <div class="editor-heading">
+                        <h1 class="page-title">
+                            <span text={l.title} />
+                            <span class="page-title-note" visible={hasValue(l.number)} text={l.number} />
+                        </h1>
+                        <div class="editor-heading-actions" visible={l.viewing}>
+                            <LinkButton
+                                mod="primary"
+                                href={expr(l.id, (id) => `~/licenses/${id}/edit`)}
+                                attrs={{ "aria-label": "Edit", title: "Edit" }}
+                            >
+                                <Icon name="edit" class="size-4" />
+                                <span class="hidden sm:inline" text="Edit" />
+                            </LinkButton>
+                            {moreActions([
+                                historyAction(l.id),
+                                {
+                                    text: "Duplicate",
+                                    icon: "duplicate",
+                                    href: expr(l.id, (id) => `~/licenses/new?from=${id}`),
+                                },
+                                { text: "Delete", icon: "delete", onClick: "remove", danger: true },
+                            ])}
+                        </div>
                     </div>
                 </div>
             </div>

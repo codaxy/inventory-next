@@ -36,7 +36,7 @@ export default createFunctionalComponent(() => {
     return (
         <cx>
             <div class="page-body page-wide list-fill type-list" controller={Controller}>
-                <div class={{ "list-top": true, "list-top-static": s.filtersOpen }}>
+                <div class="page-top">
                     {listHeading({
                         title: "Electronic device types",
                         addHref: "~/electronic-devices/types/new",
@@ -70,60 +70,6 @@ export default createFunctionalComponent(() => {
                             </Button>
                         </div>
 
-                        <div id="type-filters" class="list-pane" visible={s.filtersOpen}>
-                            <div class="list-pane-grid">
-                                <div class="list-filter">
-                                    <div
-                                        class="list-filter-label"
-                                        id="electronic-devices-types-tags-label"
-                                        text="Tags"
-                                    />
-                                    <LookupField
-                                        id="electronic-devices-types-tags"
-                                        records={f.tags}
-                                        options={s.tagOptions}
-                                        multiple
-                                        placeholder="Any tags"
-                                        inputAttrs={{ "aria-label": "Tags" }}
-                                    />
-                                </div>
-
-                                <div class="list-filter">
-                                    <div class="list-filter-label" text="Licenses" />
-                                    <div class="segmented" role="group" aria-label="Licenses">
-                                        {licenses.map((l) => (
-                                            <cx>
-                                                <Button
-                                                    mod="hollow"
-                                                    class={{
-                                                        "segmented-item": true,
-                                                        "segmented-item-on": expr(
-                                                            f.holdsLicenses,
-                                                            (v) => (v ?? null) === l.value,
-                                                        ),
-                                                    }}
-                                                    text={l.text}
-                                                    onClick={(_e: unknown, { controller }: any) =>
-                                                        controller.setHoldsLicenses(l.value)
-                                                    }
-                                                />
-                                            </cx>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="list-pane-footer">
-                                <Button
-                                    mod="hollow"
-                                    text="Clear filters"
-                                    onClick="clearFilters"
-                                    visible={hasChips}
-                                />
-                                <Button mod="primary" text="Done" onClick="closeFilters" />
-                            </div>
-                        </div>
-
                         <div class="list-chips" visible={hasChips}>
                             <Repeater records={s.chips} recordAlias={m.$chip}>
                                 <button
@@ -145,6 +91,55 @@ export default createFunctionalComponent(() => {
                                 text="Clear all"
                             />
                         </div>
+                    </div>
+                </div>
+
+                <div id="type-filters" class="list-pane" visible={s.filtersOpen}>
+                    <div class="list-pane-grid">
+                        <div class="list-filter">
+                            <div
+                                class="list-filter-label"
+                                id="electronic-devices-types-tags-label"
+                                text="Tags"
+                            />
+                            <LookupField
+                                id="electronic-devices-types-tags"
+                                records={f.tags}
+                                options={s.tagOptions}
+                                multiple
+                                placeholder="Any tags"
+                                inputAttrs={{ "aria-label": "Tags" }}
+                            />
+                        </div>
+
+                        <div class="list-filter">
+                            <div class="list-filter-label" text="Licenses" />
+                            <div class="segmented" role="group" aria-label="Licenses">
+                                {licenses.map((l) => (
+                                    <cx>
+                                        <Button
+                                            mod="hollow"
+                                            class={{
+                                                "segmented-item": true,
+                                                "segmented-item-on": expr(
+                                                    f.holdsLicenses,
+                                                    (v) => (v ?? null) === l.value,
+                                                ),
+                                            }}
+                                            text={l.text}
+                                            onClick={(_e: unknown, { controller }: any) =>
+                                                controller.setHoldsLicenses(l.value)
+                                            }
+                                        />
+                                    </cx>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="list-pane-footer">
+                        <Button mod="hollow" text="Clear filters" onClick="clearFilters" visible={hasChips} />
+                        <Button mod="primary" text="Done" onClick="closeFilters" />
                     </div>
                 </div>
 

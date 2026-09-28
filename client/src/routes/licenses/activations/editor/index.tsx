@@ -72,42 +72,44 @@ const fact = (label: string, value: typeof v.software | typeof v.deactivated) =>
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
-            <div class="page-header">
-                <Link
-                    href={expr(a.origin, a.id, (o, id) =>
-                        !id && o ? o.href : listReturn("~/licenses/activations"),
-                    )}
-                    url={$app.url}
-                    class="editor-back"
-                >
-                    <Icon name="previous" class="size-4" />
-                    <span text={expr(a.origin, a.id, (o, id) => (!id && o ? o.text : "Activations"))} />
-                </Link>
-                <div class="editor-heading">
-                    <h1 class="page-title" text={a.title} />
-                    <div class="editor-heading-actions" visible={shown}>
-                        <Button
-                            mod="primary"
-                            visible={active}
-                            onClick="deactivate"
-                            attrs={{ "aria-label": "Deactivate", title: "Deactivate" }}
-                        >
-                            <Icon name="deactivate" class="size-4" />
-                            <span class="hidden sm:inline" text="Deactivate" />
-                        </Button>
-                        <Button
-                            mod="primary"
-                            visible={ended}
-                            onClick="reactivate"
-                            attrs={{ "aria-label": "Reactivate", title: "Reactivate" }}
-                        >
-                            <Icon name="reactivate" class="size-4" />
-                            <span class="hidden sm:inline" text="Reactivate" />
-                        </Button>
-                        {moreActions([
-                            historyAction(a.id),
-                            { text: "Delete", icon: "delete", onClick: "remove", danger: true },
-                        ])}
+            <div class="page-top">
+                <div class="page-header">
+                    <Link
+                        href={expr(a.origin, a.id, (o, id) =>
+                            !id && o ? o.href : listReturn("~/licenses/activations"),
+                        )}
+                        url={$app.url}
+                        class="editor-back"
+                    >
+                        <Icon name="previous" class="size-4" />
+                        <span text={expr(a.origin, a.id, (o, id) => (!id && o ? o.text : "Activations"))} />
+                    </Link>
+                    <div class="editor-heading">
+                        <h1 class="page-title" text={a.title} />
+                        <div class="editor-heading-actions" visible={shown}>
+                            <Button
+                                mod="primary"
+                                visible={active}
+                                onClick="deactivate"
+                                attrs={{ "aria-label": "Deactivate", title: "Deactivate" }}
+                            >
+                                <Icon name="deactivate" class="size-4" />
+                                <span class="hidden sm:inline" text="Deactivate" />
+                            </Button>
+                            <Button
+                                mod="primary"
+                                visible={ended}
+                                onClick="reactivate"
+                                attrs={{ "aria-label": "Reactivate", title: "Reactivate" }}
+                            >
+                                <Icon name="reactivate" class="size-4" />
+                                <span class="hidden sm:inline" text="Reactivate" />
+                            </Button>
+                            {moreActions([
+                                historyAction(a.id),
+                                { text: "Delete", icon: "delete", onClick: "remove", danger: true },
+                            ])}
+                        </div>
                     </div>
                 </div>
             </div>

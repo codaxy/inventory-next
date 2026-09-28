@@ -26,7 +26,7 @@ export default createFunctionalComponent(() => {
     return (
         <cx>
             <div class="page-body page-wide list-fill tag-list" controller={Controller}>
-                <div class="list-top">
+                <div class="page-top">
                     {listHeading({
                         title: "Electronic device tags",
                         addHref: "~/electronic-devices/tags/new",

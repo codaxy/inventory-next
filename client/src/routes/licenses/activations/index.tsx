@@ -85,7 +85,7 @@ export default createFunctionalComponent(() => {
     return (
         <cx>
             <div class="page-body page-wide list-fill" controller={Controller}>
-                <div class={{ "list-top": true, "list-top-static": s.filtersOpen }}>
+                <div class="page-top">
                     {listHeading({
                         title: "Activations",
                         exportHref: s.exportHref,
@@ -124,82 +124,6 @@ export default createFunctionalComponent(() => {
                             </Button>
                         </div>
 
-                        <div id="activation-filters" class="list-pane" visible={s.filtersOpen}>
-                            <div class="list-pane-grid">
-                                <div class="list-filter">
-                                    <div
-                                        class="list-filter-label"
-                                        id="licenses-activations-software-or-service-label"
-                                        text="Software or service"
-                                    />
-                                    <LookupField
-                                        id="licenses-activations-software-or-service"
-                                        value={f.softwareId}
-                                        text={f.softwareText}
-                                        options={s.software}
-                                        placeholder="Any"
-                                        inputAttrs={{ "aria-label": "Software or service" }}
-                                    />
-                                </div>
-                                <div class="list-filter">
-                                    <div
-                                        class="list-filter-label"
-                                        id="licenses-activations-license-label"
-                                        text="License"
-                                    />
-                                    <LookupField
-                                        id="licenses-activations-license"
-                                        value={f.licenseId}
-                                        text={f.licenseText}
-                                        options={s.licenses}
-                                        placeholder="Any license"
-                                        inputAttrs={{ "aria-label": "License" }}
-                                    />
-                                </div>
-                                <div class="list-filter">
-                                    <div
-                                        class="list-filter-label"
-                                        id="licenses-activations-volume-label"
-                                        text="Volume"
-                                    />
-                                    <LookupField
-                                        id="licenses-activations-volume"
-                                        value={f.volumeId}
-                                        text={f.volumeText}
-                                        options={volumeOptions}
-                                        placeholder="Any volume"
-                                        inputAttrs={{ "aria-label": "Volume" }}
-                                    />
-                                </div>
-                                <div class="list-filter">
-                                    <div
-                                        class="list-filter-label"
-                                        id="licenses-activations-person-label"
-                                        text="Held by"
-                                    />
-                                    <LookupField
-                                        id="licenses-activations-person"
-                                        value={f.personId}
-                                        text={f.personText}
-                                        options={s.people}
-                                        placeholder="Anyone"
-                                        inputAttrs={{ "aria-label": "Held by" }}
-                                    />
-                                </div>
-                                {segmented("Status", statuses, f.status, "setStatus")}
-                                {segmented("License expiry", expiries, f.expiry, "setExpiry")}
-                            </div>
-                            <div class="list-pane-footer">
-                                <Button
-                                    mod="hollow"
-                                    text="Clear filters"
-                                    onClick="clearFilters"
-                                    visible={hasChips}
-                                />
-                                <Button mod="primary" text="Done" onClick="closeFilters" />
-                            </div>
-                        </div>
-
                         <div class="list-chips" visible={hasChips}>
                             <Repeater records={s.chips} recordAlias={m.$chip}>
                                 <button
@@ -221,6 +145,77 @@ export default createFunctionalComponent(() => {
                                 text="Clear all"
                             />
                         </div>
+                    </div>
+                </div>
+
+                <div id="activation-filters" class="list-pane" visible={s.filtersOpen}>
+                    <div class="list-pane-grid">
+                        <div class="list-filter">
+                            <div
+                                class="list-filter-label"
+                                id="licenses-activations-software-or-service-label"
+                                text="Software or service"
+                            />
+                            <LookupField
+                                id="licenses-activations-software-or-service"
+                                value={f.softwareId}
+                                text={f.softwareText}
+                                options={s.software}
+                                placeholder="Any"
+                                inputAttrs={{ "aria-label": "Software or service" }}
+                            />
+                        </div>
+                        <div class="list-filter">
+                            <div
+                                class="list-filter-label"
+                                id="licenses-activations-license-label"
+                                text="License"
+                            />
+                            <LookupField
+                                id="licenses-activations-license"
+                                value={f.licenseId}
+                                text={f.licenseText}
+                                options={s.licenses}
+                                placeholder="Any license"
+                                inputAttrs={{ "aria-label": "License" }}
+                            />
+                        </div>
+                        <div class="list-filter">
+                            <div
+                                class="list-filter-label"
+                                id="licenses-activations-volume-label"
+                                text="Volume"
+                            />
+                            <LookupField
+                                id="licenses-activations-volume"
+                                value={f.volumeId}
+                                text={f.volumeText}
+                                options={volumeOptions}
+                                placeholder="Any volume"
+                                inputAttrs={{ "aria-label": "Volume" }}
+                            />
+                        </div>
+                        <div class="list-filter">
+                            <div
+                                class="list-filter-label"
+                                id="licenses-activations-person-label"
+                                text="Held by"
+                            />
+                            <LookupField
+                                id="licenses-activations-person"
+                                value={f.personId}
+                                text={f.personText}
+                                options={s.people}
+                                placeholder="Anyone"
+                                inputAttrs={{ "aria-label": "Held by" }}
+                            />
+                        </div>
+                        {segmented("Status", statuses, f.status, "setStatus")}
+                        {segmented("License expiry", expiries, f.expiry, "setExpiry")}
+                    </div>
+                    <div class="list-pane-footer">
+                        <Button mod="hollow" text="Clear filters" onClick="clearFilters" visible={hasChips} />
+                        <Button mod="primary" text="Done" onClick="closeFilters" />
                     </div>
                 </div>
 

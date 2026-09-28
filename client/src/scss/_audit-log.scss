@@ -1,8 +1,8 @@
 // The audit log's entries, grouped by day: a stacked card on a phone, one row of columns from `md`.
 // The toolbar above them is `_list.scss`.
 
-.list-top + .audit-list,
-.list-top + .list-error + .audit-list {
+.page-top + .audit-list,
+.page-top + .list-error + .audit-list {
     margin-top: 0.375rem;
 }
 
@@ -27,12 +27,11 @@
     display: none;
 }
 
-// Sticks beneath the list's pinned block where the page scrolls — on a phone — and at the top of the
-// page with the filters pane open, when nothing else is pinned. From `md` the list scrolls itself, and
-// the heading sticks beneath its column header.
+// Sticks beneath the page's pinned block where the page scrolls — on a phone, or with the filters pane
+// open. From `md` the list scrolls itself, and the heading sticks beneath its column header.
 .audit-day {
     position: sticky;
-    top: calc(var(--shell-top) + var(--list-top-height, 0px));
+    top: calc(var(--shell-top) + var(--page-top-height, 0px));
     z-index: 1;
     padding: 0.5rem 1rem;
     border-bottom: 1px solid var(--color-line-soft);
@@ -212,11 +211,6 @@
             }
         }
     }
-}
-
-// With the filters pane open nothing is pinned, so a day's heading sticks at the top of the page.
-.list-fill:has(.list-pane) .audit-day {
-    top: var(--shell-top);
 }
 
 @media (min-width: 768px) {

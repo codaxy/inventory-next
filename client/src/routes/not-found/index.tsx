@@ -6,7 +6,9 @@ import { landing } from "../../layout/navigation";
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow">
-            <h1 class="page-header page-title" text="Page not found" />
+            <div class="page-top">
+                <h1 class="page-header page-title" text="Page not found" />
+            </div>
             <p class="page-lede">
                 Nothing lives at this address. Check the URL, or go to{" "}
                 <Link href={landing} text="the start" />.
