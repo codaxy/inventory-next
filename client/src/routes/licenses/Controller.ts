@@ -32,7 +32,6 @@ export default class extends ListController<Filters, LicenseItem, Row, LicenseSo
     protected readonly path = "~/licenses";
     protected readonly defaultSort = "-modified";
     protected readonly sorts = keys.flatMap((k) => [k, `-${k}`] as LicenseSort[]);
-    protected readonly nouns = ["license", "licenses", "No licenses"] as const;
     protected readonly failure = "The licenses could not be loaded.";
 
     protected fetch({

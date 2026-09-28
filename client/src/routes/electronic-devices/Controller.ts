@@ -36,7 +36,6 @@ export default class extends ListController<Filters, DeviceItem, Row, DeviceSort
     protected readonly path = "~/electronic-devices";
     protected readonly defaultSort = "-modified";
     protected readonly sorts = keys.flatMap((k) => [k, `-${k}`] as DeviceSort[]);
-    protected readonly nouns = ["device", "devices", "No devices"] as const;
     protected readonly failure = "The devices could not be loaded.";
 
     protected fetch({

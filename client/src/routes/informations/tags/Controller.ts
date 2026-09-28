@@ -7,7 +7,6 @@ export default class extends ListController<Filters, GroupItem, Row, GroupSort> 
     protected readonly path = "~/informations/tags";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "information", "-information"] as const;
-    protected readonly nouns = ["tag", "tags", "No tags"] as const;
     protected readonly failure = "The tags could not be loaded.";
 
     protected fetch({

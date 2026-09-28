@@ -7,7 +7,6 @@ export default class extends ListController<Filters, GroupItem, Row, GroupSort> 
     protected readonly path = "~/informations/types";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "information", "-information"] as const;
-    protected readonly nouns = ["type", "types", "No types"] as const;
     protected readonly failure = "The types could not be loaded.";
 
     protected fetch({

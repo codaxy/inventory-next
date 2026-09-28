@@ -7,7 +7,6 @@ export default class extends ListController<Filters, ClientItem, Row, ClientSort
     protected readonly path = "~/company/clients";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "projects", "-projects"] as const;
-    protected readonly nouns = ["client", "clients", "No clients"] as const;
     protected readonly failure = "The clients could not be loaded.";
 
     protected fetch({

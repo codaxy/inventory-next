@@ -1,13 +1,17 @@
 // The audit log's entries, grouped by day: a stacked card on a phone, one row of columns from `md`.
 // The toolbar above them is `_list.scss`.
 
-.list-bar + .audit-list {
+.list-top + .audit-list,
+.list-top + .list-error + .audit-list {
     margin-top: 0.375rem;
 }
 
 // `clip` rather than `hidden`: it rounds the corners without becoming a scroll container, which
-// would stop the day headings sticking.
+// would stop the day headings sticking to the page where it scrolls. From `md` the list fills its page
+// and scrolls itself (`list-fill`), and they stick inside it.
 .audit-list {
+    --audit-head-height: 2.125rem;
+
     overflow: clip;
     border: 1px solid var(--color-line);
     border-radius: 12px;
@@ -23,11 +27,12 @@
     display: none;
 }
 
-// Sticks beneath the pinned toolbar, following it when it slides away.
+// Sticks beneath the list's pinned block where the page scrolls — on a phone — and at the top of the
+// page with the filters pane open, when nothing else is pinned. From `md` the list scrolls itself, and
+// the heading sticks beneath its column header.
 .audit-day {
     position: sticky;
-    top: calc(var(--shell-top) + var(--sticky-bar-height, 0px));
-    transition: top 200ms ease;
+    top: calc(var(--shell-top) + var(--list-top-height, 0px));
     z-index: 1;
     padding: 0.5rem 1rem;
     border-bottom: 1px solid var(--color-line-soft);
@@ -176,9 +181,13 @@
         gap: 1rem;
     }
 
+    // A height of its own, so a day's heading can stick exactly beneath it while the list scrolls.
     .audit-list-head {
         display: grid;
-        padding: 0.5rem 1rem;
+        align-items: center;
+        box-sizing: border-box;
+        height: var(--audit-head-height);
+        padding: 0 1rem;
         border-bottom: 1px solid var(--color-line);
         background: var(--color-raised);
         font-size: 11px;
@@ -202,5 +211,16 @@
                 display: inline;
             }
         }
+    }
+}
+
+// With the filters pane open nothing is pinned, so a day's heading sticks at the top of the page.
+.list-fill:has(.list-pane) .audit-day {
+    top: var(--shell-top);
+}
+
+@media (min-width: 768px) {
+    .list-fill:not(:has(.list-pane)) .audit-day {
+        top: var(--audit-head-height);
     }
 }

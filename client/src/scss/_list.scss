@@ -1,42 +1,19 @@
 // A list screen's shared parts: the pinned toolbar — search, Filters and its pane, chips, the caption
 // line — and the error, empty and loading states. The rows are each screen's own.
 
-// The toolbar, pinned to the top of the content column while the rows scroll beneath it. It runs
-// into the page's side padding so rows do not show past its edges, and pulls up by its own top padding
-// so the gap under the header band is unchanged until it sticks.
+// The toolbar, under the header band in the list's pinned block (`list-top`). It spans the page's side
+// padding, so rows do not show past its edges while pinned: opaque over the content, clear beyond it,
+// so the dots beside the page run on under it instead of being cut by a stripe of canvas.
 .list-bar {
-    position: sticky;
-    top: var(--shell-top);
-    z-index: 5;
-    margin: -0.75rem -0.75rem 0;
-    padding: 0.75rem 0.75rem 0.375rem;
-    // Opaque over the content it pins above, clear beyond it, so the dots beside the page run on
-    // under a pinned bar instead of being cut by a stripe of canvas.
+    padding: 1rem var(--page-pad) 0.375rem;
     background: linear-gradient(
         to right,
         var(--color-canvas) calc(var(--page-pad) * 2 + var(--page-width)),
         transparent 0
     );
-    transition: transform 200ms ease;
 
     @media (min-width: 640px) {
-        margin: -0.75rem -1.25rem 0;
-        padding: 0.75rem 1.25rem 0.375rem;
-    }
-}
-
-.list-bar-static {
-    position: static;
-}
-
-// Off the top on a narrow screen while scrolling down; see `stickyBar.ts`.
-.list-bar-hidden {
-    transform: translateY(-100%);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .list-bar {
-        transition: none;
+        padding-top: 1.25rem;
     }
 }
 
@@ -164,50 +141,6 @@
     margin-top: 0.75rem;
 }
 
-// A quiet line under the search bar: where the reader is, the order, and a step either way. Small
-// type and borderless controls, so it reads as a caption rather than a second toolbar.
-.list-results-head {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    margin-top: 0.375rem;
-}
-
-.list-total {
-    flex: 1;
-    min-width: 0;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--color-ink-muted);
-    font-variant-numeric: tabular-nums;
-}
-
-.cxb-button.cxm-hollow.list-sort {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    height: 32px;
-    padding: 0 0.5rem;
-    border-color: transparent;
-    background: transparent;
-    box-shadow: none;
-    font-size: 12.5px;
-    color: var(--color-ink-muted);
-
-    // Drawn at 32px, touched at 44.
-    &::after {
-        content: "";
-        position: absolute;
-        inset: -6px 0;
-    }
-
-    &:hover {
-        background: var(--color-hover);
-        color: var(--color-ink);
-    }
-}
-
 // A list's secondary action in its header band — Excel, the server log's Refresh — quieter than Add
 // beside it: text with no border or fill. An anchor or a button alike.
 .list-export {
@@ -282,18 +215,17 @@
     color: var(--color-danger-text);
 }
 
-.list-bar + .list-error,
 .list-top + .list-error {
     margin-top: 0.375rem;
 }
 
 // A list fills its page (`list-fill`). No caption line: its header band carries its actions
-// (`listHeading`), and the pager under the list the range and the steps. The audit log keeps the
-// pinned bar above with its caption line.
+// (`listHeading`), and the pager under the list the range and the steps.
 //
 // The header band and the toolbar are one block (`list-top`), pinned beneath the shell's top bar
 // wherever the document scrolls, except while the filters pane is open, which is too tall to hold. The
-// block spans the page's padding itself, so neither part pulls into it with negative margins.
+// block spans the page's padding itself, so neither part pulls into it with negative margins. Its
+// height is `--list-top-height` where something sticks beneath it (`listTop.ts`).
 .list-top {
     position: sticky;
     top: var(--shell-top);
@@ -304,18 +236,8 @@
         margin: 0;
     }
 
-    > .list-bar {
-        position: static;
-        margin: 0;
-        padding-top: 1rem;
-    }
-
     @media (min-width: 640px) {
         margin-top: -1.25rem;
-
-        > .list-bar {
-            padding-top: 1.25rem;
-        }
     }
 }
 
@@ -344,11 +266,11 @@
 }
 
 // Where the columns show, the document holds still and the rows scroll inside the card — the
-// server log's terminal — under its pinned header, the pager at the window's foot. Below `md` the document scrolls, as everywhere, for
-// Safari's toolbars — and at every width while the filters pane is open: in a page of fixed height the
-// pane pushes the rows out of it, so the page scrolls as a phone's does, nothing pinned. cx renders
-// the pane only while it is open. A card squeezed under 10rem in a short window lets the document
-// scroll after all rather than hide the rows.
+// server log's terminal — under its pinned header, the pager at the window's foot. Below `md` the
+// document scrolls, as everywhere, for Safari's toolbars — and at every width while the filters pane
+// is open: in a page of fixed height the pane pushes the rows out of it, so the page scrolls as a
+// phone's does, nothing pinned. cx renders the pane only while it is open. A card squeezed under
+// 10rem in a short window lets the document scroll after all rather than hide the rows.
 @media (min-width: 768px) {
     .shell:has(.list-fill):not(:has(.list-pane)) {
         height: 100dvh;
@@ -365,6 +287,7 @@
         min-height: 0;
 
         > .record-list,
+        > .audit-list,
         > .term {
             flex: 1 1 0;
             min-height: 10rem;
@@ -373,6 +296,7 @@
         }
 
         .record-head,
+        .audit-list-head,
         .term-bar {
             position: sticky;
             top: 0;

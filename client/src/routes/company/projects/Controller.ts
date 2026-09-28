@@ -10,7 +10,6 @@ export default class extends ListController<Filters, ProjectItem, Row, ProjectSo
     protected readonly path = "~/company/projects";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "client", "-client", "owner", "-owner"] as const;
-    protected readonly nouns = ["project", "projects", "No projects"] as const;
     protected readonly failure = "The projects could not be loaded.";
 
     protected fetch({

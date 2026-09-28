@@ -14,11 +14,6 @@ export default class extends ListController<Filters, OnVolumeItem, Row, Sort> {
         "information",
         "-information",
     ] as const;
-    protected readonly nouns = [
-        "cloud subscription",
-        "cloud subscriptions",
-        "No cloud subscriptions",
-    ] as const;
     protected readonly failure = "The cloud subscriptions could not be loaded.";
 
     protected fetch({

@@ -7,7 +7,6 @@ export default class extends ListController<Filters, VendorItem, Row, VendorSort
     protected readonly path = "~/company/vendors";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "assets", "-assets"] as const;
-    protected readonly nouns = ["vendor", "vendors", "No vendors"] as const;
     protected readonly failure = "The vendors could not be loaded.";
 
     protected fetch({

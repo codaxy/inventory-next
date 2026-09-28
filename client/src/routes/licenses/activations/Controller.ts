@@ -29,7 +29,6 @@ export default class extends ListController<Filters, ActivationItem, Row, Activa
     protected readonly path = "~/licenses/activations";
     protected readonly defaultSort = "-activated";
     protected readonly sorts = keys.flatMap((k) => [k, `-${k}`] as ActivationSort[]);
-    protected readonly nouns = ["activation", "activations", "No activations"] as const;
     protected readonly failure = "The activations could not be loaded.";
 
     protected fetch({

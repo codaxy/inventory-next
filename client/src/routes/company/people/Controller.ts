@@ -7,7 +7,6 @@ export default class extends ListController<Filters, PersonItem, Row, PersonSort
     protected readonly path = "~/company/people";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "email", "-email", "assets", "-assets"] as const;
-    protected readonly nouns = ["person", "people", "No people"] as const;
     protected readonly failure = "The people could not be loaded.";
 
     protected fetch({

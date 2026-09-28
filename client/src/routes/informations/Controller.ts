@@ -43,7 +43,6 @@ export default class extends ListController<Filters, InformationItem, Row, Infor
     protected readonly path = "~/informations";
     protected readonly defaultSort = "name";
     protected readonly sorts = keys.flatMap((k) => [k, `-${k}`] as InformationSort[]);
-    protected readonly nouns = ["piece of information", "pieces of information", "No information"] as const;
     protected readonly failure = "The information could not be loaded.";
 
     protected fetch({

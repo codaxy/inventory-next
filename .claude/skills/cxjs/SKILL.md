@@ -408,7 +408,7 @@ classes land on the `tbody`. **Grid selects on `mousedown`**, not `click`.
 ## Other gotchas
 
 - **An element is reached through `onRef`, never `document.querySelector`.** The view holds the ref
-  (a closure in the functional component, or a helper returning the callback, as `stickyBar()` does)
+  (a closure in the functional component, or a helper returning the callback, as `listTop()` does)
   and acts on it itself; a controller querying the DOM by class breaks silently when the markup moves.
 
 - **Setting `input.value` programmatically does not reach the store.** A headless check clicks and

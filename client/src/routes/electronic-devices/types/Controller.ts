@@ -10,7 +10,6 @@ export default class extends ListController<Filters, TypeItem, Row, TypeSort, Fi
     protected readonly path = "~/electronic-devices/types";
     protected readonly defaultSort = "name";
     protected readonly sorts = sorts;
-    protected readonly nouns = ["type", "types", "No types"] as const;
     protected readonly failure = "The types could not be loaded.";
 
     protected fetch({

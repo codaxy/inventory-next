@@ -35,7 +35,6 @@ export interface ListState<F, Row, Sort extends string = string, K extends strin
     loaded: boolean;
     error?: string;
     pager: PagerState;
-    totalText: string;
     /** The search that ran is one id: an empty answer then says no record has it. */
     idSearch?: boolean;
 }
@@ -65,8 +64,6 @@ export abstract class ListController<
     protected abstract readonly path: string;
     protected abstract readonly defaultSort: Sort;
     protected abstract readonly sorts: readonly Sort[];
-    /** "license", "licenses", "No licenses". */
-    protected abstract readonly nouns: readonly [string, string, string];
     protected abstract readonly failure: string;
 
     protected abstract fetch(q: {
@@ -112,7 +109,6 @@ export abstract class ListController<
         this.store.set(s.loaded, false);
         this.store.delete(s.error);
         this.store.set(s.pager, pager(1, pageSize, 0));
-        this.store.set(s.totalText, "");
 
         this.apply(queryOf(this.store.get($app.url)), false);
 
@@ -212,14 +208,9 @@ export abstract class ListController<
             const state = pager(page, pageSize, result.total);
             if (result.items.length === 0 && result.total > 0) return this.goTo(state.pageCount);
 
-            const [one, many, none] = this.nouns;
             this.store.set(s.rows, this.toRows(result.items));
             this.store.set(s.total, result.total);
             this.store.set(s.pager, state);
-            this.store.set(
-                s.totalText,
-                result.total === 0 ? none : `${state.summary} ${result.total === 1 ? one : many}`,
-            );
             this.store.set(s.idSearch, isId(q));
             this.store.delete(s.error);
             this.store.set(s.loaded, true);

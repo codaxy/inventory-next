@@ -2,8 +2,10 @@ import { createFunctionalComponent, equal, expr, falsy, hasValue, isNonEmpty } f
 import { Button, DateField, Icon, LookupField, Repeater, TextField } from "cx/widgets";
 
 import { dateValue } from "../../../bindings";
+import { listHeading, listPaging } from "../../../components/listHeading";
 import { Pager } from "../../../components/Pager";
-import { stickyBar } from "../../../stickyBar";
+import { sortHeader } from "../../../components/sortHeader";
+import { listTop } from "../../../listTop";
 import Controller from "./Controller";
 import m, { type Filters } from "./model";
 import { inventoryNumberPattern, recordIdPattern } from "./utils";
@@ -38,8 +40,6 @@ const notEmpty = expr(
     s.error,
     (loaded, total, error) => !(loaded && total === 0 && !error),
 );
-const newestFirst = equal(s.sort, "-time");
-const oldestFirst = equal(s.sort, "time");
 
 const actions = [
     { value: null, text: "All" },
@@ -53,197 +53,183 @@ const actions = [
  * stays visible as chips, so the pane can close without hiding it.
  */
 export default createFunctionalComponent(() => {
-    const onBarRef = stickyBar();
+    const onTopRef = listTop();
+    const paging = listPaging();
 
     return (
         <cx>
-            <div class="page-body page-wide audit-log" controller={Controller}>
-                <h1 class="page-header page-title" text="Audit log" />
+            <div class="page-body page-wide audit-log list-fill" controller={Controller}>
+                <div class={{ "list-top": true, "list-top-static": s.filtersOpen }} onRef={onTopRef}>
+                    {listHeading({ title: "Audit log" })}
 
-                {/* Pinned while the rows scroll, except while the filters are open: the pane is too tall. */}
-                <div class={{ "list-bar": true, "list-bar-static": s.filtersOpen }} onRef={onBarRef}>
-                    <div class="list-toolbar">
-                        <div class="list-search">
-                            <Icon name="search" class="list-search-icon" />
-                            <TextField
-                                class="list-search-field"
-                                value={s.search}
-                                placeholder="Search changes, people, records…"
-                                showClear
-                                inputAttrs={{
-                                    "aria-label": "Search the audit log",
-                                    enterKeyHint: "search",
+                    <div class="list-bar">
+                        <div class="list-toolbar">
+                            <div class="list-search">
+                                <Icon name="search" class="list-search-icon" />
+                                <TextField
+                                    class="list-search-field"
+                                    value={s.search}
+                                    placeholder="Search changes, people, records…"
+                                    showClear
+                                    inputAttrs={{
+                                        "aria-label": "Search the audit log",
+                                        enterKeyHint: "search",
+                                    }}
+                                />
+                            </div>
+                            <Button
+                                mod="hollow"
+                                class={{
+                                    "list-filters-toggle": true,
+                                    "list-filters-toggle-open": s.filtersOpen,
                                 }}
-                            />
+                                attrs={{ "aria-controls": "audit-filters" }}
+                                onClick="toggleFilters"
+                            >
+                                <Icon name="filters" class="size-4" />
+                                <span class="hidden sm:inline" text="Filters" />
+                                <span class="list-count" visible={hasChips} text={chipCount} />
+                            </Button>
                         </div>
-                        <Button
-                            mod="hollow"
-                            class={{
-                                "list-filters-toggle": true,
-                                "list-filters-toggle-open": s.filtersOpen,
-                            }}
-                            attrs={{ "aria-controls": "audit-filters" }}
-                            onClick="toggleFilters"
-                        >
-                            <Icon name="filters" class="size-4" />
-                            <span class="hidden sm:inline" text="Filters" />
-                            <span class="list-count" visible={hasChips} text={chipCount} />
-                        </Button>
-                    </div>
 
-                    <div id="audit-filters" class="list-pane" visible={s.filtersOpen}>
-                        <div class="list-pane-grid">
-                            <div class="list-filter list-filter-wide">
-                                <div class="list-filter-label" text="Change" />
-                                <div class="segmented" role="group" aria-label="Change">
-                                    {actions.map((a) => (
-                                        <cx>
-                                            <Button
-                                                mod="hollow"
-                                                class={{
-                                                    "segmented-item": true,
-                                                    "segmented-item-on": expr(
-                                                        f.action,
-                                                        (v) => (v ?? null) === a.value,
-                                                    ),
-                                                }}
-                                                text={a.text}
-                                                onClick={(_e: unknown, { controller }: any) =>
-                                                    controller.setAction(a.value)
-                                                }
-                                            />
-                                        </cx>
-                                    ))}
+                        <div id="audit-filters" class="list-pane" visible={s.filtersOpen}>
+                            <div class="list-pane-grid">
+                                <div class="list-filter list-filter-wide">
+                                    <div class="list-filter-label" text="Change" />
+                                    <div class="segmented" role="group" aria-label="Change">
+                                        {actions.map((a) => (
+                                            <cx>
+                                                <Button
+                                                    mod="hollow"
+                                                    class={{
+                                                        "segmented-item": true,
+                                                        "segmented-item-on": expr(
+                                                            f.action,
+                                                            (v) => (v ?? null) === a.value,
+                                                        ),
+                                                    }}
+                                                    text={a.text}
+                                                    onClick={(_e: unknown, { controller }: any) =>
+                                                        controller.setAction(a.value)
+                                                    }
+                                                />
+                                            </cx>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div class="list-filter">
+                                    <div
+                                        class="list-filter-label"
+                                        id="administration-audit-log-record-type-label"
+                                        text="Record type"
+                                    />
+                                    <LookupField
+                                        id="administration-audit-log-record-type"
+                                        value={f.table}
+                                        options={s.tables}
+                                        placeholder="Any type"
+                                        inputAttrs={{ "aria-label": "Record type" }}
+                                    />
+                                </div>
+
+                                <div class="list-filter">
+                                    <div class="list-filter-label" text="Record id" />
+                                    <TextField
+                                        value={f.entityId}
+                                        placeholder="Paste an id"
+                                        inputAttrs={{
+                                            "aria-label": "Record id",
+                                            spellCheck: false,
+                                            autoComplete: "off",
+                                        }}
+                                        onValidate={(v: string | null) =>
+                                            !v || recordIdPattern.test(v.trim())
+                                                ? undefined
+                                                : "Not a record id."
+                                        }
+                                    />
+                                </div>
+
+                                <div class="list-filter">
+                                    <div class="list-filter-label" text="Inventory number" />
+                                    <TextField
+                                        value={f.inventoryNumber}
+                                        placeholder="e.g. 100893"
+                                        inputAttrs={{
+                                            "aria-label": "Inventory number",
+                                            inputMode: "numeric",
+                                        }}
+                                        onValidate={(v: string | null) =>
+                                            !v || inventoryNumberPattern.test(v) ? undefined : "Digits only."
+                                        }
+                                    />
+                                </div>
+
+                                <div class="list-filter">
+                                    <div
+                                        class="list-filter-label"
+                                        id="administration-audit-log-changed-by-label"
+                                        text="Changed by"
+                                    />
+                                    <LookupField
+                                        id="administration-audit-log-changed-by"
+                                        value={f.email}
+                                        options={s.emails}
+                                        placeholder="Anyone"
+                                        inputAttrs={{ "aria-label": "Changed by" }}
+                                    />
+                                </div>
+
+                                <div class="list-filter">
+                                    <div class="list-filter-label" text="From" />
+                                    <DateField
+                                        value={dateValue(f.from)}
+                                        placeholder="Any day"
+                                        inputAttrs={{ "aria-label": "From" }}
+                                    />
+                                </div>
+
+                                <div class="list-filter">
+                                    <div class="list-filter-label" text="To" />
+                                    <DateField
+                                        value={dateValue(f.to)}
+                                        placeholder="Any day"
+                                        inputAttrs={{ "aria-label": "To" }}
+                                    />
                                 </div>
                             </div>
 
-                            <div class="list-filter">
-                                <div
-                                    class="list-filter-label"
-                                    id="administration-audit-log-record-type-label"
-                                    text="Record type"
+                            <div class="list-pane-footer">
+                                <Button
+                                    mod="hollow"
+                                    text="Clear filters"
+                                    onClick="clearFilters"
+                                    visible={hasChips}
                                 />
-                                <LookupField
-                                    id="administration-audit-log-record-type"
-                                    value={f.table}
-                                    options={s.tables}
-                                    placeholder="Any type"
-                                    inputAttrs={{ "aria-label": "Record type" }}
-                                />
-                            </div>
-
-                            <div class="list-filter">
-                                <div class="list-filter-label" text="Record id" />
-                                <TextField
-                                    value={f.entityId}
-                                    placeholder="Paste an id"
-                                    inputAttrs={{
-                                        "aria-label": "Record id",
-                                        spellCheck: false,
-                                        autoComplete: "off",
-                                    }}
-                                    onValidate={(v: string | null) =>
-                                        !v || recordIdPattern.test(v.trim()) ? undefined : "Not a record id."
-                                    }
-                                />
-                            </div>
-
-                            <div class="list-filter">
-                                <div class="list-filter-label" text="Inventory number" />
-                                <TextField
-                                    value={f.inventoryNumber}
-                                    placeholder="e.g. 100893"
-                                    inputAttrs={{ "aria-label": "Inventory number", inputMode: "numeric" }}
-                                    onValidate={(v: string | null) =>
-                                        !v || inventoryNumberPattern.test(v) ? undefined : "Digits only."
-                                    }
-                                />
-                            </div>
-
-                            <div class="list-filter">
-                                <div
-                                    class="list-filter-label"
-                                    id="administration-audit-log-changed-by-label"
-                                    text="Changed by"
-                                />
-                                <LookupField
-                                    id="administration-audit-log-changed-by"
-                                    value={f.email}
-                                    options={s.emails}
-                                    placeholder="Anyone"
-                                    inputAttrs={{ "aria-label": "Changed by" }}
-                                />
-                            </div>
-
-                            <div class="list-filter">
-                                <div class="list-filter-label" text="From" />
-                                <DateField
-                                    value={dateValue(f.from)}
-                                    placeholder="Any day"
-                                    inputAttrs={{ "aria-label": "From" }}
-                                />
-                            </div>
-
-                            <div class="list-filter">
-                                <div class="list-filter-label" text="To" />
-                                <DateField
-                                    value={dateValue(f.to)}
-                                    placeholder="Any day"
-                                    inputAttrs={{ "aria-label": "To" }}
-                                />
+                                <Button mod="primary" text="Done" onClick="closeFilters" />
                             </div>
                         </div>
 
-                        <div class="list-pane-footer">
-                            <Button
-                                mod="hollow"
-                                text="Clear filters"
-                                onClick="clearFilters"
-                                visible={hasChips}
-                            />
-                            <Button mod="primary" text="Done" onClick="closeFilters" />
-                        </div>
-                    </div>
-
-                    <div class="list-chips" visible={hasChips}>
-                        <Repeater records={s.chips} recordAlias={m.$chip}>
+                        <div class="list-chips" visible={hasChips}>
+                            <Repeater records={s.chips} recordAlias={m.$chip}>
+                                <button
+                                    type="button"
+                                    class="chip"
+                                    onClick={(_e: unknown, { store, controller }: any) =>
+                                        controller.removeFilter(store.get(m.$chip.key))
+                                    }
+                                >
+                                    <span text={m.$chip.text} />
+                                    <Icon name="close" class="size-3.5" />
+                                    <span class="sr-only" text="Remove filter" />
+                                </button>
+                            </Repeater>
                             <button
                                 type="button"
-                                class="chip"
-                                onClick={(_e: unknown, { store, controller }: any) =>
-                                    controller.removeFilter(store.get(m.$chip.key))
-                                }
-                            >
-                                <span text={m.$chip.text} />
-                                <Icon name="close" class="size-3.5" />
-                                <span class="sr-only" text="Remove filter" />
-                            </button>
-                        </Repeater>
-                        <button type="button" class="chip-clear" onClick="clearFilters" text="Clear all" />
-                    </div>
-
-                    <div class="list-results-head">
-                        <span class="list-total" text={s.totalText} />
-                        <Button
-                            mod="hollow"
-                            class="list-sort"
-                            onClick="toggleSort"
-                            attrs={{ "aria-label": "Change the order" }}
-                        >
-                            <Icon name="newestFirst" class="size-3.5" visible={newestFirst} />
-                            <Icon name="oldestFirst" class="size-3.5" visible={oldestFirst} />
-                            <span
-                                class="hidden sm:inline"
-                                text={expr(s.sort, (sort) =>
-                                    sort === "time" ? "Oldest first" : "Newest first",
-                                )}
-                            />
-                        </Button>
-                        <div>
-                            <Pager
-                                state={s.pager}
-                                compact
-                                onPage={(page, instance) => instance.controller.goTo(page, true)}
+                                class="chip-clear"
+                                onClick="clearFilters"
+                                text="Clear all"
                             />
                         </div>
                     </div>
@@ -254,9 +240,13 @@ export default createFunctionalComponent(() => {
                     <Button mod="hollow" text="Try again" onClick="load" />
                 </div>
 
-                <div class={{ "audit-list": true, "audit-list-loading": s.loading }} visible={notEmpty}>
-                    <div class="audit-list-head" aria-hidden="true">
-                        <span text="Time" />
+                <div
+                    class={{ "audit-list": true, "audit-list-loading": s.loading }}
+                    visible={notEmpty}
+                    onRef={paging.onRowsRef}
+                >
+                    <div class="audit-list-head">
+                        {sortHeader(s.sort, "time", "Time")}
                         <span text="Change" />
                         <span text="Record" />
                         <span text="Fields" />
@@ -363,10 +353,7 @@ export default createFunctionalComponent(() => {
                 </div>
 
                 <div visible={expr(s.total, (t) => t > 0)}>
-                    <Pager
-                        state={s.pager}
-                        onPage={(page, instance) => instance.controller.goTo(page, true)}
-                    />
+                    <Pager state={s.pager} onPage={paging.onPage} />
                 </div>
             </div>
         </cx>

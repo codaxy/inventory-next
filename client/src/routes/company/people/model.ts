@@ -31,7 +31,6 @@ export interface PeopleListState {
     loaded: boolean;
     error?: string;
     pager: PagerState;
-    totalText: string;
     /** The search that ran is one id: an empty answer then says no record has it. */
     idSearch?: boolean;
 }

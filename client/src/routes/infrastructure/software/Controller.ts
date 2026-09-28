@@ -14,7 +14,6 @@ export default class extends ListController<Filters, OnVolumeItem, Row, Sort> {
         "information",
         "-information",
     ] as const;
-    protected readonly nouns = ["software", "software", "No software"] as const;
     protected readonly failure = "The software could not be loaded.";
 
     protected fetch({

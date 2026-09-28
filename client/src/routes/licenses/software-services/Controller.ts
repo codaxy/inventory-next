@@ -30,7 +30,6 @@ export default class extends ListController<
         "volumes",
         "-volumes",
     ] as const;
-    protected readonly nouns = ["entry", "entries", "None"] as const;
     protected readonly failure = "The list could not be loaded.";
 
     protected fetch({

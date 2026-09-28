@@ -7,7 +7,6 @@ export default class extends ListController<Filters, LocationItem, Row, Location
     protected readonly path = "~/company/locations";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "city", "-city", "assets", "-assets"] as const;
-    protected readonly nouns = ["location", "locations", "No locations"] as const;
     protected readonly failure = "The locations could not be loaded.";
 
     protected fetch({

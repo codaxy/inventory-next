@@ -70,24 +70,6 @@
     font-weight: 700;
 }
 
-// The bar's pager sits on the caption line under the search, so its steps close up.
-.pager-compact {
-    margin-top: 0;
-
-    .pager-controls {
-        gap: 0;
-    }
-
-    .cxb-button.cxm-hollow.pager-step {
-        min-width: 32px;
-        padding: 0;
-
-        &::after {
-            inset: -6px -2px;
-        }
-    }
-}
-
 .pager-gap {
     min-width: 1.5rem;
     text-align: center;

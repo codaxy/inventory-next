@@ -11,7 +11,6 @@ export default class extends ListController<Filters, FurnitureTypeItem, Row, Fur
     protected readonly path = "~/furniture/types";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "furniture", "-furniture"] as const;
-    protected readonly nouns = ["type", "types", "No types"] as const;
     protected readonly failure = "The types could not be loaded.";
 
     protected fetch({

@@ -34,7 +34,6 @@ export default class extends ListController<Filters, FurnitureItem, Row, Furnitu
     protected readonly path = "~/furniture";
     protected readonly defaultSort = "-modified";
     protected readonly sorts = keys.flatMap((k) => [k, `-${k}`] as FurnitureSort[]);
-    protected readonly nouns = ["piece of furniture", "pieces of furniture", "No furniture"] as const;
     protected readonly failure = "The furniture could not be loaded.";
 
     protected fetch({

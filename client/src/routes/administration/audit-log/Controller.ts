@@ -15,7 +15,6 @@ export default class extends ListController<Filters, AuditEntry, Row, AuditSort,
     protected readonly path = "~/administration/audit-log";
     protected readonly defaultSort = "-time";
     protected readonly sorts = ["-time", "time"] as const;
-    protected readonly nouns = ["change", "changes", "No changes"] as const;
     protected readonly failure = "The audit log could not be loaded.";
     protected readonly filterDelay = searchDelay;
 
@@ -105,8 +104,9 @@ export default class extends ListController<Filters, AuditEntry, Row, AuditSort,
             .catch(() => {});
     }
 
-    toggleSort() {
-        this.sortOn("time", true);
+    /** Newest first, then oldest first. */
+    sortBy(key: "time") {
+        this.sortOn(key, true);
     }
 
     setAction(action: "Create" | "Update" | "Delete" | null) {

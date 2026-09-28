@@ -7,7 +7,6 @@ export default class extends ListController<Filters, TagItem, Row, TagSort> {
     protected readonly path = "~/electronic-devices/tags";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "types", "-types"] as const;
-    protected readonly nouns = ["tag", "tags", "No tags"] as const;
     protected readonly failure = "The tags could not be loaded.";
 
     protected fetch({
