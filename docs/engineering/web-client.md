@@ -255,11 +255,12 @@ prefix.
 The page is the header band with a back link — blue at weight 500, light enough that the name leads; grey read as
 disabled — 44px to a
 finger by padding its margin takes back — and the record's name — as tall in every mode as with
-its actions, so switching mode never moves the page — and the form as a card in the narrow column. While editing, the card ends in a footer — the card's own white under a rule,
-buttons at the end; tinted, it takes the page's colour and reads as a hole in the card — sticky at the viewport's foot, so a long form keeps Save in reach and a short one does not
-float a full-width bar over empty canvas. **A form of several cards commits in a bar of its own
-below the last** (`editor-actions-bar`): a footer inside one card sticks only while that card is on
-screen. A view-mode value reads at the input's size whatever the field — cx sets text fields'
+its actions, so switching mode never moves the page — and the form as a card in the narrow column. **While editing, the form's last card ends in a footer**, whatever the number of cards — the card's
+own white under a rule, buttons at the end; tinted, it takes the page's colour and reads as a hole in
+the card. **It is part of the card and scrolls with it**: Save is where a form is finished, at its
+end. Not pinned to the screen's foot: pinned, it read as the form's end with more still beneath it,
+showed its rounded foot over whatever was behind it, and on a form of several cards needed a bar of
+its own to stay in reach. A view-mode value reads at the input's size whatever the field — cx sets text fields'
 larger than pickers'. In view mode a field is text lined up with its label, and a list of values — the types on a tag —
 is chips, each a link to its record.
 

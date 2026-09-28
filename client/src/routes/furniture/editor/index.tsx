@@ -76,17 +76,17 @@ export default createFunctionalComponent(() => (
                             })}
                             {text("URL", "url", 500, { wide: true, url: true })}
                         </div>
+                        <div class="editor-actions" visible={editing}>
+                            <LinkButton
+                                mod="hollow"
+                                text="Cancel"
+                                href={expr(f.id, (id) =>
+                                    id ? `~/furniture/${id}` : listReturn("~/furniture"),
+                                )}
+                            />
+                            <Button mod="primary" text="Save" onClick="save" disabled={truthy(f.saving)} />
+                        </div>
                     </section>
-
-                    {/* Below the last card, sticky across both. */}
-                    <div class="editor-actions editor-actions-bar" visible={editing}>
-                        <LinkButton
-                            mod="hollow"
-                            text="Cancel"
-                            href={expr(f.id, (id) => (id ? `~/furniture/${id}` : listReturn("~/furniture")))}
-                        />
-                        <Button mod="primary" text="Save" onClick="save" disabled={truthy(f.saving)} />
-                    </div>
                 </ValidationGroup>
             </div>
         </div>

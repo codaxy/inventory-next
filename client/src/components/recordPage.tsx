@@ -18,8 +18,8 @@ interface RecordPage {
     fields: any;
     /** The first card's title, where more cards follow. */
     title?: string;
-    /** Further cards of the form; Cancel and Save then sit in a bar of their own below the last. */
-    cards?: any;
+    /** Further cards of the form, given Cancel and Save for the last one's footer. */
+    cards?: (actions: any) => any;
     /** Actions behind the ⋮ before Delete. */
     more?: MoreAction[];
     /** Duplicate behind the ⋮: `new?from=:id`, which the controller opens as a copy. */
@@ -157,14 +157,7 @@ export function recordPage(o: RecordPage) {
                         <div class="editor-grid">{o.fields}</div>
                         {o.cards ? null : actions}
                     </section>
-                    {o.cards ?? null}
-                    {o.cards ? (
-                        <cx>
-                            <div class="editor-actions editor-actions-bar" visible={falsy(r.viewing)}>
-                                {commit}
-                            </div>
-                        </cx>
-                    ) : null}
+                    {o.cards ? o.cards(actions) : null}
                 </ValidationGroup>
 
                 {holdingSections(r.sections, r.viewing)}

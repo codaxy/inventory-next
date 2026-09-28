@@ -196,39 +196,23 @@ a.editor-chip:hover {
     color: var(--color-danger-text);
 }
 
-// A form of several cards commits below the last, in a bar of its own: a footer inside one card
-// sticks only while that card is on screen.
-.editor-actions.editor-actions-bar {
-    margin: 1rem 0 0;
-    border: 1px solid var(--color-line);
-    border-radius: 12px;
-    box-shadow: 0 -6px 16px -12px color-mix(in srgb, var(--color-ink) 35%, transparent);
-
-    @media (min-width: 640px) {
-        margin: 1rem 0 0;
-    }
-}
-
-// The card's footer: the card's own white under a rule, buttons at the end — tinted, it takes the
-// page's colour and reads as a hole in the card. Sticky, so a form taller than the screen keeps Save
-// in reach, and it rests at the card's foot on a short one.
+// The form's last card ends in its footer: the card's own white under a rule, buttons at the end —
+// tinted, it takes the page's colour and reads as a hole in the card. Part of the card, scrolling
+// with it: never pinned to the screen's foot.
 .editor-actions {
-    position: sticky;
-    bottom: 0;
-    z-index: 5;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 0.5rem;
     margin: 1rem -1rem -1rem;
-    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+    padding: 0.75rem 1rem;
     border-top: 1px solid var(--color-line);
     border-radius: 0 0 11px 11px;
     background: var(--color-surface);
 
     @media (min-width: 640px) {
         margin: 1.25rem -1.25rem -1.25rem;
-        padding: 0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom));
+        padding: 0.75rem 1.25rem;
     }
 
     .cxb-button {

@@ -14,7 +14,7 @@ const { basicFields, date, label, pick, text } = formFields(
 );
 
 /** The device's own card: its type and the type's tags, who made it, its model, serial and warranty. */
-const device = (
+const device = (actions: any) => (
     <cx>
         <section class="editor-section">
             <h2 class="editor-section-title" text="Device" />
@@ -47,6 +47,7 @@ const device = (
                 {pick("Location", "location", "locations", { href: (id) => `~/company/locations/${id}` })}
                 {text("URL", "url", 500, { wide: true, url: true })}
             </div>
+            {actions}
         </section>
     </cx>
 );

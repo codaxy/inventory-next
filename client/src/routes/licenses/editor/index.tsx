@@ -325,17 +325,17 @@ export default createFunctionalComponent(() => (
                                 </div>
                             </Repeater>
                         </div>
+                        <div class="editor-actions" visible={editing}>
+                            <LinkButton
+                                mod="hollow"
+                                text="Cancel"
+                                href={expr(l.id, (id) =>
+                                    id ? `~/licenses/${id}` : listReturn("~/licenses"),
+                                )}
+                            />
+                            <Button mod="primary" text="Save" onClick="save" disabled={truthy(l.saving)} />
+                        </div>
                     </section>
-
-                    {/* Below the last card, sticky across all three. */}
-                    <div class="editor-actions editor-actions-bar" visible={editing}>
-                        <LinkButton
-                            mod="hollow"
-                            text="Cancel"
-                            href={expr(l.id, (id) => (id ? `~/licenses/${id}` : listReturn("~/licenses")))}
-                        />
-                        <Button mod="primary" text="Save" onClick="save" disabled={truthy(l.saving)} />
-                    </div>
                 </ValidationGroup>
             </div>
         </div>

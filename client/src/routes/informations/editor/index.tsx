@@ -20,7 +20,7 @@ const savedPlace = expr(p.id, (id) => !!id);
 const newPlace = expr(p.id, (id) => !id);
 
 /** Where it is kept: a saved place is kept or struck through, a new one filled in — as a license's volumes. */
-const places = (
+const places = (actions: any) => (
     <cx>
         <section class="editor-section">
             <div class="editor-section-head">
@@ -139,6 +139,7 @@ const places = (
                     </div>
                 </Repeater>
             </div>
+            {actions}
         </section>
     </cx>
 );
