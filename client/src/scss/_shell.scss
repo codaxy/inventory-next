@@ -11,13 +11,15 @@
     }
 }
 
+// Beyond the page, where a bounce opens, the root shows its own background: the page colour, at both
+// ends, so a bounce at the foot carries the page on and the scrollbar's track is always light. Above
+// the page, each band at the top reaches up with a screen of its own colour, moving with it, so a
+// bounce there stretches it rather than opening a gap: the phone's top bar, and from `lg` the sidebar
+// and the header band.
 .top-bar {
     height: var(--shell-top);
     box-sizing: border-box;
 
-    // A screen of the bar's navy above it, moving with it: whatever a bounce opens above the bar is
-    // the bar. The root's navy alone is not enough — Safari painted the page colour there when a fast
-    // scroll hit the top, though a finger's pull showed the navy.
     &::before {
         content: "";
         position: absolute;
@@ -29,31 +31,24 @@
     }
 }
 
-// Above the page, where a bounce opens, is the navy of the chrome: the top bar's on a phone, the
-// sidebar's from `lg`. Below it the page colour carries on — navy there read as a stray band — so on
-// its last screen (`page-end`, `pageEnd.ts`) the root takes the page colour. The shell paints the page
-// colour, so the root shows nowhere else, and the body need not paint at all: a sub-pixel seam shows
-// navy, not a light line.
-.shell {
-    background: var(--color-canvas);
-}
-
-html:has(.shell) {
-    background: var(--color-nav-bar);
-}
-
-html:has(.shell) body {
-    background: transparent;
-}
-
 @media (min-width: 1024px) {
-    html:has(.shell) {
+    .nav-drawer::before,
+    .page-top::before {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: 100%;
+        left: 0;
+        height: 100vh;
+    }
+
+    .nav-drawer::before {
         background: var(--color-nav);
     }
-}
 
-html.page-end:has(.shell) {
-    background: var(--color-canvas);
+    .page-top::before {
+        background: var(--color-surface);
+    }
 }
 
 // The signed-in page: its head (`page-top`) flush with the top and sides of the content column and

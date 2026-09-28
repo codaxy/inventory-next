@@ -83,12 +83,11 @@ bar that carries only the mark. Any tap in the drawer closes it, except one that
 **The document scrolls, not the content column**: iPhone Safari collapses its toolbars only when the
 document does, so a scrolling `main` keeps the address bar on screen for good. The desktop sidebar and
 the phone's top bar are sticky; the top bar's height is `--shell-top`, 0 from `lg`, and anything else
-that sticks sits beneath it. **Above the page is the chrome's navy, below it the page colour**: a bounce past the top
-shows the root's background, the top bar's navy on a phone and the sidebar's from `lg`, so the header
-stretches rather than splitting from the status bar; past the bottom, navy read as a stray band, so on the
-page's last screen the root takes the page colour (`page-end`, set by `pageEnd.ts` from the shell's
-size and the scroll). The shell carries the page colour itself, so the root shows nowhere else. The root alone is not enough: Safari painted the page colour above the bar when a
-fast scroll hit the top, so the bar also carries a screen of its navy above itself, which moves with it. **Whatever covers the page locks it** — the open drawer and every modal window — by
+that sticks sits beneath it. **Above the page is the chrome's colour, below it the page colour**: the root is the page colour,
+always, so a bounce past the bottom carries the page on and the scrollbar's track is always light;
+above the top, each band there reaches up with a screen of its own colour that moves with it — the
+top bar's navy on a phone, the sidebar's navy and the header band's white from `lg` — so a bounce
+stretches the band rather than splitting it from the status bar. **Whatever covers the page locks it** — the open drawer and every modal window — by
 refusing gestures: `lockScroll()` in `src/scrollLock.ts` lets a touch or wheel scroll through only
 inside a scrollable element of the overlay, or of a cx window or dropdown over it, while it can still
 move. The page stays scrollable underneath, so Safari's toolbar keeps its state. Modal windows get it
@@ -168,7 +167,8 @@ wait for the record's page.
 show, the document holds still: the card — the server log's terminal — fills the window down to the
 pager, and only its rows scroll (`list-rows`), beneath its header row, so the scrollbar starts there
 rather than running beside the header. The room a short list leaves beneath its last row is the
-header's `raised`, not a row's white, so it reads as no more rows. A card squeezed under 10rem in a
+header's `raised`, not a row's white, so it reads as no more rows, and the last row keeps its rule
+to edge it. A card squeezed under 10rem in a
 short window lets the document scroll after all rather than hide the rows. Below `md` the document
 scrolls, for Safari's toolbars. **With the filter pane open the page scrolls at every width**, as a
 phone's does: the pane pushes the list down, and in a page of fixed height that pushes the rows off
@@ -493,10 +493,11 @@ that a static shell supports. Worth deciding before there are screens, not after
 zero wide; its bar has a fixed width. **A list's first load also sets it loading**, whose dimming is
 for a refetch; the outline undoes it with `:has()`.
 
-**Beyond the page a browser paints only the root's background.** A shadow or pseudo-element reaching
-past the page's end is not drawn in a bounce there — Chrome shows the root's colour — so two colours
-at the two ends mean swapping the root's by scroll position. Watch the shell's size, not the body's:
-the body is the window's height and the page overflows it.
+**Past the page's foot a browser paints only the root's background.** A shadow or pseudo-element
+reaching below the page is not drawn in a bounce there — Chrome shows the root's colour — so the foot's
+colour is the root's; above the top, a band's own pseudo-element is drawn. Never swap the root's colour
+by scroll position to get two ends: with scrollbars always shown, the document's track takes the
+root's colour, and it flickers between the two at the threshold.
 
 **A scroll lock that outlives its overlay freezes the page until a reload**: it listens to the whole
 document and refuses every gesture outside the overlay. A window mounted twice without unmounting — a
