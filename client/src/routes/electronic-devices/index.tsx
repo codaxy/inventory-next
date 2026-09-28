@@ -169,9 +169,16 @@ export default createFunctionalComponent(() => {
                                 href={expr(m.$row.id, (id) => `~/electronic-devices/${id}`)}
                                 url={$app.url}
                             >
-                                <span class="record-meta device-number record-copy">
+                                <span
+                                    class={{
+                                        "record-meta": true,
+                                        "device-number": true,
+                                        "record-copy": true,
+                                        "record-blank": expr(m.$row.number, (n) => !n),
+                                    }}
+                                >
                                     <span class="record-copy-line">
-                                        <span text={m.$row.number} />
+                                        <span text={expr(m.$row.number, (n) => n ?? "—")} />
                                         {copyButton(m.$row.number, "number")}
                                     </span>
                                 </span>
@@ -199,6 +206,7 @@ export default createFunctionalComponent(() => {
                                     visible={hasValue(m.$row.kind)}
                                     text={m.$row.kind}
                                 />
+                                <span class="record-meta device-held" text={m.$row.held} />
                             </Link>
                         </Repeater>
                     </div>

@@ -149,8 +149,9 @@ slowly, and stand still under reduced motion.
 
 **A cell says only what its column's header does not**: "6 Aug 2024" under Deactivated, not
 "Deactivated 6 Aug 2024" — but a phone's card, which has no headers, keeps the word. **A phone's card
-says what the record is** under its name: a device's is "Laptop · ThinkPad E16 Gen 3", its type and
-model, which the columns show apart.
+says what the record is** under its name: a device's is three lines — the name with its inventory
+number at the end, muted; "Laptop · ThinkPad E16 Gen 3", its type and model, which the columns show
+apart; and who has it where, "Suzana Koprena · Kancelarija Terra".
 
 **A quantity is right-aligned, a label that is a number is not**: counts, seats and money — and their
 headers — sit right in tabular figures from `md` (`record-num`; `countCell` carries it, a `searchList`

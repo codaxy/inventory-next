@@ -567,23 +567,45 @@
 // model, assignee, location and type; from `xl` every column — manufacturer, model code, serial number
 // and the change time are the least scanned, and wait for the width.
 .device-columns {
-    grid-template-columns: minmax(0, 1fr);
-
-    // A phone's card says what the device is — its type and model on one line — where the columns show
-    // them apart.
-    > .device-number,
-    > :nth-child(3),
-    > :nth-child(6),
-    > :nth-child(7),
-    > :nth-child(8),
-    > :nth-child(9),
-    > :nth-child(10) {
-        display: none;
+    > .device-number {
+        font-variant-numeric: tabular-nums;
     }
 
-    > :nth-child(2),
-    > .device-kind {
-        order: -1;
+    // A phone's card is three lines: the name with its inventory number at the end, what the device
+    // is — its type and model — and who has it where, the last two a text of their own each, since the
+    // columns show their parts apart.
+    @media (max-width: 767.98px) {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "name number"
+            "kind kind"
+            "held held";
+
+        > .device-number {
+            grid-area: number;
+        }
+
+        > :nth-child(2) {
+            grid-area: name;
+        }
+
+        // The number is smaller than the name: on the name's baseline, not its top.
+        > .device-number,
+        > :nth-child(2) {
+            align-self: baseline;
+        }
+
+        > .device-kind {
+            grid-area: kind;
+        }
+
+        > .device-held {
+            grid-area: held;
+        }
+
+        > :nth-child(n + 3):nth-child(-n + 10) {
+            display: none;
+        }
     }
 
     @media (min-width: 768px) {
@@ -591,18 +613,13 @@
             4.5rem minmax(0, 2fr) minmax(0, 1.3fr) minmax(0, 1.2fr) minmax(0, 1.2fr)
             minmax(0, 1fr);
 
-        > .device-number,
-        > :nth-child(3),
-        > :nth-child(6) {
-            display: block;
-        }
-
-        > .device-kind {
+        > :nth-child(7),
+        > :nth-child(8),
+        > :nth-child(9),
+        > :nth-child(10),
+        > .device-kind,
+        > .device-held {
             display: none;
-        }
-
-        > :nth-child(2) {
-            order: 0;
         }
     }
 

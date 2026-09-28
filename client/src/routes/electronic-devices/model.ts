@@ -8,7 +8,8 @@ import type { PagerState } from "../../paging";
 
 export interface Row {
     id: string;
-    number: string;
+    /** `#100893`; absent on a device created without one. */
+    number?: string;
     name: string;
     /** Present only where the record is marked incomplete: a flag, not a column. */
     incomplete?: string;
@@ -20,6 +21,8 @@ export interface Row {
     modelCode?: string;
     /** "Laptop · ThinkPad E16 Gen 3": what the device is, for a phone's card, which has no columns. */
     kind?: string;
+    /** "Suzana Koprena · Kancelarija Terra": who has it where, for a phone's card. */
+    held: string;
     serial?: string;
     modified: string;
 }
@@ -87,7 +90,7 @@ export default createModel<Model>();
 export const toRows = (items: DeviceItem[]): Row[] =>
     items.map((d) => ({
         id: d.id,
-        number: d.number ? `#${d.number}` : "—",
+        number: d.number ? `#${d.number}` : undefined,
         name: d.name,
         incomplete: d.incomplete ? "Incomplete" : undefined,
         model: d.modelName || undefined,
@@ -99,6 +102,7 @@ export const toRows = (items: DeviceItem[]): Row[] =>
         serial: d.serialNumber || undefined,
         modified: formatDay(new Date(d.lastModified)),
         kind: [d.type, d.modelName].filter(Boolean).join(" · ") || undefined,
+        held: [d.assignee, d.location].filter(Boolean).join(" · "),
     }));
 
 const pickChip = (key: FilterKey, label: string, id?: string | null, text?: string): Chip[] =>
