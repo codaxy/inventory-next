@@ -2,9 +2,12 @@
 
 ## The threshold
 
-**Line coverage is at least 80%, and CI fails below it.** The original application had no gate at all
-— its workflow published an image on every push and never ran a test — so a number that is not
-enforced is the same as no number.
+**Line coverage is at least 80%, checked before a branch merges and again in CI.** The original
+application had no gate at all — its workflow published an image on every push and never ran a test
+— so a number that is not enforced is the same as no number. **One script computes it,
+`scripts/coverage.sh`**, and both run it: the pre-merge check (`scripts/premerge.sh`) on any branch
+touching `server/`, and CI's server job. CI alone notices too late — shipping pushes before it runs.
+A branch that cannot touch the figure skips it: it measures the server alone.
 
 What the percentage is measured over decides whether it means anything:
 
@@ -18,8 +21,8 @@ What the percentage is measured over decides whether it means anything:
   proves the whole schema they describe rather than a line at a time.
 - **Included: everything else.**
 
-The exclusions live in `server/coverlet.runsettings`, so the number CI enforces and the number a
-local run prints are the same one.
+The exclusions live in `server/coverlet.runsettings`. **Not coverlet's `Threshold` property**: it
+judges each test project alone, and the 80% is over the unit and integration projects together.
 
 **Integration tests count.** Most of the coverage comes from tests that boot the application against a
 real PostgreSQL container and drive it through HTTP, because that is what exercises paging,
@@ -44,8 +47,12 @@ the order they happened to start in.
 
 ## Formatting
 
-CSharpier formats the server and Prettier the client, both pinned and both checked in CI, so
-formatting is never a review comment. **A pre-commit hook applies them**: Husky.Net, a dotnet
+CSharpier formats the server and Prettier the client, both pinned and both checked — before every
+merge by `scripts/premerge.sh` and in CI, with the same commands — so formatting is never a review
+comment. **The check is over the tree, not a record of the hook**: a hook not installed, skipped or
+unstable in one pass is caught all the same, and fixed by running the formatter and committing —
+never by redoing the hook's job by hand. **A pre-commit hook applies them**, which usually makes
+the check a formality: Husky.Net, a dotnet
 tool beside CSharpier, so the repository root carries no `package.json`. It runs on staged files
 only, with exactly the globs CI checks — a hook broader than CI rewrites files CI never looks at,
 and a narrower one lets a commit fail CI — then re-stages them. Prettier runs from the client's own

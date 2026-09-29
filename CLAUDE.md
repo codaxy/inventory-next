@@ -207,6 +207,11 @@ commit.**
 Check it before committing, not after: documentation that lands a commit later does not land, and
 neither file is worth having if it cannot be trusted.
 
+**Nothing merges to `main` before `scripts/premerge.sh` passes** — CI's checks, run locally: the
+formatting always, the coverage threshold when the branch touches `server/`. CI noticing is too
+late, since shipping pushes before it runs. A failure is unfinished work: format and commit, or add
+the tests. Whether the pre-commit hook ran does not matter; the script checks the tree.
+
 **"Ship it" means: commit if it is not already committed, merge to `main`, then push** — the whole way
 home in one word, which is what makes branching cheap enough to be compulsory. The checks above come
 first; shipping is the whole sequence, not a way of skipping to the end of it.
@@ -219,7 +224,8 @@ the `:stable` image.
 **It leaves you on `main`, so the next change — a correction to what just shipped included —
 starts by branching again.**
 
-**Merge by fast-forward:** rebase the branch onto `main`, then `git merge --ff-only`. A "Merge branch
+**Merge by fast-forward:** rebase the branch onto `main`, run the pre-merge check, then
+`git merge --ff-only`. A "Merge branch
 '…'" commit says nothing the commits beneath it do not.
 
 ## Pushing
