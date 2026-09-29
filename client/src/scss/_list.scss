@@ -175,6 +175,55 @@
         background: var(--color-hover);
         color: var(--color-ink);
     }
+
+    &:disabled {
+        cursor: default;
+    }
+}
+
+// Excel's states, `data-state` on the button: one icon and one label at a time. Done is the success
+// colour, so the moment reads without the word, which a phone does not show.
+.list-export-busy,
+.list-export-done {
+    display: none;
+}
+
+.list-export[data-state="busy"] {
+    .list-export-idle {
+        display: none;
+    }
+
+    .list-export-busy {
+        display: inline;
+    }
+
+    svg.list-export-busy {
+        animation: list-export-spin 0.8s linear infinite;
+    }
+}
+
+.list-export[data-state="done"] {
+    color: var(--color-success-text);
+
+    .list-export-idle {
+        display: none;
+    }
+
+    .list-export-done {
+        display: inline;
+    }
+}
+
+@keyframes list-export-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .list-export[data-state="busy"] svg.list-export-busy {
+        animation: none;
+    }
 }
 
 .list-empty {

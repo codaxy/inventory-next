@@ -237,8 +237,14 @@ its filters to and from the address, and its fetch. Not a history entry per chan
 through every filter click before leaving.
 
 **A list that has a spreadsheet offers it in its header band** — "Excel", before Add — as a
-plain anchor to the export of its current request, filters and all: cx's `Link` would route it inside
-the application instead of downloading.
+button that fetches the export of its current request, filters and all, and saves it under the
+server's name (`src/download.ts`). **It says what it is doing**, since the export takes a tenth of a
+second and what the click lacked was acknowledgement: disabled at once, so a double click fetches
+once; "Preparing…" with a spinner from 200ms, the skeleton's delay; "Ready" with a check, in the
+success colour, for 2s however quick; a failure, a cx `Toast` saying why. "Ready", not "Downloaded":
+the browser may still ask, as iPhone Safari does, and the page never learns the answer. Not a plain
+`<a download>`: the page cannot see the browser's download end, and an error answer is saved as a
+broken file.
 
 **Only the latest request writes.** A controller numbers its requests and drops any answer that is not
 the newest, or a slow early answer lands over a later one.

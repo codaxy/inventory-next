@@ -84,7 +84,7 @@ export abstract class ListController<
     protected loadOptions(): void {}
     /**
      * The export of what the list selects: its request without the page. A list without one has no
-     * spreadsheet; a plain link, since a download carries the session cookie.
+     * spreadsheet.
      */
     protected exportUrl?(q: { q?: string; sort: Sort; filters: F }): string;
     /** Where the export's link is kept, for a list that has one. */
