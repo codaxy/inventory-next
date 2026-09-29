@@ -66,13 +66,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # The commit's own UTC time, so main and production build one commit as one version:
-      # year . month and day . hour and minute, each without a leading zero — .NET caps a part at
-      # 65535 and SemVer refuses a leading zero — then the short sha as build metadata.
+      # From the commit's own UTC time, so main and production build one commit as one version:
+      # year . month . day, without leading zeros — SemVer refuses them — then, as build metadata,
+      # the hour and minute and the short sha, which SemVer does not order but a reader does.
       - id: version
         run: |
-          hhmm=$(TZ=UTC git log -1 --format=%cd --date=format-local:%H%M)
-          echo "version=$(TZ=UTC git log -1 --format=%cd --date=format-local:%Y.%-m%d).$((10#$hhmm))+${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          stamp=$(TZ=UTC git log -1 --format=%cd --date=format-local:%y.%-m.%-d+%H%M)
+          echo "version=$stamp.${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
       - uses: docker/login-action@v3
         with:

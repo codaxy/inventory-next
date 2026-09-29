@@ -16,13 +16,13 @@ original's `ghcr.io/codaxy/inventory`, so neither workflow overwrites the other'
 deployment switches between the two by changing one line.
 
 **The version is the commit's, stamped when CI builds the image** — never a commit of its own:
-`2026.929.1222+eaea98a`, the commit's UTC time as year, month and day, hour and minute, then its
-sha. Each part drops its leading zeros (09:05 is `905`): .NET caps a version part at 65535 and SemVer
-refuses a leading zero, and in this form the part before `+` is both, and sorts as time does. From
-the commit, not the build, so `main` and `production` build one commit as one version. The
-Dockerfile's `APP_VERSION` argument carries it; unstamped, it is `dev`. `/api/version` answers it
-without a session, and the sidebar shows it under the
-application's name.
+`26.9.29+1222.eaea98a`, the commit's UTC date as year, month and day, then its hour and minute and
+its short sha. The date is the version proper — .NET's and SemVer's, so no part keeps a leading zero,
+which SemVer refuses; the time and the sha are build metadata, which SemVer ignores when it orders:
+the time orders a day's builds for a reader, the sha is pasted into `git show`. From the commit, not
+the build, so `main` and `production` build one commit as one version. The Dockerfile's
+`APP_VERSION` argument carries it; unstamped, it is `dev`. `/api/version` answers it without a
+session, and the sidebar shows it under the application's name.
 
 ## Compose
 

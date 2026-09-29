@@ -19,7 +19,7 @@ COPY server/Codaxy.Inventory.Tests.Integration/*.csproj Codaxy.Inventory.Tests.I
 RUN dotnet restore Codaxy.Inventory.Web/Codaxy.Inventory.Web.csproj
 COPY server/ ./
 COPY --from=client /src/client/dist/ Codaxy.Inventory.Web/wwwroot/
-# The version CI stamps, from the commit: `2026.929.1222+eaea98a`. Its part before `+` is the
+# The version CI stamps, from the commit: `26.9.29+1222.eaea98a`. Its part before `+` is the
 # assembly's version as well; `dev`, the default, and a test build's `dev.…` are not numbers and stay
 # the informational version only. Not `VERSION`: MSBuild reads the environment as properties, ignoring
 # case, so an argument of that name becomes `$(Version)` in every project and fails to parse.

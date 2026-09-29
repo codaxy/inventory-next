@@ -5,8 +5,8 @@ namespace Codaxy.Inventory.Web.Version;
 public static class Endpoint
 {
     /// <summary>
-    /// The build: <c>2026.929.1222+eaea98a</c> — the commit's UTC time as year, month and day, hour and
-    /// minute, then its sha — stamped by the image build; <c>dev</c>, with the checkout's sha where there
+    /// The build: <c>26.9.29+1222.eaea98a</c> — the commit's UTC date, then its time and sha — stamped
+    /// by the image build; <c>dev</c>, with the checkout's sha where there
     /// is one, anywhere else.
     /// </summary>
     public static readonly string Current = Shorten(
