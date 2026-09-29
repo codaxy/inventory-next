@@ -148,8 +148,9 @@ apply to an id; any other search keeps its list's own wording. `ListController` 
 (`idSearch`).
 
 **A screen loads as its own outline**: its real layout with a `skeleton-bar` for each text
-(`_skeleton.scss`), so the data arrives without anything moving — shown at once, since there is no
-flash to hide. A list's first load is `listSkeleton()`: eight rows in the list's columns under its
+(`_skeleton.scss`), so the data arrives without anything moving. The layout shows at once and the
+bars fade in after 200ms: a quicker load fills in blank values, where bars on and off again would read
+as flicker. A list's first load is `listSkeleton()`: eight rows in the list's columns under its
 real head, one bar per cell, a phone's row its first two. A record's page in view is its fields'
 labels with a bar under each and one for its title (`record-loading`, set by `outlined()` in
 `components/recordPage.tsx`, which every view page takes); a form opens with its fields empty. The

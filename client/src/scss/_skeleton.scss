@@ -1,6 +1,10 @@
 // What a screen shows while its data is on the way: its own layout, with a bar where each text will
 // be, so the data arrives without anything moving. A refetch keeps what it has and dims it instead.
 
+// The bars wait before fading in: a load quicker than this shows the layout with its values blank,
+// where bars on for a moment and off again read as flicker.
+$appear: skeleton-appear 150ms ease-out 200ms both;
+
 // One line of text to come. A width is set where it is used; the height is a line's x-height, so a
 // bar sits in the line box its text will take.
 @mixin bar {
@@ -16,10 +20,12 @@
     background-position:
         -150% 0,
         0 0;
-    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+    animation:
+        $appear,
+        skeleton-shimmer 1.6s ease-in-out infinite;
 
     @media (prefers-reduced-motion: reduce) {
-        animation: none;
+        animation: $appear;
     }
 }
 
@@ -33,6 +39,12 @@
 .record-list-loading:has(.record-row-skeleton),
 .audit-list-loading:has(.audit-row-skeleton) {
     opacity: 1;
+}
+
+@keyframes skeleton-appear {
+    from {
+        opacity: 0;
+    }
 }
 
 @keyframes skeleton-shimmer {
@@ -104,6 +116,7 @@
 
     // A disc on a phone; from 768px the pill "Updated" makes, which an empty one would collapse.
     .audit-action-skeleton {
+        animation: $appear;
         border-radius: 999px;
         background: var(--color-line-soft);
 
