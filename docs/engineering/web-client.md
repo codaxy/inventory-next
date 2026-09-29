@@ -202,10 +202,9 @@ phone, which shows no header, keeps the default or the address's.
 **`components/Pager`** sits under every list, driven by `pager()` in `src/paging.ts`: the range and
 the total, previous and next, and from `sm` the first, last and current page with a neighbour each side.
 A phone gets "3 / 40" in place of the links. Paging scrolls the page back to the top, and a list's
-rows inside their card (`listPaging()`). **A list shows 20 per page** (`pageSize` in `paging.ts`), so
-a page fits a 1440px-tall display without scrolling; with Windows scaling at 125% it still scrolls.
-The server log's lines are denser, and it shows 25, always newest first: a log is read from what just
-happened, so it offers no order. **The pager is a caption, not a toolbar**: steps and page numbers
+rows inside their card (`listPaging()`). **A list shows 50 per page** (`pageSize` in `paging.ts`), and
+the server log as many lines, always newest first: a log is read from what just happened, so it
+offers no order. A page is more than a window holds; the rows scroll inside their card. **The pager is a caption, not a toolbar**: steps and page numbers
 are text drawn at 32px and touched at 44, with no border or fill; the current page is a small pill of
 the accent, as the menu marks where the reader is. It goes when nothing matches. Not infinite scroll:
 it loses the reader's place and cannot reach page 40 without loading 39.
