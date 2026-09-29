@@ -21,6 +21,7 @@ export default createFunctionalComponent(() => (
                 addText: "Add software",
                 href: (id) => `~/infrastructure/software/${id}`,
                 columns: "on-volume-columns",
+                exportHref: m.list.exportHref,
                 cells: [
                     {
                         header: "Name",

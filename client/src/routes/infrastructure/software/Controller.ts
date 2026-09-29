@@ -4,6 +4,7 @@ import m, { type Filters, type Row, toRows } from "./model";
 
 export default class extends ListController<Filters, OnVolumeItem, Row, Sort> {
     protected readonly s = m.list;
+    protected readonly exportHref = m.list.exportHref;
     protected readonly path = "~/infrastructure/software";
     protected readonly defaultSort = "name";
     protected readonly sorts = [
@@ -27,6 +28,10 @@ export default class extends ListController<Filters, OnVolumeItem, Row, Sort> {
         filters: Filters;
     }) {
         return software.list(q);
+    }
+
+    protected exportUrl({ filters: _, ...q }: { q?: string; sort: Sort; filters: Filters }) {
+        return software.export(q);
     }
 
     protected toRows = toRows;

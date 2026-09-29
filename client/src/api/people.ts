@@ -64,6 +64,9 @@ const base = "/api/company/people";
 
 export const listPeople = (q: PersonQuery) => send<Page<PersonItem>>(`${base}/?${toQuery(q)}`);
 
+/** The spreadsheet of what a list query selects, every row. */
+export const peopleExport = (q: Omit<PersonQuery, "page" | "pageSize">) => `${base}/export?${toQuery(q)}`;
+
 export const getPerson = (id: string) => send<PersonDetail>(`${base}/${id}`);
 
 export const getHoldings = (id: string) => send<Holdings>(`${base}/${id}/holdings`);

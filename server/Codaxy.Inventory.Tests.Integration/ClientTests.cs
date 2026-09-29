@@ -214,4 +214,20 @@ public class ClientTests(ClientApplication app) : IClassFixture<ClientApplicatio
             (await (await Client()).GetAsync($"{Url}/?sort=size")).StatusCode
         );
     }
+
+    [Fact]
+    public async Task Exports_what_the_list_selects_named_filtered_when_narrowed()
+    {
+        var client = await Client();
+
+        var narrowed = await client.GetAsync($"{Url}/export?q=acme");
+        var all = await client.GetAsync($"{Url}/export");
+
+        Assert.Equal("Clients.Export - Filtered.xlsx", Spreadsheet.FileNameOf(narrowed));
+        Assert.Equal("Clients.Export.xlsx", Spreadsheet.FileNameOf(all));
+        var text = await Spreadsheet.TextOf(narrowed);
+        Assert.Contains("Acme", text);
+        Assert.Contains("Projects", text);
+        Assert.DoesNotContain("Idle Inc.", text);
+    }
 }

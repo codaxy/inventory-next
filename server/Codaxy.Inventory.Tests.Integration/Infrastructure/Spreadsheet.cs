@@ -23,4 +23,9 @@ public static class Spreadsheet
         }
         return text.ToString();
     }
+
+    /// <summary>The name the file downloads as.</summary>
+    public static string? FileNameOf(HttpResponseMessage response) =>
+        response.Content.Headers.ContentDisposition?.FileNameStar
+        ?? response.Content.Headers.ContentDisposition?.FileName;
 }

@@ -630,4 +630,49 @@ public class CompanyTests(CompanyApplication app) : IClassFixture<CompanyApplica
             );
         }
     }
+
+    // Exports
+
+    [Theory]
+    [InlineData("/api/company/projects", "rocket", "Projects.Export", "Acme", "Owner")]
+    [InlineData(
+        "/api/company/vendors",
+        "service",
+        "Vendors.Export",
+        "desk@service.example",
+        "VAT Number"
+    )]
+    [InlineData(
+        "/api/company/manufacturers",
+        "maker",
+        "Manufacturers.Export",
+        "https://maker.example",
+        "Devices"
+    )]
+    [InlineData(
+        "/api/company/locations",
+        "hq",
+        "Locations.Export",
+        "Bosnia and Herzegovina",
+        "Postal Code"
+    )]
+    public async Task Exports_what_the_list_selects_named_filtered_when_narrowed(
+        string url,
+        string q,
+        string name,
+        string value,
+        string header
+    )
+    {
+        var client = await Client();
+
+        var narrowed = await client.GetAsync($"{url}/export?q={q}");
+        var all = await client.GetAsync($"{url}/export");
+
+        Assert.Equal($"{name} - Filtered.xlsx", Spreadsheet.FileNameOf(narrowed));
+        Assert.Equal($"{name}.xlsx", Spreadsheet.FileNameOf(all));
+        var text = await Spreadsheet.TextOf(narrowed);
+        Assert.Contains(value, text);
+        Assert.Contains(header, text);
+    }
 }

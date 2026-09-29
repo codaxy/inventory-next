@@ -26,14 +26,38 @@ public static class Endpoint
         if (Paging.Read(query.Page, query.PageSize, out var window) is { } problem)
             return problem;
 
-        if (query.Sort is not null && !Keys.Contains(query.Sort.TrimStart('-')))
-            return Results.ValidationProblem(
+        if (Refuse(query) is { } refused)
+            return refused;
+
+        var devices = context.ElectronicDevices;
+        var software = context.SoftwareOrServices;
+        return Results.Ok(
+            await Rows(context, query)
+                .Select(m => new Item(
+                    m.Id,
+                    m.Name,
+                    m.URL,
+                    devices.Count(d => d.ManufacturerId == m.Id),
+                    software.Count(s => s.ManufacturerId == m.Id)
+                ))
+                .ToPageAsync(window, cancellationToken)
+        );
+    }
+
+    /// <summary>A sort outside the convention; the problem to answer with, or none.</summary>
+    internal static IResult? Refuse(Query query) =>
+        query.Sort is not null && !Keys.Contains(query.Sort.TrimStart('-'))
+            ? Results.ValidationProblem(
                 new Dictionary<string, string[]>
                 {
                     ["sort"] = ["Sort by name, devices or software."],
                 }
-            );
+            )
+            : null;
 
+    /// <summary>The manufacturers the query selects, in its order, for the page and the export alike.</summary>
+    internal static IOrderedQueryable<Manufacturer> Rows(InventoryContext context, Query query)
+    {
         var manufacturers = context.Manufacturers.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
@@ -67,19 +91,6 @@ public static class Endpoint
                 ? manufacturers.OrderByDescending(m => m.Name)
                 : manufacturers.OrderBy(m => m.Name),
         };
-
-        return Results.Ok(
-            await ordered
-                .ThenBy(m => m.Name)
-                .ThenBy(m => m.Id)
-                .Select(m => new Item(
-                    m.Id,
-                    m.Name,
-                    m.URL,
-                    devices.Count(d => d.ManufacturerId == m.Id),
-                    software.Count(s => s.ManufacturerId == m.Id)
-                ))
-                .ToPageAsync(window, cancellationToken)
-        );
+        return ordered.ThenBy(m => m.Name).ThenBy(m => m.Id);
     }
 }

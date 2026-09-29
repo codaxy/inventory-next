@@ -7,6 +7,7 @@ public static class Endpoints
         var locations = api.MapGroup("/company/locations");
 
         List.Endpoint.Map(locations);
+        Export.Endpoint.Map(locations);
         Options.Endpoint.Map(locations);
         Get.Endpoint.Map(locations);
         Create.Endpoint.Map(locations);

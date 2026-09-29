@@ -52,6 +52,7 @@ export default createFunctionalComponent(() => {
                 <div class="page-top">
                     {listHeading({
                         title: "Projects",
+                        exportHref: s.exportHref,
                         addHref: "~/company/projects/new",
                         addLabel: "Add project",
                     })}

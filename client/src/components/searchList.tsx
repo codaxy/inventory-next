@@ -49,6 +49,8 @@ interface SearchList {
     /** The screen's class that lays the columns out, in `_records.scss`. */
     columns: string;
     cells: Column[];
+    /** The spreadsheet's link, for a list that has one; its controller keeps it. */
+    exportHref?: AccessorChain<string | undefined>;
 }
 
 /**
@@ -70,7 +72,12 @@ export function searchList(o: SearchList) {
     return (
         <cx>
             <div class="page-top">
-                {listHeading({ title: o.title, addHref: o.newHref, addLabel: o.addText })}
+                {listHeading({
+                    title: o.title,
+                    exportHref: o.exportHref,
+                    addHref: o.newHref,
+                    addLabel: o.addText,
+                })}
 
                 <div class="list-bar">
                     <div class="list-toolbar">

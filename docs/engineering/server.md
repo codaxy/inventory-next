@@ -147,6 +147,10 @@ the response to that request, not as the original's handle to a file cached for 
 handle existed because its bearer token could not ride a download link, and the session cookie does.
 CodeReports reads its texts by the thread's culture and throws on one it does not ship, the
 invariant culture of a container among them, so `Shared/Export/Excel` writes under English.
+**A list the original never exported** — the company's records, the infrastructure — takes the list's
+columns, then the record's own fields, names resolved and counts kept, its headers padded as the
+original's are, since CodeReports sizes a column by its header's width; its file is
+`<List>.Export`, the list's name without spaces.
 
 **A delete the database would refuse is a 409 that says what holds the record** — "113 devices are of
 this type" — checked before the save, not left to surface as a foreign-key 500.

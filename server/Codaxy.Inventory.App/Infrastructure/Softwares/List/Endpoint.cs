@@ -29,8 +29,26 @@ public static class Endpoint
         if (Paging.Read(query.Page, query.PageSize, out var window) is { } problem)
             return problem;
 
-        if (
-            query.Sort
+        if (Refuse(query) is { } refused)
+            return refused;
+
+        var locations = context.InformationLocations;
+        return Results.Ok(
+            await Rows(context, query)
+                .Select(t => new Item(
+                    t.Id,
+                    t.Name,
+                    t.Volume.License.Asset.Name,
+                    t.Volume.SoftwareOrService.Name,
+                    locations.Count(l => l.SoftwareId == t.Id)
+                ))
+                .ToPageAsync(window, cancellationToken)
+        );
+    }
+
+    /// <summary>A sort outside the convention; the problem to answer with, or none.</summary>
+    internal static IResult? Refuse(Query query) =>
+        query.Sort
             is not (
                 null
                 or "name"
@@ -40,14 +58,17 @@ public static class Endpoint
                 or "license"
                 or "-license"
             )
-        )
-            return Results.ValidationProblem(
+            ? Results.ValidationProblem(
                 new Dictionary<string, string[]>
                 {
                     ["sort"] = ["Sort by name, license or information."],
                 }
-            );
+            )
+            : null;
 
+    /// <summary>The software entries the query selects, in its order, for the page and the export alike.</summary>
+    internal static IOrderedQueryable<Software> Rows(InventoryContext context, Query query)
+    {
         var rows = context.Softwares.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
@@ -85,18 +106,6 @@ public static class Endpoint
                 .ThenBy(t => t.Name),
             _ => rows.OrderBy(t => t.Name),
         };
-
-        return Results.Ok(
-            await ordered
-                .ThenBy(t => t.Id)
-                .Select(t => new Item(
-                    t.Id,
-                    t.Name,
-                    t.Volume.License.Asset.Name,
-                    t.Volume.SoftwareOrService.Name,
-                    locations.Count(l => l.SoftwareId == t.Id)
-                ))
-                .ToPageAsync(window, cancellationToken)
-        );
+        return ordered.ThenBy(t => t.Id);
     }
 }

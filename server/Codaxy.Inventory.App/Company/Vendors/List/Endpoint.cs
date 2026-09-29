@@ -32,11 +32,35 @@ public static class Endpoint
         if (Paging.Read(query.Page, query.PageSize, out var window) is { } problem)
             return problem;
 
-        if (query.Sort is not (null or "name" or "-name" or "assets" or "-assets"))
-            return Results.ValidationProblem(
-                new Dictionary<string, string[]> { ["sort"] = ["Sort by name or assets."] }
-            );
+        if (Refuse(query) is { } refused)
+            return refused;
 
+        var assets = context.Assets;
+        return Results.Ok(
+            await Rows(context, query)
+                .Select(v => new Item(
+                    v.Id,
+                    v.Name,
+                    v.ContactPerson,
+                    v.Email,
+                    v.Phone ?? v.MobilePhone,
+                    assets.Count(a => a.VendorId == v.Id)
+                ))
+                .ToPageAsync(window, cancellationToken)
+        );
+    }
+
+    /// <summary>A sort outside the convention; the problem to answer with, or none.</summary>
+    internal static IResult? Refuse(Query query) =>
+        query.Sort is not (null or "name" or "-name" or "assets" or "-assets")
+            ? Results.ValidationProblem(
+                new Dictionary<string, string[]> { ["sort"] = ["Sort by name or assets."] }
+            )
+            : null;
+
+    /// <summary>The vendors the query selects, in its order, for the page and the export alike.</summary>
+    internal static IOrderedQueryable<Vendor> Rows(InventoryContext context, Query query)
+    {
         var vendors = context.Vendors.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
@@ -68,19 +92,6 @@ public static class Endpoint
                 .ThenBy(v => v.Name),
             _ => vendors.OrderBy(v => v.Name),
         };
-
-        return Results.Ok(
-            await ordered
-                .ThenBy(v => v.Id)
-                .Select(v => new Item(
-                    v.Id,
-                    v.Name,
-                    v.ContactPerson,
-                    v.Email,
-                    v.Phone ?? v.MobilePhone,
-                    assets.Count(a => a.VendorId == v.Id)
-                ))
-                .ToPageAsync(window, cancellationToken)
-        );
+        return ordered.ThenBy(v => v.Id);
     }
 }

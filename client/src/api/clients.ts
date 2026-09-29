@@ -32,6 +32,9 @@ const base = "/api/company/clients";
 
 export const listClients = (q: ClientQuery) => send<Page<ClientItem>>(`${base}/?${toQuery(q)}`);
 
+/** The spreadsheet of what a list query selects, every row. */
+export const clientsExport = (q: Omit<ClientQuery, "page" | "pageSize">) => `${base}/export?${toQuery(q)}`;
+
 export const getClient = (id: string) => send<ClientDetail>(`${base}/${id}`);
 
 export const createClient = (form: ClientForm) =>

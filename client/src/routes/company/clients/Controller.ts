@@ -1,9 +1,10 @@
-import { type ClientItem, type ClientSort, listClients } from "../../../api/clients";
+import { type ClientItem, type ClientSort, listClients, clientsExport } from "../../../api/clients";
 import { ListController } from "../../../listController";
 import m, { type Filters, type Row, toRows } from "./model";
 
 export default class extends ListController<Filters, ClientItem, Row, ClientSort> {
     protected readonly s = m.clients;
+    protected readonly exportHref = m.clients.exportHref;
     protected readonly path = "~/company/clients";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "projects", "-projects"] as const;
@@ -20,6 +21,10 @@ export default class extends ListController<Filters, ClientItem, Row, ClientSort
         filters: Filters;
     }) {
         return listClients(q);
+    }
+
+    protected exportUrl({ filters: _, ...q }: { q?: string; sort: ClientSort; filters: Filters }) {
+        return clientsExport(q);
     }
 
     protected toRows = toRows;

@@ -58,6 +58,10 @@ const base = "/api/company/locations";
 
 export const listLocations = (q: { q?: string; sort?: LocationSort; page: number; pageSize: number }) =>
     send<Page<LocationItem>>(`${base}/?${toQuery(q)}`);
+
+/** The spreadsheet of what a list query selects, every row. */
+export const locationsExport = (q: { q?: string; sort?: LocationSort }) => `${base}/export?${toQuery(q)}`;
+
 export const getLocation = (id: string) => send<LocationDetail>(`${base}/${id}`);
 export const getLocationOptions = () => send<LocationOptions>(`${base}/options`);
 export const createLocation = (form: LocationForm) =>

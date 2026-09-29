@@ -23,11 +23,28 @@ public static class Endpoint
         if (Paging.Read(query.Page, query.PageSize, out var window) is { } problem)
             return problem;
 
-        if (query.Sort is not (null or "name" or "-name" or "projects" or "-projects"))
-            return Results.ValidationProblem(
-                new Dictionary<string, string[]> { ["sort"] = ["Sort by name or projects."] }
-            );
+        if (Refuse(query) is { } refused)
+            return refused;
 
+        var projects = context.Projects;
+        return Results.Ok(
+            await Rows(context, query)
+                .Select(c => new Item(c.Id, c.Name, projects.Count(p => p.ClientId == c.Id)))
+                .ToPageAsync(window, cancellationToken)
+        );
+    }
+
+    /// <summary>A sort outside the convention; the problem to answer with, or none.</summary>
+    internal static IResult? Refuse(Query query) =>
+        query.Sort is not (null or "name" or "-name" or "projects" or "-projects")
+            ? Results.ValidationProblem(
+                new Dictionary<string, string[]> { ["sort"] = ["Sort by name or projects."] }
+            )
+            : null;
+
+    /// <summary>The clients the query selects, in its order, for the page and the export alike.</summary>
+    internal static IOrderedQueryable<Client> Rows(InventoryContext context, Query query)
+    {
         var clients = context.Clients.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
@@ -53,12 +70,6 @@ public static class Endpoint
                 .ThenBy(c => c.Name),
             _ => clients.OrderBy(c => c.Name),
         };
-
-        return Results.Ok(
-            await ordered
-                .ThenBy(c => c.Id)
-                .Select(c => new Item(c.Id, c.Name, projects.Count(p => p.ClientId == c.Id)))
-                .ToPageAsync(window, cancellationToken)
-        );
+        return ordered.ThenBy(c => c.Id);
     }
 }

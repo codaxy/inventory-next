@@ -62,6 +62,8 @@ export type Sort = `${"" | "-"}${"name" | "information" | "license"}`;
 const records = <Item, Detail, Form>(base: string) => ({
     list: (q: { q?: string; sort?: Sort; page: number; pageSize: number }) =>
         send<Page<Item>>(`${base}/?${toQuery(q)}`),
+    /** The spreadsheet of what a list query selects, every row. */
+    export: (q: { q?: string; sort?: Sort }) => `${base}/export?${toQuery(q)}`,
     get: (id: string) => send<Detail>(`${base}/${id}`),
     options: () => send<{ volumes: Option[] }>(`${base}/options`),
     create: (form: Form) => send<Detail>(`${base}/`, { method: "POST", body: JSON.stringify(form) }),

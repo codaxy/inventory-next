@@ -34,11 +34,36 @@ public static class Endpoint
         if (Paging.Read(query.Page, query.PageSize, out var window) is { } problem)
             return problem;
 
-        if (query.Sort is not null && !Keys.Contains(query.Sort.TrimStart('-')))
-            return Results.ValidationProblem(
-                new Dictionary<string, string[]> { ["sort"] = ["Sort by name, city or assets."] }
-            );
+        if (Refuse(query) is { } refused)
+            return refused;
 
+        var assets = context.Assets;
+        return Results.Ok(
+            await Rows(context, query)
+                .Select(l => new Item(
+                    l.Id,
+                    l.Name,
+                    l.Street,
+                    l.HouseNumber,
+                    l.City.Name,
+                    l.Room,
+                    assets.Count(a => a.LocationId == l.Id)
+                ))
+                .ToPageAsync(window, cancellationToken)
+        );
+    }
+
+    /// <summary>A sort outside the convention; the problem to answer with, or none.</summary>
+    internal static IResult? Refuse(Query query) =>
+        query.Sort is not null && !Keys.Contains(query.Sort.TrimStart('-'))
+            ? Results.ValidationProblem(
+                new Dictionary<string, string[]> { ["sort"] = ["Sort by name, city or assets."] }
+            )
+            : null;
+
+    /// <summary>The locations the query selects, in its order, for the page and the export alike.</summary>
+    internal static IOrderedQueryable<Location> Rows(InventoryContext context, Query query)
+    {
         var locations = context.Locations.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
@@ -71,21 +96,6 @@ public static class Endpoint
                 ? locations.OrderByDescending(l => l.Name)
                 : locations.OrderBy(l => l.Name),
         };
-
-        return Results.Ok(
-            await ordered
-                .ThenBy(l => l.Name)
-                .ThenBy(l => l.Id)
-                .Select(l => new Item(
-                    l.Id,
-                    l.Name,
-                    l.Street,
-                    l.HouseNumber,
-                    l.City.Name,
-                    l.Room,
-                    assets.Count(a => a.LocationId == l.Id)
-                ))
-                .ToPageAsync(window, cancellationToken)
-        );
+        return ordered.ThenBy(l => l.Name).ThenBy(l => l.Id);
     }
 }

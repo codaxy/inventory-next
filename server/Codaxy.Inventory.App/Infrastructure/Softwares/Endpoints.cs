@@ -7,6 +7,7 @@ public static class Endpoints
         var software = api.MapGroup("/infrastructure/software");
 
         List.Endpoint.Map(software);
+        Export.Endpoint.Map(software);
         Options.Endpoint.Map(software);
         Get.Endpoint.Map(software);
         Create.Endpoint.Map(software);

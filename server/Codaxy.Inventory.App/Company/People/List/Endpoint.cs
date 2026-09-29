@@ -28,11 +28,34 @@ public static class Endpoint
         if (Paging.Read(query.Page, query.PageSize, out var window) is { } problem)
             return problem;
 
-        if (query.Sort is not null && !Keys.Contains(query.Sort.TrimStart('-')))
-            return Results.ValidationProblem(
-                new Dictionary<string, string[]> { ["sort"] = ["Sort by name, email or assets."] }
-            );
+        if (Refuse(query) is { } refused)
+            return refused;
 
+        var assets = context.Assets;
+        return Results.Ok(
+            await Rows(context, query)
+                .Select(p => new Item(
+                    p.Id,
+                    p.Name,
+                    p.Email,
+                    assets.Count(a => a.PersonId == p.Id),
+                    context.Activations.Count(a => a.PersonId == p.Id && a.DeactivationDate == null)
+                ))
+                .ToPageAsync(window, cancellationToken)
+        );
+    }
+
+    /// <summary>A sort outside the convention; the problem to answer with, or none.</summary>
+    internal static IResult? Refuse(Query query) =>
+        query.Sort is not null && !Keys.Contains(query.Sort.TrimStart('-'))
+            ? Results.ValidationProblem(
+                new Dictionary<string, string[]> { ["sort"] = ["Sort by name, email or assets."] }
+            )
+            : null;
+
+    /// <summary>The people the query selects, in its order, for the page and the export alike.</summary>
+    internal static IOrderedQueryable<Person> Rows(InventoryContext context, Query query)
+    {
         var people = context.Persons.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
@@ -61,19 +84,6 @@ public static class Endpoint
                 : people.OrderBy(p => assets.Count(a => a.PersonId == p.Id)),
             _ => descending ? people.OrderByDescending(p => p.Name) : people.OrderBy(p => p.Name),
         };
-
-        return Results.Ok(
-            await ordered
-                .ThenBy(p => p.Name)
-                .ThenBy(p => p.Id)
-                .Select(p => new Item(
-                    p.Id,
-                    p.Name,
-                    p.Email,
-                    assets.Count(a => a.PersonId == p.Id),
-                    context.Activations.Count(a => a.PersonId == p.Id && a.DeactivationDate == null)
-                ))
-                .ToPageAsync(window, cancellationToken)
-        );
+        return ordered.ThenBy(p => p.Name).ThenBy(p => p.Id);
     }
 }

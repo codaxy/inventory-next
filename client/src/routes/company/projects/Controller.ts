@@ -1,4 +1,10 @@
-import { getProjectOptions, listProjects, type ProjectItem, type ProjectSort } from "../../../api/projects";
+import {
+    getProjectOptions,
+    listProjects,
+    projectsExport,
+    type ProjectItem,
+    type ProjectSort,
+} from "../../../api/projects";
 import type { AddressValue } from "../../../listAddress";
 import { ListController } from "../../../listController";
 import m, { type FilterKey, type Filters, type Row, toChips, toRows } from "./model";
@@ -7,6 +13,7 @@ const s = m.list;
 
 export default class extends ListController<Filters, ProjectItem, Row, ProjectSort, FilterKey> {
     protected readonly s = s;
+    protected readonly exportHref = s.exportHref;
     protected readonly path = "~/company/projects";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "client", "-client", "owner", "-owner"] as const;
@@ -23,6 +30,10 @@ export default class extends ListController<Filters, ProjectItem, Row, ProjectSo
         filters: Filters;
     }) {
         return listProjects({ ...q, clientId: f.clientId ?? undefined, personId: f.personId ?? undefined });
+    }
+
+    protected exportUrl({ filters: f, ...q }: { q?: string; sort: ProjectSort; filters: Filters }) {
+        return projectsExport({ ...q, clientId: f.clientId ?? undefined, personId: f.personId ?? undefined });
     }
 
     protected toRows = toRows;

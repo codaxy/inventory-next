@@ -4,6 +4,7 @@ import m, { type Filters, type Row, toRows } from "./model";
 
 export default class extends ListController<Filters, MachineItem, Row, Sort> {
     protected readonly s = m.list;
+    protected readonly exportHref = m.list.exportHref;
     protected readonly path = "~/infrastructure/virtual-machines";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "information", "-information"] as const;
@@ -20,6 +21,10 @@ export default class extends ListController<Filters, MachineItem, Row, Sort> {
         filters: Filters;
     }) {
         return virtualMachines.list(q);
+    }
+
+    protected exportUrl({ filters: _, ...q }: { q?: string; sort: Sort; filters: Filters }) {
+        return virtualMachines.export(q);
     }
 
     protected toRows = toRows;

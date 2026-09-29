@@ -39,6 +39,10 @@ export interface ProjectQuery {
 const base = "/api/company/projects";
 
 export const listProjects = (q: ProjectQuery) => send<Page<ProjectItem>>(`${base}/?${toQuery(q)}`);
+
+/** The spreadsheet of what a list query selects, every row. */
+export const projectsExport = (q: Omit<ProjectQuery, "page" | "pageSize">) => `${base}/export?${toQuery(q)}`;
+
 export const getProject = (id: string) => send<ProjectDetail>(`${base}/${id}`);
 export const getProjectOptions = () => send<{ clients: Option[]; people: Option[] }>(`${base}/options`);
 export const createProject = (form: ProjectForm) =>

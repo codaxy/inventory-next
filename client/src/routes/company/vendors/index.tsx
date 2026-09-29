@@ -21,6 +21,7 @@ export default createFunctionalComponent(() => (
                 addText: "Add vendor",
                 href: (id) => `~/company/vendors/${id}`,
                 columns: "vendor-columns",
+                exportHref: m.list.exportHref,
                 cells: [
                     {
                         header: "Name",

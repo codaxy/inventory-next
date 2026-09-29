@@ -1,9 +1,10 @@
-import { listVendors, type VendorItem, type VendorSort } from "../../../api/vendors";
+import { listVendors, type VendorItem, type VendorSort, vendorsExport } from "../../../api/vendors";
 import { ListController } from "../../../listController";
 import m, { type Filters, type Row, toRows } from "./model";
 
 export default class extends ListController<Filters, VendorItem, Row, VendorSort> {
     protected readonly s = m.list;
+    protected readonly exportHref = m.list.exportHref;
     protected readonly path = "~/company/vendors";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "assets", "-assets"] as const;
@@ -20,6 +21,10 @@ export default class extends ListController<Filters, VendorItem, Row, VendorSort
         filters: Filters;
     }) {
         return listVendors(q);
+    }
+
+    protected exportUrl({ filters: _, ...q }: { q?: string; sort: VendorSort; filters: Filters }) {
+        return vendorsExport(q);
     }
 
     protected toRows = toRows;

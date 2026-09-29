@@ -1,9 +1,15 @@
-import { listManufacturers, type ManufacturerItem, type ManufacturerSort } from "../../../api/manufacturers";
+import {
+    listManufacturers,
+    type ManufacturerItem,
+    type ManufacturerSort,
+    manufacturersExport,
+} from "../../../api/manufacturers";
 import { ListController } from "../../../listController";
 import m, { type Filters, type Row, toRows } from "./model";
 
 export default class extends ListController<Filters, ManufacturerItem, Row, ManufacturerSort> {
     protected readonly s = m.list;
+    protected readonly exportHref = m.list.exportHref;
     protected readonly path = "~/company/manufacturers";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "devices", "-devices", "software", "-software"] as const;
@@ -20,6 +26,10 @@ export default class extends ListController<Filters, ManufacturerItem, Row, Manu
         filters: Filters;
     }) {
         return listManufacturers(q);
+    }
+
+    protected exportUrl({ filters: _, ...q }: { q?: string; sort: ManufacturerSort; filters: Filters }) {
+        return manufacturersExport(q);
     }
 
     protected toRows = toRows;

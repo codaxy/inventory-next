@@ -21,6 +21,7 @@ export default createFunctionalComponent(() => (
                 addText: "Add cloud subscription",
                 href: (id) => `~/infrastructure/cloud-subscriptions/${id}`,
                 columns: "on-volume-columns",
+                exportHref: m.list.exportHref,
                 cells: [
                     {
                         header: "Name",

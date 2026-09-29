@@ -7,6 +7,7 @@ public static class Endpoints
         var manufacturers = api.MapGroup("/company/manufacturers");
 
         List.Endpoint.Map(manufacturers);
+        Export.Endpoint.Map(manufacturers);
         Get.Endpoint.Map(manufacturers);
         Create.Endpoint.Map(manufacturers);
         Update.Endpoint.Map(manufacturers);

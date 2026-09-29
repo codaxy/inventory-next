@@ -24,11 +24,33 @@ public static class Endpoint
         if (Paging.Read(query.Page, query.PageSize, out var window) is { } problem)
             return problem;
 
-        if (query.Sort is not (null or "name" or "-name" or "information" or "-information"))
-            return Results.ValidationProblem(
-                new Dictionary<string, string[]> { ["sort"] = ["Sort by name or information."] }
-            );
+        if (Refuse(query) is { } refused)
+            return refused;
 
+        var locations = context.InformationLocations;
+        return Results.Ok(
+            await Rows(context, query)
+                .Select(t => new Item(
+                    t.Id,
+                    t.Name,
+                    t.IPAddress,
+                    locations.Count(l => l.VirtualMachineId == t.Id)
+                ))
+                .ToPageAsync(window, cancellationToken)
+        );
+    }
+
+    /// <summary>A sort outside the convention; the problem to answer with, or none.</summary>
+    internal static IResult? Refuse(Query query) =>
+        query.Sort is not (null or "name" or "-name" or "information" or "-information")
+            ? Results.ValidationProblem(
+                new Dictionary<string, string[]> { ["sort"] = ["Sort by name or information."] }
+            )
+            : null;
+
+    /// <summary>The virtual machines the query selects, in its order, for the page and the export alike.</summary>
+    internal static IOrderedQueryable<VirtualMachine> Rows(InventoryContext context, Query query)
+    {
         var rows = context.VirtualMachines.AsNoTracking();
         foreach (var term in FreeText.Terms(query.Q))
         {
@@ -57,17 +79,6 @@ public static class Endpoint
                 .ThenBy(t => t.Name),
             _ => rows.OrderBy(t => t.Name),
         };
-
-        return Results.Ok(
-            await ordered
-                .ThenBy(t => t.Id)
-                .Select(t => new Item(
-                    t.Id,
-                    t.Name,
-                    t.IPAddress,
-                    locations.Count(l => l.VirtualMachineId == t.Id)
-                ))
-                .ToPageAsync(window, cancellationToken)
-        );
+        return ordered.ThenBy(t => t.Id);
     }
 }

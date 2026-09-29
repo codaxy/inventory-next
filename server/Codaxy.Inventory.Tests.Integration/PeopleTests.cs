@@ -416,4 +416,20 @@ public class PeopleTests(PeopleApplication app) : IClassFixture<PeopleApplicatio
             )!.Total
         );
     }
+
+    [Fact]
+    public async Task Exports_what_the_list_selects_named_filtered_when_narrowed()
+    {
+        var client = await Client();
+
+        var narrowed = await client.GetAsync($"{Url}/export?q=hana");
+        var all = await client.GetAsync($"{Url}/export");
+
+        Assert.Equal("People.Export - Filtered.xlsx", Spreadsheet.FileNameOf(narrowed));
+        Assert.Equal("People.Export.xlsx", Spreadsheet.FileNameOf(all));
+        var text = await Spreadsheet.TextOf(narrowed);
+        Assert.Contains("hana@codaxy.com", text);
+        Assert.Contains("Seats", text);
+        Assert.DoesNotContain("ivo@codaxy.com", text);
+    }
 }

@@ -31,6 +31,11 @@ export const listManufacturers = (q: {
     page: number;
     pageSize: number;
 }) => send<Page<ManufacturerItem>>(`${base}/?${toQuery(q)}`);
+
+/** The spreadsheet of what a list query selects, every row. */
+export const manufacturersExport = (q: { q?: string; sort?: ManufacturerSort }) =>
+    `${base}/export?${toQuery(q)}`;
+
 export const getManufacturer = (id: string) => send<ManufacturerDetail>(`${base}/${id}`);
 export const createManufacturer = (form: ManufacturerForm) =>
     send<ManufacturerDetail>(`${base}/`, { method: "POST", body: JSON.stringify(form) });

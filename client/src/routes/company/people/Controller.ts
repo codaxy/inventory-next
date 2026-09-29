@@ -1,9 +1,10 @@
-import { listPeople, type PersonItem, type PersonSort } from "../../../api/people";
+import { listPeople, type PersonItem, type PersonSort, peopleExport } from "../../../api/people";
 import { ListController } from "../../../listController";
 import m, { type Filters, type Row, toRows } from "./model";
 
 export default class extends ListController<Filters, PersonItem, Row, PersonSort> {
     protected readonly s = m.people;
+    protected readonly exportHref = m.people.exportHref;
     protected readonly path = "~/company/people";
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "email", "-email", "assets", "-assets"] as const;
@@ -20,6 +21,10 @@ export default class extends ListController<Filters, PersonItem, Row, PersonSort
         filters: Filters;
     }) {
         return listPeople(q);
+    }
+
+    protected exportUrl({ filters: _, ...q }: { q?: string; sort: PersonSort; filters: Filters }) {
+        return peopleExport(q);
     }
 
     protected toRows = toRows;

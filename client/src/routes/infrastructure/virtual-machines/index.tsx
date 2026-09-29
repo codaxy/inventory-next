@@ -21,6 +21,7 @@ export default createFunctionalComponent(() => (
                 addText: "Add virtual machine",
                 href: (id) => `~/infrastructure/virtual-machines/${id}`,
                 columns: "machine-columns",
+                exportHref: m.list.exportHref,
                 cells: [
                     {
                         header: "Name",

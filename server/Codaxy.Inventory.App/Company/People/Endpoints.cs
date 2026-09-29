@@ -7,6 +7,7 @@ public static class Endpoints
         var people = api.MapGroup("/company/people");
 
         List.Endpoint.Map(people);
+        Export.Endpoint.Map(people);
         Get.Endpoint.Map(people);
         Holdings.Endpoint.Map(people);
         Handover.Endpoint.Map(people);

@@ -7,6 +7,7 @@ public static class Endpoints
         var vendors = api.MapGroup("/company/vendors");
 
         List.Endpoint.Map(vendors);
+        Export.Endpoint.Map(vendors);
         Get.Endpoint.Map(vendors);
         Create.Endpoint.Map(vendors);
         Update.Endpoint.Map(vendors);

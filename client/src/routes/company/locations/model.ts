@@ -32,6 +32,7 @@ export interface ListState {
     pager: PagerState;
     /** The search that ran is one id: an empty answer then says no record has it. */
     idSearch?: boolean;
+    exportHref?: string;
 }
 
 export interface Model {

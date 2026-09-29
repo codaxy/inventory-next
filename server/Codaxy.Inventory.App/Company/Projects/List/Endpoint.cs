@@ -34,11 +34,34 @@ public static class Endpoint
         if (Paging.Read(query.Page, query.PageSize, out var window) is { } problem)
             return problem;
 
-        if (query.Sort is not null && !Keys.Contains(query.Sort.TrimStart('-')))
-            return Results.ValidationProblem(
-                new Dictionary<string, string[]> { ["sort"] = ["Sort by name, client or owner."] }
-            );
+        if (Refuse(query) is { } refused)
+            return refused;
 
+        var information = context.Informations;
+        return Results.Ok(
+            await Rows(context, query)
+                .Select(p => new Item(
+                    p.Id,
+                    p.Name,
+                    p.Client.Name,
+                    p.ProjectOwner.Name,
+                    information.Count(i => i.ProjectId == p.Id)
+                ))
+                .ToPageAsync(window, cancellationToken)
+        );
+    }
+
+    /// <summary>A sort outside the convention; the problem to answer with, or none.</summary>
+    internal static IResult? Refuse(Query query) =>
+        query.Sort is not null && !Keys.Contains(query.Sort.TrimStart('-'))
+            ? Results.ValidationProblem(
+                new Dictionary<string, string[]> { ["sort"] = ["Sort by name, client or owner."] }
+            )
+            : null;
+
+    /// <summary>The projects the query selects, in its order, for the page and the export alike.</summary>
+    internal static IOrderedQueryable<Project> Rows(InventoryContext context, Query query)
+    {
         var projects = context.Projects.AsNoTracking();
         if (query.ClientId is { } client)
             projects = projects.Where(p => p.ClientId == client);
@@ -75,20 +98,6 @@ public static class Endpoint
                 ? projects.OrderByDescending(p => p.Name)
                 : projects.OrderBy(p => p.Name),
         };
-
-        var information = context.Informations;
-        return Results.Ok(
-            await ordered
-                .ThenBy(p => p.Name)
-                .ThenBy(p => p.Id)
-                .Select(p => new Item(
-                    p.Id,
-                    p.Name,
-                    p.Client.Name,
-                    p.ProjectOwner.Name,
-                    information.Count(i => i.ProjectId == p.Id)
-                ))
-                .ToPageAsync(window, cancellationToken)
-        );
+        return ordered.ThenBy(p => p.Name).ThenBy(p => p.Id);
     }
 }

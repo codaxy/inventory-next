@@ -368,4 +368,40 @@ public class InfrastructureTests(InfrastructureApplication app)
                 && v.Text.StartsWith("Azure license · ")
         );
     }
+
+    [Theory]
+    [InlineData(
+        "/api/infrastructure/virtual-machines",
+        "build",
+        "VirtualMachines.Export",
+        "10.0.0.1",
+        "IP Address"
+    )]
+    [InlineData(
+        "/api/infrastructure/cloud-subscriptions",
+        "prod",
+        "CloudSubscriptions.Export",
+        "https://portal.azure.com",
+        "Management URL"
+    )]
+    [InlineData("/api/infrastructure/software", "tools", "Software.Export", "Azure", "Information")]
+    public async Task Exports_what_the_list_selects_named_filtered_when_narrowed(
+        string url,
+        string q,
+        string name,
+        string value,
+        string header
+    )
+    {
+        var client = await Client();
+
+        var narrowed = await client.GetAsync($"{url}/export?q={q}");
+        var all = await client.GetAsync($"{url}/export");
+
+        Assert.Equal($"{name} - Filtered.xlsx", Spreadsheet.FileNameOf(narrowed));
+        Assert.Equal($"{name}.xlsx", Spreadsheet.FileNameOf(all));
+        var text = await Spreadsheet.TextOf(narrowed);
+        Assert.Contains(value, text);
+        Assert.Contains(header, text);
+    }
 }

@@ -7,6 +7,7 @@ public static class Endpoints
         var cloudSubscriptions = api.MapGroup("/infrastructure/cloud-subscriptions");
 
         List.Endpoint.Map(cloudSubscriptions);
+        Export.Endpoint.Map(cloudSubscriptions);
         Options.Endpoint.Map(cloudSubscriptions);
         Get.Endpoint.Map(cloudSubscriptions);
         Create.Endpoint.Map(cloudSubscriptions);

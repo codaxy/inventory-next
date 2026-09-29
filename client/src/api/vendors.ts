@@ -43,6 +43,10 @@ const base = "/api/company/vendors";
 
 export const listVendors = (q: { q?: string; sort?: VendorSort; page: number; pageSize: number }) =>
     send<Page<VendorItem>>(`${base}/?${toQuery(q)}`);
+
+/** The spreadsheet of what a list query selects, every row. */
+export const vendorsExport = (q: { q?: string; sort?: VendorSort }) => `${base}/export?${toQuery(q)}`;
+
 export const getVendor = (id: string) => send<VendorDetail>(`${base}/${id}`);
 export const createVendor = (form: VendorFields) =>
     send<VendorDetail>(`${base}/`, { method: "POST", body: JSON.stringify(form) });
