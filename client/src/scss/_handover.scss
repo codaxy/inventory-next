@@ -1,12 +1,18 @@
+@use "brand";
+
 // The handover sheet: on screen a sheet of paper in the column, printed alone — the shell, the header
 // band and the Print button stay on the screen.
 
+// The sheet keeps the original's type — a plain sans at 14px, not the application's Montserrat,
+// which set at this size in running text reads as a form, not a document.
+// The original's page margins, on screen as on paper: 1cm above and below, 2cm left, 1.5cm right.
 .handover {
-    padding: 2.5rem 2.25rem;
+    padding: 10mm 15mm 10mm 20mm;
     border: 1px solid var(--color-line);
     border-radius: 12px;
     background: var(--color-surface);
     color: var(--color-ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 1.5;
 }
@@ -14,48 +20,91 @@
 .handover-header {
     display: flex;
     justify-content: space-between;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    align-items: center;
+    padding: 20px 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+// A mask prints only as a background, which browsers leave out unless told otherwise.
+.handover-logo {
+    width: calc(32px * 238 / 80);
+    height: 32px;
+    background: var(--color-ink);
+    mask: brand.$codaxy center / contain no-repeat;
+    print-color-adjust: exact;
+}
+
+.handover-class {
+    color: var(--color-danger-text);
+    text-transform: uppercase;
+    print-color-adjust: exact;
 }
 
 .handover-title {
-    margin: 2rem 0 1.5rem;
-    font-size: 20px;
-    font-weight: 700;
+    margin: 30px 0;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
     text-align: center;
 }
 
 .handover-lead {
-    padding: 0.5rem 0;
+    padding: 25px 0 0;
 }
 
 .handover-terms {
-    margin: 0.5rem 0 1.5rem;
-    padding-left: 1.25rem;
+    margin: 1rem 0;
+    padding-left: 40px;
     list-style: disc;
-
-    > li + li {
-        margin-top: 0.375rem;
-    }
+    line-height: 2.2;
 }
 
+// The table grows with its rows: it is printed, so nothing in it scrolls.
 .handover-table {
     width: 100%;
+    margin-top: 20px;
+    border: 1px solid var(--color-line);
     border-collapse: collapse;
+    table-layout: fixed;
     font-size: 13px;
+    line-height: 24px;
 
     th,
     td {
-        padding: 0.375rem 0.5rem;
-        border: 1px solid var(--color-line-strong);
+        padding: 5px 7.5px;
         text-align: left;
-        vertical-align: top;
+        vertical-align: middle;
         overflow-wrap: anywhere;
     }
 
     th {
+        font-size: 11px;
         font-weight: 700;
+        text-transform: uppercase;
         background: var(--color-raised);
+        print-color-adjust: exact;
+    }
+
+    td {
+        border-top: 1px solid var(--color-line);
+    }
+
+    // The narrow columns keep their width; the description takes what is left.
+    th:nth-child(1) {
+        width: 3rem;
+    }
+
+    th:nth-child(2) {
+        width: 6.5rem;
+    }
+
+    th:nth-child(3) {
+        width: 24%;
+    }
+
+    th:nth-child(5) {
+        width: 8.5rem;
     }
 }
 
@@ -68,65 +117,62 @@
     margin-top: 2.5rem;
 }
 
-// Two columns of lines on paper and a desktop, one on a phone; the superior's line alone, at the end.
+// Pairs of lines, the second of each at the right edge; the superior's line alone, at the right.
+// A line is 250px, as in the original, where the sheet has the room; narrower, it shrinks with it,
+// or the right-hand lines run past the edge.
 .handover-signatures {
+    container-type: inline-size;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2rem 3rem;
-    margin-top: 2.25rem;
+    gap: 35px 2rem;
+    margin-top: 70px;
 
     @media (min-width: 640px), print {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: auto auto;
+        justify-content: space-between;
     }
 }
 
 .handover-line {
     display: flex;
     align-items: flex-end;
-    gap: 0.5rem;
     white-space: nowrap;
+
+    @media (min-width: 640px), print {
+        &:nth-child(even) {
+            justify-self: end;
+        }
+    }
 }
 
 .handover-line-last {
     @media (min-width: 640px), print {
-        grid-column: 2;
+        grid-column: 1 / -1;
+        justify-self: end;
     }
 }
 
 .handover-blank {
     flex: 1;
     min-width: 6rem;
+    height: 1.2em;
     border-bottom: 1px solid var(--color-ink);
+
+    @media (min-width: 640px), print {
+        flex: none;
+        width: min(250px, 32cqi);
+    }
 }
 
 @media (max-width: 639.98px) {
     .handover {
         padding: 1.5rem 1rem;
     }
-}
 
-// The narrow columns keep their width; the description takes what is left.
-.handover-table {
-    table-layout: fixed;
-
-    th:nth-child(1) {
-        width: 3.5rem;
+    .handover-terms {
+        padding-left: 1.25rem;
     }
 
-    th:nth-child(2) {
-        width: 7.5rem;
-    }
-
-    th:nth-child(3) {
-        width: 24%;
-    }
-
-    th:nth-child(5) {
-        width: 10rem;
-    }
-}
-
-@media (max-width: 639.98px) {
     .handover-table {
         table-layout: auto;
     }
@@ -134,7 +180,8 @@
 
 @media print {
     @page {
-        margin: 16mm 14mm;
+        size: A4;
+        margin: 10mm 15mm 10mm 20mm;
     }
 
     // The shell goes, not only hidden: hidden, it still takes its room, and the sheet is squeezed
@@ -173,18 +220,14 @@
         table-layout: fixed;
         font-size: 9.5pt;
 
-        th {
-            background: none;
-        }
-
         tr {
             break-inside: avoid;
         }
     }
 
-    // The original's second page.
+    // The closing line and the signatures are never split: under the table where they fit,
+    // otherwise all on the next page.
     .handover-closing {
-        break-before: page;
-        margin-top: 0;
+        break-inside: avoid;
     }
 }

@@ -1,7 +1,7 @@
 import { createModel } from "cx/ui";
 
 export interface SheetRow {
-    /** "1.", as the sheet's first column counts. */
+    /** "1", as the sheet's first column counts. */
     index: string;
     number: string;
     name: string;

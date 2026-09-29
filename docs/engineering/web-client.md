@@ -318,10 +318,14 @@ changes none of it, leaves it out. The city and state a location offers are the 
 form whose only choice is made — one country, its one city — starts with it.
 
 **A printable document is a page of its own with its own print styles** — the handover sheet at
-`~/company/people/:id/handover`: the original's text word for word, a Print button, and under
+`~/company/people/:id/handover`: the original's text word for word and its look — a plain sans at
+14px, not Montserrat, which reads as a form in running text; Codaxy's wordmark and a red "INTERNO"
+at its head; uppercase column headers on a grey band, rules between rows only; A4 margins of 1cm above and below, 2cm left and 1.5cm right, on screen
+too — its table as long as
+its rows, never scrolling, since it is printed. A Print button, and under
 `@media print` the shell removed (`display: none`, not hidden — hidden, it keeps its room and
-squeezes the sheet), the table's header repeating on each page, and the signatures on a page of their
-own.
+squeezes the sheet), the table's header repeating on each page, and the closing line with the signatures
+never split — under the table where they fit, whole on the next page where they do not.
 
 **A license's volume is read in parts, not as a sentence**: its software, then its type and
 description muted beneath, and its seats — "15 / 35 in use" over a meter, primary while seats are
@@ -517,6 +521,9 @@ reaching below the page is not drawn in a bounce there — Chrome shows the root
 colour is the root's; above the top, a band's own pseudo-element is drawn. Never swap the root's colour
 by scroll position to get two ends: with scrollbars always shown, the document's track takes the
 root's colour, and it flickers between the two at the threshold.
+
+**A browser prints no background unless told to**, and a mask is drawn through one: the wordmark
+and a grey table header vanish from paper without `print-color-adjust: exact`.
 
 **A scroll lock that outlives its overlay freezes the page until a reload**: it listens to the whole
 document and refuses every gesture outside the overlay. A window mounted twice without unmounting — a

@@ -44,8 +44,8 @@ export default createFunctionalComponent(() => (
             <article class="handover" visible={falsy(h.error)}>
                 <div class="handover-part">
                     <header class="handover-header">
-                        <div text="CODAXY" />
-                        <div text="Interno" />
+                        <div class="handover-logo" attrs={{ role: "img", "aria-label": "Codaxy" }} />
+                        <div class="handover-class" text="Interno" />
                     </header>
                     <h2 class="handover-title">
                         <span text="Spisak sredstava za rad koje" />
@@ -92,24 +92,24 @@ export default createFunctionalComponent(() => (
                     </table>
                 </div>
 
-                {/* The original's second page: the closing line and the signatures. */}
+                {/* The closing line and the signatures, printed together, never split. */}
                 <div class="handover-part handover-closing">
                     <p text="Ovaj dokument je napravljen i potpisan u 2 (dva) primjerka, od kojih jedan zadržava zaposleni, a drugi ostaje kompaniji." />
                     <div class="handover-signatures">
                         <div class="handover-line">
-                            <span text="Mjesto: " />
+                            <span text="Mjesto:" />
                             <span class="handover-blank" />
                         </div>
                         <div class="handover-line">
-                            <span text="Potpis: " />
+                            <span text="Potpis:" />
                             <span class="handover-blank" />
                         </div>
                         <div class="handover-line">
-                            <span text="Datum: " />
+                            <span text="Datum:" />
                             <span class="handover-blank" />
                         </div>
                         <div class="handover-line">
-                            <span text="Ime i prezime: " />
+                            <span text="Ime i prezime:" />
                             <span class="handover-blank" />
                         </div>
                         <div class="handover-line handover-line-last">

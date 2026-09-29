@@ -27,7 +27,7 @@ export default class extends Controller {
                 this.store.set(
                     h.rows,
                     sheet.assets.map((a, i) => ({
-                        index: `${i + 1}.`,
+                        index: `${i + 1}`,
                         number: a.number ? String(a.number) : "-",
                         name: a.name?.trim() || "-",
                         description: a.description?.trim() || "-",
