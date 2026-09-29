@@ -1,4 +1,4 @@
-import { createFunctionalComponent, expr, hasValue } from "cx/ui";
+import { createFunctionalComponent, expr } from "cx/ui";
 import { Icon, Menu, MenuItem } from "cx/widgets";
 
 import $app from "../model";
@@ -18,8 +18,8 @@ const showEmail = expr(
 
 /**
  * The signed-in person, at the foot of the navigation; clicking opens a menu above it that holds
- * signing out, and beneath it the build the server runs. A cx `MenuItem` dropdown rather than a
- * hand-built popover: it brings Enter, Escape, arrow keys and closing when focus leaves.
+ * signing out. A cx `MenuItem` dropdown rather than a hand-built popover: it brings Enter, Escape,
+ * arrow keys and closing when focus leaves.
  *
  * `openOnFocus` is off so tabbing through the navigation does not pop the menu open.
  */
@@ -62,8 +62,6 @@ export const AccountMenu = createFunctionalComponent(() => (
                             <span text="Sign out" />
                         </div>
                     </MenuItem>
-                    {/* Not a MenuItem: nothing to do with it, so neither a click nor the arrow keys land on it. */}
-                    <div class="account-version" text={$app.version} visible={hasValue($app.version)} />
                 </Menu>
             </MenuItem>
         </Menu>

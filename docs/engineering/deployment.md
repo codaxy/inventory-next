@@ -21,7 +21,8 @@ sha. Each part drops its leading zeros (09:05 is `905`): .NET caps a version par
 refuses a leading zero, and in this form the part before `+` is both, and sorts as time does. From
 the commit, not the build, so `main` and `production` build one commit as one version. The
 Dockerfile's `APP_VERSION` argument carries it; unstamped, it is `dev`. `/api/version` answers it
-without a session, and the account menu shows it under Sign out.
+without a session, and the sidebar shows it under the
+application's name.
 
 ## Compose
 

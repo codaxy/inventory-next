@@ -37,7 +37,7 @@ export const Sidebar = createFunctionalComponent(() => (
             onClick={closeDrawer}
         >
             <div class="px-5 pt-5 pb-2">
-                <Logo subtitle="Asset register" />
+                <Logo version />
             </div>
 
             <nav class="nav-scroll flex-1 overflow-y-auto overscroll-contain lg:overscroll-auto px-2 pb-4">
