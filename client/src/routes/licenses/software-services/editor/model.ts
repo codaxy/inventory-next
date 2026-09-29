@@ -41,7 +41,6 @@ export interface VolumeRow {
     activationsHref?: string;
     activationsText: string;
     activateHref: string;
-    activateText: string;
     detail: string;
     seats: string;
     fill: number;
@@ -81,7 +80,6 @@ export const toVolumeRows = (volumes: VolumeLine[]): VolumeRow[] =>
         activationsHref: v.activationCount > 0 ? `~/licenses/activations?volumeId=${v.id}` : undefined,
         activationsText: v.activationCount === 1 ? "1 activation" : `${v.activationCount} activations`,
         activateHref: `~/licenses/activations/new?volumeId=${v.id}&from=software`,
-        activateText: v.inUse < v.quantity ? "Activate" : "Over-activate",
         license: v.licenseNumber ? `${v.license} #${v.licenseNumber}` : v.license,
         detail: v.description ? `${v.type} · ${v.description}` : v.type,
         seats: `${v.inUse} / ${v.quantity}`,

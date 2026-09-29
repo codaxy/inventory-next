@@ -242,7 +242,7 @@ export default createFunctionalComponent(() => (
                                                     class="editor-link volume-activations"
                                                     href={m.$volume.activateHref}
                                                     url={$app.url}
-                                                    text={m.$volume.activateText}
+                                                    text="Activate"
                                                 />
                                                 <Link
                                                     class="editor-link volume-activations"

@@ -226,9 +226,9 @@ and what follows from it, as text rather than asking again: the volume and its s
 the next field the one its type calls for, a user or a device. The activations list filtered to one volume
 opens such a form from its Activate button too. Such a form returns where it was started: from a volume on
 its license's page (`from=license`) or its software's (`from=software`), its back link names that page
-and Cancel and a save go back to it; from the list, to the list as it was left. A volume always offers its shortcut, and says
-what it leads to: "Activate" while a seat is free, "Over-activate" once none is — past the quantity a
-seat is allowed with a warning, not refused. `ListController` in `src/listController.ts` holds all of this
+and Cancel and a save go back to it; from the list, to the list as it was left. A volume always offers its shortcut, "Activate",
+full or not: the seats are chosen on the form, so only the form can tell they run past the quantity,
+and it warns there rather than refusing. `ListController` in `src/listController.ts` holds all of this
 with the search's pause, the chips, the sort and the latest-request rule; a list declares its path,
 its filters to and from the address, and its fetch. Not a history entry per change: Back would step
 through every filter click before leaving.
