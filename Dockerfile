@@ -39,7 +39,6 @@ EXPOSE 8080
 # The server log in the folder the image made writable: the default, `logs` under /app, is root's,
 # and the file sink fails without a word.
 ENV ASPNETCORE_ENVIRONMENT=Production \
-    ASPNETCORE_FORWARDEDHEADERS_ENABLED=true \
     ServerLog__Path=/var/lib/inventory/logs
 
 ENTRYPOINT ["dotnet", "Codaxy.Inventory.Web.dll"]

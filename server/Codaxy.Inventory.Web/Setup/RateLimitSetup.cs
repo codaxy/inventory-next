@@ -21,7 +21,7 @@ public static class RateLimitSetup
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
             // Partitioned by caller address, so one caller exhausting its permits cannot lock anyone
-            // else out. Behind a proxy that is the forwarded address, which the image enables.
+            // else out. Behind a proxy that is the forwarded address, where the deployment enables it.
             options.AddPolicy(
                 AuthEndpoints.SignInRateLimit,
                 context =>

@@ -54,10 +54,11 @@ for seats left on them. Development names the restored database's `Otpisano` and
 Mailpit and one-time codes on, so a fresh checkout runs. Development credentials live in user
 secrets; see [auth.md](auth.md).
 
-`ASPNETCORE_FORWARDEDHEADERS_ENABLED=true` is set in the image rather than configured in code: it
-enables the forwarded-headers middleware for `X-Forwarded-For` and `X-Forwarded-Proto` with the
-known-proxy lists cleared, which is what running behind a reverse proxy needs and what running
-without one should not have.
+**A deployment behind a reverse proxy sets `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true`; the image
+does not.** It trusts `X-Forwarded-For` and `X-Forwarded-Proto` from any sender, known-proxy lists
+cleared — which the Google redirect URI, the cookie's `Secure` flag and the sign-in rate limit need
+behind a proxy, and which lets anyone reaching the port directly spoof the address and the
+scheme.
 
 The data protection key ring lives on a named volume at `DataProtection:KeyRingPath`
 (`/var/lib/inventory/keys`). The image creates that directory and gives it to the application's user
