@@ -1,4 +1,4 @@
-import { createFunctionalComponent, equal, expr, falsy, hasValue } from "cx/ui";
+import { createFunctionalComponent, equal, expr, hasValue } from "cx/ui";
 import { Button, Icon, Repeater, TextField } from "cx/widgets";
 
 import { listHeading, listPaging } from "../../../components/listHeading";
@@ -129,8 +129,6 @@ export default createFunctionalComponent(() => {
                     </div>
 
                     <div class="list-rows" onRef={paging.onRowsRef}>
-                        <div class="term-empty" visible={falsy(s.loaded)} text="Loading…" />
-
                         <Repeater records={s.rows} recordAlias={m.$row} keyField="id">
                             <div
                                 class={{

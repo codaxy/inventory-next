@@ -86,9 +86,7 @@ export default (
     <cx>
         <PureContainer layout={FirstVisibleChildLayout} controller={Controller}>
             <PureContainer visible={equal($app.session.status, "loading")}>
-                <div class="page">
-                    <p text="Loading…" />
-                </div>
+                <div class="page" />
             </PureContainer>
 
             <PureContainer layout={FirstVisibleChildLayout} if={falsy($app.session.user)}>
