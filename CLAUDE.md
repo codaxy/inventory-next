@@ -211,6 +211,11 @@ neither file is worth having if it cannot be trusted.
 home in one word, which is what makes branching cheap enough to be compulsory. The checks above come
 first; shipping is the whole sequence, not a way of skipping to the end of it.
 
+**"Ship it to prod" or "ship it to production" goes one step further**: ship it if it is not already
+on `main`, then fast-forward `production` to `main` and push both. **Never touch `production`
+otherwise** — no commit, merge, rebase or push to it on your own initiative: a push to it publishes
+the `:stable` image.
+
 **It leaves you on `main`, so the next change — a correction to what just shipped included —
 starts by branching again.**
 
@@ -223,8 +228,8 @@ starts by branching again.**
 PR, or anything else that publishes work waits for my say-so every time. Prior permission to push
 does not carry over to the next push.
 
-**"Ship it" is that instruction**, and it behaves like any other: it authorises the push in front
-of us and no later one.
+**"Ship it" is that instruction** — "ship it to production" for `production` — and it behaves like
+any other: it authorises the push in front of us and no later one.
 
 ## Commit messages
 
