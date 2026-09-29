@@ -1,20 +1,25 @@
 @use "brand";
 
-// The handover sheet: on screen a sheet of paper in the column, printed alone — the shell, the header
-// band and the Print button stay on the screen.
+// The handover sheet: on screen the printed page itself — A4, its margins and its type — fitted to
+// the column as a PDF viewer fits a page, zoomed down where the column is narrower (`sheetFit`), never
+// laid out again for it. Printed alone: the shell, the header band and the Print button stay on the
+// screen.
 
-// The sheet keeps the original's type — a plain sans at 14px, not the application's Montserrat,
+// The sheet keeps the original's type — a plain sans at 10.5pt, not the application's Montserrat,
 // which set at this size in running text reads as a form, not a document.
-// The original's page margins, on screen as on paper: 1cm above and below, 2cm left, 1.5cm right.
+// The original's page margins: 1cm above and below, 2cm left, 1.5cm right.
 .handover {
+    box-sizing: border-box;
+    width: 210mm;
+    min-height: 297mm;
     padding: 10mm 15mm 10mm 20mm;
     border: 1px solid var(--color-line);
-    border-radius: 12px;
     background: var(--color-surface);
     color: var(--color-ink);
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 10.5pt;
     line-height: 1.5;
+    zoom: var(--sheet-zoom, 1);
 }
 
 .handover-header {
@@ -67,7 +72,7 @@
     border: 1px solid var(--color-line);
     border-collapse: collapse;
     table-layout: fixed;
-    font-size: 13px;
+    font-size: 9.5pt;
     line-height: 24px;
 
     th,
@@ -118,19 +123,14 @@
 }
 
 // Pairs of lines, the second of each at the right edge; the superior's line alone, at the right.
-// A line is 250px, as in the original, where the sheet has the room; narrower, it shrinks with it,
-// or the right-hand lines run past the edge.
+// A line is 250px, as in the original, and shorter where a pair would run past the margin.
 .handover-signatures {
     container-type: inline-size;
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
     gap: 35px 2rem;
     margin-top: 70px;
-
-    @media (min-width: 640px), print {
-        grid-template-columns: auto auto;
-        justify-content: space-between;
-    }
 }
 
 .handover-line {
@@ -138,44 +138,20 @@
     align-items: flex-end;
     white-space: nowrap;
 
-    @media (min-width: 640px), print {
-        &:nth-child(even) {
-            justify-self: end;
-        }
-    }
-}
-
-.handover-line-last {
-    @media (min-width: 640px), print {
-        grid-column: 1 / -1;
+    &:nth-child(even) {
         justify-self: end;
     }
 }
 
-.handover-blank {
-    flex: 1;
-    min-width: 6rem;
-    height: 1.2em;
-    border-bottom: 1px solid var(--color-ink);
-
-    @media (min-width: 640px), print {
-        flex: none;
-        width: min(250px, 32cqi);
-    }
+.handover-line-last {
+    grid-column: 1 / -1;
+    justify-self: end;
 }
 
-@media (max-width: 639.98px) {
-    .handover {
-        padding: 1.5rem 1rem;
-    }
-
-    .handover-terms {
-        padding-left: 1.25rem;
-    }
-
-    .handover-table {
-        table-layout: auto;
-    }
+.handover-blank {
+    width: min(250px, 32cqi);
+    height: 1.2em;
+    border-bottom: 1px solid var(--color-ink);
 }
 
 @media print {
@@ -206,23 +182,21 @@
         }
     }
 
-    .page-body > .handover {
+    .page-body > .handover-fit {
         max-width: none;
     }
 
+    // The page's own margins are `@page`'s on paper.
     .handover {
+        width: auto;
+        min-height: 0;
         padding: 0;
         border: 0;
-        font-size: 10.5pt;
+        zoom: 1;
     }
 
-    .handover-table {
-        table-layout: fixed;
-        font-size: 9.5pt;
-
-        tr {
-            break-inside: avoid;
-        }
+    .handover-table tr {
+        break-inside: avoid;
     }
 
     // The closing line and the signatures are never split: under the table where they fit,

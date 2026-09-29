@@ -325,10 +325,13 @@ form whose only choice is made — one country, its one city — starts with it.
 
 **A printable document is a page of its own with its own print styles** — the handover sheet at
 `~/company/people/:id/handover`: the original's text word for word and its look — a plain sans at
-14px, not Montserrat, which reads as a form in running text; Codaxy's wordmark and a red "INTERNO"
-at its head; uppercase column headers on a grey band, rules between rows only; A4 margins of 1cm above and below, 2cm left and 1.5cm right, on screen
-too — its table as long as
-its rows, never scrolling, since it is printed. A Print button, and under
+10.5pt, not Montserrat, which reads as a form in running text; Codaxy's wordmark and a red "INTERNO"
+at its head; uppercase column headers on a grey band, rules between rows only; A4 margins of 1cm above and below,
+2cm left and 1.5cm right — its table as long as its rows, never scrolling, since it is printed.
+**On screen it is the printed page, at every width**: A4, the paper's type in points, fixed column
+widths, the signatures in pairs — fitted to the column as a PDF viewer fits a page (`sheetFit()`,
+zoomed down, never up), never laid out again for a phone. CSS `zoom`, not `transform: scale`: a
+transform leaves the page's full width in the layout, and the phone scrolls sideways. A Print button, and under
 `@media print` the shell removed (`display: none`, not hidden — hidden, it keeps its room and
 squeezes the sheet), the table's header repeating on each page, and the closing line with the signatures
 never split — under the table where they fit, whole on the next page where they do not.
