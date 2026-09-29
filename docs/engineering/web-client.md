@@ -78,9 +78,8 @@ is 1rem — so the list starts on the first screen.
 ## The phone is the hard case
 
 **The shell is Pulse's.** From `lg` (1024px) a 260px sidebar holds the navigation and, at its foot,
-the signed-in person alone; signing out is in the menu that opens above them. At its head the mark
-and "Inventory", with the build the server runs beneath the name in monospace, as an application
-signs itself (see [deployment.md](deployment.md)). Below `lg` the
+the signed-in person alone; signing out is in the menu that opens above them, and under it, ruled
+off and centred, the build the server runs (see [deployment.md](deployment.md)). Below `lg` the
 sidebar becomes a drawer over the content, as wide and never closer than 56px to the far edge, the page beside
 it not dimmed. Its contents stop at the dynamic viewport's foot, above Safari's floating toolbar, so the
 account menu stays within reach; beneath them the drawer reaches on in its navy, down under the

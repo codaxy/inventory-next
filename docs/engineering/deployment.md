@@ -22,7 +22,7 @@ which SemVer refuses; the time and the sha are build metadata, which SemVer igno
 the time orders a day's builds for a reader, the sha is pasted into `git show`. From the commit, not
 the build, so `main` and `production` build one commit as one version. The Dockerfile's
 `APP_VERSION` argument carries it; unstamped, it is `dev`. `/api/version` answers it without a
-session, and the sidebar shows it under the application's name.
+session, and the account menu shows it under Sign out.
 
 ## Compose
 
