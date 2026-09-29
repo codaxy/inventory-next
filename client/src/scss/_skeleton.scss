@@ -3,9 +3,7 @@
 
 // One line of text to come. A width is set where it is used; the height is a line's x-height, so a
 // bar sits in the line box its text will take.
-.skeleton-bar {
-    display: block;
-    width: 60%;
+@mixin bar {
     max-width: 100%;
     height: 0.625rem;
     border-radius: 999px;
@@ -23,6 +21,12 @@
     @media (prefers-reduced-motion: reduce) {
         animation: none;
     }
+}
+
+.skeleton-bar {
+    @include bar;
+    display: block;
+    width: 60%;
 }
 
 // A first load sets the list loading too; its outline is not dimmed like a refetch's rows.
@@ -133,4 +137,46 @@
 
 .dash-detail .holding-row .skeleton-bar {
     margin-block: 0.3rem;
+}
+
+// A record's page while its record is on the way, in view: the title and each value a bar in the line
+// it will take, the labels already in place. Its value would otherwise read "—", an empty record.
+.record-loading {
+    .page-title,
+    .editor-grid :is(.cxs-view-mode, .editor-value, .editor-chips) {
+        position: relative;
+
+        > * {
+            visibility: hidden;
+        }
+
+        &::after {
+            @include bar;
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 55%;
+            translate: 0 -50%;
+        }
+    }
+
+    // Empty, the title would shrink to nothing in its heading's row, and its bar with it.
+    .page-title {
+        flex: 1;
+    }
+
+    .page-title::after {
+        width: 14rem;
+        height: 1rem;
+    }
+
+    // Widths fixed by the field's place, so the outline does not look like a column of one bar.
+    .editor-grid > :nth-child(3n + 2) :is(.cxs-view-mode, .editor-value, .editor-chips)::after {
+        width: 35%;
+    }
+
+    .editor-grid > :nth-child(3n) :is(.cxs-view-mode, .editor-value, .editor-chips)::after {
+        width: 70%;
+    }
 }

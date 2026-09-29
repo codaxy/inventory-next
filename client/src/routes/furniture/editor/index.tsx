@@ -3,12 +3,14 @@ import { Button, Icon, Link, LinkButton, ValidationGroup } from "cx/widgets";
 
 import { formFields } from "../../../components/formFields";
 import { historyAction, moreActions } from "../../../components/moreActions";
+import { outlined } from "../../../components/recordPage";
 import { listReturn } from "../../../listAddress";
 import $app from "../../../model";
 import Controller from "./Controller";
 import m from "./model";
 
 const f = m.furniture;
+const outline = outlined(f.viewing, f.loading);
 const { basicInformation, editing, pick, text } = formFields(
     { draft: f.draft, options: f.options, errors: f.errors, viewing: f.viewing, importance: f.importance },
     "furniture",
@@ -22,7 +24,7 @@ const { basicInformation, editing, pick, text } = formFields(
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
-            <div class="page-top">
+            <div class={{ "page-top": true, "record-loading": outline }}>
                 <div class="page-header">
                     <Link href={listReturn("~/furniture")} url={$app.url} class="editor-back">
                         <Icon name="previous" class="size-4" />
@@ -56,7 +58,7 @@ export default createFunctionalComponent(() => (
                 </div>
             </div>
 
-            <div class="editor">
+            <div class={{ editor: true, "record-loading": outline }}>
                 <div class="editor-alert" visible={hasValue(f.error)}>
                     <span text={f.error} />
                     <Button mod="hollow" text="Reload" onClick="reload" visible={f.stale} />

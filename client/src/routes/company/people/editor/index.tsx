@@ -4,12 +4,14 @@ import { Button, Icon, Link, LinkButton, ValidationGroup } from "cx/widgets";
 import { formFields } from "../../../../components/formFields";
 import { holdingSections } from "../../../../components/holdings";
 import { historyAction, moreActions } from "../../../../components/moreActions";
+import { outlined } from "../../../../components/recordPage";
 import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import Controller from "./Controller";
 import m from "./model";
 
 const p = m.person;
+const outline = outlined(p.viewing, p.loading);
 const { editing, text } = formFields({ draft: p.draft, errors: p.errors, viewing: p.viewing }, "person");
 
 /**
@@ -19,7 +21,7 @@ const { editing, text } = formFields({ draft: p.draft, errors: p.errors, viewing
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
-            <div class="page-top">
+            <div class={{ "page-top": true, "record-loading": outline }}>
                 <div class="page-header">
                     <Link href={listReturn("~/company/people")} url={$app.url} class="editor-back">
                         <Icon name="previous" class="size-4" />
@@ -50,7 +52,7 @@ export default createFunctionalComponent(() => (
                 </div>
             </div>
 
-            <div class="editor">
+            <div class={{ editor: true, "record-loading": outline }}>
                 <div class="editor-alert" visible={hasValue(p.error)}>
                     <span text={p.error} />
                 </div>

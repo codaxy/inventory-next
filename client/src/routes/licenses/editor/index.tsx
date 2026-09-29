@@ -15,6 +15,7 @@ import {
 import { dateValue, numberValue } from "../../../bindings";
 import { expiryClass } from "../../../licensing";
 import { historyAction, moreActions } from "../../../components/moreActions";
+import { outlined } from "../../../components/recordPage";
 import { listReturn } from "../../../listAddress";
 import { externalLink } from "../../../components/externalLink";
 import { formFields } from "../../../components/formFields";
@@ -23,6 +24,7 @@ import Controller from "./Controller";
 import m from "./model";
 
 const l = m.license;
+const outline = outlined(l.viewing, l.loading);
 const o = l.options as any;
 const errors = l.errors as any;
 const { basicInformation, editing, flag, money, pick, text } = formFields(
@@ -42,7 +44,7 @@ const keptRow = expr(m.$volume.id, (id) => !!id);
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
-            <div class="page-top">
+            <div class={{ "page-top": true, "record-loading": outline }}>
                 <div class="page-header">
                     <Link href={listReturn("~/licenses")} url={$app.url} class="editor-back">
                         <Icon name="previous" class="size-4" />
@@ -76,7 +78,7 @@ export default createFunctionalComponent(() => (
                 </div>
             </div>
 
-            <div class="editor">
+            <div class={{ editor: true, "record-loading": outline }}>
                 <div class="editor-alert" visible={hasValue(l.error)}>
                     <span text={l.error} />
                     <Button mod="hollow" text="Reload" onClick="reload" visible={l.stale} />

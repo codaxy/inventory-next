@@ -12,6 +12,7 @@ import {
 } from "cx/widgets";
 
 import { historyAction, moreActions } from "../../../../components/moreActions";
+import { outlined } from "../../../../components/recordPage";
 import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import Controller from "./Controller";
@@ -21,6 +22,7 @@ import m from "./model";
 const noErrorText = false as unknown as Config;
 
 const t = m.tag;
+const outline = outlined(t.viewing, t.loading);
 
 /**
  * A tag's page: read-only as a row opens it, Delete and Edit in the header beside its name; editable
@@ -30,7 +32,7 @@ const t = m.tag;
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
-            <div class="page-top">
+            <div class={{ "page-top": true, "record-loading": outline }}>
                 <div class="page-header">
                     <Link href={listReturn("~/electronic-devices/tags")} url={$app.url} class="editor-back">
                         <Icon name="previous" class="size-4" />
@@ -58,7 +60,7 @@ export default createFunctionalComponent(() => (
                 </div>
             </div>
 
-            <div class="editor">
+            <div class={{ editor: true, "record-loading": outline }}>
                 <div class="editor-alert" visible={hasValue(t.error)}>
                     <span text={t.error} />
                 </div>

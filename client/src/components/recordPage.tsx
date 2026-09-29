@@ -28,6 +28,10 @@ interface RecordPage {
     another?: boolean;
 }
 
+/** A record's page is outlined (`record-loading`) while the record it shows in view is on the way. */
+export const outlined = (viewing: AccessorChain<boolean>, loading: AccessorChain<boolean>) =>
+    expr(viewing, loading, (v, l) => !!v && !!l);
+
 /**
  * A record's page in the house shape: the back link and the name, Edit and a ⋮ holding Delete; one
  * card of fields, Cancel and Save at its foot while editing; then, read-only, what is attached to it.
@@ -35,6 +39,7 @@ interface RecordPage {
  */
 export function recordPage(o: RecordPage) {
     const r = o.r;
+    const outline = outlined(r.viewing, r.loading);
     const commit = (
         <cx>
             <LinkButton
@@ -102,7 +107,7 @@ export function recordPage(o: RecordPage) {
     );
     return (
         <cx>
-            <div class="page-top">
+            <div class={{ "page-top": true, "record-loading": outline }}>
                 <div class="page-header">
                     <Link href={listReturn(o.path)} url={$app.url} class="editor-back">
                         <Icon name="previous" class="size-4" />
@@ -141,7 +146,7 @@ export function recordPage(o: RecordPage) {
                 </div>
             </div>
 
-            <div class="editor">
+            <div class={{ editor: true, "record-loading": outline }}>
                 <div class="editor-alert" visible={hasValue(r.error)}>
                     <span text={r.error} />
                     <Button mod="hollow" text="Reload" onClick="reload" visible={truthy(r.stale)} />

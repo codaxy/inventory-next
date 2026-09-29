@@ -11,6 +11,7 @@ import {
 } from "cx/widgets";
 
 import { historyAction, moreActions } from "../../../../components/moreActions";
+import { outlined } from "../../../../components/recordPage";
 import { listReturn } from "../../../../listAddress";
 import { externalLink } from "../../../../components/externalLink";
 import $app from "../../../../model";
@@ -21,6 +22,7 @@ import m, { volumesText } from "./model";
 const noErrorText = false as unknown as Config;
 
 const e = m.entry;
+const outline = outlined(e.viewing, e.loading);
 
 /**
  * A software or service's page: read-only as a row opens it, Delete and Edit in the header; editable
@@ -29,7 +31,7 @@ const e = m.entry;
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow" controller={Controller}>
-            <div class="page-top">
+            <div class={{ "page-top": true, "record-loading": outline }}>
                 <div class="page-header">
                     <Link
                         href={listReturn("~/licenses/software-services")}
@@ -59,7 +61,7 @@ export default createFunctionalComponent(() => (
                 </div>
             </div>
 
-            <div class="editor">
+            <div class={{ editor: true, "record-loading": outline }}>
                 <div class="editor-alert" visible={hasValue(e.error)}>
                     <span text={e.error} />
                 </div>
