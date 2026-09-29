@@ -214,6 +214,9 @@ first; shipping is the whole sequence, not a way of skipping to the end of it.
 **It leaves you on `main`, so the next change — a correction to what just shipped included —
 starts by branching again.**
 
+**Merge by fast-forward:** rebase the branch onto `main`, then `git merge --ff-only`. A "Merge branch
+'…'" commit says nothing the commits beneath it do not.
+
 ## Pushing
 
 **Never push unless I explicitly tell you to.** Committing locally is fine; `git push`, opening a
