@@ -15,6 +15,14 @@ original published before any test ran; here a red build publishes nothing. The 
 original's `ghcr.io/codaxy/inventory`, so neither workflow overwrites the other's image and a
 deployment switches between the two by changing one line.
 
+**The version is the commit's, stamped when CI builds the image** — never a commit of its own:
+`2026.929.1222+eaea98a`, the commit's UTC time as year, month and day, hour and minute, then its
+sha. Each part drops its leading zeros (09:05 is `905`): .NET caps a version part at 65535 and SemVer
+refuses a leading zero, and in this form the part before `+` is both, and sorts as time does. From
+the commit, not the build, so `main` and `production` build one commit as one version. The
+Dockerfile's `APP_VERSION` argument carries it; unstamped, it is `dev`. `/api/version` answers it
+without a session, and the account menu shows it under Sign out.
+
 ## Compose
 
 **`docker compose up` brings up infrastructure only** — PostgreSQL and Mailpit — which is what running
@@ -104,6 +112,9 @@ checkout writes to `logs/` under the content root.
 
 ## Traps
 
+**MSBuild reads environment variables as properties, ignoring case.** A Docker build argument is in
+the environment of every `RUN`, so one named `VERSION` becomes `$(Version)` in every project — a
+number parses and hides it, anything else fails the publish. The version travels as `APP_VERSION`.
 
 **`dotnet run` is Production without `launchSettings.json`.** The environment comes from there, so a
 missing or renamed profile means development settings are never loaded and the application stops at

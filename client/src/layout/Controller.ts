@@ -1,6 +1,7 @@
 import { Controller, History } from "cx/ui";
 
 import { signOut } from "../api/auth";
+import { getVersion } from "../api/version";
 import $app from "../model";
 import { lockScroll } from "../scrollLock";
 
@@ -16,6 +17,12 @@ export default class extends Controller {
      * on the backdrop scrolls the rows under the drawer, with Safari's toolbar resizing it as it goes.
      */
     onInit() {
+        // Nothing depends on it: a failure leaves the line out rather than saying so.
+        getVersion().then(
+            (version) => this.store.set($app.version, version),
+            () => {},
+        );
+
         this.addTrigger("drawer-lock", [$app.ui.drawerOpen], (open) => {
             const drawer = document.querySelector<HTMLElement>(".nav-drawer");
             if (open && drawer && drawerWidth.matches) this.unlock ??= lockScroll(drawer);

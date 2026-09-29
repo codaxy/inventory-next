@@ -37,6 +37,18 @@ public class HealthCheckTests
     }
 
     [Fact]
+    public async Task The_version_answers_without_a_session_or_a_database()
+    {
+        using var app = new ApplicationWithNoDatabase();
+
+        var response = await app.CreateClient().GetAsync("/api/version");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        // A test build is never stamped: `dev`, and the checkout's sha cut to seven.
+        Assert.Matches("^dev(\\+[0-9a-f]{7})?$", await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
     public async Task Readiness_is_unhealthy_when_the_database_is_not_reachable()
     {
         using var app = new ApplicationWithNoDatabase();

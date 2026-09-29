@@ -12,6 +12,8 @@ export interface Session {
 export interface AppModel {
     url: string;
     session: Session;
+    /** The build the server runs, once read; see `api/version.ts`. */
+    version?: string;
     ui: {
         /** The navigation drawer below `lg`; above it the navigation is always shown. */
         drawerOpen: boolean;

@@ -1,6 +1,7 @@
 using Codaxy.Inventory.App;
 using Codaxy.Inventory.Web.Auth;
 using Codaxy.Inventory.Web.Setup;
+using Codaxy.Inventory.Web.Version;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +34,7 @@ app.UseAuthorization();
 app.MapHealthChecks("/health/live", new HealthCheckOptions { Predicate = _ => false });
 app.MapHealthChecks("/health/ready");
 app.MapAuth();
+app.MapVersion();
 app.MapInventoryApi();
 
 // Every path the client routes to returns the shell. An unknown /api path is a 404, not the shell:

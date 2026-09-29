@@ -66,6 +66,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The commit's own UTC time, so main and production build one commit as one version:
+      # year . month and day . hour and minute, each without a leading zero — .NET caps a part at
+      # 65535 and SemVer refuses a leading zero — then the short sha as build metadata.
+      - id: version
+        run: |
+          hhmm=$(TZ=UTC git log -1 --format=%cd --date=format-local:%H%M)
+          echo "version=$(TZ=UTC git log -1 --format=%cd --date=format-local:%Y.%-m%d).$((10#$hhmm))+${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -76,6 +84,7 @@ jobs:
         with:
           context: .
           push: true
+          build-args: APP_VERSION=${{ steps.version.outputs.version }}
           tags: |
             ghcr.io/codaxy/inventory-next:${{ github.ref_name == 'production' && 'stable' || 'latest' }}
             ghcr.io/codaxy/inventory-next:${{ github.sha }}

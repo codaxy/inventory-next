@@ -61,6 +61,20 @@
     color: color-mix(in oklch, var(--color-danger) 55%, white);
 }
 
+// The build the server runs, under Sign out: looked up, not glanced at, so it waits in the menu.
+// Ruled off from the action above, as a menu separates groups of different kinds, and monospace, so
+// it reads as a value, not an action.
+.account-version {
+    margin-top: 0.25rem;
+    padding: 0.5rem 0.5rem 0.25rem;
+    border-top: 1px solid var(--color-nav-line);
+    text-align: center;
+    font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 10.5px;
+    color: var(--color-nav-ink-dim);
+    user-select: all;
+}
+
 // Below `lg` the chrome is a drawer on a touch screen, so its targets meet the 44px rule.
 @media (max-width: 1023.98px) {
     .account-menu .cxb-menuitem.account-trigger,
