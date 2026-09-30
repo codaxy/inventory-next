@@ -8,6 +8,7 @@ import {
     updateInformation,
 } from "../../../api/informations";
 import { importanceFor } from "../../../assets";
+import { withNumber } from "../../../inventoryNumbers";
 import { RecordController } from "../../../recordController";
 import m, {
     emptyOptions,
@@ -85,7 +86,13 @@ export default class extends RecordController<InformationDraft, InformationDetai
         });
 
         getInformationOptions()
-            .then((o) => this.store.set(r.options, { ...emptyOptions, ...o }))
+            .then((o) =>
+                this.store.set(r.options, {
+                    ...emptyOptions,
+                    ...o,
+                    devices: o.devices.map((d) => ({ id: d.id, text: withNumber(d.name, d.number) })),
+                }),
+            )
             .catch(() => {});
     }
 

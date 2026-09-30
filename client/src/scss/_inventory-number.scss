@@ -1,0 +1,10 @@
+// An inventory number beside a name, wherever the name is shown but in an editable picker: muted,
+// never bold and smaller, so it is not read as part of the name. Relative to the name, since names
+// run from a chip's 13px to a title's: 0.82em is a holding row's 11.5px beside its 14px name.
+.inventory-number {
+    margin-left: 0.4em;
+    font-size: 0.82em;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink-muted);
+}

@@ -1,4 +1,5 @@
 import type { Page } from "../paging";
+import type { NumberedOption } from "./assets";
 import { send, toQuery } from "./http";
 
 export type Expiry = "expired" | "soon" | "regular";
@@ -93,10 +94,12 @@ export interface DeviceOption extends Option {
     holder: string | null;
 }
 
-/** A volume for a filter's chip and a form's preselection: what tells it apart, and its software. */
+/** A volume for a filter's chip and a form's preselection: its license, what tells it apart, and its software. */
 export interface VolumeRef {
     id: string;
-    text: string;
+    license: string;
+    licenseNumber: number | null;
+    designator: string;
     softwareId: string;
     software: string;
     licenseId: string;
@@ -115,6 +118,8 @@ export interface VolumeOption {
     designator: string;
 }
 
+export type { NumberedOption };
+
 /** The seeded id of the per-user volume type: the one activated for a person. */
 export const perUser = 1;
 
@@ -131,7 +136,7 @@ export const getActivation = (id: string) => send<ActivationDetail>(`${base}/${i
 export const getActivationOptions = () =>
     send<{
         software: Option[];
-        licenses: Option[];
+        licenses: NumberedOption[];
         people: Option[];
         devices: DeviceOption[];
         volumes: VolumeRef[];

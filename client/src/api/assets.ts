@@ -10,6 +10,13 @@ export interface Option {
     text: string;
 }
 
+/** An asset to pick, its name and inventory number apart: beside a name the number is muted. */
+export interface NumberedOption {
+    id: string;
+    name: string;
+    number: number | null;
+}
+
 export interface Weighted extends Option {
     weight: number;
 }

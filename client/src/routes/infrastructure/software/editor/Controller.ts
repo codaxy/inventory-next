@@ -1,4 +1,5 @@
 import { type OnVolumeDetail, type OnVolumeForm, software } from "../../../../api/infrastructure";
+import { numberText, volumeText } from "../../../../inventoryNumbers";
 import { RecordController } from "../../../../recordController";
 import m, { type Draft, toAttached, toDraft, toForm } from "./model";
 
@@ -27,13 +28,19 @@ export default class extends RecordController<Draft, OnVolumeDetail, OnVolumeFor
         super.onInit();
         software
             .options()
-            .then((o) => this.store.set(m.record.options, o))
+            .then((o) =>
+                this.store.set(m.record.options, {
+                    volumes: o.volumes.map((v) => ({ id: v.id, text: volumeText(v) })),
+                }),
+            )
             .catch(() => {});
     }
 
-    /** The license the volume is under, as a link beside it. */
+    /** The license the volume is under, as a link beside it, and the volume's parts for its view. */
     protected loaded(d: OnVolumeDetail) {
         this.store.set(m.record.licenseHref, `~/licenses/${d.volume.licenseId}`);
         this.store.set(m.record.licenseText, d.volume.license);
+        this.store.set(m.record.licenseNumber, numberText(d.volume.licenseNumber));
+        this.store.set(m.record.designator, d.volume.designator);
     }
 }

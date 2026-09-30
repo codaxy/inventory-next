@@ -8,6 +8,7 @@ import type {
     VolumeOption,
 } from "../../../../api/activations";
 import { perUser } from "../../../../api/activations";
+import { numberText, volumeText, withNumber } from "../../../../inventoryNumbers";
 import { expiryText, formatDate } from "../../../../licensing";
 
 /** The form, as the fields bind it: a pick as its id and text, numbers and dates `null` until set. */
@@ -30,10 +31,13 @@ export interface View {
     softwareHref: string;
     licenseId: string;
     license: string;
+    licenseNumber?: string;
     volume: string;
     seats: string;
     assigneeLabel: string;
     assignee: string;
+    /** A device's inventory number. */
+    assigneeNumber?: string;
     /** The person's page, or the device's. */
     assigneeHref?: string;
     activated: string;
@@ -102,11 +106,10 @@ export const toForm = (d: Draft, forPerson: boolean) => ({
     quantity: d.quantity ?? 1,
 });
 
-export const volumeText = (v: VolumeOption) =>
-    `${v.license}${v.licenseNumber ? ` #${v.licenseNumber}` : ""} · ${v.designator} · ${v.inUse} of ${v.quantity} in use`;
+export const volumeOptionText = (v: VolumeOption) => `${volumeText(v)} · ${v.inUse} of ${v.quantity} in use`;
 
 export const deviceText = (d: DeviceOption) =>
-    [d.text, d.number ? `#${d.number}` : null, d.holder].filter(Boolean).join(" · ");
+    [withNumber(d.text, d.number), d.holder].filter(Boolean).join(" · ");
 
 export function overWarning(volume: VolumeOption | undefined, quantity: number | null | undefined) {
     if (!volume || !quantity) return undefined;
@@ -120,13 +123,13 @@ export const toView = (a: ActivationDetail): View => ({
     software: a.software.name,
     softwareHref: `~/licenses/software-services/${a.software.id}`,
     licenseId: a.license.id,
-    license: a.license.number ? `${a.license.name} #${a.license.number}` : a.license.name,
+    license: a.license.name,
+    licenseNumber: numberText(a.license.number),
     volume: `${a.volume.type} · ${a.volume.inUse} of ${a.volume.quantity} in use`,
     seats: a.quantity === 1 ? "1 seat" : `${a.quantity} seats`,
     assigneeLabel: a.volume.typeId === perUser ? "User" : "Device",
-    assignee:
-        a.person?.name ??
-        (a.device ? `${a.device.name}${a.device.number ? ` #${a.device.number}` : ""}` : "—"),
+    assignee: a.person?.name ?? a.device?.name ?? "—",
+    assigneeNumber: a.person ? undefined : numberText(a.device?.number),
     assigneeHref: a.person
         ? `~/company/people/${a.person.id}`
         : a.device

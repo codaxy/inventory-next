@@ -16,17 +16,4 @@ public class VolumeNamesTests
         string? description,
         string expected
     ) => Assert.Equal(expected, VolumeNames.Designator(description, "Per user"));
-
-    [Fact]
-    public void A_volume_is_named_by_its_license_and_number_then_its_designator()
-    {
-        Assert.Equal(
-            "Apple developer program #100684 · Per user",
-            VolumeNames.Text("Apple developer program", 100684, null, "Per user")
-        );
-        Assert.Equal(
-            "Docusign · Marko Stijak",
-            VolumeNames.Text("Docusign", null, "Marko Stijak", "Per user")
-        );
-    }
 }

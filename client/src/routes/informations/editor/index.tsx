@@ -3,6 +3,7 @@ import { Button, Icon, Link, LookupField, Repeater, TextField } from "cx/widgets
 
 import { externalLink } from "../../../components/externalLink";
 import { formFields } from "../../../components/formFields";
+import { inventoryNumber } from "../../../components/inventoryNumber";
 import { recordPage } from "../../../components/recordPage";
 import $app from "../../../model";
 import Controller from "./Controller";
@@ -45,14 +46,17 @@ const places = (actions: any) => (
                         <div class="place-summary">
                             <div class="place-kind" text={p.label} />
                             <div class="place-target">
-                                <Link
-                                    visible={hasValue(p.href)}
-                                    href={p.href}
-                                    url={$app.url}
-                                    class="editor-link"
-                                    text={p.target}
-                                />
-                                <span visible={falsy(p.href)} text={p.target} />
+                                <span>
+                                    <Link
+                                        visible={hasValue(p.href)}
+                                        href={p.href}
+                                        url={$app.url}
+                                        class="editor-link"
+                                        text={p.target}
+                                    />
+                                    <span visible={falsy(p.href)} text={p.target} />
+                                    {inventoryNumber(p.targetNumber)}
+                                </span>
                                 {externalLink(p.external, r.viewing)}
                             </div>
                         </div>

@@ -10,7 +10,7 @@ public static class Endpoint
     public static void Map(RouteGroupBuilder cloudSubscriptions) =>
         cloudSubscriptions.MapGet("/options", Handle);
 
-    public sealed record Response(IReadOnlyList<AssetOption> Volumes);
+    public sealed record Response(IReadOnlyList<VolumeOption> Volumes);
 
     private static async Task<IResult> Handle(
         InventoryContext context,

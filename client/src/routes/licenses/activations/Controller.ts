@@ -6,12 +6,18 @@ import {
     activationsExport,
     getActivationOptions,
     listActivations,
+    type NumberedOption,
+    type VolumeRef,
 } from "../../../api/activations";
 import { type AddressValue, oneOf } from "../../../listAddress";
 import { ListController } from "../../../listController";
+import { volumeText, withNumber } from "../../../inventoryNumbers";
 import m, { type FilterKey, type Filters, type Row, toChips, toRows } from "./model";
 
 const s = m.list;
+
+const licenseText = (l: NumberedOption | undefined) => l && withNumber(l.name, l.number);
+const volumeRefText = (v: VolumeRef | undefined) => v && volumeText(v);
 const keys = ["activated", "software", "license", "assignee", "deactivated"] as const;
 
 const request = (f: Filters): Partial<ActivationQuery> => ({
@@ -49,7 +55,7 @@ export default class extends ListController<Filters, ActivationItem, Row, Activa
     }
 
     protected toRows = toRows;
-    protected toChips = toChips;
+    protected toChips = (f: Filters) => toChips(f, this.store.get(s.licenses), this.store.get(s.volumes));
 
     protected filtersFrom = (query: URLSearchParams): Filters => ({
         softwareId: query.get("softwareId"),
@@ -127,8 +133,8 @@ export default class extends ListController<Filters, ActivationItem, Row, Activa
                 this.store.update(s.filters, (f) => ({
                     ...f,
                     softwareText: f.softwareText ?? o.software.find((x) => x.id === f.softwareId)?.text,
-                    licenseText: f.licenseText ?? o.licenses.find((x) => x.id === f.licenseId)?.text,
-                    volumeText: f.volumeText ?? o.volumes.find((x) => x.id === f.volumeId)?.text,
+                    licenseText: f.licenseText ?? licenseText(o.licenses.find((x) => x.id === f.licenseId)),
+                    volumeText: f.volumeText ?? volumeRefText(o.volumes.find((x) => x.id === f.volumeId)),
                     personText: f.personText ?? o.people.find((x) => x.id === f.personId)?.text,
                 }));
             })

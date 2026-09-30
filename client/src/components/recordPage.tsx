@@ -6,6 +6,7 @@ import { listReturn } from "../listAddress";
 import $app from "../model";
 import type { RecordState } from "../recordController";
 import { holdingSections } from "./holdings";
+import { inventoryNumber } from "./inventoryNumber";
 import { historyAction, type MoreAction, moreActions } from "./moreActions";
 
 interface RecordPage {
@@ -116,7 +117,7 @@ export function recordPage(o: RecordPage) {
                     <div class="editor-heading">
                         <h1 class="page-title">
                             <span text={r.title} />
-                            <span class="page-title-note" visible={hasValue(r.number)} text={r.number} />
+                            {inventoryNumber(r.number)}
                         </h1>
                         <div class="editor-heading-actions" visible={r.viewing}>
                             <LinkButton

@@ -1,7 +1,9 @@
 import { createFunctionalComponent, expr, falsy, hasValue, isNonEmpty } from "cx/ui";
 import { Button, Icon, Link, LookupField, Repeater, TextField } from "cx/widgets";
 
+import { inventoryNumber } from "../../../components/inventoryNumber";
 import { Pager } from "../../../components/Pager";
+import { volumeText, withNumber } from "../../../inventoryNumbers";
 import { sortHeader } from "../../../components/sortHeader";
 import { expiryClass } from "../../../licensing";
 import $app from "../../../model";
@@ -28,16 +30,17 @@ const notEmpty = expr(
 const volumeOptions = expr(s.volumes, f.licenseId, f.softwareId, (volumes, license, software) =>
     (volumes ?? [])
         .filter((v) => (!license || v.licenseId === license) && (!software || v.softwareId === software))
-        .map((v) => ({ id: v.id, text: v.text })),
+        .map((v) => ({ id: v.id, text: volumeText(v) })),
 );
 
 /** The licenses with a volume of the chosen software, every one while none is chosen. */
 const licenseOptions = expr(s.licenses, s.volumes, f.softwareId, (licenses, volumes, software) =>
-    software
-        ? (licenses ?? []).filter((l) =>
-              (volumes ?? []).some((v) => v.licenseId === l.id && v.softwareId === software),
-          )
-        : (licenses ?? []),
+    (licenses ?? [])
+        .filter(
+            (l) =>
+                !software || (volumes ?? []).some((v) => v.licenseId === l.id && v.softwareId === software),
+        )
+        .map((l) => ({ id: l.id, text: withNumber(l.name, l.number) })),
 );
 
 /** A new activation, of the volume the list is filtered to when it is: that choice is already made. */
@@ -142,7 +145,11 @@ export default createFunctionalComponent(() => {
                                         controller.removeFilter(store.get(m.$chip.key))
                                     }
                                 >
-                                    <span text={m.$chip.text} />
+                                    <span>
+                                        <span text={m.$chip.text} />
+                                        {inventoryNumber(m.$chip.number)}
+                                        <span visible={hasValue(m.$chip.rest)} text={m.$chip.rest} />
+                                    </span>
                                     <Icon name="close" class="size-3.5" />
                                     <span class="sr-only" text="Remove filter" />
                                 </button>

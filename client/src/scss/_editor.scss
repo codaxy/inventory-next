@@ -270,13 +270,6 @@ a.editor-chip:hover {
     }
 }
 
-// The record's number beside its name: what it is known by, lighter than the name.
-.page-title-note {
-    margin-left: 0.5rem;
-    font-weight: 500;
-    color: var(--color-ink-muted);
-}
-
 // A license's volumes: an existing one a line, a new one its four fields; remove at the end of each.
 .volume-list {
     display: grid;

@@ -10,6 +10,7 @@ import {
     perUser,
     reactivateActivation,
     type VolumeOption,
+    type NumberedOption,
     type VolumeRef,
 } from "../../../../api/activations";
 import { ApiError, fieldErrors } from "../../../../api/http";
@@ -19,7 +20,7 @@ import { guardLeaving } from "../../../../leaveGuard";
 import { listReturn, queryOf } from "../../../../listAddress";
 import $app from "../../../../model";
 import { askDeactivationDate } from "./deactivateWindow";
-import m, { deviceText, type EditorState, overWarning, toForm, toView, volumeText } from "./model";
+import m, { deviceText, type EditorState, overWarning, toForm, toView, volumeOptionText } from "./model";
 
 const list = "~/licenses/activations";
 const a = m.activation;
@@ -30,7 +31,7 @@ export default class extends Controller {
     private volumes: VolumeOption[] = [];
     /** Every volume, from the options: what a volume named in the address is looked up in. */
     private volumeRefs: VolumeRef[] = [];
-    private licenses: { id: string; text: string }[] = [];
+    private licenses: NumberedOption[] = [];
     /** A volume named by the address — `new?volumeId=…`, from a license's volume — to choose once loaded. */
     private preselect: string | null = null;
 
@@ -142,7 +143,7 @@ export default class extends Controller {
         if (from === "license")
             this.store.set(a.origin, {
                 href: `~/licenses/${ref.licenseId}`,
-                text: this.licenses.find((l) => l.id === ref.licenseId)?.text ?? "License",
+                text: this.licenses.find((l) => l.id === ref.licenseId)?.name ?? "License",
             });
         if (from === "software")
             this.store.set(a.origin, {
@@ -166,12 +167,12 @@ export default class extends Controller {
             if (this.store.get(a.draft.softwareId) !== softwareId) return;
             this.store.set(
                 a.volumes,
-                this.volumes.map((v) => ({ id: v.id, text: volumeText(v) })),
+                this.volumes.map((v) => ({ id: v.id, text: volumeOptionText(v) })),
             );
             const named = this.volumes.find((v) => v.id === this.preselect);
             if (named) {
                 this.store.set(a.draft.volumeId, named.id);
-                this.store.set(a.draft.volumeText, volumeText(named));
+                this.store.set(a.draft.volumeText, volumeOptionText(named));
                 this.preselect = null;
                 // What the address chose is where the form starts, not an edit to guard.
                 this.saved = JSON.stringify(toForm(this.store.get(a.draft), named.typeId === perUser));
@@ -179,7 +180,7 @@ export default class extends Controller {
             // One volume is the choice already made.
             else if (this.volumes.length === 1) {
                 this.store.set(a.draft.volumeId, this.volumes[0].id);
-                this.store.set(a.draft.volumeText, volumeText(this.volumes[0]));
+                this.store.set(a.draft.volumeText, volumeOptionText(this.volumes[0]));
             }
         } catch {
             this.store.set(a.error, "The volumes could not be loaded.");

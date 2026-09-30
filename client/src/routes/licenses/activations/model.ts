@@ -1,6 +1,14 @@
 import { createModel } from "cx/ui";
 
-import type { ActivationItem, ActivationSort, Expiry, Option, VolumeRef } from "../../../api/activations";
+import type {
+    ActivationItem,
+    ActivationSort,
+    Expiry,
+    NumberedOption,
+    Option,
+    VolumeRef,
+} from "../../../api/activations";
+import { numberText } from "../../../inventoryNumbers";
 import { expiryText, formatDate } from "../../../licensing";
 import type { PagerState } from "../../../paging";
 
@@ -40,6 +48,9 @@ export type FilterKey = "software" | "license" | "volume" | "person" | "status" 
 export interface Chip {
     key: FilterKey;
     text: string;
+    /** A license's inventory number, muted after its name, and a volume's designator after that. */
+    number?: string;
+    rest?: string;
 }
 
 export interface ListState {
@@ -48,7 +59,7 @@ export interface ListState {
     filtersOpen: boolean;
     chips: Chip[];
     software: Option[];
-    licenses: Option[];
+    licenses: NumberedOption[];
     volumes: VolumeRef[];
     people: Option[];
     sort: ActivationSort;
@@ -88,13 +99,27 @@ export const toRows = (items: ActivationItem[]): Row[] =>
         expiryText: a.expiry ? `${expiryText[a.expiry]} · ${formatDate(a.expirationDate)}` : undefined,
     }));
 
+const licenseChip = (l: NumberedOption | undefined): Chip => ({
+    key: "license",
+    text: `License: ${l?.name ?? "…"}`,
+    number: numberText(l?.number),
+});
+
+const volumeChip = (v: VolumeRef | undefined): Chip => ({
+    key: "volume",
+    text: `Volume: ${v?.license ?? "…"}`,
+    number: numberText(v?.licenseNumber),
+    rest: v && ` · ${v.designator}`,
+});
+
 const statusText = { active: "Active", deactivated: "Deactivated" } as const;
 const expiryFilterText = { ...expiryText, none: "No expiry date" } as const;
 
-export const toChips = (f: Filters): Chip[] => [
+/** A license's and a volume's chips name them from the options, so the number is apart from the name. */
+export const toChips = (f: Filters, licenses: NumberedOption[] = [], volumes: VolumeRef[] = []): Chip[] => [
     ...(f.softwareId ? [{ key: "software" as const, text: f.softwareText ?? "Software" }] : []),
-    ...(f.licenseId ? [{ key: "license" as const, text: `License: ${f.licenseText ?? "…"}` }] : []),
-    ...(f.volumeId ? [{ key: "volume" as const, text: `Volume: ${f.volumeText ?? "…"}` }] : []),
+    ...(f.licenseId ? [licenseChip(licenses.find((l) => l.id === f.licenseId))] : []),
+    ...(f.volumeId ? [volumeChip(volumes.find((v) => v.id === f.volumeId))] : []),
     ...(f.personId ? [{ key: "person" as const, text: `Held by: ${f.personText ?? "…"}` }] : []),
     ...(f.status ? [{ key: "status" as const, text: statusText[f.status] }] : []),
     ...(f.expiry ? [{ key: "expiry" as const, text: `License: ${expiryFilterText[f.expiry]}` }] : []),

@@ -1,19 +1,10 @@
 using System.Text.RegularExpressions;
-using Codaxy.Inventory.App.Shared.Assets;
 
 namespace Codaxy.Inventory.App.Shared.Volumes;
 
-/// <summary>How a volume is named wherever one is picked or named in passing.</summary>
+/// <summary>What names a volume beside its license, wherever one is picked or named in passing.</summary>
 public static partial class VolumeNames
 {
-    /// <summary>"JetBrains All Products #100231 · Per user": the license with its inventory number, and the volume's designator.</summary>
-    public static string Text(
-        string license,
-        int? licenseNumber,
-        string? description,
-        string type
-    ) => $"{AssetNames.WithNumber(license, licenseNumber)} · {Designator(description, type)}";
-
     /// <summary>
     /// What tells volumes of one license and software apart: the description, else the type. A web
     /// address in the description is left out — it is where the seats are managed, not a name, and

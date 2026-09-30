@@ -54,17 +54,25 @@ export function formFields(state: FormState, prefix: string) {
 
     /**
      * A picker over one of the options' lists, bound as `<key>Id` and `<key>Text`. Given `href`, the
-     * chosen record's address from its id, the view shows the choice as a link to it.
+     * chosen record's address from its id, the view shows the choice as a link to it; given `view`,
+     * the view shows that — an option whose text holds an inventory number, which the view mutes.
      */
     const pick = (
         text: string,
         key: string,
         list: string,
-        opts: Layout & { href?: (id: string) => string } = {},
+        opts: Layout & { href?: (id: string) => string; view?: any } = {},
     ) => (
         <cx>
             <div class={{ "editor-wide": !!opts.wide }}>
                 {label(text, opts.required, `${prefix}-${key}-label`)}
+                {opts.view ? (
+                    <cx>
+                        <div class="editor-value" visible={state.viewing}>
+                            {opts.view}
+                        </div>
+                    </cx>
+                ) : null}
                 {opts.href ? (
                     <cx>
                         <div class="editor-value" visible={state.viewing}>
@@ -80,7 +88,7 @@ export function formFields(state: FormState, prefix: string) {
                     </cx>
                 ) : null}
                 <LookupField
-                    visible={opts.href ? editing : true}
+                    visible={opts.href || opts.view ? editing : true}
                     id={`${prefix}-${key}`}
                     value={d[`${key}Id`]}
                     text={d[`${key}Text`]}

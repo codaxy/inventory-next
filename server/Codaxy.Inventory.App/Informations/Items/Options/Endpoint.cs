@@ -17,7 +17,7 @@ public static class Endpoint
         IReadOnlyList<WeightedOption> Confidentialities,
         IReadOnlyList<WeightedOption> Integrities,
         IReadOnlyList<WeightedOption> Availabilities,
-        IReadOnlyList<AssetOption> Devices,
+        IReadOnlyList<NumberedOption> Devices,
         IReadOnlyList<AssetOption> VirtualMachines,
         IReadOnlyList<AssetOption> Software,
         IReadOnlyList<AssetOption> CloudSubscriptions,
@@ -51,15 +51,14 @@ public static class Endpoint
                 asset.Confidentialities,
                 asset.Integrities,
                 asset.Availabilities,
-                // "Laptop · #100893": a device is found by name, told apart by number.
+                // A device is found by name, told apart by number.
                 await context
                     .ElectronicDevices.AsNoTracking()
                     .OrderBy(d => d.Asset.Name)
-                    .Select(d => new AssetOption(
+                    .Select(d => new NumberedOption(
                         d.AssetId,
-                        d.Asset.InventoryNumber == null
-                            ? d.Asset.Name
-                            : d.Asset.Name + " · #" + d.Asset.InventoryNumber
+                        d.Asset.Name,
+                        d.Asset.InventoryNumber
                     ))
                     .ToListAsync(cancellationToken),
                 await context

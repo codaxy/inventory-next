@@ -12,6 +12,7 @@ import {
 
 import { dateValue, numberValue } from "../../../../bindings";
 import { expiryClass } from "../../../../licensing";
+import { inventoryNumber } from "../../../../components/inventoryNumber";
 import { historyAction, moreActions } from "../../../../components/moreActions";
 import { listReturn } from "../../../../listAddress";
 import { externalLink } from "../../../../components/externalLink";
@@ -127,23 +128,28 @@ export default createFunctionalComponent(() => (
                             {linked("Software or service", v.software, v.softwareHref)}
                             <div>
                                 <div class="editor-label" text="License" />
-                                <Link
-                                    class="editor-value editor-link"
-                                    href={expr(v.licenseId, (id) => `~/licenses/${id}`)}
-                                    url={$app.url}
-                                    text={v.license}
-                                />
+                                <div class="editor-value">
+                                    <Link
+                                        class="editor-link"
+                                        href={expr(v.licenseId, (id) => `~/licenses/${id}`)}
+                                        url={$app.url}
+                                        text={v.license}
+                                    />
+                                    {inventoryNumber(v.licenseNumber)}
+                                </div>
                             </div>
                             {fact("Volume", v.volume)}
                             <div>
                                 <div class="editor-label" text={v.assigneeLabel} />
-                                <Link
-                                    class="editor-value editor-link"
-                                    visible={hasValue(v.assigneeHref)}
-                                    href={v.assigneeHref}
-                                    url={$app.url}
-                                    text={v.assignee}
-                                />
+                                <div class="editor-value" visible={hasValue(v.assigneeHref)}>
+                                    <Link
+                                        class="editor-link"
+                                        href={v.assigneeHref}
+                                        url={$app.url}
+                                        text={v.assignee}
+                                    />
+                                    {inventoryNumber(v.assigneeNumber)}
+                                </div>
                                 <div class="editor-value" visible={falsy(v.assigneeHref)} text={v.assignee} />
                             </div>
                             {fact("Seats", v.seats)}

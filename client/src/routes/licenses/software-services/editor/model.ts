@@ -1,6 +1,7 @@
 import { createModel } from "cx/ui";
 
 import type { Option, VolumeLine } from "../../../../api/softwareServices";
+import { numberText } from "../../../../inventoryNumbers";
 
 /** The form, as the fields bind it: text keys absent until typed, a pick as its id and text. */
 export interface Draft {
@@ -38,6 +39,8 @@ export interface VolumeRow {
     id: string;
     licenseHref: string;
     license: string;
+    /** "#100661", muted beside the license's name. */
+    licenseNumber?: string;
     activationsHref?: string;
     activationsText: string;
     activateHref: string;
@@ -80,7 +83,8 @@ export const toVolumeRows = (volumes: VolumeLine[]): VolumeRow[] =>
         activationsHref: v.activationCount > 0 ? `~/licenses/activations?volumeId=${v.id}` : undefined,
         activationsText: v.activationCount === 1 ? "1 activation" : `${v.activationCount} activations`,
         activateHref: `~/licenses/activations/new?volumeId=${v.id}&from=software`,
-        license: v.licenseNumber ? `${v.license} #${v.licenseNumber}` : v.license,
+        license: v.license,
+        licenseNumber: numberText(v.licenseNumber),
         detail: v.description ? `${v.type} · ${v.description}` : v.type,
         seats: `${v.inUse} / ${v.quantity}`,
         fill: v.quantity > 0 ? Math.round((v.inUse / v.quantity) * 100) : 0,

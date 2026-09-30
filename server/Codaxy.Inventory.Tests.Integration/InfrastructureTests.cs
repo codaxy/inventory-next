@@ -284,7 +284,6 @@ public class InfrastructureTests(InfrastructureApplication app)
             ("Azure license", InfrastructureApplication.Azure.License),
             (prod.Volume.License, prod.Volume.LicenseId)
         );
-        Assert.StartsWith("Azure license · ", prod.Volume.Text);
         Assert.Equal(
             ("https://portal.azure.com", "Runbook"),
             (prod.ManagementUrl, prod.Information.Items.Single().Name)
@@ -363,9 +362,7 @@ public class InfrastructureTests(InfrastructureApplication app)
         )!;
         Assert.Contains(
             o.Volumes,
-            v =>
-                v.Id == InfrastructureApplication.Azure.Volume
-                && v.Text.StartsWith("Azure license · ")
+            v => v.Id == InfrastructureApplication.Azure.Volume && v.License == "Azure license"
         );
     }
 

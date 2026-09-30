@@ -559,13 +559,13 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         ).GetFromJsonAsync<App.Licenses.Activations.Options.Endpoint.Response>($"{Url}/options");
         Assert.Contains(
             options!.Volumes,
-            v => v.Id == second && v.Text == "Office license · Second invoice"
+            v => v.Id == second && (v.License, v.Designator) == ("Office license", "Second invoice")
         );
         Assert.Contains(
             options.Volumes,
             v =>
                 v.Id == ActivationApplication.OfficeLicense.Volume
-                && v.Text == "Office license · Per user"
+                && (v.License, v.Designator) == ("Office license", "Per user")
         );
     }
 
@@ -675,7 +675,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         ).GetFromJsonAsync<App.Licenses.Activations.Options.Endpoint.Response>($"{Url}/options");
 
         Assert.Equal(["Antivirus", "Office"], options!.Software.Select(s => s.Text));
-        Assert.Contains(options.Licenses, l => l.Text == "Office license");
+        Assert.Contains(options.Licenses, l => l.Name == "Office license");
         Assert.Contains(options.People, p => p.Text == "Ana Anić");
         Assert.Contains(options.Devices, d => d.Id == ActivationApplication.Laptop);
         Assert.DoesNotContain(options.Devices, d => d.Id == ActivationApplication.Monitor);

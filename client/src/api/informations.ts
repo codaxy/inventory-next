@@ -1,5 +1,5 @@
 import type { Page } from "../paging";
-import type { Option, Ref, Weighted } from "./assets";
+import type { NumberedOption, Option, Ref, Weighted } from "./assets";
 import { send, toQuery } from "./http";
 
 export interface InformationRow {
@@ -128,6 +128,9 @@ export interface InformationOptions {
     locations: Option[];
 }
 
+/** As the server sends them: a device's name and number apart, for the picker to join. */
+export type InformationOptionsResponse = Omit<InformationOptions, "devices"> & { devices: NumberedOption[] };
+
 export type InformationSort = `${"" | "-"}${"name" | "type" | "assignee" | "author" | "project"}`;
 
 export interface InformationQuery {
@@ -152,7 +155,7 @@ export const listInformation = (q: InformationQuery) => send<Page<InformationIte
 export const informationExport = (q: Omit<InformationQuery, "page" | "pageSize">) =>
     `${base}/export?${toQuery(q)}`;
 export const getInformation = (id: string) => send<InformationDetail>(`${base}/${id}`);
-export const getInformationOptions = () => send<InformationOptions>(`${base}/options`);
+export const getInformationOptions = () => send<InformationOptionsResponse>(`${base}/options`);
 export const createInformation = (form: InformationForm) =>
     send<InformationDetail>(`${base}/`, { method: "POST", body: JSON.stringify(form) });
 export const updateInformation = (id: string, form: InformationForm) =>

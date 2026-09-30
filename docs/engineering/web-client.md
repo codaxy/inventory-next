@@ -339,12 +339,19 @@ never split — under the table where they fit, whole on the next page where the
 **A license's volume is read in parts, not as a sentence**: its software, then its type and
 description muted beneath, and its seats — "15 / 35 in use" over a meter, primary while seats are
 free, green when every one is used — a bought seat is meant to be — and red only past the quantity — in a column of their own, where the eye scans for them; on a
-phone the seats take a line beneath the name. **A volume in a picker or a chip is named by the
-server** (`VolumeNames`): its license with its inventory number, as a license picker names one
-(`AssetNames.WithNumber`), and what tells it from the license's other volumes — the description with
-any web address taken out, else the type. Not its software, which is usually the license's name
-again. An address is where the seats are managed, not a name, and it runs an option across a phone's
-screen.
+phone the seats take a line beneath the name. **A volume is named by its license, the license's
+inventory number, and what tells it from the license's other volumes** — the description with any web
+address taken out, else the type (`VolumeNames.Designator`, on the server). Not its software, which is
+usually the license's name again. An address is where the seats are managed, not a name, and it runs
+an option across a phone's screen.
+
+**An inventory number beside a name is muted** — `inventoryNumber()` in `components/`: 0.82em of
+the name, as a holding row's 11.5px beside 14px, never bold, `ink-muted` — wherever the name is shown: a title, a link, a chip, a value in view,
+a row. Joined into the name's text it reads as part of the name. The one exception is an editable
+picker, whose option is a single text — "Adobe Illustrator #100661", `withNumber()` in
+`src/inventoryNumbers.ts`. So the server sends a name and its number apart (`NumberedOption`, a
+volume's parts), never joined, and the client joins them for a picker only. A number with a column of
+its own is that column's value, and a note line muted whole needs nothing more.
 
 **Removing a saved part of a record waits for the save** — a license's volume, a place where
 information is kept: the existing one is struck

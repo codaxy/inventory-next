@@ -3,6 +3,7 @@ import { createModel } from "cx/ui";
 import type { Option } from "../../../../api/assets";
 import type { OnVolumeDetail, OnVolumeForm } from "../../../../api/infrastructure";
 import { text } from "../../../../assets";
+import { volumeText } from "../../../../inventoryNumbers";
 import { informationKind, toSections } from "../../../../holdings";
 import type { RecordState } from "../../../../recordController";
 
@@ -15,9 +16,11 @@ export interface Draft {
 
 export interface State extends RecordState<Draft> {
     options: { volumes: Option[] };
-    /** The license the volume is under, for its link. */
+    /** The license the volume is under, for its link, and the volume in view: the license's number muted. */
     licenseHref?: string;
     licenseText?: string;
+    licenseNumber?: string;
+    designator?: string;
 }
 
 export interface Model {
@@ -30,7 +33,7 @@ export default createModel<Model>();
 export const toDraft = (d: OnVolumeDetail): Draft => ({
     name: d.name,
     volumeId: d.volume.id,
-    volumeText: d.volume.text,
+    volumeText: volumeText(d.volume),
     managementUrl: d.managementUrl,
 });
 

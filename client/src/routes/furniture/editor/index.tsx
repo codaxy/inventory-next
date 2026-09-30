@@ -2,6 +2,7 @@ import { createFunctionalComponent, expr, hasValue, truthy } from "cx/ui";
 import { Button, Icon, Link, LinkButton, ValidationGroup } from "cx/widgets";
 
 import { formFields } from "../../../components/formFields";
+import { inventoryNumber } from "../../../components/inventoryNumber";
 import { historyAction, moreActions } from "../../../components/moreActions";
 import { outlined } from "../../../components/recordPage";
 import { listReturn } from "../../../listAddress";
@@ -33,7 +34,7 @@ export default createFunctionalComponent(() => (
                     <div class="editor-heading">
                         <h1 class="page-title">
                             <span text={f.title} />
-                            <span class="page-title-note" visible={hasValue(f.number)} text={f.number} />
+                            {inventoryNumber(f.number)}
                         </h1>
                         <div class="editor-heading-actions" visible={f.viewing}>
                             <LinkButton

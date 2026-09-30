@@ -2,12 +2,17 @@ import type { Page } from "../paging";
 import type { Option } from "./assets";
 import { send, toQuery } from "./http";
 
-/** "JetBrains All Products · Per user", and the license it is under. */
-export interface VolumeRef {
+/** A volume as it is named — its license and the license's number, then what tells it apart. */
+export interface VolumeName {
     id: string;
-    text: string;
-    licenseId: string;
     license: string;
+    licenseNumber: number | null;
+    designator: string;
+}
+
+/** A volume, and the license it is under. */
+export interface VolumeRef extends VolumeName {
+    licenseId: string;
 }
 
 interface Information {
@@ -65,7 +70,7 @@ const records = <Item, Detail, Form>(base: string) => ({
     /** The spreadsheet of what a list query selects, every row. */
     export: (q: { q?: string; sort?: Sort }) => `${base}/export?${toQuery(q)}`,
     get: (id: string) => send<Detail>(`${base}/${id}`),
-    options: () => send<{ volumes: Option[] }>(`${base}/options`),
+    options: () => send<{ volumes: VolumeName[] }>(`${base}/options`),
     create: (form: Form) => send<Detail>(`${base}/`, { method: "POST", body: JSON.stringify(form) }),
     update: (id: string, form: Form) =>
         send<Detail>(`${base}/${id}`, { method: "PUT", body: JSON.stringify(form) }),

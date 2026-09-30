@@ -19,6 +19,7 @@ import { outlined } from "../../../components/recordPage";
 import { listReturn } from "../../../listAddress";
 import { externalLink } from "../../../components/externalLink";
 import { formFields } from "../../../components/formFields";
+import { inventoryNumber } from "../../../components/inventoryNumber";
 import $app from "../../../model";
 import Controller from "./Controller";
 import m from "./model";
@@ -53,7 +54,7 @@ export default createFunctionalComponent(() => (
                     <div class="editor-heading">
                         <h1 class="page-title">
                             <span text={l.title} />
-                            <span class="page-title-note" visible={hasValue(l.number)} text={l.number} />
+                            {inventoryNumber(l.number)}
                         </h1>
                         <div class="editor-heading-actions" visible={l.viewing}>
                             <LinkButton

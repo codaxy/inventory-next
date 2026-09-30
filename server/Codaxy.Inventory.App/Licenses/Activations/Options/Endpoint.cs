@@ -14,10 +14,12 @@ public static class Endpoint
     /// <param name="Number">The device's inventory number, which a picker searches as well as the name.</param>
     public sealed record DeviceOption(Guid Id, string Text, int? Number, string? Holder);
 
-    /// <param name="Text">"JetBrains All Products #100231 · Per user" (<see cref="VolumeNames.Text"/>).</param>
+    /// <param name="Designator">What tells volumes of one license apart (<see cref="VolumeNames.Designator"/>).</param>
     public sealed record VolumeOption(
         Guid Id,
-        string Text,
+        string License,
+        int? LicenseNumber,
+        string Designator,
         Guid SoftwareId,
         string Software,
         Guid LicenseId
@@ -30,7 +32,7 @@ public static class Endpoint
     /// </summary>
     public sealed record Response(
         IReadOnlyList<Option> Software,
-        IReadOnlyList<Option> Licenses,
+        IReadOnlyList<NumberedOption> Licenses,
         IReadOnlyList<Option> People,
         IReadOnlyList<DeviceOption> Devices,
         IReadOnlyList<VolumeOption> Volumes
@@ -50,10 +52,7 @@ public static class Endpoint
             await context
                 .Licenses.AsNoTracking()
                 .OrderBy(l => l.Asset.Name)
-                .Select(l => new Option(
-                    l.AssetId,
-                    AssetNames.WithNumber(l.Asset.Name, l.Asset.InventoryNumber)
-                ))
+                .Select(l => new NumberedOption(l.AssetId, l.Asset.Name, l.Asset.InventoryNumber))
                 .ToListAsync(cancellationToken),
             await context
                 .Persons.AsNoTracking()
@@ -77,12 +76,9 @@ public static class Endpoint
                 .ThenBy(v => v.License.Asset.Name)
                 .Select(v => new VolumeOption(
                     v.Id,
-                    VolumeNames.Text(
-                        v.License.Asset.Name,
-                        v.License.Asset.InventoryNumber,
-                        v.Description,
-                        v.VolumeType.Text
-                    ),
+                    v.License.Asset.Name,
+                    v.License.Asset.InventoryNumber,
+                    VolumeNames.Designator(v.Description, v.VolumeType.Text),
                     v.SoftwareOrServiceId,
                     v.SoftwareOrService.Name,
                     v.LicenseId

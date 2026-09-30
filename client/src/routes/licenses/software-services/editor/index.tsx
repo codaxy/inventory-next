@@ -10,6 +10,7 @@ import {
     ValidationGroup,
 } from "cx/widgets";
 
+import { inventoryNumber } from "../../../../components/inventoryNumber";
 import { historyAction, moreActions } from "../../../../components/moreActions";
 import { outlined } from "../../../../components/recordPage";
 import { listReturn } from "../../../../listAddress";
@@ -207,7 +208,10 @@ export default createFunctionalComponent(() => (
                                                     >
                                                         <Icon name="licenses" class="size-4" />
                                                     </span>
-                                                    <span text={m.$volume.license} />
+                                                    <span>
+                                                        <span text={m.$volume.license} />
+                                                        {inventoryNumber(m.$volume.licenseNumber)}
+                                                    </span>
                                                 </div>
                                                 <div class="volume-detail" text={m.$volume.detail} />
                                             </div>

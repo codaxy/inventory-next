@@ -10,6 +10,7 @@ import type {
 } from "../../../api/informations";
 import { firstUrl } from "../../../components/externalLink";
 import { text } from "../../../assets";
+import { numberText } from "../../../inventoryNumbers";
 import type { RecordState } from "../../../recordController";
 
 /** Where a piece of information is kept, as the form holds it: a saved one kept or removed, a new one filled in. */
@@ -25,6 +26,8 @@ export interface PlaceRow {
     /** A saved one, as shown: "Electronic device", and what. */
     label?: string;
     target?: string;
+    /** A device's inventory number, muted after its name. */
+    targetNumber?: string;
     /** Its page, or the address itself. */
     href?: string;
     external?: string;
@@ -112,7 +115,8 @@ const toPlace = (l: LocationRow): PlaceRow => ({
     key: placeKey(),
     id: l.id,
     label: kinds.find((k) => k.id === l.kind)?.text,
-    target: l.number ? `${l.target} · #${l.number}` : l.target,
+    target: l.target,
+    targetNumber: numberText(l.number),
     href: l.targetId ? pageOf[l.kind]?.(l.targetId) : undefined,
     external: l.kind === "url" ? firstUrl(l.target) : undefined,
 });
