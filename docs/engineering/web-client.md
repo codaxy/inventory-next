@@ -159,7 +159,11 @@ dashboard and the audit log outline their own layouts. **A refetch keeps the row
 slowly, and stand still under reduced motion.
 
 **A cell says only what its column's header does not**: "6 Aug 2024" under Deactivated, not
-"Deactivated 6 Aug 2024" — but a phone's card, which has no headers, keeps the word. **A phone's card
+"Deactivated 6 Aug 2024" — but a phone's card, which has no headers, keeps the word. **A column holding
+two kinds of record marks each with its menu icon** before the name — an activation's user or
+device — never with a word or a number beside it, which takes the name's room. **A menu icon
+marking a record's kind is `line-strong`**, here and before a volume's title: 3.2:1 clears the 3:1 a
+meaningful graphic needs, where a text grey reads as part of the name. **A phone's card
 says what the record is** under its name: a device's is three lines — the name with its inventory
 number at the end, muted; "Laptop · ThinkPad E16 Gen 3", its type and model, which the columns show
 apart; and who has it where, "Suzana Koprena · Kancelarija Terra".

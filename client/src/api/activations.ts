@@ -15,7 +15,6 @@ export interface ActivationItem {
     licenseId: string;
     license: string;
     assignee: string | null;
-    deviceNumber: number | null;
     forDevice: boolean;
     quantity: number;
     activationDate: string;

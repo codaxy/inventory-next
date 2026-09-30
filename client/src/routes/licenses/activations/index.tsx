@@ -283,12 +283,28 @@ export default createFunctionalComponent(() => {
                                 {copyCell(m.$row.license, "license")}
                                 <span class="record-meta record-copy">
                                     <span class="record-copy-line">
-                                        <span text={m.$row.assignee} />
-                                        <span
-                                            class="record-note"
-                                            visible={hasValue(m.$row.assigneeNote)}
-                                            text={m.$row.assigneeNote}
-                                        />
+                                        <span>
+                                            {/* The column holds people and devices; the menu's mark says which. */}
+                                            <span
+                                                class="assignee-kind"
+                                                visible={m.$row.forDevice}
+                                                attrs={{
+                                                    role: "img",
+                                                    "aria-label": "Device",
+                                                    title: "Device",
+                                                }}
+                                            >
+                                                <Icon name="electronicDevices" class="size-4" />
+                                            </span>
+                                            <span
+                                                class="assignee-kind"
+                                                visible={falsy(m.$row.forDevice)}
+                                                attrs={{ role: "img", "aria-label": "User", title: "User" }}
+                                            >
+                                                <Icon name="people" class="size-4" />
+                                            </span>
+                                            <span text={m.$row.assignee} />
+                                        </span>
                                         {copyButton(m.$row.assignee, "assignee")}
                                     </span>
                                 </span>

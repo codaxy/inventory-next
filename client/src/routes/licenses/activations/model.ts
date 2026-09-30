@@ -17,8 +17,8 @@ export interface Row {
     software: string;
     license: string;
     assignee: string;
-    /** "Device · #100893" under the name, for a device. */
-    assigneeNote?: string;
+    /** The assignee is a device, not a person: its icon says which. */
+    forDevice: boolean;
     seats: string;
     activated: string;
     deactivated?: string;
@@ -90,7 +90,7 @@ export const toRows = (items: ActivationItem[]): Row[] =>
         software: a.software,
         license: a.license,
         assignee: a.assignee ?? "—",
-        assigneeNote: a.forDevice ? (a.deviceNumber ? `Device · #${a.deviceNumber}` : "Device") : undefined,
+        forDevice: a.forDevice,
         seats: a.quantity === 1 ? "1 seat" : `${a.quantity} seats`,
         activated: formatDate(a.activationDate)!,
         deactivated: formatDate(a.deactivationDate),
