@@ -244,7 +244,7 @@ export default createFunctionalComponent(() => {
                     <div class="record-head activation-columns">
                         {sortHeader(s.sort, "software", "Software")}
                         {sortHeader(s.sort, "license", "License")}
-                        {sortHeader(s.sort, "assignee", "User or device")}
+                        {sortHeader(s.sort, "assignee", "Assigned to")}
                         <span class="record-num" text="Seats" />
                         {sortHeader(s.sort, "activated", "Activated")}
                         {sortHeader(s.sort, "deactivated", "Deactivated")}
