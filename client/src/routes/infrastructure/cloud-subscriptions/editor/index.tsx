@@ -46,6 +46,7 @@ export default createFunctionalComponent(() => (
                                     url={$app.url}
                                     text={r.licenseText}
                                 />
+                                {inventoryNumber(r.licenseNumber)}
                             </div>
                         </div>
                         {text("Management URL", "managementUrl", 500, { wide: true, url: true })}

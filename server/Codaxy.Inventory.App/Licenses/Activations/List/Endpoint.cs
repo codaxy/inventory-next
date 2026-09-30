@@ -156,6 +156,11 @@ public static class Endpoint
                 || EF.Functions.ILike(a.Person.Name, pattern, FreeText.Escape)
                 || EF.Functions.ILike(a.Asset.Name, pattern, FreeText.Escape)
                 || EF.Functions.ILike(a.Asset.InventoryNumber.ToString(), pattern, FreeText.Escape)
+                || EF.Functions.ILike(
+                    a.Volume.License.Asset.InventoryNumber.ToString(),
+                    pattern,
+                    FreeText.Escape
+                )
             );
         }
 

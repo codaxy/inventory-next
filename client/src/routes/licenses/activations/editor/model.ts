@@ -58,6 +58,8 @@ export interface EditorState {
     /** `null` while creating. */
     id: string | null;
     title: string;
+    /** The device's inventory number, after its name at the title's end. */
+    titleNumber?: string;
     draft: Draft;
     view?: View;
     /** The day it began, for the deactivation's earliest date. */

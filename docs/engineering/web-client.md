@@ -346,12 +346,13 @@ usually the license's name again. An address is where the seats are managed, not
 an option across a phone's screen.
 
 **An inventory number beside a name is muted** — `inventoryNumber()` in `components/`: 0.82em of
-the name, as a holding row's 11.5px beside 14px, never bold, `ink-muted` — wherever the name is shown: a title, a link, a chip, a value in view,
-a row. Joined into the name's text it reads as part of the name. The one exception is an editable
-picker, whose option is a single text — "Adobe Illustrator #100661", `withNumber()` in
-`src/inventoryNumbers.ts`. So the server sends a name and its number apart (`NumberedOption`, a
-volume's parts), never joined, and the client joins them for a picker only. A number with a column of
-its own is that column's value, and a note line muted whole needs nothing more.
+the name, as a holding row's 11.5px beside 14px, never bold, `ink-muted` — wherever the name is
+shown: a title, a link, a chip, a value in view, a row of what a record holds. Joined into the name's
+text it reads as part of the name. An editable picker joins them, its option being a single text —
+"Adobe Illustrator #100661", `withNumber()` in `src/inventoryNumbers.ts` — so the server sends a name
+and its number apart (`NumberedOption`, a volume's parts), never joined. **A list's cells carry no
+number beside a name**: a cell holds one value, and a record's own number has a column of its own. A
+note line muted whole needs nothing more.
 
 **Removing a saved part of a record waits for the save** — a license's volume, a place where
 information is kept: the existing one is struck

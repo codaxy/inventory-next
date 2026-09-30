@@ -32,6 +32,7 @@ public static class Endpoint
         Guid Id,
         Guid LicenseId,
         string License,
+        int? LicenseNumber,
         string Software,
         int Quantity,
         int InUse
@@ -181,6 +182,7 @@ public static class Endpoint
                                 v.Volume.Id,
                                 v.Volume.LicenseId,
                                 v.Volume.License.Asset.Name,
+                                v.Volume.License.Asset.InventoryNumber,
                                 v.Volume.SoftwareOrService.Name,
                                 v.Volume.Quantity,
                                 v.InUse
@@ -196,6 +198,7 @@ public static class Endpoint
                                 v.Volume.Id,
                                 v.Volume.LicenseId,
                                 v.Volume.License.Asset.Name,
+                                v.Volume.License.Asset.InventoryNumber,
                                 v.Volume.SoftwareOrService.Name,
                                 v.Volume.Quantity,
                                 v.InUse

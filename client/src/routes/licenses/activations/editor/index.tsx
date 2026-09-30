@@ -86,7 +86,10 @@ export default createFunctionalComponent(() => (
                         <span text={expr(a.origin, a.id, (o, id) => (!id && o ? o.text : "Activations"))} />
                     </Link>
                     <div class="editor-heading">
-                        <h1 class="page-title" text={a.title} />
+                        <h1 class="page-title">
+                            <span text={a.title} />
+                            {inventoryNumber(a.titleNumber)}
+                        </h1>
                         <div class="editor-heading-actions" visible={shown}>
                             <Button
                                 mod="primary"

@@ -67,6 +67,7 @@ export interface DeviceDetail {
             software: string;
             licenseId: string;
             license: string;
+            licenseNumber: number | null;
             person: string | null;
             quantity: number;
             activationDate: string;

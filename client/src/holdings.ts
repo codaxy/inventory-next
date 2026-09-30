@@ -10,6 +10,9 @@ export interface HoldingRow {
     note?: string;
     /** The second line: a type and a model, a vendor, a license, an owner. */
     meta?: string;
+    /** A license's inventory number, muted after `meta`, and what follows it on the line. */
+    metaNumber?: string;
+    metaRest?: string;
     /** Its record's page. */
     href?: string;
     /** A record that has ended, listed as history: why. */

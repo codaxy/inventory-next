@@ -11,6 +11,7 @@ import {
     toDraftOf,
 } from "../../../assets";
 import { informationKind, joinAll, plural, toSections } from "../../../holdings";
+import { numberText } from "../../../inventoryNumbers";
 import { formatDate } from "../../../licensing";
 import type { RecordState } from "../../../recordController";
 
@@ -132,6 +133,7 @@ export function toAttached(d: DeviceDetail) {
                     title: s.software,
                     note: s.person ? `For ${s.person}` : s.quantity > 1 ? `${s.quantity} seats` : undefined,
                     meta: s.license,
+                    metaNumber: numberText(s.licenseNumber),
                     href: `~/licenses/activations/${s.id}`,
                     ended: s.deactivationDate ? `Deactivated ${formatDate(s.deactivationDate)}` : undefined,
                 })),

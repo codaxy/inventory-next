@@ -73,6 +73,7 @@ export function toHoldings(h: Holdings, person: string) {
                           ? `${s.quantity} seats`
                           : undefined,
                     meta: s.license,
+                    metaNumber: number(s.licenseNumber),
                     href: `~/licenses/activations/${s.id}`,
                     ended: s.deactivationDate ? `Deactivated ${formatDate(s.deactivationDate)}` : undefined,
                 })),

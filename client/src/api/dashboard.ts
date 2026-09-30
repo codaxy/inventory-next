@@ -16,6 +16,7 @@ export interface VolumeRow {
     id: string;
     licenseId: string;
     license: string;
+    licenseNumber: number | null;
     software: string;
     quantity: number;
     inUse: number;

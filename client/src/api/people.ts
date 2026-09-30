@@ -37,6 +37,7 @@ export interface SeatRow {
     software: string;
     licenseId: string;
     license: string;
+    licenseNumber: number | null;
     quantity: number;
     activationDate: string;
     deactivationDate: string | null;

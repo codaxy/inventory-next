@@ -16,6 +16,7 @@ import {
 import { ApiError, fieldErrors } from "../../../../api/http";
 import { confirm } from "../../../../components/confirm";
 import { encodeDate } from "../../../../dates";
+import { numberText } from "../../../../inventoryNumbers";
 import { guardLeaving } from "../../../../leaveGuard";
 import { listReturn, queryOf } from "../../../../listAddress";
 import $app from "../../../../model";
@@ -92,6 +93,7 @@ export default class extends Controller {
         this.store.set(a.forPerson, true);
         this.store.delete(a.volume);
         this.store.set(a.title, id ? "" : "New activation");
+        this.store.delete(a.titleNumber);
 
         this.release?.();
         this.release = undefined;
@@ -130,6 +132,8 @@ export default class extends Controller {
             a.title,
             `${activation.software.name} · ${activation.person?.name ?? activation.device?.name ?? ""}`,
         );
+        if (activation.person) this.store.delete(a.titleNumber);
+        else this.store.set(a.titleNumber, numberText(activation.device?.number));
     }
 
     /** The address's volume: its software first, which loads the volumes, then the volume itself. */

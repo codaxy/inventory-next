@@ -5,6 +5,7 @@ import { Link, Repeater } from "cx/widgets";
 import type { HoldingRow, HoldingSection } from "../holdings";
 import { expiryClass } from "../licensing";
 import $app from "../model";
+import { inventoryNumber } from "./inventoryNumber";
 
 const hm = createModel<{ $section: HoldingSection; $holding: HoldingRow }>();
 const h = hm.$holding;
@@ -17,7 +18,11 @@ const holding = () => (
             <span class="record-note" visible={hasValue(h.note)} text={h.note} />
             <span class="record-flag record-flag-ended" visible={hasValue(h.ended)} text={h.ended} />
         </div>
-        <div class="holding-meta" visible={hasValue(h.meta)} text={h.meta} />
+        <div class="holding-meta" visible={hasValue(h.meta)}>
+            <span text={h.meta} />
+            {inventoryNumber(h.metaNumber)}
+            <span visible={hasValue(h.metaRest)} text={h.metaRest} />
+        </div>
         <span
             class={expr(h.expiry, (x) => `holding-status status-tag ${expiryClass(x)}`)}
             visible={hasValue(h.expiryText)}
