@@ -30,6 +30,14 @@ RUN core="${APP_VERSION%%+*}"; \
         $number -p:InformationalVersion="$APP_VERSION" -p:IncludeSourceRevisionInInformationalVersion=false
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+
+# wget only for compose's health check, which runs inside the container; the base image has no HTTP
+# client. A stopgap: the lasting fix is the application probing itself (`--healthcheck`), which needs
+# nothing installed and survives a move to a chiseled image.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends wget \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY --from=server /app ./
 
