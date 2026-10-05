@@ -1,4 +1,4 @@
-using Codaxy.CodeReports.CodeModel;
+using ClosedXML.Attributes;
 using Codaxy.Inventory.App.Licenses.Licenses;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Export;
@@ -18,31 +18,32 @@ public static class Endpoint
     /// </summary>
     public sealed class Row
     {
-        [TableColumn(HeaderText = "Software/Service")]
+        [XLColumn(Header = "Software/Service")]
         public string Software { get; init; } = "";
 
-        [TableColumn(HeaderText = "License    ")]
+        [XLColumn(Header = "License")]
         public string License { get; init; } = "";
 
-        [TableColumn(HeaderText = "User      ")]
+        [XLColumn(Header = "User")]
         public string? User { get; init; }
 
-        [TableColumn(HeaderText = "Device      ")]
+        [XLColumn(Header = "Device")]
         public string? Device { get; init; }
 
-        [TableColumn]
+        [XLColumn(Header = "Quantity")]
         public int Quantity { get; init; }
 
-        [TableColumn(HeaderText = "Activation  ")]
+        [XLColumn(Header = "Activation")]
         public DateOnly ActivationDate { get; init; }
 
-        [TableColumn(HeaderText = "Deactivation")]
+        [XLColumn(Header = "Deactivation")]
         public DateOnly? DeactivationDate { get; init; }
 
-        [TableColumn(HeaderText = "Last Modified")]
+        [XLColumn(Header = "Last Modified")]
         public DateTime LastModified { get; set; }
 
         /// <summary>As stored, for <see cref="LastModified"/> to be read from; not a column.</summary>
+        [XLColumn(Ignore = true)]
         public DateTimeOffset Modified { get; init; }
     }
 
@@ -84,6 +85,6 @@ public static class Endpoint
             || query.Status is not null
             || query.Expiry is not null;
 
-        return Excel.File(rows, "Activations.Export", filtered);
+        return Spreadsheet.File(rows, "Activations.Export", filtered);
     }
 }

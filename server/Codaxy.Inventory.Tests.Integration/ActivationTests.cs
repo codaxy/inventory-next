@@ -595,7 +595,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
     {
         var client = await Client();
 
-        // Nothing matches: still a spreadsheet, though CodeReports writes an empty table without its headers.
+        // Nothing matches: still a spreadsheet, its headers and no rows.
         var nothing = await client.GetAsync($"{Url}/export?q=nobody-by-this-name");
         Assert.Equal(HttpStatusCode.OK, nothing.StatusCode);
         var none = await Spreadsheet.TextOf(nothing);
@@ -605,6 +605,7 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
             )
         );
 
+        Assert.Contains("Software/Service", none);
         Assert.DoesNotContain("Office license", none);
         Assert.Contains("Software/Service", office);
         Assert.Contains("Office license", office);
