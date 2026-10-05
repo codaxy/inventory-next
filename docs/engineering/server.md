@@ -151,9 +151,13 @@ header pinned, a filter on every column, widths fitted to the content, which nee
 image — with dates as dates and money
 to two decimals, so the file sorts and sums. **An instant is written in the viewer's time zone**,
 since a cell holds none: the request names it, `tz=Europe/Belgrade` — the browser's IANA name — and
-the column, a `DateTimeOffset`, takes that zone's local time, daylight saving included, with the zone
-in its header, "Last Modified (Europe/Belgrade)". `Spreadsheet` reads `tz` as it writes, so no export
-declares it; absent is UTC, an unknown name a 400. Not the browser's offset, which is wrong for an
+the column, a `DateTimeOffset`, takes that zone's local time, daylight saving included. **Its header
+names the zone by its abbreviations, standard time first** — "Last Modified (CET/CEST)" — which the
+browser sends as `tzLabel`, since .NET on Linux knows only long names: at most 24 of letters, digits
+and `+ - : /`. Without one, the header gives the zone's offsets in January and July, "GMT+1/GMT+2";
+without a zone, "UTC". `Shared/Export/ExportZone` reads both as `Spreadsheet` writes, so no export
+declares them; an unknown zone or a refused label is a 400. Never one offset for the column: it is
+wrong for every row on the other side of a clock change. Not the browser's offset, which is wrong for an
 instant on the other side of a clock change; not a zone per deployment, which offices in several
 zones share; not text with an offset, which Excel no longer reads as a date. Not ClosedXML's
 `InsertTable` over the rows: it writes a `DateOnly` as text. Not the original's CodeReports, which sized a column by its header's padded width

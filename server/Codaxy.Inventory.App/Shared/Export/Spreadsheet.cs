@@ -19,14 +19,7 @@ public static class Spreadsheet
     private const string DateTimeFormat = "d mmm yyyy hh:mm";
     private const string MoneyFormat = "#,##0.00";
 
-    /// <summary>The query parameter naming the viewer's time zone, as the browser does (IANA).</summary>
-    public const string TimeZoneParameter = "tz";
-
-    public static byte[] Write<TRow>(
-        IReadOnlyCollection<TRow> rows,
-        string sheet,
-        TimeZoneInfo zone
-    )
+    public static byte[] Write<TRow>(IReadOnlyCollection<TRow> rows, string sheet, ExportZone zone)
         where TRow : class
     {
         var columns = Columns<TRow>.All;
@@ -36,14 +29,14 @@ public static class Spreadsheet
 
         for (var c = 0; c < columns.Length; c++)
             worksheet.Cell(1, c + 1).Value = columns[c].Instant
-                ? $"{columns[c].Header} ({zone.Id})"
+                ? $"{columns[c].Header} ({zone.Label})"
                 : columns[c].Header;
 
         var r = 2;
         foreach (var row in rows)
         {
             for (var c = 0; c < columns.Length; c++)
-                Set(worksheet.Cell(r, c + 1), columns[c].Property.GetValue(row), zone);
+                Set(worksheet.Cell(r, c + 1), columns[c].Property.GetValue(row), zone.Time);
             r++;
         }
 
@@ -90,17 +83,11 @@ public static class Spreadsheet
     /// <summary>
     /// The file, downloaded as the original named it — "Licenses.Export.xlsx" — or, when a search or a
     /// filter narrowed the rows, "Licenses.Export - Filtered.xlsx", so a partial list is never taken for
-    /// the whole. The sort does not count: it only orders. Its instants are in the zone <c>tz</c> names,
-    /// read here so that no export declares it: absent is UTC, a name the server does not know a 400.
+    /// the whole. The sort does not count: it only orders. Its instants are in the zone the request
+    /// names (<see cref="ExportZone"/>), read here so that no export declares it.
     /// </summary>
     public static IResult File<TRow>(IReadOnlyCollection<TRow> rows, string name, bool filtered)
         where TRow : class => new FileResult<TRow>(rows, name, filtered);
-
-    /// <summary>The zone a request names, UTC when it names none; null when the name is unknown.</summary>
-    public static TimeZoneInfo? Zone(string? name) =>
-        string.IsNullOrEmpty(name) ? TimeZoneInfo.Utc
-        : TimeZoneInfo.TryFindSystemTimeZoneById(name, out var zone) ? zone
-        : null;
 
     private sealed class FileResult<TRow>(
         IReadOnlyCollection<TRow> rows,
@@ -111,19 +98,18 @@ public static class Spreadsheet
     {
         public Task ExecuteAsync(HttpContext http)
         {
-            var named = http.Request.Query[TimeZoneParameter].ToString();
-            if (Zone(named) is not { } zone)
-                return Results
-                    .ValidationProblem(
-                        new Dictionary<string, string[]>
-                        {
-                            [TimeZoneParameter] =
-                            [
-                                $"\"{named}\" is not a time zone this server knows.",
-                            ],
-                        }
-                    )
-                    .ExecuteAsync(http);
+            var query = http.Request.Query;
+            var year = http.RequestServices.GetRequiredService<TimeProvider>().GetUtcNow().Year;
+            if (
+                ExportZone.Read(
+                    query[ExportZone.ZoneParameter].ToString(),
+                    query[ExportZone.LabelParameter].ToString(),
+                    year,
+                    out var zone
+                ) is
+                { } refused
+            )
+                return refused.ExecuteAsync(http);
 
             return Results
                 .File(

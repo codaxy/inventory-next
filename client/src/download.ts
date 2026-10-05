@@ -23,11 +23,42 @@ export async function download(url: string): Promise<void> {
 
 /**
  * An export's URL naming the browser's time zone (`tz`, an IANA name), so the instants in the file read
- * as they do on screen: a spreadsheet cell holds no zone, so the server converts.
+ * as they do on screen: a spreadsheet cell holds no zone, so the server converts. `tzLabel` is what the
+ * file's headers call it, made here because .NET on Linux knows no abbreviations.
  */
 export function inViewerZone(url: string): string {
     const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    return `${url}${url.includes("?") ? "&" : "?"}tz=${encodeURIComponent(zone)}`;
+    const label = zoneLabel(zone, new Date().getUTCFullYear());
+    return `${url}${url.includes("?") ? "&" : "?"}tz=${encodeURIComponent(zone)}&tzLabel=${encodeURIComponent(label)}`;
+}
+
+/**
+ * The zone's abbreviations in mid-January and mid-July, standard time first, one when they agree:
+ * "CET/CEST", "GMT/BST", "EST/EDT". British English has the European ones and US English the American,
+ * so the first of the two whose names are letters is taken; a zone neither names is its offsets, "GMT+9".
+ */
+export function zoneLabel(zone: string, year: number): string {
+    // Ordered by offset, so a southern zone's January daylight time still comes second.
+    const days = [new Date(Date.UTC(year, 0, 15, 12)), new Date(Date.UTC(year, 6, 15, 12))].sort(
+        (a, b) => offsetMinutes(zone, a) - offsetMinutes(zone, b),
+    );
+    const names = (locale: string) => [...new Set(days.map((day) => zoneName(zone, locale, "short", day)))];
+    const lettered = ["en-GB", "en-US"].map(names).find((n) => n.every((name) => /^[A-Za-z]+$/.test(name)));
+    return (lettered ?? names("en-GB")).join("/");
+}
+
+function zoneName(zone: string, locale: string, style: "short" | "longOffset", day: Date): string {
+    return (
+        new Intl.DateTimeFormat(locale, { timeZone: zone, timeZoneName: style })
+            .formatToParts(day)
+            .find((part) => part.type === "timeZoneName")?.value ?? ""
+    );
+}
+
+/** "GMT+05:30" as 330; "GMT", the zero offset, as 0. */
+function offsetMinutes(zone: string, day: Date): number {
+    const match = /([+-])(\d{2}):(\d{2})/.exec(zoneName(zone, "en-GB", "longOffset", day));
+    return match ? (match[1] === "-" ? -1 : 1) * (Number(match[2]) * 60 + Number(match[3])) : 0;
 }
 
 /** `filename*=UTF-8''…` when the server sends it — ASP.NET does for any name — else `filename=`. */
