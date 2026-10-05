@@ -80,8 +80,7 @@ Two endpoints, because the two questions have different answers. `/health/live` 
 says the process is up; it is what compose probes, since restarting the container cannot fix a
 database that is down. **The probe runs inside the container, so the image installs `wget` for it** —
 a stopgap: the base image has no HTTP client, and an added package is surface the application does
-not need. The lasting fix is the application probing itself (`--healthcheck`); then `wget` goes. Not
-Alpine for its built-in `wget`: it ships without ICU, and the Excel export's `en-US` culture throws. `/health/ready` runs the database check and is what a load balancer should ask
+not need. The lasting fix is the application probing itself (`--healthcheck`); then `wget` goes. `/health/ready` runs the database check and is what a load balancer should ask
 before sending traffic.
 
 ## Logs

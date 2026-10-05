@@ -1,4 +1,4 @@
-using Codaxy.CodeReports.CodeModel;
+using ClosedXML.Attributes;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Export;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +15,13 @@ public static class Endpoint
     /// <summary>One virtual machine: the list's columns, then the record's own fields.</summary>
     public sealed class Row
     {
-        [TableColumn(HeaderText = "Name         ")]
+        [XLColumn(Header = "Name")]
         public string Name { get; init; } = "";
 
-        [TableColumn(HeaderText = "IP Address         ")]
+        [XLColumn(Header = "IP Address")]
         public string? IpAddress { get; init; }
 
-        [TableColumn(HeaderText = "Information")]
+        [XLColumn(Header = "Information")]
         public int Information { get; init; }
     }
 
@@ -48,6 +48,6 @@ public static class Endpoint
 
         var filtered = !string.IsNullOrWhiteSpace(query.Q);
 
-        return Excel.File(rows, "VirtualMachines.Export", filtered);
+        return Spreadsheet.File(rows, "VirtualMachines.Export", filtered);
     }
 }

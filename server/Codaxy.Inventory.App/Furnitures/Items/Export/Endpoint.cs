@@ -1,4 +1,4 @@
-using Codaxy.CodeReports.CodeModel;
+using ClosedXML.Attributes;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Export;
 using Microsoft.AspNetCore.Mvc;
@@ -14,37 +14,37 @@ public static class Endpoint
     /// <summary>One piece of furniture as the original's spreadsheet has it; the headers are its own.</summary>
     public sealed class Row
     {
-        [TableColumn(HeaderText = "No     ")]
+        [XLColumn(Header = "No")]
         public int? InventoryNumber { get; init; }
 
-        [TableColumn(HeaderText = "Name         ")]
+        [XLColumn(Header = "Name")]
         public string Name { get; init; } = "";
 
-        [TableColumn(HeaderText = "Assignee         ")]
+        [XLColumn(Header = "Assignee")]
         public string Assignee { get; init; } = "";
 
-        [TableColumn(HeaderText = "Location         ")]
+        [XLColumn(Header = "Location")]
         public string? Location { get; init; }
 
-        [TableColumn(HeaderText = "Type         ")]
+        [XLColumn(Header = "Type")]
         public string? Type { get; init; }
 
-        [TableColumn(HeaderText = "Model         ")]
+        [XLColumn(Header = "Model")]
         public string? Model { get; init; }
 
-        [TableColumn(HeaderText = "Vendor         ")]
+        [XLColumn(Header = "Vendor")]
         public string Vendor { get; init; } = "";
 
-        [TableColumn(HeaderText = "Purchase Value")]
+        [XLColumn(Header = "Purchase Value")]
         public decimal PurchaseValue { get; init; }
 
-        [TableColumn(HeaderText = "Purchase Date")]
+        [XLColumn(Header = "Purchase Date")]
         public DateOnly PurchaseDate { get; init; }
 
-        [TableColumn(HeaderText = "Invoice Number")]
+        [XLColumn(Header = "Invoice Number")]
         public string? InvoiceNumber { get; init; }
 
-        [TableColumn(HeaderText = "Last Modified")]
+        [XLColumn(Header = "Last Modified")]
         public DateTime LastModified { get; set; }
 
         /// <summary>As stored, for <see cref="LastModified"/> to be read from; not a column.</summary>
@@ -93,6 +93,6 @@ public static class Endpoint
             || query.PurchasedTo is not null
             || query.Incomplete is not null;
 
-        return Excel.File(rows, "Furniture.Export", filtered);
+        return Spreadsheet.File(rows, "Furniture.Export", filtered);
     }
 }

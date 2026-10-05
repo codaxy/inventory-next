@@ -140,17 +140,21 @@ wide model: it carries only what the change takes, and answers 409 from the wron
 
 **A list's spreadsheet is its own query, every row**: `GET …/export` takes exactly the list's
 parameters, and the list and its export share one function that filters and orders (`Rows`), so the
-file holds what the screen shows, all pages of it. Written as the original wrote them —
-CodeReports, one row type per list, its `[TableColumn]` headers and file names kept, with " - Filtered" added when a search or a filter
-narrowed the rows, so a partial list is never taken for the whole; the sort does not count — but served as
-the response to that request, not as the original's handle to a file cached for thirty seconds: the
-handle existed because its bearer token could not ride a download link, and the session cookie does.
-CodeReports reads its texts by the thread's culture and throws on one it does not ship, the
-invariant culture of a container among them, so `Shared/Export/Excel` writes under English.
+file holds what the screen shows, all pages of it. The original's file names and headers are kept,
+with " - Filtered" added when a search or a filter narrowed the rows, so a partial list is never taken
+for the whole; the sort does not count. Served as the response to that request, not as the original's
+handle to a file cached for thirty seconds: the handle existed because its bearer token could not ride
+a download link, and the session cookie does.
+**ClosedXML writes it, through `Shared/Export/Spreadsheet`**: one row type per list, a property a
+column only when `[XLColumn]` heads it; one sheet named after the list, holding an Excel table —
+header pinned, a filter on every column, widths fitted to the content, which needs no font in the
+image — with dates as dates and money
+to two decimals, so the file sorts and sums. Not ClosedXML's `InsertTable` over the rows: it writes a
+`DateOnly` as text. Not the original's CodeReports, which sized a column by its header's padded width
+and threw under a culture it did not ship; not EPPlus, licensed commercially.
 **A list the original never exported** — the company's records, the infrastructure — takes the list's
-columns, then the record's own fields, names resolved and counts kept, its headers padded as the
-original's are, since CodeReports sizes a column by its header's width; its file is
-`<List>.Export`, the list's name without spaces.
+columns, then the record's own fields, names resolved and counts kept; its file is `<List>.Export`,
+the list's name without spaces.
 
 **A delete the database would refuse is a 409 that says what holds the record** — "113 devices are of
 this type" — checked before the save, not left to surface as a foreign-key 500.

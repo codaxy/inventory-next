@@ -1,4 +1,4 @@
-using Codaxy.CodeReports.CodeModel;
+using ClosedXML.Attributes;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Export;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +14,10 @@ public static class Endpoint
     /// <summary>One client: the list's columns, then the record's own fields.</summary>
     public sealed class Row
     {
-        [TableColumn(HeaderText = "Name         ")]
+        [XLColumn(Header = "Name")]
         public string Name { get; init; } = "";
 
-        [TableColumn(HeaderText = "Projects")]
+        [XLColumn(Header = "Projects")]
         public int Projects { get; init; }
     }
 
@@ -43,6 +43,6 @@ public static class Endpoint
 
         var filtered = !string.IsNullOrWhiteSpace(query.Q);
 
-        return Excel.File(rows, "Clients.Export", filtered);
+        return Spreadsheet.File(rows, "Clients.Export", filtered);
     }
 }

@@ -1,4 +1,4 @@
-using Codaxy.CodeReports.CodeModel;
+using ClosedXML.Attributes;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Export;
 using Microsoft.AspNetCore.Mvc;
@@ -14,34 +14,34 @@ public static class Endpoint
     /// <summary>One vendor: the list's columns, then the record's own fields.</summary>
     public sealed class Row
     {
-        [TableColumn(HeaderText = "Name         ")]
+        [XLColumn(Header = "Name")]
         public string Name { get; init; } = "";
 
-        [TableColumn(HeaderText = "Contact Person         ")]
+        [XLColumn(Header = "Contact Person")]
         public string? ContactPerson { get; init; }
 
-        [TableColumn(HeaderText = "Email         ")]
+        [XLColumn(Header = "Email")]
         public string? Email { get; init; }
 
-        [TableColumn(HeaderText = "Phone         ")]
+        [XLColumn(Header = "Phone")]
         public string? Phone { get; init; }
 
-        [TableColumn(HeaderText = "Mobile Phone         ")]
+        [XLColumn(Header = "Mobile Phone")]
         public string? MobilePhone { get; init; }
 
-        [TableColumn(HeaderText = "Location         ")]
+        [XLColumn(Header = "Location")]
         public string? Location { get; init; }
 
-        [TableColumn(HeaderText = "Registration Number         ")]
+        [XLColumn(Header = "Registration Number")]
         public string? RegistrationNumber { get; init; }
 
-        [TableColumn(HeaderText = "VAT Number         ")]
+        [XLColumn(Header = "VAT Number")]
         public string? VatNumber { get; init; }
 
-        [TableColumn(HeaderText = "Web         ")]
+        [XLColumn(Header = "Web")]
         public string? Web { get; init; }
 
-        [TableColumn(HeaderText = "Assets")]
+        [XLColumn(Header = "Assets")]
         public int Assets { get; init; }
     }
 
@@ -75,6 +75,6 @@ public static class Endpoint
 
         var filtered = !string.IsNullOrWhiteSpace(query.Q);
 
-        return Excel.File(rows, "Vendors.Export", filtered);
+        return Spreadsheet.File(rows, "Vendors.Export", filtered);
     }
 }

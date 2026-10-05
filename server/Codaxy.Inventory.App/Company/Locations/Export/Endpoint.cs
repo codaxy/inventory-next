@@ -1,4 +1,4 @@
-using Codaxy.CodeReports.CodeModel;
+using ClosedXML.Attributes;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Export;
 using Microsoft.AspNetCore.Mvc;
@@ -14,37 +14,37 @@ public static class Endpoint
     /// <summary>One location: the list's columns, then the record's own fields.</summary>
     public sealed class Row
     {
-        [TableColumn(HeaderText = "Name         ")]
+        [XLColumn(Header = "Name")]
         public string Name { get; init; } = "";
 
-        [TableColumn(HeaderText = "Description         ")]
+        [XLColumn(Header = "Description")]
         public string? Description { get; init; }
 
-        [TableColumn(HeaderText = "Street         ")]
+        [XLColumn(Header = "Street")]
         public string? Street { get; init; }
 
-        [TableColumn(HeaderText = "House Number")]
+        [XLColumn(Header = "House Number")]
         public int? HouseNumber { get; init; }
 
-        [TableColumn(HeaderText = "Floor")]
+        [XLColumn(Header = "Floor")]
         public int? Floor { get; init; }
 
-        [TableColumn(HeaderText = "Room         ")]
+        [XLColumn(Header = "Room")]
         public string? Room { get; init; }
 
-        [TableColumn(HeaderText = "Postal Code         ")]
+        [XLColumn(Header = "Postal Code")]
         public string? PostalCode { get; init; }
 
-        [TableColumn(HeaderText = "City         ")]
+        [XLColumn(Header = "City")]
         public string City { get; init; } = "";
 
-        [TableColumn(HeaderText = "State         ")]
+        [XLColumn(Header = "State")]
         public string? State { get; init; }
 
-        [TableColumn(HeaderText = "Country         ")]
+        [XLColumn(Header = "Country")]
         public string? Country { get; init; }
 
-        [TableColumn(HeaderText = "Assets")]
+        [XLColumn(Header = "Assets")]
         public int Assets { get; init; }
     }
 
@@ -79,6 +79,6 @@ public static class Endpoint
 
         var filtered = !string.IsNullOrWhiteSpace(query.Q);
 
-        return Excel.File(rows, "Locations.Export", filtered);
+        return Spreadsheet.File(rows, "Locations.Export", filtered);
     }
 }

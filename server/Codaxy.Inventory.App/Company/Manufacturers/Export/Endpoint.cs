@@ -1,4 +1,4 @@
-using Codaxy.CodeReports.CodeModel;
+using ClosedXML.Attributes;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Export;
 using Microsoft.AspNetCore.Mvc;
@@ -15,16 +15,16 @@ public static class Endpoint
     /// <summary>One manufacturer: the list's columns, then the record's own fields.</summary>
     public sealed class Row
     {
-        [TableColumn(HeaderText = "Name         ")]
+        [XLColumn(Header = "Name")]
         public string Name { get; init; } = "";
 
-        [TableColumn(HeaderText = "URL         ")]
+        [XLColumn(Header = "URL")]
         public string? Url { get; init; }
 
-        [TableColumn(HeaderText = "Devices")]
+        [XLColumn(Header = "Devices")]
         public int Devices { get; init; }
 
-        [TableColumn(HeaderText = "Software")]
+        [XLColumn(Header = "Software")]
         public int Software { get; init; }
     }
 
@@ -53,6 +53,6 @@ public static class Endpoint
 
         var filtered = !string.IsNullOrWhiteSpace(query.Q);
 
-        return Excel.File(rows, "Manufacturers.Export", filtered);
+        return Spreadsheet.File(rows, "Manufacturers.Export", filtered);
     }
 }

@@ -43,7 +43,6 @@ public static class Endpoint
         public DateTime LastModified { get; set; }
 
         /// <summary>As stored, for <see cref="LastModified"/> to be read from; not a column.</summary>
-        [XLColumn(Ignore = true)]
         public DateTimeOffset Modified { get; init; }
     }
 

@@ -1,4 +1,4 @@
-using Codaxy.CodeReports.CodeModel;
+using ClosedXML.Attributes;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Export;
 using Microsoft.EntityFrameworkCore;
@@ -13,19 +13,19 @@ public static class Endpoint
     /// <summary>A piece of information as the original's spreadsheet has it; the headers are its own.</summary>
     public sealed class Row
     {
-        [TableColumn(HeaderText = "Name     ")]
+        [XLColumn(Header = "Name")]
         public string Name { get; init; } = "";
 
-        [TableColumn(HeaderText = "Type     ")]
+        [XLColumn(Header = "Type")]
         public string Type { get; init; } = "";
 
-        [TableColumn(HeaderText = "Assignee   ")]
+        [XLColumn(Header = "Assignee")]
         public string Assignee { get; init; } = "";
 
-        [TableColumn(HeaderText = "Author     ")]
+        [XLColumn(Header = "Author")]
         public string? Author { get; init; }
 
-        [TableColumn(HeaderText = "Project     ")]
+        [XLColumn(Header = "Project")]
         public string? Project { get; init; }
     }
 
@@ -63,6 +63,6 @@ public static class Endpoint
             || query.SoftwareId is not null
             || query.Incomplete is not null;
 
-        return Excel.File(rows, "Information.Export", filtered);
+        return Spreadsheet.File(rows, "Information.Export", filtered);
     }
 }

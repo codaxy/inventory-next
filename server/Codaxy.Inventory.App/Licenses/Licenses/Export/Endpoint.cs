@@ -1,4 +1,4 @@
-using Codaxy.CodeReports.CodeModel;
+using ClosedXML.Attributes;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Export;
 using Microsoft.AspNetCore.Mvc;
@@ -14,25 +14,25 @@ public static class Endpoint
     /// <summary>One license as the original's spreadsheet has it; the headers are its own.</summary>
     public sealed class Row
     {
-        [TableColumn(HeaderText = "No     ")]
+        [XLColumn(Header = "No")]
         public int? InventoryNumber { get; init; }
 
-        [TableColumn(HeaderText = "Name         ")]
+        [XLColumn(Header = "Name")]
         public string Name { get; init; } = "";
 
-        [TableColumn(HeaderText = "Vendor         ")]
+        [XLColumn(Header = "Vendor")]
         public string Vendor { get; init; } = "";
 
-        [TableColumn(HeaderText = "Purchase Value")]
+        [XLColumn(Header = "Purchase Value")]
         public decimal PurchaseValue { get; init; }
 
-        [TableColumn(HeaderText = "Purchase Date")]
+        [XLColumn(Header = "Purchase Date")]
         public DateOnly PurchaseDate { get; init; }
 
-        [TableColumn(HeaderText = "Expiration Date")]
+        [XLColumn(Header = "Expiration Date")]
         public DateOnly? ExpirationDate { get; init; }
 
-        [TableColumn(HeaderText = "Last Modified")]
+        [XLColumn(Header = "Last Modified")]
         public DateTime LastModified { get; set; }
 
         /// <summary>As stored, for <see cref="LastModified"/> to be read from; not a column.</summary>
@@ -80,6 +80,6 @@ public static class Endpoint
             || query.Expiry is not null
             || query.Incomplete is not null;
 
-        return Excel.File(rows, "Licenses.Export", filtered);
+        return Spreadsheet.File(rows, "Licenses.Export", filtered);
     }
 }

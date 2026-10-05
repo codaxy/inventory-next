@@ -5,15 +5,18 @@ using ClosedXML.Excel;
 namespace Codaxy.Inventory.App.Shared.Export;
 
 /// <summary>
-/// A list as a spreadsheet, written by ClosedXML: one row type per list, its public properties the
-/// columns in declaration order, headed by <c>[XLColumn(Header = …)]</c> and left out by
-/// <c>Ignore</c>. One sheet holding an Excel table — header pinned, filter on every column, widths
-/// fitted to the content.
+/// A list as a spreadsheet, written by ClosedXML: one row type per list, whose properties headed by
+/// <c>[XLColumn(Header = …)]</c> are the columns, in declaration order. One sheet holding an Excel
+/// table — header pinned, filter on every column, widths fitted to the content.
 /// </summary>
 public static class Spreadsheet
 {
+    public const string ContentType =
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
     private const string DateFormat = "d mmm yyyy";
     private const string DateTimeFormat = "d mmm yyyy hh:mm";
+    private const string MoneyFormat = "#,##0.00";
 
     public static byte[] Write<TRow>(IReadOnlyCollection<TRow> rows, string sheet)
         where TRow : class
@@ -63,6 +66,10 @@ public static class Spreadsheet
                 cell.Value = instant;
                 cell.Style.NumberFormat.Format = DateTimeFormat;
                 return;
+            case decimal money:
+                cell.Value = money;
+                cell.Style.NumberFormat.Format = MoneyFormat;
+                return;
             default:
                 cell.Value = XLCellValue.FromObject(value);
                 return;
@@ -78,7 +85,7 @@ public static class Spreadsheet
         where TRow : class =>
         Results.File(
             Write(rows, name.Split('.')[0]),
-            Excel.ContentType,
+            ContentType,
             filtered ? $"{name} - Filtered.xlsx" : $"{name}.xlsx"
         );
 
@@ -88,8 +95,8 @@ public static class Spreadsheet
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .OrderBy(p => p.MetadataToken)
             .Select(p => (Property: p, Column: p.GetCustomAttribute<XLColumnAttribute>()))
-            .Where(p => p.Column?.Ignore != true)
-            .Select(p => (p.Property, p.Column?.Header ?? p.Property.Name))
+            .Where(p => p.Column is { Ignore: false, Header: not null })
+            .Select(p => (p.Property, p.Column!.Header!))
             .ToArray();
     }
 }
