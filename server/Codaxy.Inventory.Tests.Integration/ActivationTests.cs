@@ -635,6 +635,21 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
         );
     }
 
+    [Fact]
+    public async Task Exports_instants_in_the_zone_the_request_names()
+    {
+        var client = await Client();
+
+        var belgrade = await client.GetAsync($"{Url}/export?tz=Europe%2FBelgrade");
+        var utc = await client.GetAsync($"{Url}/export");
+        var unknown = await client.GetAsync($"{Url}/export?tz=Mars%2FOlympus_Mons");
+
+        Assert.Contains("Last Modified (Europe/Belgrade)", await Spreadsheet.TextOf(belgrade));
+        Assert.Contains("Last Modified (UTC)", await Spreadsheet.TextOf(utc));
+        Assert.Equal(HttpStatusCode.BadRequest, unknown.StatusCode);
+        Assert.Contains("\"tz\"", await unknown.Content.ReadAsStringAsync());
+    }
+
     [Theory]
     [InlineData("sort=quantity")]
     [InlineData("status=paused")]

@@ -7,7 +7,8 @@ namespace Codaxy.Inventory.App.Shared.Export;
 /// <summary>
 /// A list as a spreadsheet, written by ClosedXML: one row type per list, whose properties headed by
 /// <c>[XLColumn(Header = …)]</c> are the columns, in declaration order. One sheet holding an Excel
-/// table — header pinned, filter on every column, widths fitted to the content.
+/// table — header pinned, filter on every column, widths fitted to the content. An instant is a
+/// <see cref="DateTimeOffset"/> column, written in the zone the request names.
 /// </summary>
 public static class Spreadsheet
 {
@@ -18,7 +19,14 @@ public static class Spreadsheet
     private const string DateTimeFormat = "d mmm yyyy hh:mm";
     private const string MoneyFormat = "#,##0.00";
 
-    public static byte[] Write<TRow>(IReadOnlyCollection<TRow> rows, string sheet)
+    /// <summary>The query parameter naming the viewer's time zone, as the browser does (IANA).</summary>
+    public const string TimeZoneParameter = "tz";
+
+    public static byte[] Write<TRow>(
+        IReadOnlyCollection<TRow> rows,
+        string sheet,
+        TimeZoneInfo zone
+    )
         where TRow : class
     {
         var columns = Columns<TRow>.All;
@@ -27,13 +35,15 @@ public static class Spreadsheet
         var worksheet = workbook.AddWorksheet(sheet);
 
         for (var c = 0; c < columns.Length; c++)
-            worksheet.Cell(1, c + 1).Value = columns[c].Header;
+            worksheet.Cell(1, c + 1).Value = columns[c].Instant
+                ? $"{columns[c].Header} ({zone.Id})"
+                : columns[c].Header;
 
         var r = 2;
         foreach (var row in rows)
         {
             for (var c = 0; c < columns.Length; c++)
-                Set(worksheet.Cell(r, c + 1), columns[c].Property.GetValue(row));
+                Set(worksheet.Cell(r, c + 1), columns[c].Property.GetValue(row), zone);
             r++;
         }
 
@@ -51,8 +61,9 @@ public static class Spreadsheet
         return stream.ToArray();
     }
 
-    // A date is a number Excel formats; `DateOnly` is written as text unless converted.
-    private static void Set(IXLCell cell, object? value)
+    // A date is a number Excel formats; `DateOnly` is written as text unless converted. A cell holds
+    // no zone, so an instant becomes the zone's local time.
+    private static void Set(IXLCell cell, object? value, TimeZoneInfo zone)
     {
         switch (value)
         {
@@ -62,8 +73,8 @@ public static class Spreadsheet
                 cell.Value = date.ToDateTime(TimeOnly.MinValue);
                 cell.Style.NumberFormat.Format = DateFormat;
                 return;
-            case DateTime instant:
-                cell.Value = instant;
+            case DateTimeOffset instant:
+                cell.Value = TimeZoneInfo.ConvertTime(instant, zone).DateTime;
                 cell.Style.NumberFormat.Format = DateTimeFormat;
                 return;
             case decimal money:
@@ -79,24 +90,69 @@ public static class Spreadsheet
     /// <summary>
     /// The file, downloaded as the original named it — "Licenses.Export.xlsx" — or, when a search or a
     /// filter narrowed the rows, "Licenses.Export - Filtered.xlsx", so a partial list is never taken for
-    /// the whole. The sort does not count: it only orders.
+    /// the whole. The sort does not count: it only orders. Its instants are in the zone <c>tz</c> names,
+    /// read here so that no export declares it: absent is UTC, a name the server does not know a 400.
     /// </summary>
     public static IResult File<TRow>(IReadOnlyCollection<TRow> rows, string name, bool filtered)
-        where TRow : class =>
-        Results.File(
-            Write(rows, name.Split('.')[0]),
-            ContentType,
-            filtered ? $"{name} - Filtered.xlsx" : $"{name}.xlsx"
-        );
+        where TRow : class => new FileResult<TRow>(rows, name, filtered);
+
+    /// <summary>The zone a request names, UTC when it names none; null when the name is unknown.</summary>
+    public static TimeZoneInfo? Zone(string? name) =>
+        string.IsNullOrEmpty(name) ? TimeZoneInfo.Utc
+        : TimeZoneInfo.TryFindSystemTimeZoneById(name, out var zone) ? zone
+        : null;
+
+    private sealed class FileResult<TRow>(
+        IReadOnlyCollection<TRow> rows,
+        string name,
+        bool filtered
+    ) : IResult
+        where TRow : class
+    {
+        public Task ExecuteAsync(HttpContext http)
+        {
+            var named = http.Request.Query[TimeZoneParameter].ToString();
+            if (Zone(named) is not { } zone)
+                return Results
+                    .ValidationProblem(
+                        new Dictionary<string, string[]>
+                        {
+                            [TimeZoneParameter] =
+                            [
+                                $"\"{named}\" is not a time zone this server knows.",
+                            ],
+                        }
+                    )
+                    .ExecuteAsync(http);
+
+            return Results
+                .File(
+                    Write(rows, name.Split('.')[0], zone),
+                    ContentType,
+                    filtered ? $"{name} - Filtered.xlsx" : $"{name}.xlsx"
+                )
+                .ExecuteAsync(http);
+        }
+    }
 
     private static class Columns<TRow>
     {
-        public static readonly (PropertyInfo Property, string Header)[] All = typeof(TRow)
-            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            .OrderBy(p => p.MetadataToken)
-            .Select(p => (Property: p, Column: p.GetCustomAttribute<XLColumnAttribute>()))
-            .Where(p => p.Column is { Ignore: false, Header: not null })
-            .Select(p => (p.Property, p.Column!.Header!))
-            .ToArray();
+        public static readonly (PropertyInfo Property, string Header, bool Instant)[] All =
+            typeof(TRow)
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .OrderBy(p => p.MetadataToken)
+                .Select(p => (Property: p, Column: p.GetCustomAttribute<XLColumnAttribute>()))
+                .Where(p => p.Column is { Ignore: false, Header: not null })
+                .Select(p =>
+                    (
+                        p.Property,
+                        p.Column!.Header!,
+                        (
+                            Nullable.GetUnderlyingType(p.Property.PropertyType)
+                            ?? p.Property.PropertyType
+                        ) == typeof(DateTimeOffset)
+                    )
+                )
+                .ToArray();
     }
 }

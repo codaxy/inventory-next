@@ -241,7 +241,8 @@ its filters to and from the address, and its fetch. Not a history entry per chan
 through every filter click before leaving.
 
 **A list that has a spreadsheet offers it in its header band** — "Excel", before Add — as a
-button that fetches the export of its current request, filters and all, and saves it under the
+button that fetches the export of its current request, filters and all, in the browser's time zone
+(`tz`), and saves it under the
 server's name (`src/download.ts`). **It says what it is doing**, since the export takes a tenth of a
 second and what the click lacked was acknowledgement: disabled at once, so a double click fetches
 once; "Preparing…" with a spinner from 200ms, the skeleton's delay; "Ready" with a check, in the

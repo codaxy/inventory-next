@@ -40,10 +40,7 @@ public static class Endpoint
         public DateOnly? DeactivationDate { get; init; }
 
         [XLColumn(Header = "Last Modified")]
-        public DateTime LastModified { get; set; }
-
-        /// <summary>As stored, for <see cref="LastModified"/> to be read from; not a column.</summary>
-        public DateTimeOffset Modified { get; init; }
+        public DateTimeOffset LastModified { get; init; }
     }
 
     /// <summary>The list as a spreadsheet: the same query, every row it selects, not one page.</summary>
@@ -68,13 +65,9 @@ public static class Endpoint
                 Quantity = a.Quantity,
                 ActivationDate = a.ActivationDate,
                 DeactivationDate = a.DeactivationDate,
-                Modified = a.Volume.License.Asset.LastModified,
+                LastModified = a.Volume.License.Asset.LastModified,
             })
             .ToListAsync(cancellationToken);
-
-        // To UTC once read: EF cannot translate `UtcDateTime` in a projection.
-        foreach (var row in rows)
-            row.LastModified = row.Modified.UtcDateTime;
 
         var filtered =
             !string.IsNullOrWhiteSpace(query.Q)

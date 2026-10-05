@@ -21,6 +21,15 @@ export async function download(url: string): Promise<void> {
     setTimeout(() => URL.revokeObjectURL(link.href), 10_000);
 }
 
+/**
+ * An export's URL naming the browser's time zone (`tz`, an IANA name), so the instants in the file read
+ * as they do on screen: a spreadsheet cell holds no zone, so the server converts.
+ */
+export function inViewerZone(url: string): string {
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return `${url}${url.includes("?") ? "&" : "?"}tz=${encodeURIComponent(zone)}`;
+}
+
 /** `filename*=UTF-8''…` when the server sends it — ASP.NET does for any name — else `filename=`. */
 function fileName(disposition: string | null): string | undefined {
     if (!disposition) return undefined;

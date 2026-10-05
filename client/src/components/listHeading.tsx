@@ -2,7 +2,7 @@ import type { AccessorChain } from "cx/data";
 import type { StringProp } from "cx/ui";
 import { Icon, LinkButton, Toast } from "cx/widgets";
 
-import { download } from "../download";
+import { download, inViewerZone } from "../download";
 
 interface ListHeading {
     title: string;
@@ -107,7 +107,7 @@ function exportButton(href: AccessorChain<string | undefined>) {
 
                     button.disabled = true;
                     const busy = setTimeout(() => show("busy"), busyAfter);
-                    download(url).then(
+                    download(inViewerZone(url)).then(
                         () => {
                             clearTimeout(busy);
                             show("done");

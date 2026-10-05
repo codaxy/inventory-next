@@ -149,8 +149,14 @@ a download link, and the session cookie does.
 column only when `[XLColumn]` heads it; one sheet named after the list, holding an Excel table —
 header pinned, a filter on every column, widths fitted to the content, which needs no font in the
 image — with dates as dates and money
-to two decimals, so the file sorts and sums. Not ClosedXML's `InsertTable` over the rows: it writes a
-`DateOnly` as text. Not the original's CodeReports, which sized a column by its header's padded width
+to two decimals, so the file sorts and sums. **An instant is written in the viewer's time zone**,
+since a cell holds none: the request names it, `tz=Europe/Belgrade` — the browser's IANA name — and
+the column, a `DateTimeOffset`, takes that zone's local time, daylight saving included, with the zone
+in its header, "Last Modified (Europe/Belgrade)". `Spreadsheet` reads `tz` as it writes, so no export
+declares it; absent is UTC, an unknown name a 400. Not the browser's offset, which is wrong for an
+instant on the other side of a clock change; not a zone per deployment, which offices in several
+zones share; not text with an offset, which Excel no longer reads as a date. Not ClosedXML's
+`InsertTable` over the rows: it writes a `DateOnly` as text. Not the original's CodeReports, which sized a column by its header's padded width
 and threw under a culture it did not ship; not EPPlus, licensed commercially.
 **A list the original never exported** — the company's records, the infrastructure — takes the list's
 columns, then the record's own fields, names resolved and counts kept; its file is `<List>.Export`,
