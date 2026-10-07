@@ -560,6 +560,30 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
     }
 
     [Fact]
+    public async Task Searches_a_devices_holder_and_location()
+    {
+        var response = await PostAsync(
+            new
+            {
+                volumeId = ActivationApplication.AntivirusLicense.Volume,
+                deviceId = ActivationApplication.Laptop,
+                activationDate = "2026-04-01",
+            }
+        );
+        var id = (await response.Content.ReadFromJsonAsync<ActivationDetail>())!.Id;
+
+        var byLocation = (await ListAsync("q=terra+office")).Items;
+        var byHolder = (await ListAsync("q=seed+person")).Items;
+        var bySomeoneElse = (await ListAsync("q=ana+anić")).Items;
+        await (await Client()).DeleteAsync($"{Url}/{id}");
+
+        Assert.Contains(byLocation, i => i.Id == id);
+        Assert.All(byLocation, i => Assert.True(i.ForDevice));
+        Assert.Contains(byHolder, i => i.Id == id);
+        Assert.DoesNotContain(bySomeoneElse, i => i.Id == id);
+    }
+
+    [Fact]
     public async Task Searches_software_license_person_and_device()
     {
         Assert.All(

@@ -113,7 +113,7 @@ export default createFunctionalComponent(() => {
                                 <TextField
                                     class="list-search-field"
                                     value={s.search}
-                                    placeholder="Search software, licenses, people, devices…"
+                                    placeholder="Search software, licenses, people, devices, locations…"
                                     showClear
                                     inputAttrs={{
                                         "aria-label": "Search activations",

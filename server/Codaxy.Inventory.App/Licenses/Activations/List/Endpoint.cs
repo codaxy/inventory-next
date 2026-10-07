@@ -10,7 +10,7 @@ public static class Endpoint
 {
     public static void Map(RouteGroupBuilder activations) => activations.MapGet("/", Handle);
 
-    /// <param name="Q">Free text over software, license, person, device name and number.</param>
+    /// <param name="Q">Free text over software, license, person, device name and number, and a device's holder and location.</param>
     /// <param name="PersonId">The seats the person answers for: theirs by name, and those on a device they hold.</param>
     /// <param name="Status"><c>active</c> or <c>deactivated</c>.</param>
     /// <param name="Expiry">The license's: <c>expired</c>, <c>soon</c>, <c>regular</c> or <c>none</c>.</param>
@@ -162,6 +162,8 @@ public static class Endpoint
                 || EF.Functions.ILike(a.Volume.License.Asset.Name, pattern, FreeText.Escape)
                 || EF.Functions.ILike(a.Person.Name, pattern, FreeText.Escape)
                 || EF.Functions.ILike(a.Asset.Name, pattern, FreeText.Escape)
+                || EF.Functions.ILike(a.Asset.Person.Name, pattern, FreeText.Escape)
+                || EF.Functions.ILike(a.Asset.Location.Name, pattern, FreeText.Escape)
                 || EF.Functions.ILike(a.Asset.InventoryNumber.ToString(), pattern, FreeText.Escape)
                 || EF.Functions.ILike(
                     a.Volume.License.Asset.InventoryNumber.ToString(),

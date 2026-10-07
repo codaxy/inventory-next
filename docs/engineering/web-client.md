@@ -308,7 +308,9 @@ has its count in the title and its first ten rows, each a link to its record —
 project's too, addressed ahead of their screens — and "See all N" to the owning list filtered to the
 record (`personId`, `clientId`), or a line saying only the first are shown where there is no list yet. The kinds with nothing are one line beneath, not empty cards. A
 seat on a device they hold says which device. On the activations list the filter reads "Held by":
-theirs by name and those on their devices.
+theirs by name and those on their devices. Its search reads a seat the same way: a person's name finds
+the seats on devices they hold as well as their own, and a location's name the seats on devices
+there.
 
 **View history leads every record's ⋮** (`historyAction`): the audit log filtered to the
 record's id, which also takes an asset's own row, since a device, a piece of furniture or a license
