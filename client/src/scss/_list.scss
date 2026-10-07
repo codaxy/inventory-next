@@ -145,9 +145,9 @@
     margin-top: 0.75rem;
 }
 
-// A list's secondary action in its header band — Excel, the server log's Refresh — quieter than Add
-// beside it: text with no border or fill. An anchor or a button alike.
-.list-export {
+// A header band's secondary action — a list's Excel, the server log's Refresh, the handover sheet's
+// PDF — quieter than Add beside it: text with no border or fill. An anchor or a button alike.
+.header-action {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -181,47 +181,47 @@
     }
 }
 
-// Excel's states, `data-state` on the button: one icon and one label at a time. Done is the success
+// A download's states (`downloadButton`), `data-state` on the button: one icon and one label at a time. Done is the success
 // colour, so the moment reads without the word, which a phone does not show.
-.list-export-busy,
-.list-export-done {
+.download-busy,
+.download-done {
     display: none;
 }
 
-.list-export[data-state="busy"] {
-    .list-export-idle {
+.header-action[data-state="busy"] {
+    .download-idle {
         display: none;
     }
 
-    .list-export-busy {
+    .download-busy {
         display: inline;
     }
 
-    svg.list-export-busy {
-        animation: list-export-spin 0.8s linear infinite;
+    svg.download-busy {
+        animation: download-spin 0.8s linear infinite;
     }
 }
 
-.list-export[data-state="done"] {
+.header-action[data-state="done"] {
     color: var(--color-success-text);
 
-    .list-export-idle {
+    .download-idle {
         display: none;
     }
 
-    .list-export-done {
+    .download-done {
         display: inline;
     }
 }
 
-@keyframes list-export-spin {
+@keyframes download-spin {
     to {
         transform: rotate(360deg);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .list-export[data-state="busy"] svg.list-export-busy {
+    .header-action[data-state="busy"] svg.download-busy {
         animation: none;
     }
 }
@@ -289,7 +289,7 @@
     align-items: center;
     gap: 0.5rem;
 
-    .list-export {
+    .header-action {
         justify-content: center;
         min-width: var(--control);
     }

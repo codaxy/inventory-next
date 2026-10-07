@@ -46,7 +46,7 @@ export default createFunctionalComponent(() => {
                             <cx>
                                 <button
                                     type="button"
-                                    class="list-export"
+                                    class="header-action"
                                     onClick="refresh"
                                     attrs={{ "aria-label": "Refresh", title: "Load what was logged since" }}
                                 >
