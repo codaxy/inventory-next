@@ -74,7 +74,8 @@ font. `Pdf:Sandbox` is false there: Chromium's sandbox cannot start as an unpriv
 container, and it loads only the application's own pages. About 490 MB of the image. **CI has the
 image's browser print a page before it publishes the image**: the tests print with the runner's own
 Chrome, so a browser that installs and does not run passes them all.
-`Handover:Place` is the place printed on the handover sheet, empty by default, since offices differ.
+`Handover:Place` is the place printed on the handover sheet: Banja Luka in `appsettings.json`, where
+the sheets are signed; an office elsewhere sets its own, and an empty one leaves the line for a hand.
 
 **A deployment behind a reverse proxy sets `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true`; the image
 does not.** It trusts `X-Forwarded-For` and `X-Forwarded-Proto` from any sender, known-proxy lists

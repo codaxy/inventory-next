@@ -358,8 +358,9 @@ never split — under the table where they fit, whole on the next page where the
 the software, the license, the device for a seat on one they hold, and the subscription's end; absent
 when there are none. An ended seat is history, not signed for. Apart from the equipment, not rows in
 its table: the original's seat rows repeated the device. A number beside a name is `#` and muted, as
-in the application. **The signature lines are one grid**: each column's lines start where its
-longest label ends, and a value stands on its label's baseline.
+in the application. **The signature lines are one grid**, the place, the date and Kontrolor on the left, the name above
+the signature and the responsible person on the right: each column's lines start where its longest
+label ends, and a value stands on its label's baseline.
 
 **It is downloaded as a PDF the server prints from this same page** — "PDF" in the header band, as "Excel" on a list,
 `downloadButton` as Excel's, absent where the server has no browser (`pdf` in the sheet's answer); no

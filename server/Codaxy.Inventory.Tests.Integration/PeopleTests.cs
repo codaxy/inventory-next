@@ -361,8 +361,11 @@ public class PeopleTests(PeopleApplication app) : IClassFixture<PeopleApplicatio
                 .ToArray()
         );
         Assert.All(sheet.Seats, s => Assert.Equal("Editor", s.Software));
-        // No place configured, no browser to print with, and a signer no person's email matches.
-        Assert.Equal(("", false, "editor@codaxy.com"), (sheet.Place, sheet.Pdf, sheet.Controller));
+        // The default place, no browser to print with, and a signer no person's email matches.
+        Assert.Equal(
+            ("Banja Luka", false, "editor@codaxy.com"),
+            (sheet.Place, sheet.Pdf, sheet.Controller)
+        );
         Assert.Contains(
             sheet.Assets,
             a =>

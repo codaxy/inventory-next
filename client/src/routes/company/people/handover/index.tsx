@@ -146,9 +146,9 @@ export default createFunctionalComponent(() => {
                             <p text="Ovaj dokument je napravljen i potpisan u 2 (dva) primjerka, od kojih jedan zadržava zaposleni, a drugi ostaje kompaniji." />
                             <div class="handover-signatures">
                                 {line("Mjesto:", h.place)}
-                                {line("Potpis:")}
-                                {line("Datum:", h.date)}
                                 {line("Ime i prezime:", h.name)}
+                                {line("Datum:", h.date)}
+                                {line("Potpis:")}
                                 {line("Kontrolor:", h.controller)}
                                 {line("Odgovorno lice ili nadređeni:")}
                             </div>
