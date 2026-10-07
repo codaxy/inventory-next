@@ -405,7 +405,10 @@ instead** (`copyButton` and `copyCell` in `components/`) on every text value of 
 numbers, codes, people, places, descriptions, addresses; not counts, dates, money, status tags or a
 "+N" list, whose text is not the value. Shown only while the pointer is over the cell, after any badge,
 and never on a touch screen, which has no hover. It copies the value as shown and ticks for 1.5s.
-Under a mouse the value truncates before its badges, so a long name never hides one. Not text selection: a link is dragged, not
+Under a mouse the value truncates before its badges, so a long name never hides one. **The
+button sits in the line**, moving what follows aside; **laid over it instead** (`"overlay"`) only where
+chosen — a device's inventory number before its holder on activations, which holds still — since past
+a value that fills its cell it would cover the next column. Not text selection: a link is dragged, not
 selected, and a row that selects on a click stops opening its record on one. Not a `<button>`, which
 an `<a>` may not hold; it stops its own click so the row does not open as well.
 

@@ -318,11 +318,16 @@ export default createFunctionalComponent(() => {
                                         >
                                             <span class="activation-device-who">
                                                 <span
-                                                    class="activation-device-number"
+                                                    class="record-copy-line activation-device-number"
                                                     visible={hasValue(m.$row.deviceNumber)}
-                                                    text={m.$row.deviceNumber}
-                                                />
-                                                {copyButton(m.$row.deviceNumberCopy, "inventory number")}
+                                                >
+                                                    <span text={m.$row.deviceNumber} />
+                                                    {copyButton(
+                                                        m.$row.deviceNumberCopy,
+                                                        "inventory number",
+                                                        "overlay",
+                                                    )}
+                                                </span>
                                                 <span
                                                     class="activation-device-holder"
                                                     visible={hasValue(m.$row.deviceHolder)}

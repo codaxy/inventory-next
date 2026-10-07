@@ -77,6 +77,10 @@
     display: none;
 }
 
+.record-copy-line:has(> .copy-button-overlay) {
+    position: relative;
+}
+
 @media (hover: hover) and (pointer: fine) {
     .record-copy-line {
         display: flex;
@@ -116,6 +120,22 @@
 
     .copy-button-copied {
         display: none;
+    }
+
+    // Laid over what follows its line instead of in it, so showing it moves nothing; the row's hover
+    // colour behind it hides the text beneath. Its line is the box it is placed against.
+    &.copy-button-overlay {
+        position: absolute;
+        top: 50%;
+        left: 100%;
+        z-index: 1;
+        margin: 0 0 0 0.125rem;
+        transform: translateY(-50%);
+        background: var(--color-hover);
+
+        &:hover {
+            background: var(--color-primary-wash);
+        }
     }
 
     &.copy-button-done {
