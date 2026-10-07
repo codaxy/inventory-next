@@ -57,9 +57,14 @@ public sealed partial class ChromiumPagePrinter(
                 await context.CloseAsync();
             }
         }
-        catch (PuppeteerException e)
+        // Starting the browser fails with an exception of its own, not a PuppeteerException; any
+        // failure of the browser is the print's, never an unhandled error.
+        catch (Exception e)
+            when (e is not PagePrintException
+                && !(e is OperationCanceledException && cancellationToken.IsCancellationRequested)
+            )
         {
-            log.LogWarning(e, "Printing {Path} failed.", path);
+            log.LogError(e, "Printing {Path} failed.", path);
             throw new PagePrintException("The page could not be printed.", e);
         }
         finally

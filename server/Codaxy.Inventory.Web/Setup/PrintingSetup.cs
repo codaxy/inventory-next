@@ -15,7 +15,13 @@ public static class PrintingSetup
     )
     {
         var section = configuration.GetSection(PrintingOptions.Section);
-        services.AddOptions<PrintingOptions>().Bind(section);
+        // A browser that is configured and missing stops the start, naming the setting, rather
+        // than failing at the first print.
+        services
+            .AddOptions<PrintingOptions>()
+            .Bind(section)
+            .Validate(o => o.IsValid, "Pdf:ChromiumPath names no file.")
+            .ValidateOnStart();
 
         if (section.Get<PrintingOptions>() is { Enabled: true })
             services.AddSingleton<IPagePrinter, ChromiumPagePrinter>();

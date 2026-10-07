@@ -29,16 +29,32 @@ RUN core="${APP_VERSION%%+*}"; \
     dotnet publish Codaxy.Inventory.Web/Codaxy.Inventory.Web.csproj -c Release -o /app --no-restore \
         $number -p:InformationalVersion="$APP_VERSION" -p:IncludeSourceRevisionInInformationalVersion=false
 
+# The browser that prints PDFs: the Chrome headless shell the application's PuppeteerSharp is
+# tested against, downloaded by the application itself (`--install-browser`, see BrowserInstall).
+# Not the distribution's: the base image is Ubuntu, whose `chromium` is a stub for a snap, which a
+# container cannot run.
+FROM server AS browser
+RUN dotnet /app/Codaxy.Inventory.Web.dll --install-browser /opt/chrome
+
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 
 # wget only for compose's health check, which runs inside the container; the base image has no HTTP
 # client. A stopgap: the lasting fix is the application probing itself (`--healthcheck`), which needs
 # nothing installed and survives a move to a chiseled image.
-# Chromium prints the handover sheet's own page to a PDF; fonts-liberation gives the sheet's
-# Helvetica/Arial stack a face with Arial's metrics, and the image has no other font.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends wget chromium fonts-liberation \
+    && apt-get install -y --no-install-recommends wget \
     && rm -rf /var/lib/apt/lists/*
+
+# The browser's system libraries, from the list it ships in Debian's dependency syntax, which
+# `apt-get satisfy` reads as it is. The list is full Chrome's: the headless shell links none of
+# GTK, CUPS, curl, Cairo, Pango, Vulkan or udev (`ldd` says so), and needs neither xdg-utils nor
+# wget, so those are left out — a third of the size. fonts-liberation, in it, gives the sheet's
+# Helvetica/Arial stack a face with Arial's metrics: the image has no other font.
+COPY --from=browser /opt/chrome/deb.deps /tmp/chrome.deps
+RUN apt-get update \
+    && apt-get satisfy -y --no-install-recommends "$(grep -vE '^(libgtk|xdg-utils|wget|libcups2|libcurl|libcairo2|libpango|libvulkan1|libudev1)' /tmp/chrome.deps | paste -sd, -)" \
+    && rm -rf /var/lib/apt/lists/* /tmp/chrome.deps
+COPY --from=browser /opt/chrome /opt/chrome
 
 WORKDIR /app
 COPY --from=server /app ./
@@ -60,7 +76,7 @@ EXPOSE 8080
 # nothing but this application's own pages.
 ENV ASPNETCORE_ENVIRONMENT=Production \
     ServerLog__Path=/var/lib/inventory/logs \
-    Pdf__ChromiumPath=/usr/bin/chromium \
+    Pdf__ChromiumPath=/opt/chrome/chrome \
     Pdf__Sandbox=false
 
 ENTRYPOINT ["dotnet", "Codaxy.Inventory.Web.dll"]

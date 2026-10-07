@@ -174,7 +174,7 @@ in `Web` by PuppeteerSharp. Chromium opens the page on the server's own address,
 caller (see [auth.md](auth.md)), its clock in `tz`, and prints once the page sets `data-print` to
 `ready` — the page's print rules and A4 `@page` are the file's. One browser for the process, opened on
 the first print and closed after `Pdf:IdleClose`; a fresh incognito context per print; two prints at
-once, more wait; a page not ready within `Pdf:Timeout` is a 500 that says so. Every request to
+once, more wait; a page not ready within `Pdf:Timeout`, or a browser that does not start, is a 500 that says so. Every request to
 anything but this machine is aborted, so nothing the page links to is fetched. **The printer exists
 only where `Pdf:ChromiumPath` names a browser**: without one it is not registered, the PDF endpoint is
 a 404 and the sheet offers no download. Not a PDF library laying the sheet out again: two layouts of

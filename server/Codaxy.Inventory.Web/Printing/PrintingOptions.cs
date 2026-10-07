@@ -23,4 +23,7 @@ public sealed class PrintingOptions
     public TimeSpan IdleClose { get; set; } = TimeSpan.FromMinutes(5);
 
     public bool Enabled => !string.IsNullOrWhiteSpace(ChromiumPath);
+
+    /// <summary>A path that is set names a file, or the application does not start.</summary>
+    public bool IsValid => !Enabled || File.Exists(ChromiumPath);
 }

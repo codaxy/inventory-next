@@ -64,10 +64,16 @@ Mailpit and one-time codes on, so a fresh checkout runs. Development credentials
 secrets; see [auth.md](auth.md).
 
 **`Pdf:ChromiumPath` names the browser that prints PDFs**; empty, nothing is printed and the
-handover sheet offers no download. Never downloaded at runtime: the image installs Debian's
-`chromium`, with `fonts-liberation` for the sheet's Arial-metric sans — the image has no other font —
-and sets the path, with `Pdf:Sandbox` false, since Chromium's sandbox cannot start as an unprivileged
-user in a container; it loads only the application's own pages. About 350 MB of the image.
+handover sheet offers no download, and a path that names no file stops the start. **The image carries
+the Chrome headless shell its PuppeteerSharp is tested against**, downloaded when the image is built
+by the application itself (`--install-browser`, `BrowserInstall`), never at runtime, so a package
+update brings the matching browser. Its libraries come from the list it ships (`deb.deps`), through
+`apt-get satisfy`, less what the headless shell does not link — GTK, CUPS, curl, Cairo, Pango,
+Vulkan, udev — with `fonts-liberation` for the sheet's Arial-metric sans, the image having no other
+font. `Pdf:Sandbox` is false there: Chromium's sandbox cannot start as an unprivileged user in a
+container, and it loads only the application's own pages. About 490 MB of the image. **CI has the
+image's browser print a page before it publishes the image**: the tests print with the runner's own
+Chrome, so a browser that installs and does not run passes them all.
 `Handover:Place` is the place printed on the handover sheet, empty by default, since offices differ.
 
 **A deployment behind a reverse proxy sets `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true`; the image
@@ -138,6 +144,10 @@ migration histories to be identical; see [co-existence.md](co-existence.md).
 **A log folder the process cannot write is an empty server log, not an error.** Serilog's file sink
 swallows the failure, so the screen shows nothing and startup succeeds; `logs/` under the image's
 `/app` is root's.
+
+**The base image is Ubuntu, and Ubuntu's `chromium` is a stub for a snap**, which a container
+cannot run: it installs, the build passes, and there is no browser. The same holds for
+`chromium-browser`.
 
 **Mailpit accepts everything and delivers nothing.** One-time codes in development are read from its
 web interface on 8025, never from a mailbox.

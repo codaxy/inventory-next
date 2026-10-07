@@ -1,8 +1,16 @@
 using Codaxy.Inventory.App;
 using Codaxy.Inventory.Web.Auth;
+using Codaxy.Inventory.Web.Printing;
 using Codaxy.Inventory.Web.Setup;
 using Codaxy.Inventory.Web.Version;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
+// Run once by the image's build, not by the server: see BrowserInstall.
+if (args is [BrowserInstall.Command, var browserDirectory])
+{
+    await BrowserInstall.RunAsync(browserDirectory);
+    return;
+}
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -97,6 +97,21 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # The image's browser prints before the image is published: a browser that installs and does
+      # not run passes every other check, since the tests print with the runner's own Chrome.
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          build-args: APP_VERSION=${{ steps.version.outputs.version }}
+          tags: inventory-next:check
+
+      - name: Check that the image's browser prints
+        run: >-
+          docker run --rm --entrypoint /opt/chrome/chrome inventory-next:check
+          --no-sandbox --disable-dev-shm-usage --print-to-pdf=/tmp/check.pdf
+          "data:text/html,<p>Mjesto: Banja Luka</p>"
+
       - uses: docker/build-push-action@v6
         with:
           context: .
