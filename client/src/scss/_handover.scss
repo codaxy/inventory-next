@@ -1,8 +1,7 @@
 @use "brand";
 
 // The handover sheet: on screen the printed page itself — A4, its margins and its type — fitted to
-// the column as a PDF viewer fits a page, zoomed down where the column is narrower (`sheetFit`), never
-// laid out again for it. Printed alone: the shell, the header band and the Print button stay on the
+// the column's width as a PDF viewer fits a page (`sheetFit`), never laid out again for it. Printed alone: the shell, the header band and the Print button stay on the
 // screen.
 
 // The sheet keeps the original's type — a plain sans at 10.5pt, not the application's Montserrat,
@@ -113,6 +112,36 @@
     }
 }
 
+// The seats' table: its own columns, beneath its own heading.
+.handover-subtitle {
+    margin: 30px 0 0;
+    font-size: 11pt;
+    font-weight: 600;
+}
+
+.handover-table.handover-seats {
+    th:nth-child(2) {
+        width: auto;
+    }
+
+    th:nth-child(3) {
+        width: 30%;
+    }
+
+    th:nth-child(4) {
+        width: 24%;
+    }
+
+    th:nth-child(5) {
+        width: 6.5rem;
+    }
+}
+
+// An inventory number beside a name, muted, as the application shows it.
+.handover-number {
+    color: var(--color-ink-muted);
+}
+
 .handover-empty {
     text-align: center;
     color: var(--color-ink-muted);
@@ -122,36 +151,50 @@
     margin-top: 2.5rem;
 }
 
-// Pairs of lines, the second of each at the right edge; the superior's line alone, at the right.
-// A line is 250px, as in the original, and shorter where a pair would run past the margin.
+// Pairs of lines, the second of each at the right edge, on one grid: every line of a column starts
+// where the column's longest label ends, so the values stand one under another. A line is 250px, as
+// in the original, and shorter where a pair would run past the margin.
 .handover-signatures {
     container-type: inline-size;
     display: grid;
-    grid-template-columns: auto auto;
-    justify-content: space-between;
-    gap: 35px 2rem;
+    grid-template-columns: auto auto 1fr auto auto;
+    align-items: end;
+    gap: 35px 0;
     margin-top: 70px;
+    white-space: nowrap;
 }
 
 .handover-line {
-    display: flex;
-    align-items: flex-end;
-    white-space: nowrap;
+    display: contents;
 
-    &:nth-child(even) {
-        justify-self: end;
+    > :first-child {
+        padding-right: 0.25em;
+    }
+
+    &:nth-child(odd) > :first-child {
+        grid-column: 1;
+    }
+
+    &:nth-child(even) > :first-child {
+        grid-column: 4;
+        padding-left: 2rem;
+        text-align: right;
     }
 }
 
-.handover-line-last {
-    grid-column: 1 / -1;
-    justify-self: end;
-}
-
+// The label's height and line height, so what the sheet fills in stands on the label's baseline.
 .handover-blank {
     width: min(250px, 32cqi);
-    height: 1.2em;
+    height: 1.5em;
     border-bottom: 1px solid var(--color-ink);
+}
+
+// What the sheet fills in sits on its line, clear of the label; a name too long for it is cut, not
+// wrapped under the line.
+.handover-blank:not(:empty) {
+    padding-left: 0.5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @media print {
@@ -168,6 +211,9 @@
         display: none !important;
     }
 
+    // The root too: the server prints backgrounds, and the root's page colour would fill the last
+    // page beneath the sheet.
+    html,
     body,
     main,
     .page-body {

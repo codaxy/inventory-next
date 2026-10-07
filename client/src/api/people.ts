@@ -58,7 +58,24 @@ export interface Holdings {
 
 export interface Handover {
     name: string;
+    /** Where it is signed; empty leaves the line for a hand. */
+    place: string;
+    /** Who produced it: the signed-in person. */
+    controller: string;
+    /** Whether the server can print it. */
+    pdf: boolean;
     assets: { number: number | null; name: string; description: string | null; type: string }[];
+    /** Active seats, theirs by name or on a device they hold. */
+    seats: {
+        software: string;
+        license: string;
+        licenseNumber: number | null;
+        /** The device it is on, for a seat not theirs by name. */
+        device: string | null;
+        deviceNumber: number | null;
+        /** `YYYY-MM-DD`, the license's subscription end. */
+        expires: string | null;
+    }[];
 }
 
 const base = "/api/company/people";
@@ -73,6 +90,10 @@ export const getPerson = (id: string) => send<PersonDetail>(`${base}/${id}`);
 export const getHoldings = (id: string) => send<Holdings>(`${base}/${id}/holdings`);
 
 export const getHandover = (id: string) => send<Handover>(`${base}/${id}/handover`);
+
+/** The handover sheet as the server prints it, dated in the browser's time zone. */
+export const handoverPdf = (id: string) =>
+    `${base}/${id}/handover.pdf?tz=${encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone)}`;
 
 export const createPerson = (form: PersonForm) =>
     send<PersonDetail>(`${base}/`, { method: "POST", body: JSON.stringify(form) });

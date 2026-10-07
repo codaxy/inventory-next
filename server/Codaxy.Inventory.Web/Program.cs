@@ -15,6 +15,7 @@ builder
     .AddInventoryAuthentication(builder.Configuration)
     .AddInventoryRateLimiting(builder.Configuration)
     .AddInventoryHttpLogging()
+    .AddInventoryPrinting(builder.Configuration)
     .AddInventoryHealthChecks();
 
 var app = builder.Build();

@@ -249,7 +249,7 @@ its filters to and from the address, and its fetch. Not a history entry per chan
 through every filter click before leaving.
 
 **A list that has a spreadsheet offers it in its header band** — "Excel", before Add — as a
-button that fetches the export of its current request, filters and all, in the browser's time zone
+button (`downloadButton`, every download's) that fetches the export of its current request, filters and all, in the browser's time zone
 (`tz`) with its abbreviations (`tzLabel`, `zoneLabel()` in `src/download.ts`: the zone's short names
 in January and July, standard first, in British English, else US English, else the offsets — no
 single locale has both CET and EST), and saves it under the
@@ -346,12 +346,29 @@ form whose only choice is made — one country, its one city — starts with it.
 at its head; uppercase column headers on a grey band, rules between rows only; A4 margins of 1cm above and below,
 2cm left and 1.5cm right — its table as long as its rows, never scrolling, since it is printed.
 **On screen it is the printed page, at every width**: A4, the paper's type in points, fixed column
-widths, the signatures in pairs — fitted to the column as a PDF viewer fits a page (`sheetFit()`,
-zoomed down, never up), never laid out again for a phone. CSS `zoom`, not `transform: scale`: a
-transform leaves the page's full width in the layout, and the phone scrolls sideways. A Print button, and under
+widths, the signatures in pairs — fitted to the column's width as a PDF viewer fits a page
+(`sheetFit()`: down on a phone, a little up on a desktop, so its edge is the header band's and its
+PDF button's), never laid out again for a phone. CSS `zoom`, not `transform: scale`: a
+transform leaves the page's full width in the layout, and the phone scrolls sideways. Under
 `@media print` the shell removed (`display: none`, not hidden — hidden, it keeps its room and
 squeezes the sheet), the table's header repeating on each page, and the closing line with the signatures
 never split — under the table where they fit, whole on the next page where they do not.
+
+**Beneath the equipment, the person's active seats** — "Licence / pretplate", a table of its own:
+the software, the license, the device for a seat on one they hold, and the subscription's end; absent
+when there are none. An ended seat is history, not signed for. Apart from the equipment, not rows in
+its table: the original's seat rows repeated the device. A number beside a name is `#` and muted, as
+in the application. **The signature lines are one grid**: each column's lines start where its
+longest label ends, and a value stands on its label's baseline.
+
+**It is downloaded as a PDF the server prints from this same page** — "PDF" in the header band, as "Excel" on a list,
+`downloadButton` as Excel's, absent where the server has no browser (`pdf` in the sheet's answer); no
+Print button. The page is the PDF's only layout: its print rules are the file's, so a second layout in
+a PDF library cannot drift from it. The page tells the printer it is whole with `data-print` on its
+root — `loading`, then `ready` once its data is in, or `failed` — see [server.md](server.md). **The
+signature lines fill in what is known**, written on the line: the place (a setting), today in the
+viewer's zone as `07.10.2026.`, the person's name, and *Kontrolor*, whoever is signed in; *Potpis* and
+*Odgovorno lice ili nadređeni* stay blank for a hand — nothing links a person to a manager.
 
 **A license's volume is read in parts, not as a sentence**: its software, then its type and
 description muted beneath, and its seats — "15 / 35 in use" over a meter, primary while seats are
@@ -560,7 +577,9 @@ by scroll position to get two ends: with scrollbars always shown, the document's
 root's colour, and it flickers between the two at the threshold.
 
 **A browser prints no background unless told to**, and a mask is drawn through one: the wordmark
-and a grey table header vanish from paper without `print-color-adjust: exact`.
+and a grey table header vanish from paper without `print-color-adjust: exact`. The server's printer
+is told to, so every background prints there — the root's page colour too, filling the last page
+beneath the sheet, unless the print rules whiten it.
 
 **A scroll lock that outlives its overlay freezes the page until a reload**: it listens to the whole
 document and refuses every gesture outside the overlay. A window mounted twice without unmounting — a

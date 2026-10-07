@@ -1,6 +1,7 @@
 import { createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
-import { Button, Icon, Link, Repeater } from "cx/widgets";
+import { Icon, Link, Repeater } from "cx/widgets";
 
+import { downloadButton } from "../../../../components/downloadButton";
 import $app from "../../../../model";
 import { sheetFit } from "../../../../sheetFit";
 import Controller from "./Controller";
@@ -11,14 +12,15 @@ const h = m.handover;
 /**
  * The equipment a person signs for, as the original printed it — its text word for word, the
  * company's own legal wording in its own language. Only the sheet prints; the header band is the
- * screen's. On screen it is the printed page itself, fitted to the column (`sheetFit`).
+ * screen's. On screen it is the printed page itself, fitted to the column (`sheetFit`); the server
+ * prints this same page for the PDF, waiting on `data-print`.
  */
 export default createFunctionalComponent(() => {
     const onColumnRef = sheetFit();
 
     return (
         <cx>
-            <div class="page-body page-narrow" controller={Controller}>
+            <div class="page-body page-narrow" controller={Controller} attrs={{ "data-print": h.print }}>
                 <div class="page-top handover-screen">
                     <div class="page-header">
                         <Link
@@ -32,10 +34,14 @@ export default createFunctionalComponent(() => {
                         <div class="editor-heading">
                             <h1 class="page-title" text="Handover sheet" />
                             <div class="editor-heading-actions">
-                                <Button mod="primary" onClick="print" disabled={h.loading}>
-                                    <Icon name="print" class="size-4" />
-                                    <span text="Print" />
-                                </Button>
+                                {downloadButton({
+                                    href: h.pdfHref,
+                                    visible: hasValue(h.pdfHref),
+                                    text: "PDF",
+                                    label: "Download as PDF",
+                                    title: "Download the handover sheet as a PDF",
+                                    noun: "PDF",
+                                })}
                             </div>
                         </div>
                     </div>
@@ -87,40 +93,64 @@ export default createFunctionalComponent(() => {
                                     <tr
                                         visible={expr(
                                             h.rows,
-                                            h.loading,
-                                            (rows, loading) => !loading && !rows?.length,
+                                            h.print,
+                                            (rows, print) => print === "ready" && !rows?.length,
                                         )}
                                     >
                                         <td colSpan={5} class="handover-empty" text="No data" />
                                     </tr>
                                 </tbody>
                             </table>
+
+                            <div visible={expr(h.seats, (seats) => !!seats?.length)}>
+                                <h3 class="handover-subtitle" text="Licence / pretplate" />
+                                <table class="handover-table handover-seats">
+                                    <thead>
+                                        <tr>
+                                            <th text="R. Br" />
+                                            <th text="Softver" />
+                                            <th text="Licenca" />
+                                            <th text="Na uređaju" />
+                                            <th text="Ističe" />
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <Repeater records={h.seats} recordAlias={m.$seat}>
+                                            <tr>
+                                                <td text={m.$seat.index} />
+                                                <td text={m.$seat.software} />
+                                                <td>
+                                                    <span text={m.$seat.license} />{" "}
+                                                    <span
+                                                        class="handover-number"
+                                                        text={m.$seat.licenseNumber}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <span text={m.$seat.device} />{" "}
+                                                    <span
+                                                        class="handover-number"
+                                                        text={m.$seat.deviceNumber}
+                                                    />
+                                                </td>
+                                                <td text={m.$seat.expires} />
+                                            </tr>
+                                        </Repeater>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                         {/* The closing line and the signatures, printed together, never split. */}
                         <div class="handover-part handover-closing">
                             <p text="Ovaj dokument je napravljen i potpisan u 2 (dva) primjerka, od kojih jedan zadržava zaposleni, a drugi ostaje kompaniji." />
                             <div class="handover-signatures">
-                                <div class="handover-line">
-                                    <span text="Mjesto:" />
-                                    <span class="handover-blank" />
-                                </div>
-                                <div class="handover-line">
-                                    <span text="Potpis:" />
-                                    <span class="handover-blank" />
-                                </div>
-                                <div class="handover-line">
-                                    <span text="Datum:" />
-                                    <span class="handover-blank" />
-                                </div>
-                                <div class="handover-line">
-                                    <span text="Ime i prezime:" />
-                                    <span class="handover-blank" />
-                                </div>
-                                <div class="handover-line handover-line-last">
-                                    <span text="Odgovorno lice ili nadređeni:" />
-                                    <span class="handover-blank" />
-                                </div>
+                                {line("Mjesto:", h.place)}
+                                {line("Potpis:")}
+                                {line("Datum:", h.date)}
+                                {line("Ime i prezime:", h.name)}
+                                {line("Kontrolor:", h.controller)}
+                                {line("Odgovorno lice ili nadređeni:")}
                             </div>
                         </div>
                     </article>
@@ -129,3 +159,15 @@ export default createFunctionalComponent(() => {
         </cx>
     );
 });
+
+/** A signature line: its label, and what the sheet fills in, if anything, written on the line. */
+function line(label: string, value?: typeof h.name) {
+    return (
+        <cx>
+            <div class="handover-line">
+                <span text={label} />
+                <span class="handover-blank" text={value ?? ""} />
+            </div>
+        </cx>
+    );
+}

@@ -1,3 +1,4 @@
+using Codaxy.Inventory.App.Company.People.Handover;
 using Codaxy.Inventory.App.Dashboard;
 using Codaxy.Inventory.Web.Auth;
 
@@ -17,6 +18,9 @@ public static class OptionsSetup
             .Bind(configuration.GetSection(DashboardOptions.Section))
             .Validate(o => o.IsValid, "Every Dashboard:*Days must be at least 1.")
             .ValidateOnStart();
+        services
+            .AddOptions<HandoverOptions>()
+            .Bind(configuration.GetSection(HandoverOptions.Section));
 
         return services;
     }

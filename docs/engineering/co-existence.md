@@ -59,6 +59,8 @@ first migration after deprecation, not a backlog to act on.
   software only through its volumes.
 - **A person's email is unique**, by an index on `lower(trim(email))`. The application refuses a
   duplicate here; the original checks nothing, and two saves at once pass either way.
+- **A person may name their manager.** A nullable self-reference on `Person`, so the handover
+  sheet can fill in *Odgovorno lice ili nadređeni*; until then the line is written by hand.
 - **No index serves any predicate.** Primary keys and the unique `inventory_number` are the whole of
   the indexing. The original filtered in the browser so there was nothing to serve; this application
   filters, sorts and pages in the database, and does it with sequential scans. At the present size —

@@ -34,8 +34,10 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 # wget only for compose's health check, which runs inside the container; the base image has no HTTP
 # client. A stopgap: the lasting fix is the application probing itself (`--healthcheck`), which needs
 # nothing installed and survives a move to a chiseled image.
+# Chromium prints the handover sheet's own page to a PDF; fonts-liberation gives the sheet's
+# Helvetica/Arial stack a face with Arial's metrics, and the image has no other font.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends wget \
+    && apt-get install -y --no-install-recommends wget chromium fonts-liberation \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -54,7 +56,11 @@ USER $APP_UID
 EXPOSE 8080
 # The server log in the folder the image made writable: the default, `logs` under /app, is root's,
 # and the file sink fails without a word.
+# Chromium without its sandbox, which cannot start as an unprivileged user in a container; it loads
+# nothing but this application's own pages.
 ENV ASPNETCORE_ENVIRONMENT=Production \
-    ServerLog__Path=/var/lib/inventory/logs
+    ServerLog__Path=/var/lib/inventory/logs \
+    Pdf__ChromiumPath=/usr/bin/chromium \
+    Pdf__Sandbox=false
 
 ENTRYPOINT ["dotnet", "Codaxy.Inventory.Web.dll"]

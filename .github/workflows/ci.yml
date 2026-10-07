@@ -26,11 +26,28 @@ jobs:
       - name: Build
         run: dotnet build server/Codaxy.Inventory.slnx --configuration Release
 
+      # The PDF test prints the built client's page in the runner's Chrome, served as the image
+      # serves it: from wwwroot.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Build the client into wwwroot
+        working-directory: client
+        run: |
+          npm ci
+          npm run build
+          cp -r dist/. ../server/Codaxy.Inventory.Web/wwwroot/
+
       # The integration tests start PostgreSQL through Testcontainers, so the runner's Docker is what
       # makes them possible; there is no service container to keep in step with the fixture. The
       # script is the one the pre-merge check runs, so the two cannot disagree.
       - name: Test with the coverage threshold
         run: scripts/coverage.sh --no-build
+        env:
+          INVENTORY_TEST_CHROMIUM: /usr/bin/google-chrome
 
   client:
     runs-on: ubuntu-latest

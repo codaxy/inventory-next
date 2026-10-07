@@ -10,7 +10,14 @@ public static class SignedIn
         string email = "reader@codaxy.com"
     )
     {
-        var client = app.CreateClient(new() { AllowAutoRedirect = false, HandleCookies = true });
+        var client = app.CreateClient(
+            new()
+            {
+                BaseAddress = app.ClientOptions.BaseAddress,
+                AllowAutoRedirect = false,
+                HandleCookies = true,
+            }
+        );
 
         await client.PostAsJsonAsync("/api/auth/one-time-code/request", new { email });
 

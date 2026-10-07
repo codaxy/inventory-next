@@ -352,6 +352,17 @@ public class PeopleTests(PeopleApplication app) : IClassFixture<PeopleApplicatio
 
         Assert.Equal("Hana Holder", sheet.Name);
         Assert.Equal(4, sheet.Assets.Count);
+        // Active seats only — by name and on her laptop — the device named only where it is on one.
+        Assert.Equal(
+            [(null, "Editor license"), ("Hana's laptop", "Editor device license")],
+            sheet
+                .Seats.Select(s => (s.Device, s.License))
+                .OrderBy(s => s.Device is not null)
+                .ToArray()
+        );
+        Assert.All(sheet.Seats, s => Assert.Equal("Editor", s.Software));
+        // No place configured, no browser to print with, and a signer no person's email matches.
+        Assert.Equal(("", false, "editor@codaxy.com"), (sheet.Place, sheet.Pdf, sheet.Controller));
         Assert.Contains(
             sheet.Assets,
             a =>
@@ -364,6 +375,28 @@ public class PeopleTests(PeopleApplication app) : IClassFixture<PeopleApplicatio
                     }
         );
     }
+
+    [Fact]
+    public async Task The_handover_sheet_names_its_signer_by_their_person()
+    {
+        var client = await app.ClientAsync("hana@codaxy.com");
+        var sheet = (
+            await client.GetFromJsonAsync<Handover>($"{Url}/{PeopleApplication.Ivo}/handover")
+        )!;
+
+        Assert.Equal("Hana Holder", sheet.Controller);
+    }
+
+    [Fact]
+    public async Task The_handover_sheet_has_no_pdf_without_a_browser() =>
+        Assert.Equal(
+            HttpStatusCode.NotFound,
+            (
+                await (await Client()).GetAsync(
+                    $"{Url}/{PeopleApplication.Hana}/handover.pdf?tz=Europe/Belgrade"
+                )
+            ).StatusCode
+        );
 
     [Fact]
     public async Task Lists_with_what_each_holds_searching_sorting_and_paging()

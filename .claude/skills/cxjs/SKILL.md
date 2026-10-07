@@ -424,6 +424,9 @@ classes land on the `tbody`. **Grid selects on `mousedown`**, not `click`.
   `<path>.bind`.
 - **CxJS's `Link` never leaves the application** — it routes any local href through the client router.
   A link to a server endpoint (an OAuth start) is a plain `<a>`.
+- **A `data-*` prop on an HTML element never reaches the DOM**: cx keeps it as the widget's data. An
+  attribute anything outside cx reads — a test, the server's printer — goes through
+  `attrs={{ "data-x": accessor }}`, which binds.
 - **A layout is an imported widget, not a string**: `layout={{ type: "vbox" }}` throws
   `Invalid widget type` at render. Anything that simple is CSS.
 

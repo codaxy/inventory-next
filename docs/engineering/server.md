@@ -168,6 +168,18 @@ and threw under a culture it did not ship; not EPPlus, licensed commercially.
 columns, then the record's own fields, names resolved and counts kept; its file is `<List>.Export`,
 the list's name without spaces.
 
+**A PDF is the client's own page, printed by the server in headless Chromium** — the handover
+sheet's, `GET …/people/{id}/handover.pdf?tz=…` — through `Shared/Printing/IPagePrinter`, implemented
+in `Web` by PuppeteerSharp. Chromium opens the page on the server's own address, signed in as the
+caller (see [auth.md](auth.md)), its clock in `tz`, and prints once the page sets `data-print` to
+`ready` — the page's print rules and A4 `@page` are the file's. One browser for the process, opened on
+the first print and closed after `Pdf:IdleClose`; a fresh incognito context per print; two prints at
+once, more wait; a page not ready within `Pdf:Timeout` is a 500 that says so. Every request to
+anything but this machine is aborted, so nothing the page links to is fetched. **The printer exists
+only where `Pdf:ChromiumPath` names a browser**: without one it is not registered, the PDF endpoint is
+a 404 and the sheet offers no download. Not a PDF library laying the sheet out again: two layouts of
+one document drift. Not the browser's print dialog: not a file, and clumsy on a phone.
+
 **A delete the database would refuse is a 409 that says what holds the record** — "113 devices are of
 this type" — checked before the save, not left to surface as a foreign-key 500.
 
@@ -208,6 +220,10 @@ namespace.
 **`App` uses the plain SDK, so it declares the implicit usings `Sdk.Web` would add** — `Http`,
 `Routing`, `Builder`, `Logging` and the rest. Without them every endpoint fails on `IResult` and
 `HttpContext`.
+
+**Where the server listens is not where Chromium can reach it**: `IServerAddressesFeature` gives
+`http://+:8080` or `http://0.0.0.0:48010`, so a wildcard host becomes the loopback address, and plain
+HTTP is preferred where it listens on both.
 
 **`dotnet ef` needs both projects**: `--project Codaxy.Inventory.App --startup-project
 Codaxy.Inventory.Web`. The migrations live with the context in `App`; the design package and the

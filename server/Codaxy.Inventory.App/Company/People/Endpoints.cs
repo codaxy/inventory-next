@@ -11,6 +11,7 @@ public static class Endpoints
         Get.Endpoint.Map(people);
         Holdings.Endpoint.Map(people);
         Handover.Endpoint.Map(people);
+        HandoverPdf.Endpoint.Map(people);
         Create.Endpoint.Map(people);
         Update.Endpoint.Map(people);
         Delete.Endpoint.Map(people);

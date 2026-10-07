@@ -63,6 +63,13 @@ for seats left on them. Development names the restored database's `Otpisano` and
 Mailpit and one-time codes on, so a fresh checkout runs. Development credentials live in user
 secrets; see [auth.md](auth.md).
 
+**`Pdf:ChromiumPath` names the browser that prints PDFs**; empty, nothing is printed and the
+handover sheet offers no download. Never downloaded at runtime: the image installs Debian's
+`chromium`, with `fonts-liberation` for the sheet's Arial-metric sans — the image has no other font —
+and sets the path, with `Pdf:Sandbox` false, since Chromium's sandbox cannot start as an unprivileged
+user in a container; it loads only the application's own pages. About 350 MB of the image.
+`Handover:Place` is the place printed on the handover sheet, empty by default, since offices differ.
+
 **A deployment behind a reverse proxy sets `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true`; the image
 does not.** It trusts `X-Forwarded-For` and `X-Forwarded-Proto` from any sender, known-proxy lists
 cleared — which the Google redirect URI, the cookie's `Secure` flag and the sign-in rate limit need

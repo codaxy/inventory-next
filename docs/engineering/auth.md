@@ -24,6 +24,14 @@ The ring is plaintext XML at rest. There is no DPAPI on Linux and no key-encrypt
 anyone who can read the volume can mint a session for any user. Treat it as a credential: it must not
 reach a backup or an image that travels further than the server.
 
+**The server's PDF printer signs in as the caller, with the caller's own cookie**: the session
+cookie of the request for the PDF is set on the print's own incognito context, for the server's
+local address, and goes with it. The ticket is protected by the key ring, not bound to a host, so a
+cookie issued for the public host opens the page on `127.0.0.1`. **Never a path that trusts a local
+caller instead**: forwarded headers are trusted from any sender, so anyone reaching the port can
+claim to be local. Not a one-time print ticket either: a second sign-in path to build and secure,
+where the cookie reuses the one that exists.
+
 ## Who may sign in
 
 `SignInPolicy` applies three rules in order, whichever provider the person came through:
