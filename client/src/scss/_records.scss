@@ -422,8 +422,8 @@
     display: flex;
     // The mark's slot and its margin, `.assignee-kind`.
     margin-left: 1.1875rem;
-    font-size: 11.5px;
-    color: var(--color-ink-muted);
+    font-size: 11px;
+    color: var(--color-line-strong);
 
     @media (min-width: 768px) {
         display: block;
