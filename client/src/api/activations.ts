@@ -16,6 +16,10 @@ export interface ActivationItem {
     license: string;
     assignee: string | null;
     forDevice: boolean;
+    /** The device's, with its holder and location; absent for a person's seat. */
+    deviceNumber: number | null;
+    deviceHolder: string | null;
+    deviceLocation: string | null;
     quantity: number;
     activationDate: string;
     deactivationDate: string | null;
@@ -43,7 +47,7 @@ export interface ActivationDetail {
     };
     volume: { id: string; type: string; typeId: number; quantity: number; inUse: number };
     person: Named | null;
-    device: { id: string; name: string; number: number | null } | null;
+    device: { id: string; name: string; number: number | null; holder: Named; location: Named | null } | null;
     quantity: number;
     activationDate: string;
     deactivationDate: string | null;

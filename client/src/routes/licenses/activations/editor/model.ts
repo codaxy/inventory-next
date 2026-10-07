@@ -40,6 +40,11 @@ export interface View {
     assigneeNumber?: string;
     /** The person's page, or the device's. */
     assigneeHref?: string;
+    /** Who holds the device, and where it is; absent for a person's seat. */
+    holder?: string;
+    holderHref?: string;
+    deviceLocation?: string;
+    deviceLocationHref?: string;
     activated: string;
     deactivated?: string;
     active: boolean;
@@ -137,6 +142,10 @@ export const toView = (a: ActivationDetail): View => ({
         : a.device
           ? `~/electronic-devices/${a.device.id}`
           : undefined,
+    holder: a.device?.holder.name,
+    holderHref: a.device ? `~/company/people/${a.device.holder.id}` : undefined,
+    deviceLocation: a.device?.location?.name,
+    deviceLocationHref: a.device?.location ? `~/company/locations/${a.device.location.id}` : undefined,
     activated: formatDate(a.activationDate)!,
     deactivated: formatDate(a.deactivationDate),
     active: !a.deactivationDate,

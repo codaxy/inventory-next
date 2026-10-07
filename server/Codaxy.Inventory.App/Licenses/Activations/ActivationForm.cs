@@ -43,7 +43,7 @@ public sealed record LicenseSummary(
     Guid? LocationId
 );
 
-public sealed record DeviceRef(Guid Id, string Name, int? Number);
+public sealed record DeviceRef(Guid Id, string Name, int? Number, Named Holder, Named? Location);
 
 /// <summary>An activation as its page shows it, with the license it draws on.</summary>
 public sealed record ActivationDetail(
@@ -107,7 +107,15 @@ internal static class Activations
                 Person = a.PersonId == null ? null : new Named(a.Person.Id, a.Person.Name),
                 Device = a.AssetId == null
                     ? null
-                    : new DeviceRef(a.Asset.Id, a.Asset.Name, a.Asset.InventoryNumber),
+                    : new DeviceRef(
+                        a.Asset.Id,
+                        a.Asset.Name,
+                        a.Asset.InventoryNumber,
+                        new Named(a.Asset.Person.Id, a.Asset.Person.Name),
+                        a.Asset.LocationId == null
+                            ? null
+                            : new Named(a.Asset.Location.Id, a.Asset.Location.Name)
+                    ),
                 a.Quantity,
                 a.ActivationDate,
                 a.DeactivationDate,

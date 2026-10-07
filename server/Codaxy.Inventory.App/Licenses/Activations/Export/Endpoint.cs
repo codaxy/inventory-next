@@ -14,7 +14,8 @@ public static class Endpoint
 
     /// <summary>
     /// One activation as the original's spreadsheet has it; the headers are its own, and so is "Last
-    /// Modified", which is the license's.
+    /// Modified", which is the license's. The device's number, holder and location are this
+    /// application's, as its list shows them.
     /// </summary>
     public sealed class Row
     {
@@ -29,6 +30,15 @@ public static class Endpoint
 
         [XLColumn(Header = "Device")]
         public string? Device { get; init; }
+
+        [XLColumn(Header = "Device Inv No")]
+        public int? DeviceNumber { get; init; }
+
+        [XLColumn(Header = "Device Holder")]
+        public string? DeviceHolder { get; init; }
+
+        [XLColumn(Header = "Device Location")]
+        public string? DeviceLocation { get; init; }
 
         [XLColumn(Header = "Quantity")]
         public int Quantity { get; init; }
@@ -62,6 +72,9 @@ public static class Endpoint
                 License = a.Volume.License.Asset.Name,
                 User = a.PersonId == null ? null : a.Person.Name,
                 Device = a.AssetId == null ? null : a.Asset.Name,
+                DeviceNumber = a.AssetId == null ? null : a.Asset.InventoryNumber,
+                DeviceHolder = a.AssetId == null ? null : a.Asset.Person.Name,
+                DeviceLocation = a.AssetId == null ? null : a.Asset.Location.Name,
                 Quantity = a.Quantity,
                 ActivationDate = a.ActivationDate,
                 DeactivationDate = a.DeactivationDate,

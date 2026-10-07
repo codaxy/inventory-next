@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Codaxy.Inventory.App.Company.Locations;
 using Codaxy.Inventory.App.Company.Manufacturers;
 using Codaxy.Inventory.App.Company.People;
 using Codaxy.Inventory.App.Licenses.Activations;
@@ -18,7 +19,8 @@ using Item = App.Licenses.Activations.List.Endpoint.Item;
 /// <summary>
 /// Office, a per-user volume of five seats on a license expiring soon, with one active and one
 /// deactivated activation; Antivirus, a per-device volume on an expired license, with a device of a
-/// type that holds licenses and one that does not. A test that changes data makes its own activation.
+/// type that holds licenses, at an office, and one that does not. A test that changes data makes its
+/// own activation.
 /// </summary>
 public class ActivationApplication : InventoryApplication
 {
@@ -85,6 +87,30 @@ public class ActivationApplication : InventoryApplication
         );
         Laptop = await Seed.DeviceAsync(context, "lap-ana", holdsLicenses: true);
         Monitor = await Seed.DeviceAsync(context, "mon-ana", holdsLicenses: false);
+
+        var city = Guid.CreateVersion7();
+        var office = Guid.CreateVersion7();
+        context.Countries.Add(new Country { Code = "RS", Name = "Serbia" });
+        context.Cities.Add(
+            new City
+            {
+                Id = city,
+                Name = "Belgrade",
+                CountryCode = "RS",
+            }
+        );
+        context.Locations.Add(
+            new Location
+            {
+                Id = office,
+                Name = "Terra office",
+                CountryCode = "RS",
+                CityId = city,
+                Street = "Terazije",
+            }
+        );
+        (await context.Assets.FindAsync(Laptop))!.LocationId = office;
+        await context.SaveChangesAsync();
 
         ActiveForAna = await Seed.ActivationAsync(
             context,
@@ -205,7 +231,14 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         var activation = (await response.Content.ReadFromJsonAsync<ActivationDetail>())!;
-        Assert.Equal("lap-ana", activation.Device!.Name);
+        Assert.Equal(
+            ("lap-ana", "Seed person", "Terra office"),
+            (
+                activation.Device!.Name,
+                activation.Device.Holder.Name,
+                activation.Device.Location?.Name
+            )
+        );
         Assert.Null(activation.Person);
         Assert.Equal("expired", activation.License.Expiry);
 
@@ -484,6 +517,46 @@ public class ActivationTests(ActivationApplication app) : IClassFixture<Activati
             ("Office", "Office license", "Ana Anić", false, 2, "soon"),
             (row.Software, row.License, row.Assignee, row.ForDevice, row.Quantity, row.Expiry)
         );
+    }
+
+    [Fact]
+    public async Task Lists_a_devices_number_holder_and_location_beside_its_name()
+    {
+        var response = await PostAsync(
+            new
+            {
+                volumeId = ActivationApplication.AntivirusLicense.Volume,
+                deviceId = ActivationApplication.Laptop,
+                activationDate = "2026-04-01",
+            }
+        );
+        var id = (await response.Content.ReadFromJsonAsync<ActivationDetail>())!.Id;
+        var number = await app.InScopeAsync(c =>
+            c.Assets.Where(a => a.Id == ActivationApplication.Laptop)
+                .Select(a => a.InventoryNumber)
+                .SingleAsync()
+        );
+
+        var device = (await ListAsync("q=lap-ana")).Items.Single(i => i.Id == id);
+        var person = (await ListAsync("q=ana+anić")).Items.Single(i =>
+            i.Id == ActivationApplication.ActiveForAna
+        );
+        var sheet = await Spreadsheet.TextOf(
+            await (await Client()).GetAsync($"{Url}/export?q=lap-ana")
+        );
+        await (await Client()).DeleteAsync($"{Url}/{id}");
+
+        Assert.Equal(
+            ("lap-ana", number, "Seed person", "Terra office"),
+            (device.Assignee, device.DeviceNumber, device.DeviceHolder, device.DeviceLocation)
+        );
+        Assert.Equal(
+            (null, null, null),
+            (person.DeviceNumber, person.DeviceHolder, person.DeviceLocation)
+        );
+        Assert.Contains("Device Location", sheet);
+        Assert.Contains(number.ToString()!, sheet);
+        Assert.Contains("Terra office", sheet);
     }
 
     [Fact]

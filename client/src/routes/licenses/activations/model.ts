@@ -19,6 +19,12 @@ export interface Row {
     assignee: string;
     /** The assignee is a device, not a person: its icon says which. */
     forDevice: boolean;
+    /** A device's inventory number, "#100631", and the number alone, which its copy button copies. */
+    deviceNumber?: string;
+    deviceNumberCopy?: string;
+    /** Who holds the device, and where it is: "Suzana Koprena", "Kancelarija Terra". */
+    deviceHolder?: string;
+    deviceLocation?: string;
     seats: string;
     activated: string;
     deactivated?: string;
@@ -91,6 +97,10 @@ export const toRows = (items: ActivationItem[]): Row[] =>
         license: a.license,
         assignee: a.assignee ?? "—",
         forDevice: a.forDevice,
+        deviceNumber: numberText(a.deviceNumber),
+        deviceNumberCopy: a.deviceNumber ? String(a.deviceNumber) : undefined,
+        deviceHolder: a.deviceHolder ?? undefined,
+        deviceLocation: a.deviceLocation ?? undefined,
         seats: a.quantity === 1 ? "1 seat" : `${a.quantity} seats`,
         activated: formatDate(a.activationDate)!,
         deactivated: formatDate(a.deactivationDate),

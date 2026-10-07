@@ -155,6 +155,10 @@ export default createFunctionalComponent(() => (
                                 </div>
                                 <div class="editor-value" visible={falsy(v.assigneeHref)} text={v.assignee} />
                             </div>
+                            <div class="contents" visible={hasValue(v.holder)}>
+                                {linked("Held by", v.holder, v.holderHref)}
+                                {linked("Device location", v.deviceLocation, v.deviceLocationHref)}
+                            </div>
                             {fact("Seats", v.seats)}
                             {fact("Activated", v.activated)}
                             {fact("Deactivated", v.deactivated)}

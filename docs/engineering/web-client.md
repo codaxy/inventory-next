@@ -160,8 +160,16 @@ slowly, and stand still under reduced motion.
 
 **A cell says only what its column's header does not**: "6 Aug 2024" under Deactivated, not
 "Deactivated 6 Aug 2024" — but a phone's card, which has no headers, keeps the word. **A column holding
-two kinds of record marks each with its menu icon** before the name — an activation's user or
-device — never with a word or a number beside it, which takes the name's room. **A menu icon
+two kinds of record marks each with its menu icon** before the name, never with a word or a number
+beside it, which takes the name's room. An activation's user or device is marked so; the lines beneath
+its name start at the cell's edge, not past the mark. **A device there carries a muted line under its
+name** — its inventory number and holder, "#100631 · Suzana Koprena", and its location: on a third
+line wherever the list has columns, so every device's row has the same three lines; on a phone's card,
+after the holder on the same line, "#100631 · Suzana Koprena · Kancelarija Terra". A seat on a device
+is found by where the device is and who has it. The name and the number each have their own copy
+button, the number's copying it without its `#`. The record's page shows the holder and location as
+links. Not a tooltip: a touch screen has no hover, and the list is scanned, not inspected row by row.
+**A menu icon
 marking a record's kind is `line-strong`**, here and before a volume's title: 3.2:1 clears the 3:1 a
 meaningful graphic needs, where a text grey reads as part of the name. **A phone's card
 says what the record is** under its name: a device's is three lines — the name with its inventory

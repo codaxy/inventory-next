@@ -142,7 +142,9 @@ wide model: it carries only what the change takes, and answers 409 from the wron
 parameters, and the list and its export share one function that filters and orders (`Rows`), so the
 file holds what the screen shows, all pages of it. The original's file names and headers are kept,
 with " - Filtered" added when a search or a filter narrowed the rows, so a partial list is never taken
-for the whole; the sort does not count. Served as the response to that request, not as the original's
+for the whole; the sort does not count. Columns the list shows and the original's file lacked follow
+its own — an activation's device number, holder and location. Served as the response to that request,
+not as the original's
 handle to a file cached for thirty seconds: the handle existed because its bearer token could not ride
 a download link, and the session cookie does.
 **ClosedXML writes it, through `Shared/Export/Spreadsheet`**: one row type per list, a property a

@@ -281,31 +281,60 @@ export default createFunctionalComponent(() => {
                                     </span>
                                 </span>
                                 {copyCell(m.$row.license, "license")}
-                                <span class="record-meta record-copy">
-                                    <span class="record-copy-line">
-                                        <span>
-                                            {/* The column holds people and devices; the menu's mark says which. */}
-                                            <span
-                                                class="assignee-kind"
-                                                visible={m.$row.forDevice}
-                                                attrs={{
-                                                    role: "img",
-                                                    "aria-label": "Device",
-                                                    title: "Device",
-                                                }}
-                                            >
-                                                <Icon name="electronicDevices" class="size-4" />
+                                <span class="record-meta">
+                                    <span class="assignee-lines">
+                                        <span class="record-copy record-copy-line">
+                                            <span>
+                                                {/* The column holds people and devices; the menu's mark says which. */}
+                                                <span
+                                                    class="assignee-kind"
+                                                    visible={m.$row.forDevice}
+                                                    attrs={{
+                                                        role: "img",
+                                                        "aria-label": "Device",
+                                                        title: "Device",
+                                                    }}
+                                                >
+                                                    <Icon name="electronicDevices" class="size-3" />
+                                                </span>
+                                                <span
+                                                    class="assignee-kind"
+                                                    visible={falsy(m.$row.forDevice)}
+                                                    attrs={{
+                                                        role: "img",
+                                                        "aria-label": "User",
+                                                        title: "User",
+                                                    }}
+                                                >
+                                                    <Icon name="people" class="size-3.5" />
+                                                </span>
+                                                <span text={m.$row.assignee} />
                                             </span>
-                                            <span
-                                                class="assignee-kind"
-                                                visible={falsy(m.$row.forDevice)}
-                                                attrs={{ role: "img", "aria-label": "User", title: "User" }}
-                                            >
-                                                <Icon name="people" class="size-4" />
-                                            </span>
-                                            <span text={m.$row.assignee} />
+                                            {copyButton(m.$row.assignee, "assignee")}
                                         </span>
-                                        {copyButton(m.$row.assignee, "assignee")}
+                                        <span
+                                            class="record-copy activation-device"
+                                            visible={m.$row.forDevice}
+                                        >
+                                            <span class="activation-device-who">
+                                                <span
+                                                    class="activation-device-number"
+                                                    visible={hasValue(m.$row.deviceNumber)}
+                                                    text={m.$row.deviceNumber}
+                                                />
+                                                {copyButton(m.$row.deviceNumberCopy, "inventory number")}
+                                                <span
+                                                    class="activation-device-holder"
+                                                    visible={hasValue(m.$row.deviceHolder)}
+                                                    text={m.$row.deviceHolder}
+                                                />
+                                            </span>
+                                            <span
+                                                class="activation-device-where"
+                                                visible={hasValue(m.$row.deviceLocation)}
+                                                text={m.$row.deviceLocation}
+                                            />
+                                        </span>
                                     </span>
                                 </span>
                                 <span class="record-meta record-num" text={m.$row.seats} />

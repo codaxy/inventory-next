@@ -29,6 +29,7 @@ public static class Endpoint
     );
 
     /// <param name="Assignee">The person's name, or the device's.</param>
+    /// <param name="DeviceNumber">The device's, with its holder and location; all three absent for a person's seat.</param>
     public sealed record Item(
         Guid Id,
         string Software,
@@ -36,6 +37,9 @@ public static class Endpoint
         string License,
         string? Assignee,
         bool ForDevice,
+        int? DeviceNumber,
+        string? DeviceHolder,
+        string? DeviceLocation,
         int Quantity,
         DateOnly ActivationDate,
         DateOnly? DeactivationDate,
@@ -76,6 +80,9 @@ public static class Endpoint
                 License = a.Volume.License.Asset.Name,
                 Assignee = a.PersonId != null ? a.Person.Name : a.Asset.Name,
                 ForDevice = a.PersonId == null,
+                DeviceNumber = a.PersonId == null ? a.Asset.InventoryNumber : null,
+                DeviceHolder = a.PersonId == null ? a.Asset.Person.Name : null,
+                DeviceLocation = a.PersonId == null ? a.Asset.Location.Name : null,
                 a.Quantity,
                 a.ActivationDate,
                 a.DeactivationDate,
@@ -92,6 +99,9 @@ public static class Endpoint
                         a.License,
                         a.Assignee,
                         a.ForDevice,
+                        a.DeviceNumber,
+                        a.DeviceHolder,
+                        a.DeviceLocation,
                         a.Quantity,
                         a.ActivationDate,
                         a.DeactivationDate,
