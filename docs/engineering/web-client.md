@@ -162,7 +162,7 @@ slowly, and stand still under reduced motion.
 "Deactivated 6 Aug 2024" — but a phone's card, which has no headers, keeps the word. **A column holding
 two kinds of record marks each with its menu icon** before the name, never with a word or a number
 beside it, which takes the name's room. An activation's user or device is marked so; the lines beneath
-its name start at the cell's edge, not past the mark. **A device there carries a muted line under its
+its name line up with it, the mark hanging before them. **A device there carries a muted line under its
 name** — its inventory number and holder, "#100631 · Suzana Koprena", and its location: on a third
 line wherever the list has columns, so every device's row has the same three lines; on a phone's card,
 after the holder on the same line, "#100631 · Suzana Koprena · Kancelarija Terra". A seat on a device

@@ -394,8 +394,8 @@
 // Activations: on a phone the software, the license, who or what holds the seats, when; from `md` a
 // column each, the dates and the count narrow.
 // An activation's assignee is a person or a device: the menu's mark before the name says which. A
-// device's number, holder and location go beneath, from the cell's edge rather than the name's: the
-// mark heads the cell, it does not indent it.
+// device's number, holder and location go beneath, in line with the name: the mark hangs before them,
+// so the column's text has one edge whichever the row.
 // One slot for both marks, the device's drawn smaller inside it, so names start in line.
 .assignee-kind {
     display: inline-flex;
@@ -420,6 +420,8 @@
 // itself, so every device's row is the same height.
 .assignee-lines > .activation-device {
     display: flex;
+    // The mark's slot and its margin, `.assignee-kind`.
+    margin-left: 1.1875rem;
     font-size: 11.5px;
     color: var(--color-ink-muted);
 
@@ -484,8 +486,8 @@
 
     @media (min-width: 768px) {
         grid-template-columns:
-            minmax(0, 16rem) minmax(0, 16rem) minmax(0, 16rem) minmax(0, 5rem) minmax(0, 7rem)
-            minmax(0, 11rem) minmax(0, 13rem);
+            minmax(0, 16rem) minmax(0, 16rem) minmax(0, 20rem) minmax(0, 5rem) minmax(0, 7rem)
+            minmax(0, 7rem) minmax(0, 13rem);
     }
 }
 
