@@ -99,7 +99,11 @@
         }
     }
 
-    .record-copy:hover .copy-button {
+    // An inline button answers to its cell, whose value it follows; an overlaid one only to its own
+    // value's line — the button included — since its cell holds other text, which is not what it
+    // copies.
+    .record-copy:hover .copy-button:not(.copy-button-overlay),
+    .record-copy-line:hover > .copy-button-overlay {
         display: inline-grid;
     }
 }
@@ -135,6 +139,16 @@
 
         &:hover {
             background: var(--color-primary-wash);
+        }
+
+        // Spans the gap to its value, so the pointer crossing it stays on the line.
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 100%;
+            bottom: 0;
+            width: 0.125rem;
         }
     }
 

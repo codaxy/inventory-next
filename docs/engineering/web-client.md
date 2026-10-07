@@ -426,7 +426,9 @@ and never on a touch screen, which has no hover. It copies the value as shown an
 Under a mouse the value truncates before its badges, so a long name never hides one. **The
 button sits in the line**, moving what follows aside; **laid over it instead** (`"overlay"`) only where
 chosen — a device's inventory number before its holder on activations, which holds still — since past
-a value that fills its cell it would cover the next column. Not text selection: a link is dragged, not
+a value that fills its cell it would cover the next column. **An overlaid button shows only over its own
+value**, not anywhere in the cell: its cell holds other text, and the button would offer to copy the
+number while the pointer is on the name. Not text selection: a link is dragged, not
 selected, and a row that selects on a click stops opening its record on one. Not a `<button>`, which
 an `<a>` may not hold; it stops its own click so the row does not open as well.
 
