@@ -25,8 +25,9 @@ export interface Row {
     expanded: boolean;
 }
 
+/** A day the picker offers: `YYYY-MM-DD` and its label. */
 export interface Day {
-    day: string;
+    id: string;
     text: string;
 }
 
@@ -52,7 +53,6 @@ export interface Model {
     serverLog: ServerLogState;
     $row: Row;
     $piece: Piece;
-    $day: Day;
 }
 
 export default createModel<Model>();
@@ -115,16 +115,25 @@ export function toRows(entries: LogEntry[], page: number): Row[] {
     });
 }
 
-/** "Today", "Yesterday", then "Thu 24 Sep" — short enough for a strip on a phone. */
+/** "Today", "Yesterday", then "Thu 24 Sep". */
 const short = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short" });
 
-export function toDays(days: string[], now = new Date()): Day[] {
-    const today = encodeDate(now);
-    const all = days.includes(today) ? days : [today, ...days];
+/** The days with a file, today and the day shown, newest first: a day in the address is offered even without one. */
+export function toDays(days: string[], shown: string, now = new Date()): Day[] {
+    const all = [...new Set([encodeDate(now), shown, ...days])].sort().reverse();
 
     return all.map((day) => {
         const date = startOfDay(day);
         const heading = formatDayHeading(date, now);
-        return { day, text: heading === "Today" || heading === "Yesterday" ? heading : short.format(date) };
+        return {
+            id: day,
+            text: heading === "Today" || heading === "Yesterday" ? heading : short.format(date),
+        };
     });
+}
+
+/** The day a step lands on: the next older (`1`) or newer (`-1`) one offered, if any. */
+export function stepDay(days: Day[], shown: string, step: 1 | -1): string | undefined {
+    const i = days.findIndex((d) => d.id === shown);
+    return i < 0 ? undefined : days[i + step]?.id;
 }

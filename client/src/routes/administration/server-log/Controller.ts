@@ -8,7 +8,7 @@ import { encodeDate, endOfDay, startOfDay } from "../../../dates";
 import { followAddress, intParam, oneOf, queryOf, toQueryString, writeAddress } from "../../../listAddress";
 import $app from "../../../model";
 import { pager } from "../../../paging";
-import m, { toDays, toRows } from "./model";
+import m, { stepDay, toDays, toRows } from "./model";
 import { pageSize, searchDelay } from "./utils";
 
 const path = "~/administration/server-log";
@@ -23,11 +23,14 @@ export default class extends Controller {
     private written = "";
     /** While the address is being applied, the triggers it sets off do not reset the page. */
     private applying = false;
+    /** The days that have a file, as the server last listed them. */
+    private fileDays: string[] = [];
+    /** The day the list reflects; the picker writes the store first. */
+    private day = "";
 
     onInit() {
         const today = encodeDate(new Date());
 
-        this.store.set(m.serverLog.days, toDays([]));
         this.store.set(m.serverLog.rows, []);
         this.store.set(m.serverLog.total, 0);
         this.store.set(m.serverLog.loading, false);
@@ -43,6 +46,12 @@ export default class extends Controller {
                 this.search = this.store.get(m.serverLog.search) ?? null;
                 this.goTo(1);
             }, searchDelay);
+        });
+
+        this.addTrigger("day", [m.serverLog.day], (value) => {
+            if (!value || value === this.day) return;
+            this.day = value;
+            this.goTo(1);
         });
 
         this.addTrigger("level", [m.serverLog.level], () => {
@@ -72,7 +81,9 @@ export default class extends Controller {
         if (q) this.store.set(m.serverLog.search, q);
         else this.store.delete(m.serverLog.search);
         this.store.set(m.serverLog.level, oneOf(query, "level", levels));
-        this.store.set(m.serverLog.day, day && /^\d{4}-\d{2}-\d{2}$/.test(day) ? day : today);
+        this.day = day && /^\d{4}-\d{2}-\d{2}$/.test(day) ? day : today;
+        this.store.set(m.serverLog.day, this.day);
+        this.showDays();
         this.store.set(m.serverLog.page, intParam(query, "page", 1));
         this.applying = false;
         if (reload) this.load();
@@ -84,8 +95,15 @@ export default class extends Controller {
 
     loadDays() {
         getLogDays()
-            .then(({ days }) => this.store.set(m.serverLog.days, toDays(days)))
+            .then(({ days }) => {
+                this.fileDays = days;
+                this.showDays();
+            })
             .catch(() => {});
+    }
+
+    private showDays() {
+        this.store.set(m.serverLog.days, toDays(this.fileDays, this.day));
     }
 
     goTo(page: number, scroll = false) {
@@ -100,15 +118,16 @@ export default class extends Controller {
         this.load();
     }
 
-    selectDay(day: string) {
-        this.store.set(m.serverLog.day, day);
-        this.goTo(1);
+    /** `1` steps to the next older day offered, `-1` to the next newer. */
+    step(step: 1 | -1) {
+        const day = stepDay(this.store.get(m.serverLog.days), this.day, step);
+        if (day) this.store.set(m.serverLog.day, day);
     }
 
     async load() {
         const request = ++this.request;
         const page = this.store.get(m.serverLog.page);
-        const day = this.store.get(m.serverLog.day);
+        const day = this.day;
 
         this.store.set(m.serverLog.loading, true);
 

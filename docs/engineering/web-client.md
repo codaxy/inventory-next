@@ -130,7 +130,7 @@ desktop sidebar keeps Pulse's denser rows. The page padding respects `env(safe-a
 ## Lists
 
 **One search box, and every other filter in a pane it drops open** — or inline, where a screen has a
-single filter: the server log's level switch sits beside its day strip, since a pane for one switch is
+single filter: the server log's level switch sits beside its day, since a pane for one switch is
 a card of empty space. The box is free text, run after a
 300ms pause; the *Filters* button beside it carries the active count and opens the pane beneath the pinned block,
 scrolling with the page and pushing the list down rather than covering it. Every active filter shows as a removable chip under the
@@ -138,6 +138,11 @@ bar, pinned with it, so closing the pane hides nothing that is filtering. Filter
 *Done* only closes it. **A switch in the pane has its row to itself at every width** (`list-filter-wide`):
 sharing it, a picker slides up beside the switch on a wide screen, and the pane reads in a different
 order from one width to the next.
+
+**The server log's day is a stepper**, `‹ Tue 6 Oct ›`, the middle a picker of
+the days that have a file: reading a log steps back a day at a time, and the control stays one width
+however many days are kept. **› is the older day**, as the list runs newest first and its pager's
+› leads into the past; ‹ is greyed out on today. Not a button per day: thirty of them scroll sideways out of sight.
 
 **A picker searches from seven options**, cx's default, and cx sizes its list to the room on screen
 and scrolls it.

@@ -1,4 +1,4 @@
-// The server log: a strip of days, then one day's entries in a terminal on its own dark palette
+// The server log: a day stepper and the level switch, then one day's entries in a terminal on its own dark palette
 // (`--color-term-*`) and the system monospace stack. Each entry is time, level tag, category and
 // message in a row from `md`; on a phone the first three share a line and the message wraps beneath.
 // Nothing scrolls sideways: long tokens break anywhere.
@@ -12,21 +12,84 @@
 
     @media (min-width: 640px) {
         flex-wrap: nowrap;
+        justify-content: space-between;
+    }
+}
 
-        .log-days {
-            flex: 1 1 auto;
+// `‹ day ›` in a track like the level switch's, so the row reads as two controls of one family: the
+// arrows step through the days that have a file, newest first as the list and its pager run (› is
+// older), the middle picks one.
+.log-day-step {
+    display: flex;
+    flex: 1 1 100%;
+    align-items: center;
+    gap: 2px;
+    padding: 2px;
+    border: 1px solid var(--color-line);
+    border-radius: 10px;
+    background: var(--color-surface);
+
+    @media (min-width: 640px) {
+        flex: 0 0 auto;
+    }
+
+    .cxb-button.cxm-hollow.log-day-arrow {
+        position: relative;
+        display: inline-grid;
+        flex-shrink: 0;
+        place-items: center;
+        width: 32px;
+        height: 28px;
+        padding: 0;
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
+        color: var(--color-ink-muted);
+
+        &:hover:not(:disabled) {
+            background: var(--color-hover);
+            color: var(--color-ink);
+        }
+
+        &:disabled {
+            color: var(--color-ink-ghost);
+        }
+
+        // Drawn at 28px inside the 32px track, touched at 44.
+        &::after {
+            content: "";
+            position: absolute;
+            inset: -8px 0;
         }
     }
 }
 
-.log-days {
-    display: flex;
-    flex: 1 1 100%;
-    gap: 0.375rem;
+.cxb-lookupfield.log-day-pick {
+    flex: 1 1 auto;
+    width: auto;
     min-width: 0;
-    padding: 6px 0;
-    overflow-x: auto;
-    scrollbar-width: none;
+
+    @media (min-width: 640px) {
+        width: 9.5rem;
+    }
+
+    .cxe-lookupfield-input {
+        height: 28px;
+        min-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 28px;
+        text-align: center;
+    }
+
+    &:hover .cxe-lookupfield-input {
+        background: var(--color-hover);
+    }
 }
 
 .log-levels {
@@ -52,40 +115,6 @@
             inset: -8px 0;
         }
     }
-}
-
-.log-day {
-    position: relative;
-    flex-shrink: 0;
-    height: 32px;
-    padding: 0 0.75rem;
-    border: 1px solid var(--color-line-field);
-    border-radius: 999px;
-    background: var(--color-surface);
-    color: var(--color-ink-soft);
-    font: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    white-space: nowrap;
-    cursor: pointer;
-
-    // Drawn at 32px, touched at 44.
-    &::after {
-        content: "";
-        position: absolute;
-        inset: -6px 0;
-    }
-
-    &:hover {
-        border-color: var(--color-primary);
-    }
-}
-
-.log-day-on,
-.log-day-on:hover {
-    border-color: var(--color-primary);
-    background: var(--color-primary);
-    color: white;
 }
 
 .term {

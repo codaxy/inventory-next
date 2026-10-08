@@ -1,10 +1,10 @@
 import { createFunctionalComponent, equal, expr, hasValue } from "cx/ui";
-import { Button, Icon, Repeater, TextField } from "cx/widgets";
+import { Button, Icon, LookupField, Repeater, TextField } from "cx/widgets";
 
 import { listHeading, listPaging } from "../../../components/listHeading";
 import { Pager } from "../../../components/Pager";
 import Controller from "./Controller";
-import m from "./model";
+import m, { stepDay } from "./model";
 import { levels } from "./utils";
 
 const s = m.serverLog;
@@ -16,6 +16,9 @@ const notEmpty = expr(
     s.error,
     (loaded, total, error) => !(loaded && total === 0 && !error),
 );
+
+const noOlder = expr(s.days, s.day, (days, day) => !stepDay(days, day, 1));
+const noNewer = expr(s.days, s.day, (days, day) => !stepDay(days, day, -1));
 
 /** A message or an exception: text, with the server's markers shown as what they stand for. */
 const Text = (pieces: typeof m.$row.message) => (
@@ -30,8 +33,8 @@ const Text = (pieces: typeof m.$row.message) => (
 );
 
 /**
- * The server log: one day's entries in a terminal, newest first, the day picked from a strip of the
- * days that have a file. The header and toolbar are the list convention's.
+ * The server log: one day's entries in a terminal, newest first, the day stepped through or picked
+ * from the days that have a file. The header and toolbar are the list convention's.
  */
 export default createFunctionalComponent(() => {
     const paging = listPaging();
@@ -78,20 +81,33 @@ export default createFunctionalComponent(() => {
 
                 {/* The day and the level, the only two things the log is narrowed by, both always in view. */}
                 <div class="log-controls">
-                    <div class="log-days" role="group" aria-label="Day">
-                        <Repeater records={s.days} recordAlias={m.$day}>
-                            <button
-                                type="button"
-                                class={{
-                                    "log-day": true,
-                                    "log-day-on": expr(m.$day.day, s.day, (d, sel) => d === sel),
-                                }}
-                                text={m.$day.text}
-                                onClick={(_e: unknown, { store, controller }: any) =>
-                                    controller.selectDay(store.get(m.$day.day))
-                                }
-                            />
-                        </Repeater>
+                    <div class="log-day-step" role="group" aria-label="Day">
+                        <Button
+                            mod="hollow"
+                            class="log-day-arrow"
+                            disabled={noNewer}
+                            attrs={{ "aria-label": "Newer", title: "Newer" }}
+                            onClick={(_e: unknown, { controller }: any) => controller.step(-1)}
+                        >
+                            <Icon name="previous" class="size-4" />
+                        </Button>
+                        <LookupField
+                            id="administration-server-log-day"
+                            class="log-day-pick"
+                            value={s.day}
+                            options={s.days}
+                            hideClear
+                        />
+                        <span id="administration-server-log-day-label" class="sr-only" text="Day" />
+                        <Button
+                            mod="hollow"
+                            class="log-day-arrow"
+                            disabled={noOlder}
+                            attrs={{ "aria-label": "Older", title: "Older" }}
+                            onClick={(_e: unknown, { controller }: any) => controller.step(1)}
+                        >
+                            <Icon name="next" class="size-4" />
+                        </Button>
                     </div>
                     <div class="segmented log-levels" role="group" aria-label="Level">
                         {levels.map((l) => (
