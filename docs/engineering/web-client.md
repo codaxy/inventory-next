@@ -166,9 +166,9 @@ its name line up with it, the mark hanging before them. **A device there carries
 name** — its inventory number and holder, "#100631 · Suzana Koprena", and its location: on a third
 line wherever the list has columns, so every device's row has the same three lines; on a phone's card,
 after the holder on the same line, "#100631 · Suzana Koprena · Kancelarija Terra". A seat on a device
-is found by where the device is and who has it. **The lines are 11px in `line-strong`**, 3.2:1 and
-below AA on purpose, as an ended record's text is: the name is what is scanned, and these are read
-once it is found. The name and the number each have their own copy
+is found by where the device is and who has it. **The lines are 11px in `ink-muted`**, a note's
+colour: the name is what is scanned, and these are read once it is found. Not `line-strong`,
+below AA: too faint to read. The name and the number each have their own copy
 button, the number's copying it without its `#`. The record's page shows the holder and location as
 links. Not a tooltip: a touch screen has no hover, and the list is scanned, not inspected row by row.
 **A menu icon
