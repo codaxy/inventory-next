@@ -139,6 +139,18 @@ public class HandoverPdfTests(HandoverPdfApplication app) : IClassFixture<Handov
     }
 
     [Fact]
+    public async Task Takes_a_language_whatever_its_case_and_prints_it_as_listed()
+    {
+        (
+            await (await app.ClientAsync()).GetAsync(
+                Url(app.Ana, "?tz=Europe/Belgrade&lang=SR-latn-ba")
+            )
+        ).EnsureSuccessStatusCode();
+
+        Assert.Equal($"/company/people/{app.Ana}/handover?lang=sr-Latn-BA", app.Printer.Last?.Path);
+    }
+
+    [Fact]
     public async Task Refuses_a_language_it_does_not_print_in()
     {
         var response = await (await app.ClientAsync()).GetAsync(Url(app.Ana, "?lang=de"));

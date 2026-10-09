@@ -48,9 +48,9 @@ public static class Endpoint
         {
             var pdf = await printer.PrintAsync(
                 http,
-                lang is null
-                    ? $"/company/people/{id}/handover"
-                    : $"/company/people/{id}/handover?lang={Uri.EscapeDataString(lang)}",
+                DocumentLanguages.Canonical(lang) is { } language
+                    ? $"/company/people/{id}/handover?lang={Uri.EscapeDataString(language)}"
+                    : $"/company/people/{id}/handover",
                 zone.Time,
                 cancellationToken
             );

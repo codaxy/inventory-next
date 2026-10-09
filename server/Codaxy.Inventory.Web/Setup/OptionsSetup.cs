@@ -16,15 +16,12 @@ public static class OptionsSetup
         services
             .AddOptions<DashboardOptions>()
             .Bind(configuration.GetSection(DashboardOptions.Section))
-            .Validate(o => o.IsValid, "Every Dashboard:*Days must be at least 1.")
+            .ValidateBy(o => o.Problem)
             .ValidateOnStart();
         services
             .AddOptions<DocumentOptions>()
             .Bind(configuration.GetSection(DocumentOptions.Section))
-            .Validate(
-                o => o.IsValid,
-                $"Documents:DefaultLanguage must be one of: {string.Join(", ", DocumentLanguages.Supported)}."
-            )
+            .ValidateBy(o => o.Problem)
             .ValidateOnStart();
 
         return services;

@@ -11,6 +11,11 @@ public sealed class DocumentOptions
     /// <summary>The city documents are signed in; empty, the line is left for a hand.</summary>
     public string Place { get; set; } = "";
 
-    /// <summary>A default the application does not print in stops the start.</summary>
-    public bool IsValid => DocumentLanguages.IsSupported(DefaultLanguage);
+    /// <summary>Why these options stop the start, or null: a default the application does not print in.</summary>
+    public string? Problem =>
+        DocumentLanguages.IsSupported(DefaultLanguage)
+            ? null
+            : $"Documents:DefaultLanguage must be one of: {string.Join(", ", DocumentLanguages.Supported)}.";
+
+    public bool IsValid => Problem is null;
 }

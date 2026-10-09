@@ -24,6 +24,11 @@ public sealed class PrintingOptions
 
     public bool Enabled => !string.IsNullOrWhiteSpace(ChromiumPath);
 
-    /// <summary>A path that is set names a file, or the application does not start.</summary>
-    public bool IsValid => !Enabled || File.Exists(ChromiumPath);
+    /// <summary>Why these options stop the start, or null: a path that is set and names no file.</summary>
+    public string? Problem =>
+        Enabled && !File.Exists(ChromiumPath)
+            ? $"Pdf:ChromiumPath names no file: {ChromiumPath}."
+            : null;
+
+    public bool IsValid => Problem is null;
 }

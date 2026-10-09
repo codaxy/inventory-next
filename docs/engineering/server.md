@@ -51,7 +51,10 @@ root. A folder exists once there is something in it: none is created ahead of it
 `Administration/` appears with the first of its screens. `Auth/`, in `Web`, shows the use-case shape, and `MapAuth` is
 the one call `Program.cs` makes for it.
 
-**A setting belongs to the code that reads it**; `Setup/` binds it.
+**A setting belongs to the code that reads it**; `Setup/` binds it. **Options say what is wrong with
+them** — `Problem`, null when valid — and `Setup/` validates by it at start (`ValidateBy`), so the
+reason is written beside the rule and a new rule brings its own message: never a fixed message at the
+binding, which goes stale once a second rule can fail.
 
 ## Where an entity lives
 
@@ -181,10 +184,17 @@ only where `Pdf:ChromiumPath` names a browser**: without one it is not registere
 a 404 and the sheet offers no download. Not a PDF library laying the sheet out again: two layouts of
 one document drift. Not the browser's print dialog: not a file, and clumsy on a phone.
 
+**The document may move to the server**: a Razor component rendered to one self-contained HTML page,
+its text a `.resx` per language, shown on screen in a frame and printed by handing Chromium that HTML
+(`SetContent`). That drops the caller's cookie on the print, the server's own address and
+`data-print`, and lets a test read the rendered document, which no test can now; it costs moving the
+sheet, its styles and its text out of the client, the larger change while the client's page works.
+
 **What every printed document shares is `Shared/Documents`**: `Documents:*` (see
 [deployment.md](deployment.md)), the languages documents are printed in (`DocumentLanguages`, which
-must match the client's list), and `GET /api/documents/settings` — the default language and the
-place — so no document's answer repeats them. A document's file name stays English whatever its
+must match the client's list, and which matches a tag whatever its case and writes it as listed —
+`sr-latn-ba` is `sr-Latn-BA` — as BCP 47 has it), and `GET /api/documents/settings` — the default
+language and the place — so no document's answer repeats them. A document's file name stays English whatever its
 language: it is named for the reader saving it.
 
 **A delete the database would refuse is a 409 that says what holds the record** — "113 devices are of

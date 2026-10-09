@@ -11,5 +11,8 @@ public static class Endpoint
     public sealed record Response(string DefaultLanguage, string Place);
 
     private static Response Handle(IOptions<DocumentOptions> options) =>
-        new(options.Value.DefaultLanguage, options.Value.Place.Trim());
+        new(
+            DocumentLanguages.Canonical(options.Value.DefaultLanguage)!,
+            options.Value.Place.Trim()
+        );
 }

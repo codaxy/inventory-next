@@ -27,6 +27,9 @@ public class PrintingOptionsTests
     }
 
     [Fact]
-    public void A_browser_that_is_not_there_stops_the_start() =>
-        Assert.False(new PrintingOptions { ChromiumPath = "/usr/bin/no-such-chromium" }.IsValid);
+    public void A_browser_that_is_not_there_stops_the_start_naming_the_path() =>
+        Assert.Equal(
+            "Pdf:ChromiumPath names no file: /usr/bin/no-such-chromium.",
+            new PrintingOptions { ChromiumPath = "/usr/bin/no-such-chromium" }.Problem
+        );
 }

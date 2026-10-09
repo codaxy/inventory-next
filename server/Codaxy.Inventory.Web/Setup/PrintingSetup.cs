@@ -20,7 +20,7 @@ public static class PrintingSetup
         services
             .AddOptions<PrintingOptions>()
             .Bind(section)
-            .Validate(o => o.IsValid, "Pdf:ChromiumPath names no file.")
+            .ValidateBy(o => o.Problem)
             .ValidateOnStart();
 
         if (section.Get<PrintingOptions>() is { Enabled: true })

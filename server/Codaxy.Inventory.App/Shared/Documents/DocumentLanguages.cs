@@ -2,7 +2,8 @@ namespace Codaxy.Inventory.App.Shared.Documents;
 
 /// <summary>
 /// The languages documents are printed in, as BCP 47 tags. The client's list
-/// (<c>src/documents/languages.ts</c>) must match: it holds the text, this one what is accepted.
+/// (<c>src/documents/languages.ts</c>) must match. A tag is matched whatever its case, as BCP 47
+/// has it, and used as written here.
 /// </summary>
 public static class DocumentLanguages
 {
@@ -13,8 +14,13 @@ public static class DocumentLanguages
     /// <summary>The query parameter a PDF endpoint takes its language from.</summary>
     public const string Parameter = "lang";
 
-    public static bool IsSupported(string? language) =>
-        language is not null && Supported.Contains(language, StringComparer.Ordinal);
+    /// <summary>The supported tag as written here — <c>sr-latn-ba</c> is <c>sr-Latn-BA</c> — or null.</summary>
+    public static string? Canonical(string? language) =>
+        Supported.FirstOrDefault(l =>
+            string.Equals(l, language, StringComparison.OrdinalIgnoreCase)
+        );
+
+    public static bool IsSupported(string? language) => Canonical(language) is not null;
 
     /// <summary>
     /// A 400 for a <c>lang</c> the server does not print in, else null; none at all is the default.
