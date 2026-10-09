@@ -358,13 +358,20 @@ widths, the signatures in pairs — fitted to the column's width as a PDF viewer
 PDF button's), never laid out again for a phone. CSS `zoom`, not `transform: scale`: a
 transform leaves the page's full width in the layout, and the phone scrolls sideways. Under
 `@media print` the shell removed (`display: none`, not hidden — hidden, it keeps its room and
-squeezes the sheet), the table's header repeating on each page, and the closing line with the signatures
-never split — under the table where they fit, whole on the next page where they do not.
+squeezes the sheet) and the table's header repeating on each page. **Nothing is left alone at a page's
+foot**: a table's heading goes with the table (`break-after: avoid`), a table's header with its first
+row, a row is never split, and the closing line with the signatures stays whole — under the table where
+it fits, on the next page where it does not. Chromium keeps a header with its first row by itself; the
+rule says so anyway. **Every printed page is numbered at its foot** — "Strana 2 od 5", "Page 2 of 5" —
+by `@page`'s `@bottom-center` and the page counters, its wording the language's (`pageNumbers()` in
+`src/documents/`), written into the sheet as a `<style>`; margin boxes need Chromium 131 or later, and
+the server's printer is the one that matters.
 
 **A printed document has a language of its own**, apart from the UI's — a sheet is printed in the
 language of whoever signs it, and a UI language, should one come, is a setting of its own. Its header
 band carries a picker of the languages (`languagePicker()` in `src/documents/`), each named in itself
-— "English", "Srpski"; a region or a script only once two share a name — which writes `?lang=`,
+— "English", "Srpski"; a region or a script only once two share a name — which writes `?lang=`, read
+whatever its case (`languageOf()`),
 replacing the history entry, so the PDF and a shared link print what the screen shows. It opens in the
 address's language, else the deployment's default (`/api/documents/settings`); a change re-renders
 the text, it does not refetch. **A document's text is a file per language** — `text/<tag>.ts` in its

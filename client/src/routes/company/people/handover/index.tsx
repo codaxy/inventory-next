@@ -56,6 +56,7 @@ export default createFunctionalComponent(() => {
                 </div>
 
                 <div class="handover-fit" onRef={onColumnRef} visible={falsy(h.error)}>
+                    <style text={h.pageNumbers} />
                     <article class="handover" attrs={{ lang: h.language }}>
                         <div class="handover-part">
                             <header class="handover-header">

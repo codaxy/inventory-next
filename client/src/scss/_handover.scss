@@ -112,11 +112,12 @@
     }
 }
 
-// The seats' table: its own columns, beneath its own heading.
+// The seats' table: its own columns, beneath its own heading, which never ends a page.
 .handover-subtitle {
     margin: 30px 0 0;
     font-size: 11pt;
     font-weight: 600;
+    break-after: avoid;
 }
 
 .handover-table.handover-seats {
@@ -198,9 +199,16 @@
 }
 
 @media print {
+    // The page numbers' look; their words are the sheet's language's (`pageNumbers()`).
     @page {
         size: A4;
         margin: 10mm 15mm 10mm 20mm;
+
+        @bottom-center {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 8pt;
+            color: var(--color-ink-muted);
+        }
     }
 
     // The shell goes, not only hidden: hidden, it still takes its room, and the sheet is squeezed
@@ -243,6 +251,11 @@
 
     .handover-table tr {
         break-inside: avoid;
+    }
+
+    // A table's header never ends a page: its first row goes with it.
+    .handover-table tbody tr:first-child {
+        break-before: avoid;
     }
 
     // The closing line and the signatures are never split: under the table where they fit,

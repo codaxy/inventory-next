@@ -3,7 +3,7 @@ import { Controller } from "cx/ui";
 import { getDocumentSettings } from "../../../../api/documents";
 import { ApiError } from "../../../../api/http";
 import { getHandover, handoverPdf, type Handover } from "../../../../api/people";
-import { documentDate, isLanguage, type Language } from "../../../../documents/languages";
+import { documentDate, languageOf, pageNumbers, type Language } from "../../../../documents/languages";
 import { queryOf, writeAddress } from "../../../../listAddress";
 import $app from "../../../../model";
 import m from "./model";
@@ -33,8 +33,7 @@ export default class extends Controller {
 
     /** The address's language, else the default. */
     private addressed(url: string): Language {
-        const lang = queryOf(url).get("lang");
-        return isLanguage(lang) ? lang : this.defaultLanguage!;
+        return languageOf(queryOf(url).get("lang")) ?? this.defaultLanguage!;
     }
 
     /** A language picked: into the address, the default left out, and the sheet re-rendered in it. */
@@ -67,7 +66,7 @@ export default class extends Controller {
             .then(([sheet, settings]) => {
                 if (this.store.get(h.id) !== id) return;
                 this.sheet = sheet;
-                this.defaultLanguage = isLanguage(settings.defaultLanguage) ? settings.defaultLanguage : "en";
+                this.defaultLanguage = languageOf(settings.defaultLanguage) ?? "en";
                 this.store.set(h.name, sheet.name);
                 this.store.set(h.place, settings.place);
                 this.store.set(h.controller, sheet.controller);
@@ -100,6 +99,7 @@ export default class extends Controller {
         if (!sheet || this.store.get(h.language) !== language) return;
         const id = this.store.get(h.id);
         this.store.set(h.text, text);
+        this.store.set(h.pageNumbers, pageNumbers(language));
         this.store.set(h.date, documentDate(language, this.today));
         if (sheet.pdf) this.store.set(h.pdfHref, handoverPdf(id, language));
         this.store.set(

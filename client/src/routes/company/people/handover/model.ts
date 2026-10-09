@@ -62,6 +62,8 @@ export interface HandoverState {
     /** The sheet's language: the address's, else the deployment's default; absent until known. */
     language?: Language;
     text?: HandoverText;
+    /** The `@page` rule numbering the printed pages in the sheet's language. */
+    pageNumbers?: string;
     /** What the signature lines say; an empty one is left for a hand. */
     place: string;
     date: string;
