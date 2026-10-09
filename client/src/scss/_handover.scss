@@ -153,11 +153,11 @@
 
 // Pairs of lines, the second of each at the right edge, on one grid: every line of a column starts
 // where the column's longest label ends, so the values stand one under another. A line is 250px, as
-// in the original, and shorter where a pair would run past the margin.
+// in the original, and gives way to the labels where a pair would run past the margin: their length
+// is the language's, and labels do not wrap.
 .handover-signatures {
-    container-type: inline-size;
     display: grid;
-    grid-template-columns: auto auto 1fr auto auto;
+    grid-template-columns: auto minmax(0, 250px) 1fr auto minmax(0, 250px);
     align-items: end;
     gap: 35px 0;
     margin-top: 70px;
@@ -184,7 +184,7 @@
 
 // The label's height and line height, so what the sheet fills in stands on the label's baseline.
 .handover-blank {
-    width: min(250px, 32cqi);
+    min-width: 0;
     height: 1.5em;
     border-bottom: 1px solid var(--color-ink);
 }

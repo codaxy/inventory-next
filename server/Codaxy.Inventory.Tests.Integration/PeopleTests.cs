@@ -21,6 +21,7 @@ namespace Codaxy.Inventory.Tests.Integration;
 using Handover = App.Company.People.Handover.Endpoint.Response;
 using Holdings = App.Company.People.Holdings.Endpoint.Response;
 using Item = App.Company.People.List.Endpoint.Item;
+using Settings = App.Shared.Documents.Settings.Endpoint.Response;
 
 /// <summary>
 /// Hana holds two devices, a chair, a license, three seats — one by name, one ended, one on her laptop
@@ -361,11 +362,8 @@ public class PeopleTests(PeopleApplication app) : IClassFixture<PeopleApplicatio
                 .ToArray()
         );
         Assert.All(sheet.Seats, s => Assert.Equal("Editor", s.Software));
-        // The default place, no browser to print with, and a signer no person's email matches.
-        Assert.Equal(
-            ("Banja Luka", false, "editor@codaxy.com"),
-            (sheet.Place, sheet.Pdf, sheet.Controller)
-        );
+        // No browser to print with, and a signer no person's email matches.
+        Assert.Equal((false, "editor@codaxy.com"), (sheet.Pdf, sheet.Controller));
         Assert.Contains(
             sheet.Assets,
             a =>
@@ -378,6 +376,13 @@ public class PeopleTests(PeopleApplication app) : IClassFixture<PeopleApplicatio
                     }
         );
     }
+
+    [Fact]
+    public async Task Documents_are_in_serbian_and_signed_in_banja_luka_by_default() =>
+        Assert.Equal(
+            new Settings("sr-Latn-BA", "Banja Luka"),
+            await (await Client()).GetFromJsonAsync<Settings>("/api/documents/settings")
+        );
 
     [Fact]
     public async Task The_handover_sheet_names_its_signer_by_their_person()

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using Codaxy.Inventory.App.Persistence;
@@ -75,7 +76,8 @@ public class ChromiumApplication : InventoryApplication
             Environment.GetEnvironmentVariable(ChromiumFactAttribute.Variable) ?? ""
         );
         builder.UseSetting("Pdf:Sandbox", "false");
-        builder.UseSetting("Handover:Place", "Banja Luka");
+        builder.UseSetting("Documents:Place", "Banja Luka");
+        builder.UseSetting("Documents:DefaultLanguage", "sr-Latn-BA");
     }
 
     public override async Task InitializeAsync()
@@ -96,19 +98,8 @@ public class ChromiumPrintingTests(ChromiumApplication app) : IClassFixture<Chro
     [ChromiumFact]
     public async Task Prints_the_handover_sheet_as_the_caller_sees_it()
     {
-        var client = await app.ClientAsync(ChromiumApplication.Email);
-
-        var response = await client.GetAsync(
-            $"/api/company/people/{app.Person}/handover.pdf?tz=Europe/Belgrade"
-        );
-
-        response.EnsureSuccessStatusCode();
-        using var pdf = PdfDocument.Open(await response.Content.ReadAsByteArrayAsync());
-        var text = string.Join(" ", pdf.GetPages().Select(p => p.Text));
-        var today = TimeZoneInfo.ConvertTime(
-            DateTimeOffset.UtcNow,
-            TimeZoneInfo.FindSystemTimeZoneById("Europe/Belgrade")
-        );
+        var text = await PrintAsync("");
+        var today = Today();
         Assert.Contains("Seed laptop", text);
         Assert.Contains("Mjesto:Banja Luka", text.Replace(": ", ":"));
         Assert.Contains($"{today:dd.MM.yyyy}.", text);
@@ -116,4 +107,34 @@ public class ChromiumPrintingTests(ChromiumApplication app) : IClassFixture<Chro
         // The sheet only: nothing of the shell around it.
         Assert.DoesNotContain("Handover sheet", text);
     }
+
+    [ChromiumFact]
+    public async Task Prints_the_handover_sheet_in_the_language_asked_for()
+    {
+        var text = await PrintAsync("&lang=en");
+        var today = Today();
+        Assert.Contains("Place:Banja Luka", text.Replace(": ", ":"));
+        Assert.Contains(today.ToString("d MMMM yyyy", CultureInfo.InvariantCulture), text);
+        Assert.Contains("Checked by:Seed person", text.Replace(": ", ":"));
+        Assert.DoesNotContain("Mjesto", text);
+    }
+
+    private async Task<string> PrintAsync(string query)
+    {
+        var client = await app.ClientAsync(ChromiumApplication.Email);
+
+        var response = await client.GetAsync(
+            $"/api/company/people/{app.Person}/handover.pdf?tz=Europe/Belgrade{query}"
+        );
+
+        response.EnsureSuccessStatusCode();
+        using var pdf = PdfDocument.Open(await response.Content.ReadAsByteArrayAsync());
+        return string.Join(" ", pdf.GetPages().Select(p => p.Text));
+    }
+
+    private static DateTimeOffset Today() =>
+        TimeZoneInfo.ConvertTime(
+            DateTimeOffset.UtcNow,
+            TimeZoneInfo.FindSystemTimeZoneById("Europe/Belgrade")
+        );
 }

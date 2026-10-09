@@ -169,9 +169,10 @@ columns, then the record's own fields, names resolved and counts kept; its file 
 the list's name without spaces.
 
 **A PDF is the client's own page, printed by the server in headless Chromium** — the handover
-sheet's, `GET …/people/{id}/handover.pdf?tz=…` — through `Shared/Printing/IPagePrinter`, implemented
-in `Web` by PuppeteerSharp. Chromium opens the page on the server's own address, signed in as the
-caller (see [auth.md](auth.md)), its clock in `tz`, and prints once the page sets `data-print` to
+sheet's, `GET …/people/{id}/handover.pdf?tz=…&lang=…` — through `Shared/Printing/IPagePrinter`,
+implemented in `Web` by PuppeteerSharp. Chromium opens the page on the server's own address, signed in
+as the caller (see [auth.md](auth.md)), its clock in `tz`, its language `lang` — passed on as the
+page's own `?lang=`, one the server does not print in a 400, none the deployment's default — and prints once the page sets `data-print` to
 `ready` — the page's print rules and A4 `@page` are the file's. One browser for the process, opened on
 the first print and closed after `Pdf:IdleClose`; a fresh incognito context per print; two prints at
 once, more wait; a page not ready within `Pdf:Timeout`, or a browser that does not start, is a 500 that says so. Every request to
@@ -179,6 +180,12 @@ anything but this machine is aborted, so nothing the page links to is fetched. *
 only where `Pdf:ChromiumPath` names a browser**: without one it is not registered, the PDF endpoint is
 a 404 and the sheet offers no download. Not a PDF library laying the sheet out again: two layouts of
 one document drift. Not the browser's print dialog: not a file, and clumsy on a phone.
+
+**What every printed document shares is `Shared/Documents`**: `Documents:*` (see
+[deployment.md](deployment.md)), the languages documents are printed in (`DocumentLanguages`, which
+must match the client's list), and `GET /api/documents/settings` — the default language and the
+place — so no document's answer repeats them. A document's file name stays English whatever its
+language: it is named for the reader saving it.
 
 **A delete the database would refuse is a 409 that says what holds the record** — "113 devices are of
 this type" — checked before the save, not left to surface as a foreign-key 500.

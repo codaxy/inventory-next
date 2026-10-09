@@ -348,7 +348,7 @@ changes none of it, leaves it out. The city and state a location offers are the 
 form whose only choice is made — one country, its one city — starts with it.
 
 **A printable document is a page of its own with its own print styles** — the handover sheet at
-`~/company/people/:id/handover`: the original's text word for word and its look — a plain sans at
+`~/company/people/:id/handover`: the original's text word for word, in Serbian, and its look — a plain sans at
 10.5pt, not Montserrat, which reads as a form in running text; Codaxy's wordmark and a red "INTERNO"
 at its head; uppercase column headers on a grey band, rules between rows only; A4 margins of 1cm above and below,
 2cm left and 1.5cm right — its table as long as its rows, never scrolling, since it is printed.
@@ -361,13 +361,29 @@ transform leaves the page's full width in the layout, and the phone scrolls side
 squeezes the sheet), the table's header repeating on each page, and the closing line with the signatures
 never split — under the table where they fit, whole on the next page where they do not.
 
+**A printed document has a language of its own**, apart from the UI's — a sheet is printed in the
+language of whoever signs it, and a UI language, should one come, is a setting of its own. Its header
+band carries a picker of the languages (`languagePicker()` in `src/documents/`), each named in itself
+— "English", "Srpski"; a region or a script only once two share a name — which writes `?lang=`,
+replacing the history entry, so the PDF and a shared link print what the screen shows. It opens in the
+address's language, else the deployment's default (`/api/documents/settings`); a change re-renders
+the text, it does not refetch. **A document's text is a typed object per language** (`text.ts` in its
+folder), so a language missing a string fails the type check; its dates are written as the language
+writes them (`documentDate()`): `07.10.2026.`, `7 October 2026`. A language is added to
+`src/documents/languages.ts` and to the server's `DocumentLanguages` together, then to every
+document's text. The screen's own chrome — the band, its buttons, an error — stays in the UI's
+language. Not a translation library: typed objects are all the text needs until plurals or a
+translated UI arrive.
+
 **Beneath the equipment, the person's active seats** — "Licence / pretplate", a table of its own:
 the software, the license, the device for a seat on one they hold, and the subscription's end; absent
 when there are none. An ended seat is history, not signed for. Apart from the equipment, not rows in
 its table: the original's seat rows repeated the device. A number beside a name is `#` and muted, as
 in the application. **The signature lines are one grid**, the place, the date and Kontrolor on the left, the name above
 the signature and the responsible person on the right: each column's lines start where its longest
-label ends, and a value stands on its label's baseline.
+label ends, and a value stands on its label's baseline. **A line is 250px and gives way to the
+labels**, which do not wrap: their length is the language's, and a fixed line ran the right column
+past the margin.
 
 **It is downloaded as a PDF the server prints from this same page** — "PDF" in the header band, as "Excel" on a list,
 `downloadButton` as Excel's, absent where the server has no browser (`pdf` in the sheet's answer); no
@@ -375,7 +391,7 @@ Print button. The page is the PDF's only layout: its print rules are the file's,
 a PDF library cannot drift from it. The page tells the printer it is whole with `data-print` on its
 root — `loading`, then `ready` once its data is in, or `failed` — see [server.md](server.md). **The
 signature lines fill in what is known**, written on the line: the place (a setting), today in the
-viewer's zone as `07.10.2026.`, the person's name, and *Kontrolor*, whoever is signed in; *Potpis* and
+viewer's zone, the person's name, and *Kontrolor*, whoever is signed in; *Potpis* and
 *Odgovorno lice ili nadređeni* stay blank for a hand — nothing links a person to a manager.
 
 **A license's volume is read in parts, not as a sentence**: its software, then its type and

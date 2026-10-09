@@ -3,7 +3,6 @@ using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Printing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Codaxy.Inventory.App.Company.People.Handover;
 
@@ -30,12 +29,10 @@ public static class Endpoint
         DateOnly? Expires
     );
 
-    /// <param name="Place">Where it is signed, or empty for a hand to write.</param>
     /// <param name="Controller">Who produced it: the signed-in person.</param>
     /// <param name="Pdf">Whether the server can print it.</param>
     public sealed record Response(
         string Name,
-        string Place,
         string Controller,
         bool Pdf,
         IReadOnlyList<Row> Assets,
@@ -46,7 +43,6 @@ public static class Endpoint
         Guid id,
         ClaimsPrincipal user,
         InventoryContext context,
-        IOptions<HandoverOptions> options,
         [FromServices] IPagePrinter? printer,
         CancellationToken cancellationToken
     )
@@ -88,7 +84,6 @@ public static class Endpoint
         return Results.Ok(
             new Response(
                 name,
-                options.Value.Place.Trim(),
                 await ControllerAsync(user, context, cancellationToken),
                 printer is not null,
                 assets,

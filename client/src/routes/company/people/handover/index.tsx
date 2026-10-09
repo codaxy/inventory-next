@@ -2,6 +2,7 @@ import { createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
 import { Icon, Link, Repeater } from "cx/widgets";
 
 import { downloadButton } from "../../../../components/downloadButton";
+import { languagePicker } from "../../../../documents/languagePicker";
 import $app from "../../../../model";
 import { sheetFit } from "../../../../sheetFit";
 import Controller from "./Controller";
@@ -10,9 +11,8 @@ import m from "./model";
 const h = m.handover;
 
 /**
- * The equipment a person signs for, as the original printed it — its text word for word, the
- * company's own legal wording in its own language. Only the sheet prints; the header band is the
- * screen's. On screen it is the printed page itself, fitted to the column (`sheetFit`); the server
+ * The equipment a person signs for, as the original printed it, in the language chosen (`text.ts`).
+ * Only the sheet prints; the header band is the screen's, in the UI's language. On screen it is the printed page itself, fitted to the column (`sheetFit`); the server
  * prints this same page for the PDF, waiting on `data-print`.
  */
 export default createFunctionalComponent(() => {
@@ -34,6 +34,10 @@ export default createFunctionalComponent(() => {
                         <div class="editor-heading">
                             <h1 class="page-title" text="Handover sheet" />
                             <div class="editor-heading-actions">
+                                {languagePicker({
+                                    id: "company-people-handover-language",
+                                    value: h.language,
+                                })}
                                 {downloadButton({
                                     href: h.pdfHref,
                                     visible: hasValue(h.pdfHref),
@@ -52,32 +56,31 @@ export default createFunctionalComponent(() => {
                 </div>
 
                 <div class="handover-fit" onRef={onColumnRef} visible={falsy(h.error)}>
-                    <article class="handover">
+                    <article class="handover" attrs={{ lang: h.language }}>
                         <div class="handover-part">
                             <header class="handover-header">
                                 <div class="handover-logo" attrs={{ role: "img", "aria-label": "Codaxy" }} />
-                                <div class="handover-class" text="Interno" />
+                                <div class="handover-class" text={h.text.classification} />
                             </header>
                             <h2 class="handover-title">
-                                <span text="Spisak sredstava za rad koje" />
+                                <span text={h.text.title[0]} />
                                 <br />
-                                <span text="duži zaposleni" />
+                                <span text={h.text.title[1]} />
                             </h2>
-                            <p class="handover-lead" text="Potpisivanjem ove izjave, slažem se da: " />
+                            <p class="handover-lead" text={h.text.lead} />
                             <ul class="handover-terms">
-                                <li text="Lista sredstava za rad je kompletna i sadrži radna sredstva za koje lično odgovaram" />
-                                <li text="Sredstva za rad koja zadužujem na sopstvenu odgovornost su vlasništvo kompanije i ne smijem da ih otuđim, prodam ili omogućim njihovu upotrebu nezaposlenima u kompaniji" />
-                                <li text="Ukoliko mi prestane radni odnos sa kompanijom, odmah ću, odgovornoj osobi ili nadređenom, vratiti sredstva za rad koja lično zadužujem" />
-                                <li text="Ako nastane oštećenje ili gubljenje sredstava za rad koje lično zadužujem, a nastalo je mojim pogrešnim postupanjem i/ili nemarom u potpunosti se slažem da nadoknadim cjelokupnu vrijednost oštećenih/izgubljenih sredstva za rad" />
+                                <Repeater records={h.text.terms} recordAlias={m.$term}>
+                                    <li text={m.$term} />
+                                </Repeater>
                             </ul>
                             <table class="handover-table">
                                 <thead>
                                     <tr>
-                                        <th text="R. Br" />
-                                        <th text="Inventarni broj" />
-                                        <th text="Naziv" />
-                                        <th text="Opis" />
-                                        <th text="Tip" />
+                                        <th text={h.text.assets.index} />
+                                        <th text={h.text.assets.number} />
+                                        <th text={h.text.assets.name} />
+                                        <th text={h.text.assets.description} />
+                                        <th text={h.text.assets.type} />
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -97,21 +100,21 @@ export default createFunctionalComponent(() => {
                                             (rows, print) => print === "ready" && !rows?.length,
                                         )}
                                     >
-                                        <td colSpan={5} class="handover-empty" text="No data" />
+                                        <td colSpan={5} class="handover-empty" text={h.text.noData} />
                                     </tr>
                                 </tbody>
                             </table>
 
                             <div visible={expr(h.seats, (seats) => !!seats?.length)}>
-                                <h3 class="handover-subtitle" text="Licence / pretplate" />
+                                <h3 class="handover-subtitle" text={h.text.seats.title} />
                                 <table class="handover-table handover-seats">
                                     <thead>
                                         <tr>
-                                            <th text="R. Br" />
-                                            <th text="Softver" />
-                                            <th text="Licenca" />
-                                            <th text="Na uređaju" />
-                                            <th text="Ističe" />
+                                            <th text={h.text.seats.index} />
+                                            <th text={h.text.seats.software} />
+                                            <th text={h.text.seats.license} />
+                                            <th text={h.text.seats.device} />
+                                            <th text={h.text.seats.expires} />
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -143,14 +146,14 @@ export default createFunctionalComponent(() => {
 
                         {/* The closing line and the signatures, printed together, never split. */}
                         <div class="handover-part handover-closing">
-                            <p text="Ovaj dokument je napravljen i potpisan u 2 (dva) primjerka, od kojih jedan zadržava zaposleni, a drugi ostaje kompaniji." />
+                            <p text={h.text.closing} />
                             <div class="handover-signatures">
-                                {line("Mjesto:", h.place)}
-                                {line("Ime i prezime:", h.name)}
-                                {line("Datum:", h.date)}
-                                {line("Potpis:")}
-                                {line("Kontrolor:", h.controller)}
-                                {line("Odgovorno lice ili nadređeni:")}
+                                {line(h.text.signatures.place, h.place)}
+                                {line(h.text.signatures.name, h.name)}
+                                {line(h.text.signatures.date, h.date)}
+                                {line(h.text.signatures.signature)}
+                                {line(h.text.signatures.controller, h.controller)}
+                                {line(h.text.signatures.responsible)}
                             </div>
                         </div>
                     </article>
@@ -161,7 +164,7 @@ export default createFunctionalComponent(() => {
 });
 
 /** A signature line: its label, and what the sheet fills in, if anything, written on the line. */
-function line(label: string, value?: typeof h.name) {
+function line(label: typeof h.name, value?: typeof h.name) {
     return (
         <cx>
             <div class="handover-line">

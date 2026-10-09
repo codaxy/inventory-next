@@ -1,3 +1,4 @@
+import type { Language } from "../documents/languages";
 import type { Page } from "../paging";
 import type { AssetRow, LicenseRow, Section } from "./assets";
 import { send, toQuery } from "./http";
@@ -58,8 +59,6 @@ export interface Holdings {
 
 export interface Handover {
     name: string;
-    /** Where it is signed; empty leaves the line for a hand. */
-    place: string;
     /** Who produced it: the signed-in person. */
     controller: string;
     /** Whether the server can print it. */
@@ -91,9 +90,9 @@ export const getHoldings = (id: string) => send<Holdings>(`${base}/${id}/holding
 
 export const getHandover = (id: string) => send<Handover>(`${base}/${id}/handover`);
 
-/** The handover sheet as the server prints it, dated in the browser's time zone. */
-export const handoverPdf = (id: string) =>
-    `${base}/${id}/handover.pdf?tz=${encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone)}`;
+/** The handover sheet as the server prints it, dated in the browser's time zone, in `language`. */
+export const handoverPdf = (id: string, language: Language) =>
+    `${base}/${id}/handover.pdf?${toQuery({ tz: Intl.DateTimeFormat().resolvedOptions().timeZone, lang: language })}`;
 
 export const createPerson = (form: PersonForm) =>
     send<PersonDetail>(`${base}/`, { method: "POST", body: JSON.stringify(form) });

@@ -4,7 +4,8 @@ public static class InventoryApi
 {
     /// <summary>
     /// The menu's endpoints, under <c>/api</c>, every one behind a session: the menu's sections in
-    /// its order, and the Dashboard, which is in none; each maps its own items.
+    /// its order, and the Dashboard, which is in none; each maps its own items. Then what serves
+    /// no one item: the printed documents' settings.
     /// </summary>
     public static void MapInventoryApi(this IEndpointRouteBuilder app)
     {
@@ -18,5 +19,6 @@ public static class InventoryApi
         Informations.Endpoints.Map(api);
         Infrastructure.Endpoints.Map(api);
         Administration.Endpoints.Map(api);
+        Shared.Documents.Settings.Endpoint.Map(api);
     }
 }

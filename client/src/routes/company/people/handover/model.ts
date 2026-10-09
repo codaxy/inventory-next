@@ -1,5 +1,7 @@
 import { createModel } from "cx/ui";
 
+import type { Language } from "../../../../documents/languages";
+
 export interface SheetRow {
     /** "1", as the sheet's first column counts. */
     index: string;
@@ -21,11 +23,45 @@ export interface SeatSheetRow {
     expires: string;
 }
 
+/** Everything the sheet says in one language, but its dates, which `documentDate` writes. */
+export interface HandoverText {
+    /** "Interno", at its head; printed uppercase. */
+    classification: string;
+    /** The title's two lines. */
+    title: [string, string];
+    lead: string;
+    terms: string[];
+    assets: { index: string; number: string; name: string; description: string; type: string };
+    /** The equipment table's one row when there is none. */
+    noData: string;
+    seats: {
+        title: string;
+        index: string;
+        software: string;
+        license: string;
+        device: string;
+        expires: string;
+    };
+    /** The line above the signatures: how many copies, and who keeps them. */
+    closing: string;
+    signatures: {
+        place: string;
+        name: string;
+        date: string;
+        signature: string;
+        controller: string;
+        responsible: string;
+    };
+}
+
 export interface HandoverState {
     id: string;
     name: string;
     rows: SheetRow[];
     seats: SeatSheetRow[];
+    /** The sheet's language: the address's, else the deployment's default; absent until known. */
+    language?: Language;
+    text?: HandoverText;
     /** What the signature lines say; an empty one is left for a hand. */
     place: string;
     date: string;
@@ -42,6 +78,7 @@ export interface Model {
     $route: { id: string };
     $row: SheetRow;
     $seat: SeatSheetRow;
+    $term: string;
 }
 
 export default createModel<Model>();

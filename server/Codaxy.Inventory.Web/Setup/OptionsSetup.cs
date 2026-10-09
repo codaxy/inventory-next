@@ -1,5 +1,5 @@
-using Codaxy.Inventory.App.Company.People.Handover;
 using Codaxy.Inventory.App.Dashboard;
+using Codaxy.Inventory.App.Shared.Documents;
 using Codaxy.Inventory.Web.Auth;
 
 namespace Codaxy.Inventory.Web.Setup;
@@ -19,8 +19,13 @@ public static class OptionsSetup
             .Validate(o => o.IsValid, "Every Dashboard:*Days must be at least 1.")
             .ValidateOnStart();
         services
-            .AddOptions<HandoverOptions>()
-            .Bind(configuration.GetSection(HandoverOptions.Section));
+            .AddOptions<DocumentOptions>()
+            .Bind(configuration.GetSection(DocumentOptions.Section))
+            .Validate(
+                o => o.IsValid,
+                $"Documents:DefaultLanguage must be one of: {string.Join(", ", DocumentLanguages.Supported)}."
+            )
+            .ValidateOnStart();
 
         return services;
     }

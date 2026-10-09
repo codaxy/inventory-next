@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Codaxy.Inventory.Tests.Integration;
 
 using Handover = App.Company.People.Handover.Endpoint.Response;
+using Settings = App.Shared.Documents.Settings.Endpoint.Response;
 
 /// <summary>A printer that prints nothing: it records what it was asked and answers a stub.</summary>
 public sealed class RecordingPagePrinter : IPagePrinter
@@ -34,7 +35,10 @@ public sealed class RecordingPagePrinter : IPagePrinter
     }
 }
 
-/// <summary>Ana holds a device; the printer is the recording stub; the place is Banja Luka.</summary>
+/// <summary>
+/// Ana holds a device; the printer is the recording stub; documents are signed in Banja Luka, in
+/// English unless asked otherwise.
+/// </summary>
 public class HandoverPdfApplication : InventoryApplication
 {
     public RecordingPagePrinter Printer { get; } = new();
@@ -43,7 +47,8 @@ public class HandoverPdfApplication : InventoryApplication
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         base.ConfigureWebHost(builder);
-        builder.UseSetting("Handover:Place", " Banja Luka ");
+        builder.UseSetting("Documents:Place", " Banja Luka ");
+        builder.UseSetting("Documents:DefaultLanguage", "en");
         builder.ConfigureServices(services =>
         {
             services.RemoveAll<IPagePrinter>();
@@ -75,7 +80,7 @@ public class HandoverPdfTests(HandoverPdfApplication app) : IClassFixture<Handov
         );
 
     [Fact]
-    public async Task The_sheet_offers_a_pdf_and_fills_in_the_place()
+    public async Task The_sheet_offers_a_pdf()
     {
         var sheet = (
             await (await app.ClientAsync()).GetFromJsonAsync<Handover>(
@@ -83,8 +88,25 @@ public class HandoverPdfTests(HandoverPdfApplication app) : IClassFixture<Handov
             )
         )!;
 
-        Assert.Equal(("Banja Luka", true), (sheet.Place, sheet.Pdf));
+        Assert.True(sheet.Pdf);
     }
+
+    [Fact]
+    public async Task Documents_take_their_language_and_place_from_the_deployment()
+    {
+        var settings = (
+            await (await app.ClientAsync()).GetFromJsonAsync<Settings>("/api/documents/settings")
+        )!;
+
+        Assert.Equal(new Settings("en", "Banja Luka"), settings);
+    }
+
+    [Fact]
+    public async Task Document_settings_need_a_session() =>
+        Assert.Equal(
+            HttpStatusCode.Unauthorized,
+            (await app.CreateClient().GetAsync("/api/documents/settings")).StatusCode
+        );
 
     [Fact]
     public async Task Prints_the_sheets_page_as_the_caller_in_their_zone()
@@ -101,6 +123,30 @@ public class HandoverPdfTests(HandoverPdfApplication app) : IClassFixture<Handov
         Assert.Equal(
             ($"/company/people/{app.Ana}/handover", "Europe/Belgrade", true),
             app.Printer.Last
+        );
+    }
+
+    [Fact]
+    public async Task Prints_the_page_in_the_language_asked_for()
+    {
+        (
+            await (await app.ClientAsync()).GetAsync(
+                Url(app.Ana, "?tz=Europe/Belgrade&lang=sr-Latn-BA")
+            )
+        ).EnsureSuccessStatusCode();
+
+        Assert.Equal($"/company/people/{app.Ana}/handover?lang=sr-Latn-BA", app.Printer.Last?.Path);
+    }
+
+    [Fact]
+    public async Task Refuses_a_language_it_does_not_print_in()
+    {
+        var response = await (await app.ClientAsync()).GetAsync(Url(app.Ana, "?lang=de"));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(
+            ["Documents are printed in en, sr-Latn-BA."],
+            (await response.Content.ReadFromJsonAsync<ValidationProblemDetails>())!.Errors["lang"]
         );
     }
 
