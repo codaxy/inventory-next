@@ -367,13 +367,17 @@ band carries a picker of the languages (`languagePicker()` in `src/documents/`),
 — "English", "Srpski"; a region or a script only once two share a name — which writes `?lang=`,
 replacing the history entry, so the PDF and a shared link print what the screen shows. It opens in the
 address's language, else the deployment's default (`/api/documents/settings`); a change re-renders
-the text, it does not refetch. **A document's text is a typed object per language** (`text.ts` in its
-folder), so a language missing a string fails the type check; its dates are written as the language
-writes them (`documentDate()`): `07.10.2026.`, `7 October 2026`. A language is added to
+the text, it does not refetch. **A document's text is a file per language** — `text/<tag>.ts` in its
+folder, `satisfies` the document's text type, so a missing or a stray string fails the type check —
+loaded by `import()` from a loader per language (`text/index.ts`), so the bundle carries none and a
+sheet fetches only its own; `ready` waits for it. Prose is held as passages — a section's paragraphs —
+never a key per sentence: languages do not split sentences alike, and legal text is translated whole.
+Its dates are written as the language writes them (`documentDate()`): `07.10.2026.`, `7 October 2026`. A language is added to
 `src/documents/languages.ts` and to the server's `DocumentLanguages` together, then to every
 document's text. The screen's own chrome — the band, its buttons, an error — stays in the UI's
-language. Not a translation library: typed objects are all the text needs until plurals or a
-translated UI arrive.
+language. Not a translation library or JSON files: typed modules are all the text needs until plurals, a
+translated UI or a translators' tool arrive. Not a template per language: the layout would be copied
+into each, and drift.
 
 **Beneath the equipment, the person's active seats** — "Licence / pretplate", a table of its own:
 the software, the license, the device for a seat on one they hold, and the subscription's end; absent

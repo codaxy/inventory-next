@@ -7,7 +7,7 @@ import { documentDate, isLanguage, type Language } from "../../../../documents/l
 import { queryOf, writeAddress } from "../../../../listAddress";
 import $app from "../../../../model";
 import m from "./model";
-import { handoverText } from "./text";
+import { loadHandoverText } from "./text";
 
 const h = m.handover;
 
@@ -44,7 +44,7 @@ export default class extends Controller {
         writeAddress(this.store, `~/company/people/${id}/handover`, {
             lang: language === this.defaultLanguage ? undefined : language,
         });
-        this.render(language);
+        this.render(language).catch(() => this.store.set(h.error, "The handover sheet could not be loaded."));
     }
 
     private open(id: string) {
@@ -72,10 +72,11 @@ export default class extends Controller {
                 this.store.set(h.place, settings.place);
                 this.store.set(h.controller, sheet.controller);
                 const language = this.addressed(this.store.get($app.url));
-                // Rendered here, not left to the trigger, which runs after `ready` would have.
                 this.store.set(h.language, language);
-                this.render(language);
-                this.store.set(h.print, "ready");
+                // Rendered here, not left to the trigger, so `ready` waits for the text.
+                return this.render(language).then(() => {
+                    if (this.store.get(h.id) === id) this.store.set(h.print, "ready");
+                });
             })
             .catch((error) => {
                 if (this.store.get(h.id) !== id) return;
@@ -89,11 +90,16 @@ export default class extends Controller {
             });
     }
 
-    /** What the language decides: the text, the dates and the PDF's address. */
-    private render(language: Language) {
-        const sheet = this.sheet!;
+    /**
+     * What the language decides: the text, the dates and the PDF's address — once its text has
+     * arrived, and only while it is still the language chosen.
+     */
+    private async render(language: Language) {
+        const text = await loadHandoverText(language);
+        const sheet = this.sheet;
+        if (!sheet || this.store.get(h.language) !== language) return;
         const id = this.store.get(h.id);
-        this.store.set(h.text, handoverText[language]);
+        this.store.set(h.text, text);
         this.store.set(h.date, documentDate(language, this.today));
         if (sheet.pdf) this.store.set(h.pdfHref, handoverPdf(id, language));
         this.store.set(
