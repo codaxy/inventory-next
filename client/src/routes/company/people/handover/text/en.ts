@@ -3,13 +3,13 @@ import type { HandoverText } from "../model";
 /** The sheet in English: a translation of the Serbian original. */
 export default {
     classification: "Internal",
-    title: ["List of work equipment", "assigned to the employee"],
-    lead: "By signing this statement, I agree that: ",
+    title: ["Employee Equipment", "Assignment Record"],
+    lead: "By signing this document, I acknowledge and agree that: ",
     terms: [
-        "The list of work equipment is complete and contains the equipment I am personally responsible for",
-        "The work equipment assigned to me on my own responsibility is the company's property; I may not dispose of it, sell it, or allow anyone not employed by the company to use it",
-        "If my employment with the company ends, I will immediately return the work equipment assigned to me to the responsible person or my superior",
-        "If the work equipment assigned to me is damaged or lost through my improper conduct and/or negligence, I fully agree to compensate the entire value of the damaged/lost equipment",
+        "The list below is complete and includes all company equipment for which I am personally responsible.",
+        "The equipment assigned to me, for which I am personally responsible, remains the property of the company. I may not transfer or sell it, or allow anyone outside the company to use it.",
+        "Upon termination of my employment, I will immediately return all equipment assigned to me to the designated company representative or my supervisor.",
+        "If any equipment assigned to me is damaged or lost due to my improper conduct or negligence, I agree to reimburse the company for the full value of the damaged or lost equipment.",
     ],
     assets: {
         index: "No.",
@@ -28,13 +28,13 @@ export default {
         expires: "Expires",
     },
     closing:
-        "This document has been drawn up and signed in 2 (two) copies, one kept by the employee and the other by the company.",
+        "This document has been prepared and signed in two copies, one kept by the employee and the other by the company.",
     signatures: {
         place: "Place:",
         name: "Full name:",
         date: "Date:",
         signature: "Signature:",
-        controller: "Checked by:",
+        controller: "Verified by:",
         responsible: "Supervisor:",
     },
 } satisfies HandoverText;
