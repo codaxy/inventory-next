@@ -72,8 +72,8 @@ update brings the matching browser. Its libraries come from the list it ships (`
 Vulkan, udev — with `fonts-liberation` for the sheet's Arial-metric sans, the image having no other
 font. `Pdf:Sandbox` is false there: Chromium's sandbox cannot start as an unprivileged user in a
 container, and it loads only the application's own pages. About 490 MB of the image. **CI has the
-image's browser print a page before it publishes the image**: the tests print with the runner's own
-Chrome, so a browser that installs and does not run passes them all.
+image's browser print a page before it publishes the image**: no test prints, so a browser that
+installs and does not run passes them all.
 **`Documents` holds what every printed document shares.** `Documents:Place` is the city they are
 signed in: Banja Luka in `appsettings.json`; an office elsewhere sets its own, and an empty one leaves
 the line for a hand. `Documents:DefaultLanguage` is the language a document opens in, which its reader

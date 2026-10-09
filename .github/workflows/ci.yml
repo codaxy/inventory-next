@@ -26,8 +26,8 @@ jobs:
       - name: Build
         run: dotnet build server/Codaxy.Inventory.slnx --configuration Release
 
-      # The PDF test prints the built client's page in the runner's Chrome, served as the image
-      # serves it: from wwwroot.
+      # The tests that serve the shell fall back to wwwroot's index.html: the built one here, as the
+      # image has it.
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -46,8 +46,6 @@ jobs:
       # script is the one the pre-merge check runs, so the two cannot disagree.
       - name: Test with the coverage threshold
         run: scripts/coverage.sh --no-build
-        env:
-          INVENTORY_TEST_CHROMIUM: /usr/bin/google-chrome
 
   client:
     runs-on: ubuntu-latest

@@ -45,12 +45,9 @@ each against its own database; a static field set in `InitializeAsync` is overwr
 starts last, and the other's tests then read ids from the wrong database — passing or failing by
 the order they happened to start in.
 
-**The PDF test prints through a real browser** — `ChromiumPrintingTests`, on Kestrel at a real port,
-against the built client in `wwwroot` — and runs only where `INVENTORY_TEST_CHROMIUM` names a
-Chromium binary and the client is built there; CI does both. Not `Pdf__ChromiumPath`: every fixture
-reads the environment, and the others are written against a server without a browser. Elsewhere the
-PDF endpoint is tested against a recording printer. A local run skips the browser's lines, so its
-figure is below CI's, never above.
+**No test prints through Chromium**: the PDF endpoint is tested against a recording printer, and the
+sheet's text and layout are the client's, which no test reads. CI's image step has its browser print a
+page before the image is published.
 
 ## Formatting
 
