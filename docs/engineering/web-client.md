@@ -294,7 +294,8 @@ that closed it has already left the screen.
 `~/<item>/:id` shows the record, **its primary action in the header beside its name and the rest behind
 a ⋮** (`moreActions` in `components/`, a borderless square button of the controls' height with a hover tint and a focus ring): Edit visible — or Deactivate, for a record never edited — and
 View history, Duplicate and Delete a click deeper, Delete last and red, so what destroys is never one mis-click
-away; icons only on a phone, named for screen readers; editing is `~/<item>/:id/edit`, Cancel and Save in the card's footer; `new` opens in editing, there being nothing to show yet. A
+away; a ⋮ the reader would find empty — no `edit` and no `audit_log.view`, as a Supervisor — is
+not shown; icons only on a phone, named for screen readers; editing is `~/<item>/:id/edit`, Cancel and Save in the card's footer; `new` opens in editing, there being nothing to show yet. A
 record's actions go where the eye starts, a form's commit where the form finishes. Not everyone will be allowed to edit, and
 a record should not change because someone clicked into it. Cancel and a successful Save of an edit
 return to the read-only page; a new record's Save and Cancel return to the list. Both modes are one form, switched by the `ValidationGroup`'s `viewMode`, which every

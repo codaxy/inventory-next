@@ -1,4 +1,4 @@
-import type { AccessorChain } from "cx/data";
+import { type AccessorChain, getSelector } from "cx/data";
 import { type BooleanProp, expr, type StringProp } from "cx/ui";
 import { Icon, Link, Menu, MenuItem } from "cx/widgets";
 
@@ -40,6 +40,15 @@ export const deleteAction: MoreAction = {
     edits: true,
 };
 
+/** Whether the reader is offered the action. */
+const offered = (action: MoreAction): BooleanProp => (action.edits ? canEdit : (action.visible ?? true));
+
+/** Whether any of the actions is offered: a ⋮ with nothing behind it is not shown at all. */
+const anyOffered = (actions: MoreAction[]) => {
+    const selectors = actions.map((action) => getSelector(offered(action)));
+    return (data: unknown) => selectors.some((offer) => !!offer(data));
+};
+
 /**
  * The record's secondary actions behind a ⋮ beside its primary one — Duplicate, Delete — so the header
  * keeps one button and what destroys is a click deeper. A cx `MenuItem` dropdown, kept inline so the
@@ -47,7 +56,7 @@ export const deleteAction: MoreAction = {
  */
 export const moreActions = (actions: MoreAction[]) => (
     <cx>
-        <Menu class="more-menu">
+        <Menu class="more-menu" visible={anyOffered(actions)}>
             <MenuItem
                 class="more-trigger"
                 openOnFocus={false}
@@ -66,7 +75,7 @@ export const moreActions = (actions: MoreAction[]) => (
                         <cx>
                             <MenuItem
                                 class={{ "more-action": true, "more-action-danger": !!action.danger }}
-                                visible={action.edits ? canEdit : (action.visible ?? true)}
+                                visible={offered(action)}
                                 onClick={action.onClick}
                                 autoClose
                             >
