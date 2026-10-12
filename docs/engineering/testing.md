@@ -43,6 +43,10 @@ under test recorded. The built-in roles are seeded for every fixture: they are t
 **Every factory that starts the application gives it scratch folders** — the key ring, and the server
 log through `UseScratchServerLog()`. The log's default is `logs` under the content root, which is the
 source tree: a test host left on it writes into the developer's own log, beside a running `dotnet run`.
+**A fixture serving the shell has a web root of its own** too, a temp folder holding a stand-in
+`index.html`, since a checkout has no built client. Never the source tree's `wwwroot`: fixtures run in
+parallel, and one removing a file it put there as it ends pulls the shell from under the rest — the
+start-page tests then fail by timing, and only in a tree with no client built, as in CI.
 
 **A fixture another extends keeps its ids per instance, not static.** Two fixtures run in parallel,
 each against its own database; a static field set in `InitializeAsync` is overwritten by whichever
