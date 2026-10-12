@@ -31,10 +31,7 @@ export const TodoScreen = createFunctionalComponent(({ title, step }: Props) => 
                 <div class="min-w-0">
                     <span class="todo-pill" text="To do" />
                     <h2 class="todo-title" text="This screen is not built yet" />
-                    <p
-                        class="todo-text"
-                        text={`It arrives with step ${step} of the rebuild. Until then, the original application has it.`}
-                    />
+                    <p class="todo-text" text={`It arrives with step ${step} of the rebuild.`} />
                 </div>
             </div>
 

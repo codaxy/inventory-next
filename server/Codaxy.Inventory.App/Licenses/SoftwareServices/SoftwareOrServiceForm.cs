@@ -50,7 +50,7 @@ internal static class SoftwareServices
 
     /// <summary>
     /// The category and manufacturer exist, and no other entry holds the name, whatever its case —
-    /// the original's grid refused a duplicate. Checked here, not by an index: the schema is frozen,
+    /// the original's grid refused a duplicate. Checked here, not by an index: none exists yet,
     /// so two saves at once can still both pass.
     /// </summary>
     public static async Task<IResult?> CheckAsync(

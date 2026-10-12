@@ -26,7 +26,7 @@ internal static class People
     /// <summary>
     /// No other person holds the name or the email, whatever the case — the original refused a
     /// duplicate name. Both sides trimmed: stored values the original wrote can carry spaces. Checked
-    /// here, not by an index: the schema is frozen, so two saves at once can still both pass.
+    /// here, not by an index: none exists yet, so two saves at once can still both pass.
     /// </summary>
     public static async Task<IResult?> CheckUniqueAsync(
         InventoryContext context,
