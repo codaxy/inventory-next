@@ -1,23 +1,27 @@
-using Microsoft.Extensions.Options;
+using Codaxy.Inventory.App.Shared.Access;
+using Codaxy.Inventory.App.Shared.Settings;
 
 namespace Codaxy.Inventory.Web.Auth;
 
 /// <summary>
-/// The deployment's outer limit on who may sign in — the domain — applied to whichever provider the
-/// person came through. Inside it, being a user decides; see <c>UserAccess</c>.
+/// The outer limit on who may sign in — the allowed domains, a setting — applied to whichever
+/// provider the person came through. Inside it, being a user decides; see <c>UserAccess</c>.
 /// </summary>
-public sealed class SignInPolicy(IOptions<AuthOptions> options)
+public sealed class SignInPolicy(SettingStore settings)
 {
-    private readonly AuthOptions options = options.Value;
-
-    public SignInResult Evaluate(string? email)
+    public async Task<SignInResult> EvaluateAsync(
+        string? email,
+        CancellationToken cancellationToken
+    )
     {
         if (string.IsNullOrWhiteSpace(email))
             return SignInResult.Refused("The account has no email address.");
 
-        email = email.Trim();
+        var domains = (await settings.LoadAsync(cancellationToken)).Get(
+            SignInSettings.AllowedDomains
+        );
 
-        if (options.AllowedDomains.Length > 0 && !IsInAnAllowedDomain(email))
+        if (!SignInSettings.Allows(domains, email.Trim()))
             return SignInResult.Refused(
                 "That email domain is not allowed to sign in.",
                 IsSayable: true
@@ -25,23 +29,6 @@ public sealed class SignInPolicy(IOptions<AuthOptions> options)
 
         return SignInResult.Allowed;
     }
-
-    private bool IsInAnAllowedDomain(string email)
-    {
-        var at = email.LastIndexOf('@');
-
-        if (at < 0)
-            return false;
-
-        var domain = email[(at + 1)..];
-
-        // Configured domains are written as people write them, so "@Codaxy.com " matches.
-        return options.AllowedDomains.Any(allowed =>
-            Normalize(allowed).Equals(domain, StringComparison.OrdinalIgnoreCase)
-        );
-    }
-
-    private static string Normalize(string domain) => domain.Trim().TrimStart('@');
 
     /// <param name="IsSayable">
     /// Whether the reason may be told to whoever asked. That a domain is refused may be: it leaves

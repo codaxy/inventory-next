@@ -1,5 +1,7 @@
 using Codaxy.Inventory.App.Administration.Roles;
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Access;
+using Codaxy.Inventory.App.Shared.Settings;
 using Codaxy.Inventory.Web.Auth;
 using Codaxy.Inventory.Web.Setup;
 using Microsoft.AspNetCore.Hosting;
@@ -61,7 +63,6 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
         // read its configuration, so a setting the application checks at startup would not be there
         // yet.
         builder.UseSetting("ConnectionStrings:PostgreSQL", postgres.GetConnectionString());
-        builder.UseSetting("Auth:AllowedDomains:0", "codaxy.com");
         builder.UseSetting("Auth:OneTimeCode:Enabled", "true");
         builder.UseSetting("DataProtection:KeyRingPath", KeyRingPath);
         builder.UseSetting("ServerLog:Path", ServerLogPath);
@@ -100,8 +101,10 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
         var context = scope.ServiceProvider.GetRequiredService<InventoryContext>();
         await context.Database.EnsureCreatedAsync();
 
-        // The roles are the application's, not a test's: every database has them.
+        // The roles and the settings are the application's, not a test's: every database has them.
         await BuiltInRoles.SeedAsync(context, CancellationToken.None);
+        await SettingCatalogue.SeedAsync(context, CancellationToken.None);
+        await Seed.SettingAsync(context, SignInSettings.AllowedDomains, ["codaxy.com"]);
     }
 
     public new async Task DisposeAsync()

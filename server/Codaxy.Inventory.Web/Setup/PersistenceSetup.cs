@@ -1,6 +1,7 @@
 using Codaxy.Inventory.App.Administration.Roles;
 using Codaxy.Inventory.App.Administration.Users;
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Settings;
 using Codaxy.Inventory.Web.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -28,6 +29,7 @@ public static class PersistenceSetup
         services.AddHttpContextAccessor();
         services.AddSingleton<ICurrentUser, HttpCurrentUser>();
         services.AddSingleton<AuditLogInterceptor>();
+        services.AddScoped<SettingStore>();
 
         return services.AddDbContext<InventoryContext>(
             (provider, options) =>
@@ -38,8 +40,8 @@ public static class PersistenceSetup
     }
 
     /// <summary>
-    /// Brings the database up to date, fills the codebooks and the built-in roles, and creates the
-    /// configured users, governed by <c>Database:MigrateOnStartup</c>, which covers all of it. A
+    /// Brings the database up to date, fills the codebooks, the built-in roles and the settings a
+    /// database lacks, and creates the configured users, governed by <c>Database:MigrateOnStartup</c>, which covers all of it. A
     /// database left without an active System Admin stops the start.
     /// </summary>
     public static void MigrateAndSeed(this WebApplication app)
@@ -57,6 +59,7 @@ public static class PersistenceSetup
 
         new InventoryContextSeedData(context).SeedData();
         BuiltInRoles.SeedAsync(context, CancellationToken.None).GetAwaiter().GetResult();
+        SettingCatalogue.SeedAsync(context, CancellationToken.None).GetAwaiter().GetResult();
         SeedUsers
             .ApplyAsync(
                 context,

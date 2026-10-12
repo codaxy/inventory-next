@@ -20,6 +20,7 @@ export interface LocationDraft {
     houseNumber?: number | null;
     floor?: number | null;
     room?: string | null;
+    isDisposal?: boolean;
 }
 
 export interface LocationState extends RecordState<LocationDraft> {
@@ -54,6 +55,7 @@ export const toDraft = (l: LocationDetail): LocationDraft => ({
     houseNumber: l.houseNumber,
     floor: l.floor,
     room: l.room,
+    isDisposal: l.isDisposal,
 });
 
 /** The country picker binds `countryId`, as every picker binds `<key>Id`; the API calls it the code. */
@@ -68,6 +70,7 @@ export const toForm = (d: LocationDraft): LocationForm => ({
     houseNumber: d.houseNumber ?? null,
     floor: d.floor ?? null,
     room: text(d.room),
+    isDisposal: !!d.isDisposal,
 });
 
 export const toAttached = (l: LocationDetail) =>

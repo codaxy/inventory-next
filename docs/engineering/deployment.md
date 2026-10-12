@@ -53,13 +53,9 @@ Google is off until a client id and secret arrive, which in compose is through t
 GOOGLE_CLIENT_ID=… GOOGLE_CLIENT_SECRET=… docker compose --profile app up
 ```
 
-**`Dashboard:DisposedLocations` names the locations assets are moved to when written off or sold**,
-by name, since names differ between databases; empty by default, and then the dashboard has no section
-for seats left on them. Development names the restored database's `Otpisano` and `Prodano`.
-
-**`Dashboard:SubscriptionsExpiredDays`, `SubscriptionsExpiringDays`, `WarrantiesEndedDays` and
-`WarrantiesEndingDays` are the dashboard's windows**, each on its own — 45, 15, 45 and 30 in
-`appsettings.json`. One below 1 stops the app at start.
+**What an administrator decides is not configuration**: the dashboard's windows and what printed
+documents share are settings kept in the database (see [server.md](server.md)), and no key here is
+read for them. Configuration holds what belongs to the deployment.
 
 `appsettings.Development.json` is committed and holds no secret: the compose connection string,
 Mailpit and one-time codes on, so a fresh checkout runs. Development credentials live in user
@@ -76,11 +72,6 @@ font. `Pdf:Sandbox` is false there: Chromium's sandbox cannot start as an unpriv
 container, and it loads only the application's own pages. About 490 MB of the image. **CI has the
 image's browser print a page before it publishes the image**: no test prints, so a browser that
 installs and does not run passes them all.
-**`Documents` holds what every printed document shares.** `Documents:Place` is the city they are
-signed in: Banja Luka in `appsettings.json`; an office elsewhere sets its own, and an empty one leaves
-the line for a hand. `Documents:DefaultLanguage` is the language a document opens in, which its reader
-can change: `sr-Latn-BA` in `appsettings.json`, English where unset; one the application does not
-print in stops the start, naming those it does.
 
 **A deployment behind a reverse proxy sets `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true`; the image
 does not.** It trusts `X-Forwarded-For` and `X-Forwarded-Proto` from any sender, known-proxy lists

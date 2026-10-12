@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using Codaxy.Inventory.App.Company.Locations;
 using Codaxy.Inventory.App.Company.Manufacturers;
+using Codaxy.Inventory.App.Dashboard;
 using Codaxy.Inventory.App.Informations.Items;
 using Codaxy.Inventory.App.Informations.Types;
 using Codaxy.Inventory.App.Licenses.SoftwareServices;
@@ -48,12 +49,6 @@ public class DashboardApplication : InventoryApplication
     public Guid IncompleteDevice { get; private set; }
     public Guid IncompleteInformation { get; private set; }
 
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
-        base.ConfigureWebHost(builder);
-        builder.UseSetting("Dashboard:DisposedLocations:0", WrittenOff);
-    }
-
     public override async Task InitializeAsync()
     {
         await base.InitializeAsync();
@@ -91,6 +86,7 @@ public class DashboardApplication : InventoryApplication
                 CountryCode = "US",
                 CityId = city,
                 Street = "N/A",
+                IsDisposal = true,
             },
             new Location
             {
@@ -303,13 +299,16 @@ public class DashboardTests(DashboardApplication app) : IClassFixture<DashboardA
 /// <summary>The same records, every window a day short of its default, each read on its own.</summary>
 public class DashboardWindowsApplication : DashboardApplication
 {
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    public override async Task InitializeAsync()
     {
-        base.ConfigureWebHost(builder);
-        builder.UseSetting("Dashboard:SubscriptionsExpiredDays", "44");
-        builder.UseSetting("Dashboard:SubscriptionsExpiringDays", "14");
-        builder.UseSetting("Dashboard:WarrantiesEndedDays", "44");
-        builder.UseSetting("Dashboard:WarrantiesEndingDays", "29");
+        await base.InitializeAsync();
+
+        using var scope = Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<InventoryContext>();
+        await Seed.SettingAsync(context, DashboardSettings.SubscriptionsExpiredDays, 44);
+        await Seed.SettingAsync(context, DashboardSettings.SubscriptionsExpiringDays, 14);
+        await Seed.SettingAsync(context, DashboardSettings.WarrantiesEndedDays, 44);
+        await Seed.SettingAsync(context, DashboardSettings.WarrantiesEndingDays, 29);
     }
 }
 
@@ -345,7 +344,7 @@ public class DashboardWithoutDisposalTests(InventoryApplication app)
     : IClassFixture<InventoryApplication>
 {
     [Fact]
-    public async Task Without_disposal_locations_there_is_no_disposed_section()
+    public async Task Without_a_disposal_location_there_is_no_disposed_section()
     {
         var client = await app.ClientAsync();
         var dashboard = (await client.GetFromJsonAsync<Response>("/api/dashboard"))!;

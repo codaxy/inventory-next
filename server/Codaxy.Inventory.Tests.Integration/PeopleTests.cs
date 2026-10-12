@@ -378,9 +378,9 @@ public class PeopleTests(PeopleApplication app) : IClassFixture<PeopleApplicatio
     }
 
     [Fact]
-    public async Task Documents_are_in_serbian_and_signed_in_banja_luka_by_default() =>
+    public async Task Documents_are_in_english_with_the_place_left_for_a_hand_by_default() =>
         Assert.Equal(
-            new Settings("sr-Latn-BA", "Banja Luka"),
+            new Settings("en", ""),
             await (await Client()).GetFromJsonAsync<Settings>("/api/documents/settings")
         );
 

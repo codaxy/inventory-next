@@ -40,8 +40,10 @@ public static class Endpoint
         if (!MiniValidator.IsValid(request, out var problem))
             return problem;
 
+        // The code first: a wrong one fails without reading the settings, and burns the code either way.
         if (
-            !policy.Evaluate(request.Email).IsAllowed || !codes.Consume(request.Email, request.Code)
+            !codes.Consume(request.Email, request.Code)
+            || !(await policy.EvaluateAsync(request.Email, context.RequestAborted)).IsAllowed
         )
             return Results.Problem(
                 title: "That code is not valid.",

@@ -46,6 +46,9 @@ public static class Endpoint
 
         [XLColumn(Header = "Assets")]
         public int Assets { get; init; }
+
+        [XLColumn(Header = "Disposal")]
+        public bool Disposal { get; init; }
     }
 
     /// <summary>The list as a spreadsheet: the same query, every row it selects, not one page.</summary>
@@ -74,6 +77,7 @@ public static class Endpoint
                 State = l.StateId == null ? null : l.State.Name,
                 Country = l.Country.Name,
                 Assets = assets.Count(a => a.LocationId == l.Id),
+                Disposal = l.IsDisposal,
             })
             .ToListAsync(cancellationToken);
 

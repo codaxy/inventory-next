@@ -7,6 +7,7 @@ using Codaxy.Inventory.App.Licenses.Licenses;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Assets;
 using Codaxy.Inventory.App.Shared.Classification;
+using Codaxy.Inventory.App.Shared.Settings;
 using Codaxy.Inventory.App.Shared.Volumes;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,18 @@ namespace Codaxy.Inventory.Tests.Integration.Infrastructure;
 /// </summary>
 public static class Seed
 {
+    /// <summary>A setting as the screen would save it: its seeded row, given another value.</summary>
+    public static async Task SettingAsync<T>(
+        InventoryContext context,
+        SettingDefinition<T> definition,
+        T value
+    )
+    {
+        var row = await context.Settings.SingleAsync(s => s.Key == definition.Key);
+        row.Value = definition.Serialize(value);
+        await context.SaveChangesAsync();
+    }
+
     public sealed record Basics(
         Guid Vendor,
         Guid Person,

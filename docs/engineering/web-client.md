@@ -362,6 +362,14 @@ for adding one to another license or a new one. The section is on the page only:
 changes none of it, leaves it out. The city and state a location offers are the chosen country's; a
 form whose only choice is made — one country, its one city — starts with it.
 
+**Administration → Settings is a card per group** — Sign-in, Dashboard, Documents — each in view
+until its Edit, then its own Cancel and Save at its foot, as a record's form; the others stay in view,
+and unsaved edits ask before leaving. On the Dashboard's card, a window that is not its default says
+so while editing, with "Reset to default" beside it; the documents' values have none worth returning
+to. **A Time zone card shows what is not a choice yet** — the interface in the browser's zone, every
+export asked for in the same — naming the zone, with no Edit. The domains are chips — removable while editing, a field
+and Add beneath — and "Any domain" in view when there are none. The server tidies what is typed.
+
 **A role's permissions are a row per area**, the catalogue's order and names — Inventory, Audit log,
 Server log, Users, Roles, Settings: View and Edit ticks side by side in two fixed columns, an area with one
 permission — the Audit log's View, Users' Manage — under the first. Ticking Edit ticks View and locks it until Edit is cleared; a permission the
@@ -396,7 +404,7 @@ band carries a picker of the languages (`languagePicker()` in `src/documents/`),
 — "English", "Srpski"; a region or a script only once two share a name — which writes `?lang=`, read
 whatever its case (`languageOf()`),
 replacing the history entry, so the PDF and a shared link print what the screen shows. It opens in the
-address's language, else the deployment's default (`/api/documents/settings`); a change re-renders
+address's language, else the default language setting (`/api/documents/settings`); a change re-renders
 the text, it does not refetch. **A document's text is a file per language** — `text/<tag>.ts` in its
 folder, `satisfies` the document's text type, so a missing or a stray string fails the type check —
 loaded by `import()` from a loader per language (`text/index.ts`), so the bundle carries none and a
@@ -498,7 +506,7 @@ change — ends in a muted `+N` pill (`record-more`), so the count never reads a
 value (`record-blank`, `ink-ghost` against values in `ink-soft`: a thin dash is judged by weight, not
 colour, so anything short of a ghost reads as one more value), never words like "No tags" that read as one more value; on a phone's card the
 line goes. A yes/no that
-most rows answer no — a type holding licenses — is a flag beside the name (`record-flag`), not a column
+most rows answer no — a type holding licenses, a disposal location — is a flag beside the name (`record-flag`), not a column
 of "No". A subscription's status is a tag (`status-tag`) — red once
 expired, amber within the fortnight, green after, grey on a record that has ended — and always says
 which in words, never by colour alone. A record that has ended — a deactivated activation or user — stays

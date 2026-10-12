@@ -2,8 +2,8 @@ using Codaxy.Inventory.App.ElectronicDevices.Devices;
 using Codaxy.Inventory.App.Licenses.Licenses;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Assets;
+using Codaxy.Inventory.App.Shared.Settings;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Codaxy.Inventory.App.Dashboard.Get;
 
@@ -59,7 +59,7 @@ public static class Endpoint
     public sealed record IncompleteRow(Guid Id, string Kind, int? Number, string Name);
 
     /// <param name="UnusedSeats">The free seats of every volume in <c>Unused</c>, not only the first.</param>
-    /// <param name="DisposedSeats">Absent where no disposal location is configured.</param>
+    /// <param name="DisposedSeats">Absent where no location is marked as disposal.</param>
     public sealed record Response(
         Section<SubscriptionRow> Expired,
         Section<SubscriptionRow> ExpiringSoon,
@@ -78,17 +78,22 @@ public static class Endpoint
 
     private static async Task<IResult> Handle(
         InventoryContext context,
-        IOptions<DashboardOptions> options,
+        SettingStore settings,
         TimeProvider clock,
         CancellationToken cancellationToken
     )
     {
-        var o = options.Value;
+        var stored = await settings.LoadAsync(cancellationToken);
+        var expiredDays = stored.Get(DashboardSettings.SubscriptionsExpiredDays);
+        var expiringDays = stored.Get(DashboardSettings.SubscriptionsExpiringDays);
+        var endedDays = stored.Get(DashboardSettings.WarrantiesEndedDays);
+        var endingDays = stored.Get(DashboardSettings.WarrantiesEndingDays);
+
         var today = Expiry.Today(clock);
-        var soon = today.AddDays(o.SubscriptionsExpiringDays);
+        var soon = today.AddDays(expiringDays);
 
         var licenses = context.Licenses.AsNoTracking();
-        var lapsedSince = today.AddDays(-o.SubscriptionsExpiredDays);
+        var lapsedSince = today.AddDays(-expiredDays);
         var lapsed = licenses.Where(l =>
             l.SubscriptionExpirationDate < today && l.SubscriptionExpirationDate >= lapsedSince
         );
@@ -111,8 +116,8 @@ public static class Endpoint
         );
 
         var devices = context.ElectronicDevices.AsNoTracking();
-        var endedSince = today.AddDays(-o.WarrantiesEndedDays);
-        var warrantyEnd = today.AddDays(o.WarrantiesEndingDays);
+        var endedSince = today.AddDays(-endedDays);
+        var warrantyEnd = today.AddDays(endingDays);
         var warrantiesEnded = devices.Where(d =>
             d.GuaranteeExpirationDate < today && d.GuaranteeExpirationDate >= endedSince
         );
@@ -120,10 +125,10 @@ public static class Endpoint
             d.GuaranteeExpirationDate >= today && d.GuaranteeExpirationDate < warrantyEnd
         );
 
-        var disposed = o.DisposedLocations;
+        var anyDisposal = await context.Locations.AnyAsync(l => l.IsDisposal, cancellationToken);
         var disposedSeats = context
             .Activations.AsNoTracking()
-            .Where(a => a.DeactivationDate == null && disposed.Contains(a.Asset.Location.Name));
+            .Where(a => a.DeactivationDate == null && a.Asset.Location.IsDisposal);
 
         var incomplete = context
             .Assets.AsNoTracking()
@@ -223,7 +228,7 @@ public static class Endpoint
                         ),
                     cancellationToken
                 ),
-                disposed.Length == 0
+                !anyDisposal
                     ? null
                     : await AssetHoldings.SectionAsync(
                         disposedSeats,
@@ -253,10 +258,10 @@ public static class Endpoint
                             )),
                     cancellationToken
                 ),
-                o.SubscriptionsExpiredDays,
-                o.SubscriptionsExpiringDays,
-                o.WarrantiesEndedDays,
-                o.WarrantiesEndingDays
+                expiredDays,
+                expiringDays,
+                endedDays,
+                endingDays
             )
         );
     }

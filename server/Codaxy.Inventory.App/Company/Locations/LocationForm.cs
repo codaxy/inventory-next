@@ -29,7 +29,8 @@ public sealed record LocationForm(
     [property: Range(0, 100000, ErrorMessage = "A house number is a whole number, 0 or more.")]
         int? HouseNumber,
     [property: Range(-20, 500, ErrorMessage = "A floor is between -20 and 500.")] int? Floor,
-    [property: StringLength(30, ErrorMessage = "A room is at most 30 characters.")] string? Room
+    [property: StringLength(30, ErrorMessage = "A room is at most 30 characters.")] string? Room,
+    bool IsDisposal = false
 );
 
 public sealed record CountryRef(string Code, string Name);
@@ -49,6 +50,7 @@ public sealed record LocationDetail(
     int? HouseNumber,
     int? Floor,
     string? Room,
+    bool IsDisposal,
     AssetSections Assets,
     Section<InformationRow> Information
 );
@@ -117,6 +119,7 @@ internal static class LocationWrites
         location.HouseNumber = form.HouseNumber;
         location.Floor = form.Floor;
         location.Room = Text(form.Room);
+        location.IsDisposal = form.IsDisposal;
     }
 
     public static async Task<LocationDetail?> DetailAsync(
@@ -141,6 +144,7 @@ internal static class LocationWrites
                 l.HouseNumber,
                 l.Floor,
                 l.Room,
+                l.IsDisposal,
             })
             .FirstOrDefaultAsync(cancellationToken);
         if (l is null)
@@ -158,6 +162,7 @@ internal static class LocationWrites
             l.HouseNumber,
             l.Floor,
             l.Room,
+            l.IsDisposal,
             await AssetHoldings.SectionsAsync(
                 context,
                 a => a.LocationId == id,

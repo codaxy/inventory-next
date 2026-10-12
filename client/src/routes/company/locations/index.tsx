@@ -31,6 +31,7 @@ export default createFunctionalComponent(() => (
                                 <span class="record-title record-copy">
                                     <span class="record-copy-line">
                                         <span text={r.name} />
+                                        <span class="record-flag" visible={r.isDisposal} text="Disposal" />
                                         {copyButton(r.name, "name")}
                                     </span>
                                 </span>

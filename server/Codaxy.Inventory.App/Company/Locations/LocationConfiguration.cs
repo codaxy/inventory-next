@@ -14,5 +14,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(l => l.PostalCode).HasMaxLength(8);
         builder.Property(l => l.Street).HasMaxLength(50);
         builder.Property(l => l.Room).HasMaxLength(30);
+
+        // The default fills the rows that predate the flag: none of them is marked.
+        builder.Property(l => l.IsDisposal).HasDefaultValue(false);
     }
 }

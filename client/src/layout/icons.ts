@@ -1,4 +1,5 @@
 import {
+    Settings01Icon,
     SquareArrowUpRightIcon,
     Download01Icon,
     Loading03Icon,
@@ -81,6 +82,7 @@ const navIcons = {
     locations: Location01Icon,
     users: UserLock01Icon,
     roles: UserShield01Icon,
+    settings: Settings01Icon,
     auditLog: HistoryIcon,
     history: HistoryIcon,
     serverLog: CommandLineIcon,

@@ -501,6 +501,42 @@ public class CompanyTests(CompanyApplication app) : IClassFixture<CompanyApplica
         );
 
     [Fact]
+    public async Task A_location_is_a_disposal_location_only_when_marked_so()
+    {
+        var client = await Client();
+        object Form(bool? disposal) =>
+            disposal is null
+                ? new
+                {
+                    name = "Scrapyard",
+                    countryCode = "BA",
+                    cityId = CompanyApplication.BanjaLuka,
+                    street = "Back",
+                }
+                : new
+                {
+                    name = "Scrapyard",
+                    countryCode = "BA",
+                    cityId = CompanyApplication.BanjaLuka,
+                    street = "Back",
+                    isDisposal = disposal,
+                };
+
+        var created = await client.PostAsJsonAsync("/api/company/locations", Form(true));
+        var id = (await created.Content.ReadFromJsonAsync<LocationDetail>())!.Id;
+        var listed = (
+            await client.GetFromJsonAsync<Page<App.Company.Locations.List.Endpoint.Item>>(
+                "/api/company/locations?q=Scrapyard"
+            )
+        )!.Items.Single();
+        var updated = await client.PutAsJsonAsync($"/api/company/locations/{id}", Form(null));
+        var unmarked = (await updated.Content.ReadFromJsonAsync<LocationDetail>())!;
+        await client.DeleteAsync($"/api/company/locations/{id}");
+
+        Assert.Equal((true, false), (listed.IsDisposal, unmarked.IsDisposal));
+    }
+
+    [Fact]
     public async Task A_location_city_and_state_must_be_of_its_country()
     {
         var client = await Client();

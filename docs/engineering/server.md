@@ -51,10 +51,24 @@ root. A folder exists once there is something in it: none is created ahead of it
 `Administration/` appears with the first of its screens. `Auth/`, in `Web`, shows the use-case shape, and `MapAuth` is
 the one call `Program.cs` makes for it.
 
-**A setting belongs to the code that reads it**; `Setup/` binds it. **Options say what is wrong with
+**A configuration option belongs to the code that reads it**; `Setup/` binds it. **Options say what is wrong with
 them** — `Problem`, null when valid — and `Setup/` validates by it at start (`ValidateBy`), so the
 reason is written beside the rule and a new rule brings its own message: never a fixed message at the
 binding, which goes stale once a second rule can fail.
+
+**What an administrator decides is a setting in the database, not configuration**: a `setting` row
+per key — `group.name`, the group a card of the settings screen — holding its value as `jsonb`, so
+the audit log names the setting that changed. **A setting is a `SettingDefinition<T>` beside the code
+that reads it** — `DashboardSettings`, `DocumentSettings` — with its default and its `Problem`, and
+`Shared/Settings/SettingCatalogue` lists them in the screen's order. A reader takes
+`SettingStore.LoadAsync` once per request, uncached, so a change applies on the next one. **A stored
+value that cannot be used** — not its type, null, or with a problem: an edit by hand, since nothing
+else saves one — **reads as its default and is logged**, never stopping a request or the start.
+**A group is saved whole** — `PUT /api/administration/settings/{group}` with every setting of it, keyed
+`group.name` — or, with any problem, not at all, the problems under their keys; a value is tidied
+before it is checked (trimmed, a language's canonical tag). A check that needs the database — the
+domains' System Admin — is the endpoint's. Configuration is not read for a setting: one value, one source. Not a row per group with a column per
+setting: a migration for every new one, and an audit entry naming the group rather than the setting.
 
 ## Where an entity lives
 
@@ -173,7 +187,7 @@ the list's name without spaces.
 sheet's, `GET …/people/{id}/handover.pdf?tz=…&lang=…` — through `Shared/Printing/IPagePrinter`,
 implemented in `Web` by PuppeteerSharp. Chromium opens the page on the server's own address, signed in
 as the caller (see [auth.md](auth.md)), its clock in `tz`, its language `lang` — passed on as the
-page's own `?lang=`, one the server does not print in a 400, none the deployment's default — and prints once the page sets `data-print` to
+page's own `?lang=`, one the server does not print in a 400, none the default language setting — and prints once the page sets `data-print` to
 `ready` — the page's print rules and A4 `@page` are the file's. One browser for the process, opened on
 the first print and closed after `Pdf:IdleClose`; a fresh incognito context per print; two prints at
 once, more wait; a page not ready within `Pdf:Timeout`, or a browser that does not start, is a 500 that says so. Every request to
@@ -188,8 +202,8 @@ its text a `.resx` per language, shown on screen in a frame and printed by handi
 `data-print`, and lets a test read the rendered document, which no test can now; it costs moving the
 sheet, its styles and its text out of the client, the larger change while the client's page works.
 
-**What every printed document shares is `Shared/Documents`**: `Documents:*` (see
-[deployment.md](deployment.md)), the languages documents are printed in (`DocumentLanguages`, which
+**What every printed document shares is `Shared/Documents`**: its settings (`DocumentSettings`: the
+place, empty for a hand, and the default language, English by default), the languages documents are printed in (`DocumentLanguages`, which
 must match the client's list, and which matches a tag whatever its case and writes it as listed —
 `sr-latn-ba` is `sr-Latn-BA` — as BCP 47 has it), and `GET /api/documents/settings` — the default
 language and the place — so no document's answer repeats them. A document's file name stays English whatever its

@@ -7,6 +7,7 @@ public static class Endpoints
     {
         Users.Endpoints.Map(api);
         Roles.Endpoints.Map(api);
+        Settings.Endpoints.Map(api);
         AuditLogs.Endpoints.Map(api);
         ServerLogs.Endpoints.Map(api);
     }

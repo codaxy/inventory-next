@@ -9,6 +9,7 @@ export interface LocationItem {
     houseNumber: number | null;
     city: string;
     room: string | null;
+    isDisposal: boolean;
     assets: number;
 }
 
@@ -23,6 +24,7 @@ export interface LocationForm {
     houseNumber: number | null;
     floor: number | null;
     room: string | null;
+    isDisposal: boolean;
 }
 
 export interface LocationDetail {
@@ -37,6 +39,7 @@ export interface LocationDetail {
     houseNumber: number | null;
     floor: number | null;
     room: string | null;
+    isDisposal: boolean;
     assets: AssetSections;
     information: Section<{ id: string; name: string; type: string | null }>;
 }

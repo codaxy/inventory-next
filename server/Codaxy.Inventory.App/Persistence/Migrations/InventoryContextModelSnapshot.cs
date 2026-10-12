@@ -219,6 +219,12 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("house_number");
 
+                    b.Property<bool>("IsDisposal")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_disposal");
+
                     b.Property<string>("Name")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
@@ -1630,6 +1636,34 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .HasName("pk_integrity");
 
                     b.ToTable("integrity", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Settings.Setting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("key");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("value");
+
+                    b.HasKey("Id")
+                        .HasName("pk_setting");
+
+                    b.HasIndex("Key")
+                        .IsUnique()
+                        .HasDatabaseName("ix_setting_key");
+
+                    b.ToTable("setting", (string)null);
                 });
 
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Volumes.Volume", b =>

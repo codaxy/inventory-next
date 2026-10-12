@@ -50,8 +50,8 @@ table with two id shapes and no way to tell which is which.
 The application allocates the id rather than letting the database default it, which is what lets an
 asset and its subtype row share one key before either is inserted.
 
-Besides the primary keys, `Asset.InventoryNumber`, a user's email, a role's name and a role's
-permission are the only unique constraints in the database.
+Besides the primary keys, `Asset.InventoryNumber`, a user's email, a role's name, a role's
+permission and a setting's key are the only unique constraints in the database.
 Names in the codebooks and the company's records are not unique: whether two vendors may share one is a product
 question nobody has answered, so the schema does not answer it either. **Device types, tags, software or
 services, furniture types, information types and tags, virtual machines, cloud subscriptions, software
@@ -95,6 +95,10 @@ codebooks and the company's starting records with the values the product expects
 populated database, but it will not repair or update a table that already has any row in it. The
 emptiness check takes no lock: two instances starting at once against an empty database can both
 insert.
+
+**The settings are seeded per key** (`SettingCatalogue.SeedAsync`): every listed setting a database
+lacks is inserted with its default from code; one that exists is never changed, and a row nothing
+lists any more is left alone.
 
 ## Audit log
 

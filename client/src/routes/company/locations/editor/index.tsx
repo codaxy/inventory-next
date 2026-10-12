@@ -6,7 +6,7 @@ import Controller from "./Controller";
 import m from "./model";
 
 const r = m.record;
-const { pick, prose, text, whole } = formFields(
+const { flag, pick, prose, text, whole } = formFields(
     { draft: r.draft, options: r.options, errors: r.errors, viewing: r.viewing },
     "location",
 );
@@ -30,6 +30,7 @@ export default createFunctionalComponent(() => (
                         {pick("Country", "country", "countries", { required: true })}
                         {whole("Floor", "floor")}
                         {text("Room", "room", 30)}
+                        {flag("Disposal", "isDisposal", "Assets here are written off or sold", "No")}
                         {prose("Description", "description", 1000)}
                     </cx>
                 ),

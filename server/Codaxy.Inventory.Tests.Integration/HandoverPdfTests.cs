@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Codaxy.Inventory.App.Company.People;
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Documents;
 using Codaxy.Inventory.App.Shared.Printing;
 using Codaxy.Inventory.Tests.Integration.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
@@ -47,8 +48,6 @@ public class HandoverPdfApplication : InventoryApplication
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         base.ConfigureWebHost(builder);
-        builder.UseSetting("Documents:Place", " Banja Luka ");
-        builder.UseSetting("Documents:DefaultLanguage", "en");
         builder.ConfigureServices(services =>
         {
             services.RemoveAll<IPagePrinter>();
@@ -63,6 +62,7 @@ public class HandoverPdfApplication : InventoryApplication
         using var scope = Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<InventoryContext>();
         Ana = (await Seed.BasicsAsync(context)).Person;
+        await Seed.SettingAsync(context, DocumentSettings.Place, " Banja Luka ");
         await Seed.DeviceAsync(context, "Ana's laptop", holdsLicenses: true);
     }
 }

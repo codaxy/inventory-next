@@ -1,6 +1,4 @@
 using Codaxy.Inventory.App.Administration.Users;
-using Codaxy.Inventory.App.Dashboard;
-using Codaxy.Inventory.App.Shared.Documents;
 using Codaxy.Inventory.Web.Auth;
 
 namespace Codaxy.Inventory.Web.Setup;
@@ -19,16 +17,6 @@ public static class OptionsSetup
             .ValidateBy(o => o.Problem)
             .ValidateOnStart();
         services.AddOptions<SmtpOptions>().Bind(configuration.GetSection(SmtpOptions.Section));
-        services
-            .AddOptions<DashboardOptions>()
-            .Bind(configuration.GetSection(DashboardOptions.Section))
-            .ValidateBy(o => o.Problem)
-            .ValidateOnStart();
-        services
-            .AddOptions<DocumentOptions>()
-            .Bind(configuration.GetSection(DocumentOptions.Section))
-            .ValidateBy(o => o.Problem)
-            .ValidateOnStart();
 
         return services;
     }

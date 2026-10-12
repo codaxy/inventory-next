@@ -21,6 +21,7 @@ import Vendors from "./company/vendors";
 import VendorEditor from "./company/vendors/editor";
 import ServerLog from "./administration/server-log";
 import Roles from "./administration/roles";
+import Settings from "./administration/settings";
 import RoleEditor from "./administration/roles/editor";
 import Users from "./administration/users";
 import UserEditor from "./administration/users/editor";
@@ -64,6 +65,7 @@ const screens: Record<string, any> = {
     "~/administration/server-log": ServerLog,
     "~/administration/users": Users,
     "~/administration/roles": Roles,
+    "~/administration/settings": Settings,
     "~/company/clients": Clients,
     "~/company/locations": Locations,
     "~/company/manufacturers": Manufacturers,

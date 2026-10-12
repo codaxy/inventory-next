@@ -35,7 +35,7 @@ public static class Endpoint
         if (!MiniValidator.IsValid(request, out var problem))
             return problem;
 
-        var decision = policy.Evaluate(request.Email);
+        var decision = await policy.EvaluateAsync(request.Email, cancellation);
 
         if (decision is { IsAllowed: false, IsSayable: true })
             return Results.Problem(

@@ -16,7 +16,6 @@ public class RateLimitTests
             builder.UseScratchServerLog();
             builder.UseSetting("Database:MigrateOnStartup", "false");
             builder.UseSetting("ConnectionStrings:PostgreSQL", "Host=localhost;Database=unused");
-            builder.UseSetting("Auth:AllowedDomains:0", "codaxy.com");
             builder.UseSetting("Auth:OneTimeCode:Enabled", "true");
             builder.UseSetting("RateLimit:SignIn:Permits", "2");
             builder.UseSetting("RateLimit:SignIn:Window", "00:05:00");

@@ -21,6 +21,9 @@ public class Location : IIdentifiable<Guid>
     public int? Floor { get; set; }
     public string Room { get; set; }
 
+    /// <summary>Assets here are written off or sold: the data marks disposal only this way.</summary>
+    public bool IsDisposal { get; set; }
+
     public Country Country { get; set; }
     public State State { get; set; }
     public City City { get; set; }

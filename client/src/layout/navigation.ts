@@ -165,6 +165,14 @@ export const navigation: NavSection[] = [
                 edit: "roles.manage",
             },
             {
+                label: "Settings",
+                title: "Settings",
+                href: "~/administration/settings",
+                icon: "settings",
+                view: "settings.manage",
+                edit: "settings.manage",
+            },
+            {
                 label: "Audit log",
                 title: "Audit log",
                 href: "~/administration/audit-log",

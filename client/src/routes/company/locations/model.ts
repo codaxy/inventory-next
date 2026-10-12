@@ -10,6 +10,8 @@ export interface Row {
     /** "Main 1, Banja Luka". */
     address: string;
     room?: string;
+    /** Assets here are written off or sold. */
+    isDisposal: boolean;
     assets?: string;
     assetsWord: string;
 }
@@ -51,6 +53,7 @@ export const toRows = (items: LocationItem[]): Row[] =>
             name: l.name,
             address: [street, l.city].filter(Boolean).join(", "),
             room: l.room || undefined,
+            isDisposal: l.isDisposal,
             assets: assets.value,
             assetsWord: assets.word,
         };

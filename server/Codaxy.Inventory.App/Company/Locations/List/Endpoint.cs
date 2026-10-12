@@ -20,6 +20,7 @@ public static class Endpoint
         int? HouseNumber,
         string City,
         string? Room,
+        bool IsDisposal,
         int Assets
     );
 
@@ -47,6 +48,7 @@ public static class Endpoint
                     l.HouseNumber,
                     l.City.Name,
                     l.Room,
+                    l.IsDisposal,
                     assets.Count(a => a.LocationId == l.Id)
                 ))
                 .ToPageAsync(window, cancellationToken)

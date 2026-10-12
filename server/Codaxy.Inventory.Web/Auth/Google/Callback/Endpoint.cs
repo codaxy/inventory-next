@@ -20,7 +20,7 @@ public static class Endpoint
             return Results.Redirect("/sign-in?error=google");
 
         var email = result.Principal.FindFirstValue(ClaimTypes.Email);
-        var decision = policy.Evaluate(email);
+        var decision = await policy.EvaluateAsync(email, context.RequestAborted);
 
         await context.SignOutAsync(AuthEndpoints.ExternalScheme);
 

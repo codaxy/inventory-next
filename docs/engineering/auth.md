@@ -1,7 +1,7 @@
 # Authentication
 
-Who may sign in and what they may do. The deployment sets the outer limit — the domain — and inside
-it a user added by an administrator decides, through the role it holds.
+Who may sign in and what they may do. The allowed domains set the outer limit, and inside it a user
+added by an administrator decides, through the role it holds.
 
 ## The session
 
@@ -34,8 +34,12 @@ where the cookie reuses the one that exists.
 
 ## Who may sign in
 
-**`SignInPolicy` applies the domain**, `Auth:AllowedDomains`, whichever provider the person came
-through; empty, any domain. One place holds it so a second provider cannot arrive with its own idea of
+**`SignInPolicy` applies the domains**, a setting (`SignInSettings.AllowedDomains`, under
+Administration → Settings), whichever provider the person came through; empty, any domain — the users
+are the allow list, so the domains only narrow who can be added. Read per sign-in, so a change applies
+to the next. **A save that would shut out an active System Admin is refused**, naming them: nobody
+else could put the domains back but by SQL. Saved as a domain is written in an address — lower-case,
+no `@`, once each. One place holds it so a second provider cannot arrive with its own idea of
 who is allowed. **Inside it, being an active user decides** (`UserAccess`): both providers end there
 once the address is proven.
 
@@ -63,8 +67,8 @@ record page that shows another section's records would have had to be trimmed fo
 **A section's endpoints carry the inventory's permissions by method** — `RequirePermissions(view,
 edit)` on the section's group: a `GET` reads and needs `view`, any other method writes and needs `edit`, and a write
 in a section without `edit` stops the start. Administration's items carry their own, and the Users
-and Roles items need `users.manage` and `roles.manage` to read as well, since who has access, and to
-what, is as much the job as changing it.
+Roles and Settings items need `users.manage`, `roles.manage` and `settings.manage` to read as well,
+since who has access, and to what, is as much the job as changing it.
 The host registers a policy per catalogue entry and none for anything else, so a key outside it fails
 the request. **A test enumerates every `/api` endpoint** and fails on one without a catalogue
 permission, apart from `/api/version`, `/api/auth/*` and the documents' settings.
