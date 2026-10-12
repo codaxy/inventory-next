@@ -2,9 +2,8 @@
 
 ## The threshold
 
-**Line coverage is at least 80%, checked before a branch merges and again in CI.** The original
-application had no gate at all — its workflow published an image on every push and never ran a test
-— so a number that is not enforced is the same as no number. **One script computes it,
+**Line coverage is at least 80%, checked before a branch merges and again in CI.** A number that
+is not enforced is the same as no number. **One script computes it,
 `scripts/coverage.sh`**, and both run it: the pre-merge check (`scripts/premerge.sh`) on any branch
 touching `server/`, and CI's server job. CI alone notices too late — shipping pushes before it runs.
 A branch that cannot touch the figure skips it: it measures the server alone.
@@ -93,9 +92,8 @@ has to be deciphered first.
 
 A percentage rewards testing what is easy to test. These are covered whatever the number says:
 
-- **Sign-in.** The original replaced it wholesale with a test handler, so token minting, validation
-  and the allowed-user rules were exercised by nothing end to end. This application mints its own
-  tokens; the path is covered here.
+- **Sign-in, end to end**: issuing the session, and who may sign in. A test handler standing in for
+  it leaves both exercised by nothing while every other test passes.
 - **Every `/api` endpoint requires a permission from the catalogue**, but for a named few that any
   caller may reach. A forgotten one means "everyone signed in", which every other test passes.
 - **Every state transition endpoint**, in both directions, including the one that undoes.

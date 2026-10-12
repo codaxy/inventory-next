@@ -15,7 +15,7 @@ namespace Codaxy.Inventory.Tests.Integration.Infrastructure;
 /// <summary>
 /// The codebooks and directory rows the license area stands on, in a test database that starts empty:
 /// the "Licenses" and "Electronic Device" asset types, a vendor and a person, the sequence, the
-/// classification with the original's weights, the volume types by their seeded ids, and the license
+/// classification with the weights a real database holds, the volume types by their seeded ids, and the license
 /// codebooks. Written once per database.
 /// </summary>
 public static class Seed

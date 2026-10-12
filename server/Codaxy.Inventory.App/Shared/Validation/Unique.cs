@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Codaxy.Inventory.App.Shared.Validation;
 
 /// <summary>
-/// A value no other record holds, whatever its case, both sides trimmed — the original saved values
-/// with stray spaces. Checked here, not by an index: none exists yet, so two saves at once can
+/// A value no other record holds, whatever its case, both sides trimmed — older rows carry
+/// stray spaces. Checked here, not by an index: none exists yet, so two saves at once can
 /// still both pass.
 /// </summary>
 public static class Unique

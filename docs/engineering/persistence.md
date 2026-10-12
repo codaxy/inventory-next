@@ -1,7 +1,7 @@
 # Persistence
 
-*Reverse-engineered from the code. It describes what the system does, not decisions recorded when they
-were taken; correct it where it is wrong rather than working around it.*
+*Much of this is what the database already held when the application was built, described rather
+than decided; correct it where it is wrong rather than working around it.*
 
 PostgreSQL through EF Core and Npgsql. `InventoryContext` exposes one `DbSet` per entity and applies
 every `IEntityTypeConfiguration` in the assembly — the entity classes carry no mapping attributes, so
@@ -113,7 +113,7 @@ request in progress. The interceptor is a singleton and knows nothing of HTTP; a
 request records `system`.
 
 **What it cannot record**: a link table's rows — `ElectronicDeviceTypeElectronicDeviceTag` and the
-like have a composite key and no id, so tagging a type leaves no trace, as in the original — and
+like have a composite key and no id, so tagging a type leaves no trace — and
 anything the database cascades without EF tracking it. Seeding a fresh database is audited like any
 save.
 

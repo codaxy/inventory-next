@@ -1,9 +1,7 @@
 # Inventory Next
 
-A rewrite of Codaxy.Inventory, on its PostgreSQL database — paged, phone-first, and honest about
-what an endpoint may change.
-
-So far it signs you in and does nothing else.
+Codaxy's inventory — equipment, licenses and their seats, the information kept on them and the
+company's records — on PostgreSQL: paged, phone-first, and honest about what an endpoint may change.
 
 ## Running it
 

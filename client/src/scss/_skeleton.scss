@@ -74,38 +74,6 @@ $appear: skeleton-appear 150ms ease-out 200ms both;
     }
 }
 
-// The outline of a screen still to be built, under its "to do" card.
-.skeleton {
-    margin-top: 1rem;
-    overflow: hidden;
-    border: 1px solid var(--color-line);
-    border-radius: 0.75rem;
-    background: var(--color-surface);
-}
-
-.skeleton-head,
-.skeleton-row {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    padding: 0.875rem 1.25rem;
-}
-
-.skeleton-head {
-    background: var(--color-canvas);
-    border-bottom: 1px solid var(--color-line);
-
-    .skeleton-bar {
-        height: 0.5rem;
-        background: var(--color-line);
-        animation: none;
-    }
-}
-
-.skeleton-row + .skeleton-row {
-    border-top: 1px solid var(--color-line-soft);
-}
-
 // The audit log's first load: its rows' own areas, the action a blank disc.
 .audit-list .audit-row-skeleton {
     cursor: default;

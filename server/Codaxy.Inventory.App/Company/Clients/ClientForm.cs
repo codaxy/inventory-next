@@ -30,8 +30,8 @@ internal static class Clients
     public const int First = 10;
 
     /// <summary>
-    /// No other client holds the name, whatever its case — the original refused a duplicate. Both
-    /// sides trimmed: the original saved values with stray spaces. Checked here, not by an index:
+    /// No other client holds the name, whatever its case. Both sides trimmed: older rows carry stray
+    /// spaces. Checked here, not by an index:
     /// none exists yet, so two saves at once can still both pass.
     /// </summary>
     public static async Task<IResult?> CheckNameAsync(

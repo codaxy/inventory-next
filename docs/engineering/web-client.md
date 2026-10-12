@@ -52,8 +52,8 @@ screen nor the application, which is what stops a signed-in person seeing a sign
 on every load.
 
 **`src/layout/navigation.ts` is both the menu and the routing table of the screens in it**: sections
-and items as the original's menu has them, flat, with no collapsing — except that its directory is
-**Company**, and first: the people and organisations everything else is assigned to. `~/` lands on the
+and items, flat, with no collapsing, the directory first — **Company**: the people and organisations
+everything else is assigned to. `~/` lands on the
 **Dashboard**, the first item and in no section. An unmatched URL shows a not-found page inside the
 shell.
 
@@ -65,8 +65,7 @@ its `view` and a section with none left; Add, Edit, Duplicate, Delete and a reco
 only with the `edit` of the page's item (`canEdit`, or `edits` on a ⋮ action), View history only with
 `audit_log.view`; an address the reader may not open — no `view`, or no `edit` where it is `new` or
 `…/edit` — is the not-found page; `~/` lands on the first item the reader can see. Hidden, never
-disabled: a button nobody can press says nothing about why. `screens` in `routes/index.tsx` maps an item's href to its screen; an item without one routes
-to `TodoScreen`, which names the programme step that builds it.
+disabled: a button nobody can press says nothing about why. `screens` in `routes/index.tsx` maps every item's href to its screen.
 
 **The Dashboard is one screen**, after Pulse's home: a lede, one card "Worth a look" holding a tile
 per rule in [domain.md](domain.md) — its count and what it counts — and beneath it the selected tile's
@@ -372,7 +371,7 @@ since the ticks are built from it. A role the reader may not change says why in 
 Admin, their own, or one granting more than theirs.
 
 **A printable document is a page of its own with its own print styles** — the handover sheet at
-`~/company/people/:id/handover`: the original's text word for word, in Serbian, and its look — a plain sans at
+`~/company/people/:id/handover`: the company's legal wording word for word, in Serbian, and its look — a plain sans at
 10.5pt, not Montserrat, which reads as a form in running text; Codaxy's wordmark and a red "INTERNO"
 at its head; uppercase column headers on a grey band, rules between rows only; A4 margins of 1cm above and below,
 2cm left and 1.5cm right — its table as long as its rows, never scrolling, since it is printed.
@@ -413,7 +412,7 @@ into each, and drift.
 **Beneath the equipment, the person's active seats** — "Licence / pretplate", a table of its own:
 the software, the license, the device for a seat on one they hold, and the subscription's end; absent
 when there are none. An ended seat is history, not signed for. Apart from the equipment, not rows in
-its table: the original's seat rows repeated the device. A number beside a name is `#` and muted, as
+its table: a seat's row there would repeat the device. A number beside a name is `#` and muted, as
 in the application. **The signature lines are one grid**, the place, the date and Kontrolor on the left, the name above
 the signature and the responsible person on the right: each column's lines start where its longest
 label ends, and a value stands on its label's baseline. **A line is 250px and gives way to the
@@ -684,7 +683,7 @@ list, in any browser, and the options past the first page never load.
 pointing at a label cx renders only in a labels layout. Give the field an `id` and the visible label
 beside it the matching `<id>-label`; in a `Repeater`, bind both to the row's key.
 
-**Text the original emptied is `""`, not `null`.** Its forms saved a cleared description as an empty
+**Older rows hold an emptied text as `""`, not `null`**: a cleared description was saved as an empty
 string, so a list that shows "—" for a missing value tests for blank (`||`), not for `null` (`??`), or
 those rows show nothing at all.
 

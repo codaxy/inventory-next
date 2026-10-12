@@ -14,8 +14,6 @@ export interface NavItem {
 
 export interface NavSection {
     title?: string;
-    /** The step of `docs/plans/global/0001-the-new-application.md` that builds these screens. */
-    step: number;
     /** What showing its items, and every page under them, takes. */
     view?: Permission;
     /** What adding, changing and deleting there takes; none where nothing is. */
@@ -27,13 +25,11 @@ export interface NavSection {
 export const navigation: NavSection[] = [
     {
         // Above every section and in none: where the day starts.
-        step: 1,
         view: "inventory.view",
         items: [{ label: "Dashboard", title: "Dashboard", href: "~/dashboard", icon: "dashboard" }],
     },
     {
         title: "Company",
-        step: 6,
         view: "inventory.view",
         edit: "inventory.edit",
         items: [
@@ -52,7 +48,6 @@ export const navigation: NavSection[] = [
     },
     {
         title: "Electronic devices",
-        step: 2,
         view: "inventory.view",
         edit: "inventory.edit",
         items: [
@@ -78,7 +73,6 @@ export const navigation: NavSection[] = [
     },
     {
         title: "Licenses",
-        step: 3,
         view: "inventory.view",
         edit: "inventory.edit",
         items: [
@@ -99,7 +93,6 @@ export const navigation: NavSection[] = [
     },
     {
         title: "Furniture",
-        step: 4,
         view: "inventory.view",
         edit: "inventory.edit",
         items: [
@@ -109,7 +102,6 @@ export const navigation: NavSection[] = [
     },
     {
         title: "Information",
-        step: 5,
         view: "inventory.view",
         edit: "inventory.edit",
         items: [
@@ -135,7 +127,6 @@ export const navigation: NavSection[] = [
     },
     {
         title: "Infrastructure",
-        step: 4,
         view: "inventory.view",
         edit: "inventory.edit",
         items: [
@@ -156,7 +147,6 @@ export const navigation: NavSection[] = [
     },
     {
         title: "Administration",
-        step: 7,
         items: [
             {
                 label: "Users",
@@ -206,7 +196,7 @@ export const destinations: Destination[] = navigation.flatMap((section) =>
     })),
 );
 
-/** Where `~/` lands: the first item the reader can see. There is no home screen, as in the original. */
+/** Where `~/` lands: the first item the reader can see. There is no home screen. */
 export const landingFor = (permissions: readonly Permission[]) =>
     destinations.find((d) => permissions.includes(d.view))?.href ?? "~/not-found";
 

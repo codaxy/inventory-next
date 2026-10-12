@@ -11,7 +11,7 @@ import m from "./model";
 const h = m.handover;
 
 /**
- * The equipment a person signs for, as the original printed it, in the language chosen (`text.ts`).
+ * The equipment a person signs for, in the language chosen (`text.ts`).
  * Only the sheet prints; the header band is the screen's, in the UI's language. On screen it is the printed page itself, fitted to the column (`sheetFit`); the server
  * prints this same page for the PDF, waiting on `data-print`.
  */

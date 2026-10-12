@@ -68,7 +68,7 @@ export const toRows = (items: TypeItem[]): Row[] =>
         id: t.id,
         name: t.name,
         licenses: t.holdsLicenses ? "Holds licenses" : undefined,
-        // The original saved an emptied description as "", so blank is absent too.
+        // Older rows hold an emptied description as "", so blank is absent too.
         description: t.description || undefined,
         tags: t.tagCount === 0 ? undefined : t.firstTags.join(", "),
         more: t.tagCount > t.firstTags.length ? `+${t.tagCount - t.firstTags.length}` : undefined,

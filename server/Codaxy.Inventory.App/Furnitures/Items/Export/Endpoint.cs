@@ -11,7 +11,7 @@ public static class Endpoint
 {
     public static void Map(RouteGroupBuilder furniture) => furniture.MapGet("/export", Handle);
 
-    /// <summary>One piece of furniture as the original's spreadsheet has it; the headers are its own.</summary>
+    /// <summary>One piece of furniture as a spreadsheet row, under fixed headers.</summary>
     public sealed class Row
     {
         [XLColumn(Header = "No")]

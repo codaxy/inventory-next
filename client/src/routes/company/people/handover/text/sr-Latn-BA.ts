@@ -1,6 +1,6 @@
 import type { HandoverText } from "../model";
 
-/** The sheet in Serbian: the original's word for word — the company's own legal wording. */
+/** The sheet in Serbian: the company's own legal wording, word for word. */
 export default {
     classification: "Interno",
     title: ["Spisak sredstava za rad koje", "duži zaposleni"],

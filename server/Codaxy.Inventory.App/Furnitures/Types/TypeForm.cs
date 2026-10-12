@@ -21,7 +21,7 @@ public sealed record TypeDetail(Guid Id, string Name, string? Description, int F
 internal static class FurnitureTypes
 {
     /// <summary>
-    /// No other type holds the name, whatever its case — the original's grid refused duplicates.
+    /// No other type holds the name, whatever its case.
     /// Checked here, not by an index: none exists yet, so two saves at once can still both pass.
     /// </summary>
     public static async Task<IResult?> CheckNameAsync(

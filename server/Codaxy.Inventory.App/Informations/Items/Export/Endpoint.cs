@@ -10,7 +10,7 @@ public static class Endpoint
 {
     public static void Map(RouteGroupBuilder information) => information.MapGet("/export", Handle);
 
-    /// <summary>A piece of information as the original's spreadsheet has it; the headers are its own.</summary>
+    /// <summary>A piece of information as a spreadsheet row, under fixed headers.</summary>
     public sealed class Row
     {
         [XLColumn(Header = "Name")]

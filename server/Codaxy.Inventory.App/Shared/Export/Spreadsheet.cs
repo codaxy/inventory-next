@@ -81,7 +81,7 @@ public static class Spreadsheet
     }
 
     /// <summary>
-    /// The file, downloaded as the original named it — "Licenses.Export.xlsx" — or, when a search or a
+    /// The file, downloaded under its fixed name — "Licenses.Export.xlsx" — or, when a search or a
     /// filter narrowed the rows, "Licenses.Export - Filtered.xlsx", so a partial list is never taken for
     /// the whole. The sort does not count: it only orders. Its instants are in the zone the request
     /// names (<see cref="ExportZone"/>), read here so that no export declares it.

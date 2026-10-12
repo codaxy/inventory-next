@@ -9,6 +9,6 @@ charset = utf-8
 indent_style = space
 indent_size = 4
 
-# EF Core's migration generator ignores this, so migrations stay block-scoped and the code carried
-# over from the original was left as it is rather than split into two styles.
+# EF Core's migration generator ignores this, so migrations are block-scoped, and left as generated
+# rather than converted: the next `migrations add` would undo it.
 csharp_style_namespace_declarations = file_scoped

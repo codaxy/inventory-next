@@ -13,15 +13,15 @@ namespace Codaxy.Inventory.App.Persistence;
 /// complete property set before and after as indented JSON in EF's property order. Rows of one save
 /// share a transaction id.
 ///
-/// The user is read when the save happens, not when the interceptor was made — the original captured
-/// the request in its constructor and attributed writes by the request that created it.
+/// The user is read when the save happens, not when the interceptor was made: one captured at
+/// construction attributes every write to the request that created it.
 /// </summary>
 public sealed class AuditLogInterceptor(ICurrentUser user, TimeProvider clock)
     : SaveChangesInterceptor
 {
     public const string SystemUser = "system";
 
-    /// <summary>Non-ASCII written as it is, as the original's writer does; indented as it is.</summary>
+    /// <summary>Non-ASCII written as it is, and indented, as every row since 2022 is.</summary>
     private static readonly JsonWriterOptions Writer = new()
     {
         Indented = true,

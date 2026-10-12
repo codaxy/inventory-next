@@ -13,9 +13,9 @@ public static class Endpoint
     public static void Map(RouteGroupBuilder activations) => activations.MapGet("/export", Handle);
 
     /// <summary>
-    /// One activation as the original's spreadsheet has it; the headers are its own, and so is "Last
-    /// Modified", which is the license's. The device's number, holder and location are this
-    /// application's, as its list shows them.
+    /// One activation as a spreadsheet row; its headers are fixed, as the file's readers expect them,
+    /// and "Last Modified" is the license's. The device's number, holder and location follow, as the
+    /// list shows them.
     /// </summary>
     public sealed class Row
     {

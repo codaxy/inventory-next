@@ -23,7 +23,6 @@ import {
     CommandLineIcon,
     DashboardSquare01Icon,
     ComputerIcon,
-    ConstructionIcon,
     Delete02Icon,
     Factory01Icon,
     FilterHorizontalIcon,
@@ -89,7 +88,6 @@ const navIcons = {
 
 /** Everything that is not a menu item. */
 const uiIcons = {
-    todo: ConstructionIcon,
     accountMenu: ArrowUp01Icon,
     moreWays: ArrowDown01Icon,
     signOut: Logout01Icon,

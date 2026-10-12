@@ -1,7 +1,6 @@
 # Principles
 
-What this application is built to be, as against the one it replaces. Each of these is here because
-it was got wrong first.
+What this application is built to be. Each of these is here because it was got wrong first.
 
 **Take a dependency when it earns its place, not before.** A library added for what it might be
 needed for later brings its configuration, its idioms and its version with it, and the code written

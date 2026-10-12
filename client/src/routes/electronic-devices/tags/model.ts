@@ -46,7 +46,7 @@ export const toRows = (items: TagItem[]): Row[] =>
     items.map((t) => ({
         id: t.id,
         name: t.name,
-        // The original saved an emptied description as "", so blank is absent too.
+        // Older rows hold an emptied description as "", so blank is absent too.
         description: t.description || undefined,
         types: t.typeCount === 0 ? undefined : t.firstTypes.join(", "),
         more: t.typeCount > t.firstTypes.length ? `+${t.typeCount - t.firstTypes.length}` : undefined,

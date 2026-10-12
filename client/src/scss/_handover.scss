@@ -4,9 +4,9 @@
 // the column's width as a PDF viewer fits a page (`sheetFit`), never laid out again for it. Printed alone: the shell, the header band and the Print button stay on the
 // screen.
 
-// The sheet keeps the original's type — a plain sans at 10.5pt, not the application's Montserrat,
+// The sheet's type is a plain sans at 10.5pt, not the application's Montserrat,
 // which set at this size in running text reads as a form, not a document.
-// The original's page margins: 1cm above and below, 2cm left, 1.5cm right.
+// Page margins: 1cm above and below, 2cm left, 1.5cm right.
 .handover {
     box-sizing: border-box;
     width: 210mm;
@@ -153,8 +153,8 @@
 }
 
 // Pairs of lines, the second of each at the right edge, on one grid: every line of a column starts
-// where the column's longest label ends, so the values stand one under another. A line is 250px, as
-// in the original, and gives way to the labels where a pair would run past the margin: their length
+// where the column's longest label ends, so the values stand one under another. A line is 250px,
+// and gives way to the labels where a pair would run past the margin: their length
 // is the language's, and labels do not wrap.
 .handover-signatures {
     display: grid;

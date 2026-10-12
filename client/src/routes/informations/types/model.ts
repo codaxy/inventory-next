@@ -45,7 +45,7 @@ export const toRows = (items: GroupItem[]): Row[] =>
         return {
             id: t.id,
             name: t.name,
-            // The original saved an emptied description as "", so blank is absent too.
+            // Older rows hold an emptied description as "", so blank is absent too.
             description: t.description || undefined,
             information: information.value,
             informationWord: information.word,

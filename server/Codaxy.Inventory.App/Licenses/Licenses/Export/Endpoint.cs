@@ -11,7 +11,7 @@ public static class Endpoint
 {
     public static void Map(RouteGroupBuilder licenses) => licenses.MapGet("/export", Handle);
 
-    /// <summary>One license as the original's spreadsheet has it; the headers are its own.</summary>
+    /// <summary>One license as a spreadsheet row, under fixed headers.</summary>
     public sealed class Row
     {
         [XLColumn(Header = "No")]
@@ -38,8 +38,8 @@ public static class Endpoint
 
     /// <summary>
     /// The list as a spreadsheet: the same query — search, filters, sort — every row it selects, not
-    /// one page. A link, not the original's handle in a cache: the session is a cookie, which a
-    /// download carries; the original's bearer token could not.
+    /// one page. A link, not a handle to a cached file: the session is a cookie, which a download
+    /// carries, as a bearer token could not.
     /// </summary>
     private static async Task<IResult> Handle(
         [AsParameters] Query query,

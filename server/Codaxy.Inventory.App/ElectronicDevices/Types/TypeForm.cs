@@ -54,7 +54,7 @@ internal static class DeviceTypes
     }
 
     /// <summary>
-    /// No other type holds the name, whatever its case — the original refused duplicates too. Checked
+    /// No other type holds the name, whatever its case. Checked
     /// here, not by an index: none exists yet, so two saves at once can still both pass.
     /// </summary>
     public static async Task<IResult?> CheckNameAsync(

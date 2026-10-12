@@ -7,7 +7,7 @@ namespace Codaxy.Inventory.App.Shared.Assets;
 public static partial class AssetWrites
 {
     /// <summary>
-    /// The next inventory number, as the original allocates it: read the single row, take its value,
+    /// The next inventory number: read the single row, take its value,
     /// write it back incremented. Two creates at once can take the same number; the unique index on
     /// the number is what turns that into a failed save rather than a duplicate.
     /// </summary>
@@ -48,7 +48,7 @@ public static partial class AssetWrites
     }
 
     /// <summary>
-    /// Importance from the three weights, as the original's editors computed it: 3–4 Low, 5–7 Medium,
+    /// Importance from the three weights: 3–4 Low, 5–7 Medium,
     /// 8–9 High, and none unless all three are chosen.
     /// </summary>
     public static async Task<Guid?> ImportanceAsync(

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Time.Testing;
 namespace Codaxy.Inventory.Tests.Unit;
 
 /// <summary>
-/// The audit JSON, checked against the format the original application writes, on a context that
+/// The audit JSON, checked against the format every row since 2022 has, on a context that
 /// never connects: EF builds its model without a database.
 /// </summary>
 public class AuditLogInterceptorTests

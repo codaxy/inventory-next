@@ -1,7 +1,6 @@
 import { equal, FirstVisibleChildLayout, falsy } from "cx/ui";
 import { PureContainer, RedirectRoute, Route } from "cx/widgets";
 
-import { TodoScreen } from "../components/TodoScreen";
 import { AppLayout } from "../layout";
 import { forbidden, landing } from "../access";
 import { navigation } from "../layout/navigation";
@@ -58,7 +57,7 @@ import Dashboard from "./dashboard";
 import NotFound from "./not-found";
 import SignIn from "./sign-in";
 
-/** The menu items that have a screen; the rest route to a placeholder naming the step that builds them. */
+/** Every menu item's screen, by its href. */
 const screens: Record<string, any> = {
     "~/dashboard": Dashboard,
     "~/administration/audit-log": AuditLog,
@@ -120,11 +119,7 @@ export default (
                             return (
                                 <cx>
                                     <Route route={item.href} url={$app.url}>
-                                        {Screen ? (
-                                            <Screen />
-                                        ) : (
-                                            <TodoScreen title={item.title} step={section.step} />
-                                        )}
+                                        <Screen />
                                     </Route>
                                 </cx>
                             );

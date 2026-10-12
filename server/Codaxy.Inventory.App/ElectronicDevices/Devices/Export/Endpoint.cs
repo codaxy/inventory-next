@@ -10,7 +10,7 @@ public static class Endpoint
 {
     public static void Map(RouteGroupBuilder devices) => devices.MapGet("/export", Handle);
 
-    /// <summary>One device as the original's spreadsheet has it; the headers are its own.</summary>
+    /// <summary>One device as a spreadsheet row, under fixed headers.</summary>
     public sealed class Row
     {
         [XLColumn(Header = "No")]

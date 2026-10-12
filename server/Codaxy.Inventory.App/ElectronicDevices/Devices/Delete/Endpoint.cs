@@ -9,8 +9,8 @@ public static class Endpoint
 
     /// <summary>
     /// The device, its asset and its maintenance contracts, in one save — the contracts restrict the
-    /// asset, so they go first in that save, not in a request of their own as the original's client
-    /// did. Seats activated on it or information kept on it refuse the delete: both foreign keys
+    /// asset, so they go first in that save, never in a request of their own, which a failed delete
+    /// would leave half done. Seats activated on it or information kept on it refuse the delete: both foreign keys
     /// would, as a 500, and neither is the device's to take.
     /// </summary>
     private static async Task<IResult> Handle(

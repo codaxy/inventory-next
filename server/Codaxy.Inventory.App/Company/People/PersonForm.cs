@@ -24,8 +24,8 @@ public sealed record PersonDetail(Guid Id, string Name, string Email);
 internal static class People
 {
     /// <summary>
-    /// No other person holds the name or the email, whatever the case — the original refused a
-    /// duplicate name. Both sides trimmed: stored values the original wrote can carry spaces. Checked
+    /// No other person holds the name or the email, whatever the case. Both sides trimmed: older rows
+    /// carry stray spaces. Checked
     /// here, not by an index: none exists yet, so two saves at once can still both pass.
     /// </summary>
     public static async Task<IResult?> CheckUniqueAsync(

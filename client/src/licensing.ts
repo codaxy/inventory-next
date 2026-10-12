@@ -10,7 +10,7 @@ export function formatDate(date: string | null | undefined): string | undefined 
 
 const money = new Intl.NumberFormat("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-/** A purchase value; the original kept every one in convertible marks. */
+/** A purchase value; every stored one is in convertible marks. */
 export const formatMoney = (value: number | null | undefined) =>
     value == null ? undefined : `${money.format(value)} BAM`;
 

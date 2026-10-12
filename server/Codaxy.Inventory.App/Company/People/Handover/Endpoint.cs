@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Codaxy.Inventory.App.Company.People.Handover;
 
 /// <summary>
-/// The handover sheet: every asset the person holds — the equipment they sign for — in the original's
-/// columns, their active seats apart from it, and what the sheet fills in for itself. A seat is not
-/// equipment: the original's seat rows only repeated the device.
+/// The handover sheet: every asset the person holds — the equipment they sign for — their active
+/// seats apart from it, and what the sheet fills in for itself. A seat is not equipment: a row of its
+/// own among the equipment would only repeat the device.
 /// </summary>
 public static class Endpoint
 {

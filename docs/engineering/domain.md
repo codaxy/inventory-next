@@ -1,7 +1,7 @@
 # Domain
 
-*Reverse-engineered from the code. It describes what the system does, not decisions recorded when they
-were taken; correct it where it is wrong rather than working around it.*
+*Much of this is what the database already held when the application was built, described rather
+than decided; correct it where it is wrong rather than working around it.*
 
 The system tracks assets through their life-cycle, plus the information, licenses and contracts
 attached to them.
@@ -70,7 +70,7 @@ wrong activation is deleted and made again.
 
 **An activation's assignee follows the volume's type**: a person for a per-user volume, otherwise an
 electronic device whose type holds licenses. **Seats past a volume's quantity warn, they are not
-refused** — the original only warned, and over-allocation is recorded rather than prevented. Seats in
+refused** — over-allocation is recorded rather than prevented. Seats in
 use are the sum of the quantities of the volume's active activations.
 
 **A subscription is expired before its date, expires soon within fifteen days of it, and is current
@@ -79,12 +79,12 @@ Today is the server's UTC date. Auto-renewal is a recorded flag and changes none
 
 **Importance is computed from the three weights** of confidentiality, integrity and availability —
 3–4 Low, 5–7 Medium, 8–9 High — and is absent unless all three are chosen. The server computes it on
-every save; the original's client did, and sent the result.
+every save, never taking a client's figure.
 
 **What stands on a volume keeps it**: its activations, cloud subscriptions and software entries cascade with it, so
 a volume holding any is not removed from its license, and a license with such a volume — or with a
 maintenance contract — is not deleted. A software or service a volume is of is not deleted either. An
-existing volume is kept as it is or removed; editing one is not offered, as in the original.
+existing volume is kept as it is or removed; editing one is not offered.
 
 ## What the dashboard counts
 
@@ -152,8 +152,7 @@ empty rather than starting at 1.
 information and projects; a client's its projects; a vendor's every asset bought from it and its
 maintenance contracts; a manufacturer's its software and services, and their volumes — the foreign
 keys are `ON DELETE CASCADE`, so a delete the application did not refuse would take a
-default holder's hundreds of devices with it — and the original's delete refuses only when an
-activation happens to stand in the way.
+default holder's hundreds of devices with it.
 
 **Deleting an asset cascades to its subtype row**, by configuration rather than by anything visible at
 the call site. Maintenance contracts are *not* part of that cascade: the foreign key is `ON DELETE

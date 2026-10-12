@@ -142,13 +142,12 @@ wide model: it carries only what the change takes, and answers 409 from the wron
 
 **A list's spreadsheet is its own query, every row**: `GET …/export` takes exactly the list's
 parameters, and the list and its export share one function that filters and orders (`Rows`), so the
-file holds what the screen shows, all pages of it. The original's file names and headers are kept,
-with " - Filtered" added when a search or a filter narrowed the rows, so a partial list is never taken
-for the whole; the sort does not count. Columns the list shows and the original's file lacked follow
-its own — an activation's device number, holder and location. Served as the response to that request,
-not as the original's
-handle to a file cached for thirty seconds: the handle existed because its bearer token could not ride
-a download link, and the session cookie does.
+file holds what the screen shows, all pages of it. **File names and headers are fixed** — the sheets
+and formulas that read them depend on them — with " - Filtered" added when a search or a filter narrowed
+the rows, so a partial list is never taken for the whole; the sort does not count. Columns a list
+gained later follow them — an activation's device number, holder and location. Served as the response
+to that request, not as a handle to a file cached for thirty seconds: a handle is for a bearer token,
+which cannot ride a download link, and the session cookie does.
 **ClosedXML writes it, through `Shared/Export/Spreadsheet`**: one row type per list, a property a
 column only when `[XLColumn]` heads it; one sheet named after the list, holding an Excel table —
 header pinned, a filter on every column, widths fitted to the content, which needs no font in the
@@ -164,9 +163,9 @@ declares them; an unknown zone or a refused label is a 400. Never one offset for
 wrong for every row on the other side of a clock change. Not the browser's offset, which is wrong for an
 instant on the other side of a clock change; not a zone per deployment, which offices in several
 zones share; not text with an offset, which Excel no longer reads as a date. Not ClosedXML's
-`InsertTable` over the rows: it writes a `DateOnly` as text. Not the original's CodeReports, which sized a column by its header's padded width
-and threw under a culture it did not ship; not EPPlus, licensed commercially.
-**A list the original never exported** — the company's records, the infrastructure — takes the list's
+`InsertTable` over the rows: it writes a `DateOnly` as text. Not CodeReports, which sizes a column by its header's padded width
+and throws under a culture it does not ship; not EPPlus, licensed commercially.
+**A list without an established file** — the company's records, the infrastructure — takes the list's
 columns, then the record's own fields, names resolved and counts kept; its file is `<List>.Export`,
 the list's name without spaces.
 

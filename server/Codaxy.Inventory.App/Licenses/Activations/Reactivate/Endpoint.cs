@@ -9,7 +9,7 @@ public static class Endpoint
     public static void Map(RouteGroupBuilder activations) =>
         activations.MapPost("/{id:guid}/reactivate", Handle);
 
-    /// <summary>A deactivation undone: the date it held is discarded, as in the original.</summary>
+    /// <summary>A deactivation undone: the date it held is discarded.</summary>
     private static async Task<IResult> Handle(
         Guid id,
         InventoryContext context,
