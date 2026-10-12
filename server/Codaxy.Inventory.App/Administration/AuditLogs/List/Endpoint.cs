@@ -16,6 +16,8 @@ public static class Endpoint
     /// <param name="Sort"><c>-time</c>, newest first, or <c>time</c>.</param>
     /// <param name="EntityId">Text, not <see cref="Guid"/>: one that is not an id matches nothing,
     /// where binding a <see cref="Guid"/> would refuse the whole request.</param>
+    /// <param name="System">Includes saves made outside a request — the seeding at startup — which
+    /// the log otherwise leaves out, but in one record's history.</param>
     public sealed record Query(
         string? Q,
         string? Action,
@@ -25,6 +27,7 @@ public static class Endpoint
         DateTimeOffset? To,
         string? EntityId,
         int? InventoryNumber,
+        bool? System,
         string? Sort,
         int? Page,
         int? PageSize
@@ -45,11 +48,14 @@ public static class Endpoint
             );
 
         var rows = context.AuditLogs.AsNoTracking();
+        var oneRecord =
+            !string.IsNullOrWhiteSpace(query.EntityId) || query.InventoryNumber is not null;
 
         foreach (var term in FreeText.Terms(query.Q))
         {
             if (FreeText.Id(term) is { } id)
             {
+                oneRecord = true;
                 rows = rows.Where(a => a.Id == id || a.EntityId == id || a.TransactionId == id);
                 continue;
             }
@@ -73,6 +79,11 @@ public static class Endpoint
 
         if (!string.IsNullOrWhiteSpace(query.Email))
             rows = rows.Where(a => a.Email == query.Email);
+
+        // A record's history is whole: a seeded record's creation is a system save. The user filter
+        // only narrows, so `system` there finds them only alongside System.
+        if (query.System != true && !oneRecord)
+            rows = rows.Where(a => a.Email != AuditLogInterceptor.SystemUser);
 
         if (query.From is { } from)
             rows = rows.Where(a => a.TimeCreated >= from);

@@ -1,5 +1,5 @@
 import { createFunctionalComponent, equal, expr, falsy, hasValue, isNonEmpty } from "cx/ui";
-import { Button, DateField, Icon, LookupField, Repeater, TextField } from "cx/widgets";
+import { Button, DateField, Icon, LookupField, Repeater, Switch, TextField } from "cx/widgets";
 
 import { dateValue } from "../../../bindings";
 import { listHeading, listPaging } from "../../../components/listHeading";
@@ -219,6 +219,10 @@ export default createFunctionalComponent(() => {
                                 placeholder="Any day"
                                 inputAttrs={{ "aria-label": "To" }}
                             />
+                        </div>
+
+                        <div class="list-filter list-filter-toggle">
+                            <Switch value={f.system} text="Include system changes" />
                         </div>
                     </div>
 

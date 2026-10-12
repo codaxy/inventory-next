@@ -163,6 +163,7 @@ export function toChips(filters: Filters): Chip[] {
             text: `Record: ${filters.entityLabel ?? (recordIdPattern.test(id) ? id.slice(0, 8) : id)}`,
         });
     if (filters.action) chips.push({ key: "action", text: actionText[filters.action] });
+    if (filters.system) chips.push({ key: "system", text: "Including system changes" });
     if (filters.table) chips.push({ key: "table", text: humanize(filters.table) });
     if (filters.email) chips.push({ key: "email", text: filters.email });
     if (filters.from || filters.to) chips.push({ key: "range", text: range(filters.from, filters.to) });
@@ -196,6 +197,7 @@ export function toQuery(
         from: filters.from ? startOfDay(filters.from).toISOString() : undefined,
         to: filters.to ? endOfDay(filters.to).toISOString() : undefined,
         entityId: filters.entityId?.trim() || undefined,
+        system: filters.system || undefined,
         inventoryNumber: number && inventoryNumberPattern.test(number) ? Number(number) : undefined,
         sort,
         page,

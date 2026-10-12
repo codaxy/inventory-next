@@ -24,11 +24,13 @@ export interface Filters {
     inventoryNumber?: string | null;
     /** One record's history, set from an entry rather than typed. */
     entityId?: string | null;
+    /** Includes saves made at startup, otherwise left out but in a record's history. */
+    system?: boolean;
     /** The record's name, for its chip only; never stored with the filters. */
     entityLabel?: string | null;
 }
 
-export type FilterKey = "action" | "table" | "email" | "range" | "inventoryNumber" | "entityId";
+export type FilterKey = "action" | "system" | "table" | "email" | "range" | "inventoryNumber" | "entityId";
 
 export interface Chip {
     key: FilterKey;
@@ -75,6 +77,9 @@ export interface AuditLogState {
     idSearch?: boolean;
 
     tables: Option[];
+    /** Every user in the log, `system` included. */
+    allEmails: Option[];
+    /** What "Changed by" offers: `system` only while system changes are included. */
     emails: Option[];
 }
 

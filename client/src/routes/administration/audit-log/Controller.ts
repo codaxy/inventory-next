@@ -8,6 +8,9 @@ import { showEntryWindow } from "./EntryWindow";
 import m, { type FilterKey, type Filters, humanize, type Row, toRows } from "./model";
 import { inventoryNumberPattern, recordIdPattern, searchDelay, toChips, toQuery } from "./utils";
 
+/** Who the log names for a save made outside a request. */
+const systemUser = "system";
+
 const day = /^\d{4}-\d{2}-\d{2}$/;
 
 export default class extends ListController<Filters, AuditEntry, Row, AuditSort, FilterKey> {
@@ -68,6 +71,7 @@ export default class extends ListController<Filters, AuditEntry, Row, AuditSort,
             to: to && day.test(to) ? to : null,
             inventoryNumber: number && inventoryNumberPattern.test(number) ? number : null,
             entityId: query.get("entityId"),
+            system: query.get("system") === "true",
         };
     }
 
@@ -79,6 +83,7 @@ export default class extends ListController<Filters, AuditEntry, Row, AuditSort,
         to: f.to,
         inventoryNumber: f.inventoryNumber,
         entityId: f.entityId,
+        system: f.system || undefined,
     });
 
     protected without(f: Filters, key: FilterKey): Filters {
@@ -89,7 +94,24 @@ export default class extends ListController<Filters, AuditEntry, Row, AuditSort,
     protected loadOptions() {
         this.store.set(m.auditLog.filtersValid, true);
         this.store.set(m.auditLog.tables, []);
+        this.store.set(m.auditLog.allEmails, []);
         this.store.set(m.auditLog.emails, []);
+
+        // "Changed by" follows "Include system changes": `system` is offered only with it, and a
+        // choice of it — picked, or arriving in the address — goes when it is off.
+        this.addTrigger(
+            "system-users",
+            [m.auditLog.filters.system, m.auditLog.allEmails],
+            (system, emails) => {
+                this.store.set(
+                    m.auditLog.emails,
+                    (emails ?? []).filter((e) => system || e.id !== systemUser),
+                );
+                if (!system && this.store.get(m.auditLog.filters.email) === systemUser)
+                    this.store.set(m.auditLog.filters.email, null);
+            },
+            true,
+        );
         getAuditFacets()
             .then((facets) => {
                 this.store.set(
@@ -97,7 +119,7 @@ export default class extends ListController<Filters, AuditEntry, Row, AuditSort,
                     facets.tables.map((t) => ({ id: t, text: humanize(t) })),
                 );
                 this.store.set(
-                    m.auditLog.emails,
+                    m.auditLog.allEmails,
                     facets.emails.map((e) => ({ id: e, text: e })),
                 );
             })

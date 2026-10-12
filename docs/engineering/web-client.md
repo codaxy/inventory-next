@@ -145,7 +145,9 @@ a card of empty space. The box is free text, run after a
 300ms pause; the *Filters* button beside it carries the active count and opens the pane beneath the pinned block,
 scrolling with the page and pushing the list down rather than covering it. Every active filter shows as a removable chip under the
 bar, pinned with it, so closing the pane hides nothing that is filtering. Filters apply as they change; the pane's
-*Done* only closes it. **A switch in the pane has its row to itself at every width** (`list-filter-wide`):
+*Done* only closes it. **A choice among values is a segmented switch; an option that widens the list is a toggle**
+(`Switch`, `list-filter-toggle`), its text beside it rather than a label above, at the foot of its
+row and a control's height: "Hidden | Shown" reads as a choice and asks "hidden from what". **A switch in the pane has its row to itself at every width** (`list-filter-wide`):
 sharing it, a picker slides up beside the switch on a wide screen, and the pane reads in a different
 order from one width to the next.
 
@@ -335,6 +337,9 @@ shares its asset's id. The address carries the id only; the chip names the recor
 entry. A verb first, as beside it — "Change history" reads as an order to change it — and not
 "activity": the log holds saves, never who looked. A record the log has
 never seen says so — the log begins on 5 December 2022 — rather than advising fewer search words.
+The log's pane has **Include system changes**, a chip while on; "Changed by" offers `system` only
+then, and loses it when the toggle goes off. See [persistence.md](persistence.md) for why they are
+left out, and why a record's history keeps them.
 
 **A record page and a searched list are made, not copied.** `RecordController` in
 `src/recordController.ts` holds the page's life — the address naming record and mode, the

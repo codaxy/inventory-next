@@ -122,6 +122,14 @@ the key's target entity and the first of its `Name`, `Text`, `Level`, `Status`, 
 no name of its own and shares the asset's id; it is labelled from the asset, or from the asset's last
 logged values once the asset is deleted.
 
+**System saves are left out of the log as a whole** — `system`, saves outside a request, which today
+is the seeding at startup — unless the reader includes them (`system=true`): they come in bursts
+nobody made, and push people's edits off the first page. The user filter only narrows, so `system`
+there finds them only alongside it. **A record's
+history keeps them** — the log narrowed to one id or one inventory number, or searched for an id —
+since a seeded record's creation is a system save, and without it its history would start halfway,
+or say the log never saw it.
+
 ## Schema changes wanted
 
 What the database lacks and the application works around; each is a migration of its own.

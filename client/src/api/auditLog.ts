@@ -57,6 +57,8 @@ export interface AuditQuery {
     to?: string;
     entityId?: string;
     inventoryNumber?: number;
+    /** Saves made at startup, which the server leaves out unless asked or narrowed to one record. */
+    system?: boolean;
     sort?: AuditSort;
     page: number;
     pageSize: number;
