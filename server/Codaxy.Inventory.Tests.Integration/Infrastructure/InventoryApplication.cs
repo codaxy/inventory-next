@@ -25,11 +25,24 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
 
     public RecordingEmailSender Emails { get; } = new();
 
-    private string? stubbedShell;
-
     /// <summary>Its own ring per run, so a test never writes to the configured path.</summary>
     public string KeyRingPath { get; } =
         Path.Combine(Path.GetTempPath(), "inventory-next-tests", Guid.CreateVersion7().ToString());
+
+    /// <summary>
+    /// Its own web root per run, holding a stand-in shell. The client is built into its own folder and
+    /// copied into wwwroot by the image, so a checkout has no shell; the routing is the application's
+    /// behaviour and worth a test, the file is the build's job. Not written into the source tree's
+    /// wwwroot: fixtures run in parallel, and one deleting the file there as it ends pulls the shell
+    /// from under the rest.
+    /// </summary>
+    public string WebRootPath { get; } =
+        Path.Combine(
+            Path.GetTempPath(),
+            "inventory-next-tests",
+            Guid.CreateVersion7().ToString(),
+            "wwwroot"
+        );
 
     /// <summary>Its own log folder per run, so a test never writes into the source tree.</summary>
     public string ServerLogPath { get; } =
@@ -53,6 +66,13 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
         builder.UseSetting("DataProtection:KeyRingPath", KeyRingPath);
         builder.UseSetting("ServerLog:Path", ServerLogPath);
 
+        Directory.CreateDirectory(WebRootPath);
+        File.WriteAllText(
+            Path.Combine(WebRootPath, "index.html"),
+            "<!doctype html><title>Inventory</title>"
+        );
+        builder.UseWebRoot(WebRootPath);
+
         // The schema here comes from the model through EnsureCreated, and the codebooks stay empty so
         // a test seeds exactly what it needs. Migrations are proven against their own database by
         // MigrationsTests; running them for every fixture would prove the same thing more slowly.
@@ -74,8 +94,6 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
 
     public virtual async Task InitializeAsync()
     {
-        StubTheShell();
-
         await postgres.StartAsync();
 
         using var scope = Services.CreateScope();
@@ -88,43 +106,16 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
 
     public new async Task DisposeAsync()
     {
-        if (stubbedShell is not null)
-            File.Delete(stubbedShell);
-
         if (Directory.Exists(KeyRingPath))
             Directory.Delete(KeyRingPath, recursive: true);
 
         if (Directory.Exists(ServerLogPath))
             Directory.Delete(ServerLogPath, recursive: true);
 
+        if (Directory.Exists(WebRootPath))
+            Directory.Delete(WebRootPath, recursive: true);
+
         await postgres.DisposeAsync();
         await base.DisposeAsync();
-    }
-
-    /// <summary>
-    /// The client is built into its own folder and copied into wwwroot by the image, so a source
-    /// checkout has no shell to fall back to. The routing is the application's behaviour and is worth
-    /// a test; the file is the build's job, so one is put there when it is missing.
-    /// </summary>
-    private void StubTheShell()
-    {
-        var shell = Path.Combine(
-            AppContext.BaseDirectory,
-            "..",
-            "..",
-            "..",
-            "..",
-            "Codaxy.Inventory.Web",
-            "wwwroot",
-            "index.html"
-        );
-
-        shell = Path.GetFullPath(shell);
-
-        if (File.Exists(shell))
-            return;
-
-        File.WriteAllText(shell, "<!doctype html><title>Inventory</title>");
-        stubbedShell = shell;
     }
 }
