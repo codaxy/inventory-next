@@ -15,7 +15,6 @@ public static class SeedUsers
     public static async Task ApplyAsync(
         InventoryContext context,
         UserOptions options,
-        ILogger logger,
         TimeProvider time,
         CancellationToken cancellation = default
     )
@@ -54,16 +53,6 @@ public static class SeedUsers
                 "There is no active System Admin, so nobody could manage the users. Name one in "
                     + $"{UserOptions.Section}:SeedUsers — {UserOptions.Section}__SeedUsers__0__Email, "
                     + "__Name and __Role (\"System Admin\") in the environment."
-            );
-
-        var users = await context.AppUsers.Select(u => u.Email).ToListAsync(cancellation);
-        var waiting = options.Admitted().Except(users).ToList();
-        if (waiting.Count > 0)
-            logger.LogWarning(
-                "Admitted by {Setting} but not added as users yet: {Emails}. Add them before the "
-                    + "setting is removed.",
-                $"{UserOptions.Section}:AllowedUsers",
-                string.Join(", ", waiting)
             );
     }
 }

@@ -32,10 +32,7 @@ export interface ListState {
 
 export interface Model {
     list: ListState;
-    /** Admitted by `Auth:AllowedUsers` and not added yet. */
-    configured: { email: string; addHref: string }[];
     $row: Row;
-    $configured: { email: string; addHref: string };
 }
 
 export default createModel<Model>();

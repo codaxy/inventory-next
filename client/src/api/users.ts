@@ -44,9 +44,6 @@ const base = "/api/administration/users";
 export const listUsers = (q: { q?: string; sort?: UserSort; page: number; pageSize: number }) =>
     send<Page<UserItem>>(`${base}/?${toQuery(q)}`);
 
-/** The addresses `Auth:AllowedUsers` lets in that are not users yet. */
-export const listConfiguredUsers = () => send<string[]>(`${base}/configured`);
-
 /** The roles the reader may give, in authority order. */
 export const getUserOptions = () => send<{ roles: RoleOption[] }>(`${base}/options`);
 

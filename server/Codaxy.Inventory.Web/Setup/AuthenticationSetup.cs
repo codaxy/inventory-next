@@ -79,7 +79,7 @@ public static class AuthenticationSetup
 
         // The API answers with status codes; only the client decides to show a sign-in screen.
         // A cookie outlives the access it was issued for, so the user is looked up on every request:
-        // a deactivated one, or one no longer admitted, is signed out there, not in fourteen days.
+        // a deactivated or missing one is signed out there, not in fourteen days.
         options.Events.OnValidatePrincipal = async context =>
         {
             var email = context.Principal?.FindFirstValue(SignIn.EmailClaim);

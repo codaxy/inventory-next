@@ -43,11 +43,9 @@ once the address is proven.
 verifying a code, `/sign-in?error=no-access` from Google. Requesting a code still answers `204` for
 anyone in the domain, and sends the code, so the endpoint names nobody.
 
-**`Auth:AllowedUsers`, less `Auth:DeniedUsers`, sign in as Admin while not users yet**, so the
-release that brought users locked nobody out; a user, once added, decides for that address and the
-lists no longer matter for it. The Users screen lists those addresses beneath the users, each with Add,
-and a start logs a warning naming those still not added. Both settings, and this rule, go once every
-listed address is a user on every deployment.
+**There is no allow list in configuration**: the users are the allow list and deactivating is the
+deny list, both kept in the application. A deployment moving from one names its addresses in
+`Auth:SeedUsers` instead.
 
 ## Users, roles and permissions
 

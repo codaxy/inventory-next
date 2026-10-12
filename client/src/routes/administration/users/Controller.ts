@@ -1,4 +1,4 @@
-import { listConfiguredUsers, listUsers, type UserItem, type UserSort } from "../../../api/users";
+import { listUsers, type UserItem, type UserSort } from "../../../api/users";
 import { ListController } from "../../../listController";
 import m, { type Filters, type Row, toRows } from "./model";
 
@@ -8,22 +8,6 @@ export default class extends ListController<Filters, UserItem, Row, UserSort> {
     protected readonly defaultSort = "name";
     protected readonly sorts = ["name", "-name", "email", "-email", "role", "-role"] as const;
     protected readonly failure = "The users could not be loaded.";
-
-    onInit() {
-        super.onInit();
-        this.store.set(m.configured, []);
-        listConfiguredUsers()
-            .then((emails) =>
-                this.store.set(
-                    m.configured,
-                    emails.map((email) => ({
-                        email,
-                        addHref: `~/administration/users/new?email=${encodeURIComponent(email)}`,
-                    })),
-                ),
-            )
-            .catch(() => {});
-    }
 
     protected fetch({
         filters: _,

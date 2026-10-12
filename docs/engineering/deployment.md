@@ -45,8 +45,7 @@ missing.
 **`Auth:SeedUsers` names the first users** — `Auth__SeedUsers__0__Email`, `__Name` and `__Role` (a
 role's name, `System Admin` for the first) — created at start when missing, never changed after. Empty
 in `appsettings.json`; **a start with no active System Admin stops**, so a fresh deployment names one.
-`Auth:AllowedUsers` admits its addresses as Admin until they are added as users (see
-[auth.md](auth.md)); a deployment limited by domain alone admits only its users.
+Only users sign in (see [auth.md](auth.md)).
 
 Google is off until a client id and secret arrive, which in compose is through the environment:
 

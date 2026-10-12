@@ -4,7 +4,6 @@ using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.Tests.Integration.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Codaxy.Inventory.Tests.Integration;
 
@@ -32,7 +31,6 @@ public class SeedUsersTests(SeedUsersApplication app) : IClassFixture<SeedUsersA
         await SeedUsers.ApplyAsync(
             scope.ServiceProvider.GetRequiredService<InventoryContext>(),
             options,
-            NullLogger.Instance,
             TimeProvider.System
         );
     }

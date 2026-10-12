@@ -1,14 +1,12 @@
 using Codaxy.Inventory.App.Administration.Roles;
 using Codaxy.Inventory.App.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Codaxy.Inventory.App.Administration.Users;
 
 /// <summary>Who someone is to the application and what they may do.</summary>
-/// <param name="UserId">None for an address admitted by configuration and not yet added.</param>
 public sealed record Access(
-    Guid? UserId,
+    Guid UserId,
     string Email,
     string Name,
     Guid RoleId,
@@ -26,7 +24,7 @@ public sealed record Access(
     public bool Covers(Role role) =>
         IsSystemAdmin || (!role.IsSystemAdmin && role.Grants().IsSubsetOf(Permissions));
 
-    internal static Access Of(Guid? userId, string email, string name, Role role) =>
+    internal static Access Of(Guid userId, string email, string name, Role role) =>
         new(userId, email, name, role.Id, role.Name, role.IsSystemAdmin, role.Grants());
 }
 
@@ -35,11 +33,7 @@ public sealed record Access(
 /// a changed role applies on the next request. Scoped, so the cookie's check and the endpoint's share
 /// one query.
 /// </summary>
-public sealed class UserAccess(
-    InventoryContext context,
-    IOptions<UserOptions> options,
-    ICurrentUser current
-)
+public sealed class UserAccess(InventoryContext context, ICurrentUser current)
 {
     private readonly Dictionary<string, Access?> read = [];
 
@@ -48,8 +42,7 @@ public sealed class UserAccess(
         current.Email is { } email ? ForAsync(email, cancellation) : Task.FromResult<Access?>(null);
 
     /// <summary>
-    /// The access of whoever holds <paramref name="email"/>: an active user's role; for an address
-    /// admitted by configuration that is not a user yet, Admin's; for anyone else, none.
+    /// The access of whoever holds <paramref name="email"/>: an active user's role, or none.
     /// </summary>
     public async Task<Access?> ForAsync(string email, CancellationToken cancellation = default)
     {
@@ -63,19 +56,9 @@ public sealed class UserAccess(
                 .ThenInclude(r => r.Permissions)
             .FirstOrDefaultAsync(u => u.Email == email, cancellation);
 
-        Access? access;
-        if (user is not null)
-            access = user.IsActive ? Access.Of(user.Id, user.Email, user.Name, user.Role) : null;
-        else if (options.Value.Admits(email))
-            access = await context
-                .Roles.AsNoTracking()
-                .Include(r => r.Permissions)
-                .FirstOrDefaultAsync(r => r.Name == BuiltInRoles.Admin, cancellation)
-                is { } admin
-                ? Access.Of(null, email, email, admin)
-                : null;
-        else
-            access = null;
+        var access = user is { IsActive: true }
+            ? Access.Of(user.Id, user.Email, user.Name, user.Role)
+            : null;
 
         read[email] = access;
         return access;

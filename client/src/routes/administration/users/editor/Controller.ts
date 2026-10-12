@@ -10,8 +10,6 @@ import {
     type UserForm,
 } from "../../../../api/users";
 import { confirm } from "../../../../components/confirm";
-import { queryOf } from "../../../../listAddress";
-import $app from "../../../../model";
 import { RecordController } from "../../../../recordController";
 import m, { toDraft, toForm, type UserDraft } from "./model";
 
@@ -29,12 +27,6 @@ export default class extends RecordController<UserDraft, UserDetail, UserForm> {
     protected toDraft = toDraft;
     protected toForm = toForm;
     protected titleOf = (u: UserDetail) => u.name;
-
-    /** Added from the configured list: its address filled in. */
-    protected emptyDraft(): UserDraft {
-        const email = queryOf(this.store.get($app.url)).get("email");
-        return email ? { email } : {};
-    }
 
     protected loaded(u: UserDetail) {
         this.store.set(m.record.user, { isActive: u.isActive, isSelf: u.isSelf, canManage: u.canManage });

@@ -61,7 +61,6 @@ public static class PersistenceSetup
             .ApplyAsync(
                 context,
                 scope.ServiceProvider.GetRequiredService<IOptions<UserOptions>>().Value,
-                app.Logger,
                 TimeProvider.System
             )
             .GetAwaiter()

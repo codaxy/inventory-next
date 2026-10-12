@@ -1,16 +1,13 @@
-import { createFunctionalComponent, expr } from "cx/ui";
-import { Link, Repeater } from "cx/widgets";
+import { createFunctionalComponent } from "cx/ui";
 
 import { copyButton, copyCell } from "../../../components/copyButton";
 import { searchList } from "../../../components/searchList";
-import $app from "../../../model";
 import Controller from "./Controller";
 import m from "./model";
 
 const r = m.$row;
-const c = m.$configured;
 
-/** Who may sign in: the users, then the addresses configuration lets in that are not users yet. */
+/** Who may sign in: every user added, the deactivated kept as history. */
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-wide list-fill" controller={Controller}>
@@ -57,20 +54,6 @@ export default createFunctionalComponent(() => (
                     },
                 ],
             })}
-
-            <section class="configured-users" visible={expr(m.configured, (list) => (list?.length ?? 0) > 0)}>
-                <h2 class="configured-users-title" text="Allowed by configuration, not added yet" />
-                <p
-                    class="configured-users-note"
-                    text="These addresses sign in as Admin through Auth:AllowedUsers. Add each as a user before the setting is removed."
-                />
-                <Repeater records={m.configured} recordAlias={c} keyField="email">
-                    <div class="configured-user">
-                        <span class="configured-user-email" text={c.email} />
-                        <Link class="editor-link" href={c.addHref} url={$app.url} text="Add" />
-                    </div>
-                </Repeater>
-            </section>
         </div>
     </cx>
 ));

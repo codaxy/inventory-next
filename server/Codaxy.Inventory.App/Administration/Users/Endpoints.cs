@@ -11,7 +11,6 @@ public static class Endpoints
             .RequirePermissions(Permissions.UsersManage, Permissions.UsersManage);
 
         List.Endpoint.Map(users);
-        Configured.Endpoint.Map(users);
         Options.Endpoint.Map(users);
         Get.Endpoint.Map(users);
         Create.Endpoint.Map(users);
