@@ -21,6 +21,8 @@ import ProjectEditor from "./company/projects/editor";
 import Vendors from "./company/vendors";
 import VendorEditor from "./company/vendors/editor";
 import ServerLog from "./administration/server-log";
+import Roles from "./administration/roles";
+import RoleEditor from "./administration/roles/editor";
 import Users from "./administration/users";
 import UserEditor from "./administration/users/editor";
 import ElectronicDevices from "./electronic-devices";
@@ -62,6 +64,7 @@ const screens: Record<string, any> = {
     "~/administration/audit-log": AuditLog,
     "~/administration/server-log": ServerLog,
     "~/administration/users": Users,
+    "~/administration/roles": Roles,
     "~/company/clients": Clients,
     "~/company/locations": Locations,
     "~/company/manufacturers": Manufacturers,
@@ -129,6 +132,12 @@ export default (
                     )}
 
                     {/* Editors, after the menu's own routes: `~/electronic-devices/tags` is one of them. */}
+                    <Route route="~/administration/roles/:id/edit" url={$app.url}>
+                        <RoleEditor />
+                    </Route>
+                    <Route route="~/administration/roles/:id" url={$app.url}>
+                        <RoleEditor />
+                    </Route>
                     <Route route="~/administration/users/:id/edit" url={$app.url}>
                         <UserEditor />
                     </Route>

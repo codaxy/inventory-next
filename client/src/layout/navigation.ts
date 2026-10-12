@@ -28,14 +28,14 @@ export const navigation: NavSection[] = [
     {
         // Above every section and in none: where the day starts.
         step: 1,
-        view: "dashboard.view",
+        view: "inventory.view",
         items: [{ label: "Dashboard", title: "Dashboard", href: "~/dashboard", icon: "dashboard" }],
     },
     {
         title: "Company",
         step: 6,
-        view: "company.view",
-        edit: "company.edit",
+        view: "inventory.view",
+        edit: "inventory.edit",
         items: [
             { label: "People", title: "People", href: "~/company/people", icon: "people" },
             { label: "Clients", title: "Clients", href: "~/company/clients", icon: "clients" },
@@ -53,8 +53,8 @@ export const navigation: NavSection[] = [
     {
         title: "Electronic devices",
         step: 2,
-        view: "electronic_devices.view",
-        edit: "electronic_devices.edit",
+        view: "inventory.view",
+        edit: "inventory.edit",
         items: [
             {
                 label: "Electronic devices",
@@ -79,8 +79,8 @@ export const navigation: NavSection[] = [
     {
         title: "Licenses",
         step: 3,
-        view: "licenses.view",
-        edit: "licenses.edit",
+        view: "inventory.view",
+        edit: "inventory.edit",
         items: [
             { label: "Licenses", title: "Licenses", href: "~/licenses", icon: "licenses" },
             {
@@ -100,8 +100,8 @@ export const navigation: NavSection[] = [
     {
         title: "Furniture",
         step: 4,
-        view: "furniture.view",
-        edit: "furniture.edit",
+        view: "inventory.view",
+        edit: "inventory.edit",
         items: [
             { label: "Furniture", title: "Furniture", href: "~/furniture", icon: "furniture" },
             { label: "Types", title: "Furniture types", href: "~/furniture/types", icon: "furnitureTypes" },
@@ -110,8 +110,8 @@ export const navigation: NavSection[] = [
     {
         title: "Information",
         step: 5,
-        view: "information.view",
-        edit: "information.edit",
+        view: "inventory.view",
+        edit: "inventory.edit",
         items: [
             {
                 label: "Information",
@@ -136,8 +136,8 @@ export const navigation: NavSection[] = [
     {
         title: "Infrastructure",
         step: 4,
-        view: "infrastructure.view",
-        edit: "infrastructure.edit",
+        view: "inventory.view",
+        edit: "inventory.edit",
         items: [
             {
                 label: "Virtual machines",
@@ -165,6 +165,14 @@ export const navigation: NavSection[] = [
                 icon: "users",
                 view: "users.manage",
                 edit: "users.manage",
+            },
+            {
+                label: "Roles",
+                title: "Roles",
+                href: "~/administration/roles",
+                icon: "roles",
+                view: "roles.manage",
+                edit: "roles.manage",
             },
             {
                 label: "Audit log",

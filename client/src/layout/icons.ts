@@ -45,6 +45,7 @@ import {
     Tick02Icon,
     UserIcon,
     UserLock01Icon,
+    UserShield01Icon,
 } from "@hugeicons/core-free-icons";
 
 /**
@@ -80,6 +81,7 @@ const navIcons = {
     manufacturers: Factory01Icon,
     locations: Location01Icon,
     users: UserLock01Icon,
+    roles: UserShield01Icon,
     auditLog: HistoryIcon,
     history: HistoryIcon,
     serverLog: CommandLineIcon,

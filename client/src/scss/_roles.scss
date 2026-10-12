@@ -1,0 +1,33 @@
+// A role's permissions: a row per section, its ticks while editing, what it grants in words in view.
+.role-grants {
+    display: grid;
+}
+
+.role-grant {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: var(--control);
+    padding: 0.25rem 0;
+    font-size: 14px;
+
+    & + & {
+        border-top: 1px solid var(--color-line-soft);
+    }
+}
+
+.role-grant-section {
+    font-weight: 600;
+    color: var(--color-ink);
+}
+
+.role-grant-summary {
+    color: var(--color-ink-soft);
+}
+
+// Two columns, View then Edit, so a section with one permission lines up under the first.
+.role-grant-ticks {
+    display: grid;
+    grid-template-columns: 5.5rem 5.5rem;
+}

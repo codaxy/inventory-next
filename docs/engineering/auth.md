@@ -50,16 +50,21 @@ deny list, both kept in the application. A deployment moving from one names its 
 ## Users, roles and permissions
 
 **The code checks a permission, never a role; a role is a named set of permissions; a user holds
-one.** The catalogue is `Shared/Access/Permissions`: per section `view` and `edit` — company,
-electronic devices, licenses, furniture, information, infrastructure, a section's types and tags going
-with it — then `dashboard.view`, `audit_log.view`, `server_log.view` and `users.manage`. **A permission
-nothing checks is not in it.** `audit_log.view` is all or nothing: the log holds every field of every
-section.
+one.** The catalogue is `Shared/Access/Permissions`, **coarse, as the application is used**:
+`inventory.view` and `inventory.edit` — every section and the dashboard; nobody views or edits part of
+the inventory and not the rest — then `audit_log.view`, `server_log.view`, `users.manage`,
+`roles.manage` and `settings.manage`. **A permission nothing checks is not in it.** Each names what a screen groups it
+under, so a view and its edit are ticked side by side. **The audit log is apart from the inventory**:
+it holds who changed what, and deleted records whole, which seeing every record does not.
 
-**A section's endpoints carry its permissions by method** — `RequirePermissions(view, edit)` on the
-section's group: a `GET` reads and needs `view`, any other method writes and needs `edit`, and a write
+Not per section: the per-section split was built first and dropped — it served nobody, and every
+record page that shows another section's records would have had to be trimmed for it.
+
+**A section's endpoints carry the inventory's permissions by method** — `RequirePermissions(view,
+edit)` on the section's group: a `GET` reads and needs `view`, any other method writes and needs `edit`, and a write
 in a section without `edit` stops the start. Administration's items carry their own, and the Users
-item needs `users.manage` to read as well, since who has access is as much the job as changing it.
+and Roles items need `users.manage` and `roles.manage` to read as well, since who has access, and to
+what, is as much the job as changing it.
 The host registers a policy per catalogue entry and none for anything else, so a key outside it fails
 the request. **A test enumerates every `/api` endpoint** and fails on one without a catalogue
 permission, apart from `/api/version`, `/api/auth/*` and the documents' settings.
@@ -68,9 +73,26 @@ permission, apart from `/api/version`, `/api/auth/*` and the documents' settings
 permission granted or revoked. Three are built in and found by name, which therefore never changes:
 **System Admin** grants every permission, including ones added later — the seeder keeps its rows in
 step with the catalogue so a screen shows the truth, and nothing about it changes; **Admin** views and
-edits every section, reads the audit log and manages users; **Supervisor** views every section and the
-audit log. A built-in role missing from a database is seeded with its defaults; one that exists is left
-as it is. A stored permission the catalogue no longer has is dropped from every role.
+edits the inventory, reads the audit log and manages users; **Supervisor** views the inventory, and
+not the audit log. A built-in role missing from a database is seeded with its defaults; one that exists
+is left as it is, so its permissions are an administrator's to change. A stored permission the
+catalogue no longer has is dropped from every role — but for the per-section keys of before
+(`Permissions.Legacy`): a built-in role still holding one goes back to its defaults, since nobody
+could edit one then, and a custom role's become `inventory.view` and `inventory.edit`. That
+translation is deletable once every database has started with it.
+
+**Roles are edited under Administration → Roles, with `roles.manage`**, which only System Admin holds
+by default. A role is a name, a description and its permissions; a new one starts with none. **An
+`edit` comes with its `view`** (`Permissions.Implied`): an editor cannot load the record it
+edits, so a role saved with one and without the other is refused. A built-in role keeps its name and
+offers **Reset to default** — its description and permissions back to what a new database gets; a
+custom role is deleted once nobody holds it. **The editor's own limits** are the users' subset rule
+turned on roles — a permission is granted only by someone holding it, and a role granting more than
+its editor holds is out of their reach — and **nobody edits, resets or deletes the role they hold**:
+the subset rule stops them granting themselves more, not taking `roles.manage` off their own role or
+changing what everyone else holding it may do. System Admin has no editor. The roles list and the
+users' role picker share one order: System Admin, the other built-in roles, then the rest by name
+(`BuiltInRoles.Rank`).
 
 **A user is a row, `app_user`** — not `user`, which PostgreSQL reserves, so hand-written SQL against it
 would fail unquoted. Its email is stored trimmed and lower-case, unique, and fixed once added; its name
@@ -162,11 +184,6 @@ Both are configured rather than compiled in, because the right numbers depend on
 behind one address — which the application cannot know.
 
 ## Traps
-
-**A record carries what other sections attach to it, whatever its reader holds** — a person's devices,
-a device's seats — the dashboard every tile, and option lookups more than ids and names. Every
-built-in role sees every section, so nothing shows it; a role that leaves a section out would still
-see that section's records there.
 
 **The caller limit counts addresses, not people.** Everyone behind one office address shares a
 partition, so the permit count has to allow for however many that is; and everyone on their own

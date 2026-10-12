@@ -9,7 +9,7 @@ public static class Endpoints
     {
         var api = inventory
             .MapGroup("")
-            .RequirePermissions(Permissions.CompanyView, Permissions.CompanyEdit);
+            .RequirePermissions(Permissions.InventoryView, Permissions.InventoryEdit);
 
         People.Endpoints.Map(api);
         Clients.Endpoints.Map(api);

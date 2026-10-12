@@ -1,6 +1,5 @@
 import { createFunctionalComponent } from "cx/ui";
 
-import { copyButton, copyCell } from "../../../components/copyButton";
 import { searchList } from "../../../components/searchList";
 import Controller from "./Controller";
 import m from "./model";
@@ -28,21 +27,26 @@ export default createFunctionalComponent(() => (
                         sort: "name",
                         cell: (
                             <cx>
-                                <span class="record-title record-copy">
-                                    <span class="record-copy-line">
-                                        <span text={r.name} />
-                                        {copyButton(r.name, "name")}
-                                        <span
-                                            class="record-flag record-flag-ended"
-                                            visible={r.ended}
-                                            text="Deactivated"
-                                        />
-                                    </span>
+                                <span class="record-title">
+                                    <span text={r.name} />
+                                    <span
+                                        class="record-flag record-flag-ended"
+                                        visible={r.ended}
+                                        text="Deactivated"
+                                    />
                                 </span>
                             </cx>
                         ),
                     },
-                    { header: "Email", sort: "email", cell: copyCell(r.email, "email") },
+                    {
+                        header: "Email",
+                        sort: "email",
+                        cell: (
+                            <cx>
+                                <span class="record-meta" text={r.email} />
+                            </cx>
+                        ),
+                    },
                     {
                         header: "Role",
                         sort: "role",

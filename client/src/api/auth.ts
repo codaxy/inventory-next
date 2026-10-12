@@ -7,22 +7,13 @@ export interface AuthProviders {
 
 /** The server's catalogue (`Permissions`); the server checks every request whatever the client shows. */
 export type Permission =
-    | "dashboard.view"
-    | "company.view"
-    | "company.edit"
-    | "electronic_devices.view"
-    | "electronic_devices.edit"
-    | "licenses.view"
-    | "licenses.edit"
-    | "furniture.view"
-    | "furniture.edit"
-    | "information.view"
-    | "information.edit"
-    | "infrastructure.view"
-    | "infrastructure.edit"
+    | "inventory.view"
+    | "inventory.edit"
     | "audit_log.view"
     | "server_log.view"
-    | "users.manage";
+    | "users.manage"
+    | "roles.manage"
+    | "settings.manage";
 
 export interface CurrentUser {
     email: string;

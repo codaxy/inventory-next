@@ -6,6 +6,7 @@ public static class Endpoints
     public static void Map(RouteGroupBuilder api)
     {
         Users.Endpoints.Map(api);
+        Roles.Endpoints.Map(api);
         AuditLogs.Endpoints.Map(api);
         ServerLogs.Endpoints.Map(api);
     }

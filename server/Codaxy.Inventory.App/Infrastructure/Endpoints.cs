@@ -9,7 +9,7 @@ public static class Endpoints
     {
         var api = inventory
             .MapGroup("")
-            .RequirePermissions(Permissions.InfrastructureView, Permissions.InfrastructureEdit);
+            .RequirePermissions(Permissions.InventoryView, Permissions.InventoryEdit);
 
         VirtualMachines.Endpoints.Map(api);
         CloudSubscriptions.Endpoints.Map(api);

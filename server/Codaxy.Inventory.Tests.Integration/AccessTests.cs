@@ -54,7 +54,12 @@ public class AccessTests(InventoryApplication app) : IClassFixture<InventoryAppl
 
     [Theory]
     [InlineData(BuiltInRoles.Supervisor, "/api/dashboard", HttpStatusCode.OK)]
-    [InlineData(BuiltInRoles.Supervisor, "/api/administration/audit-log/", HttpStatusCode.OK)]
+    [InlineData(
+        BuiltInRoles.Supervisor,
+        "/api/administration/audit-log/",
+        HttpStatusCode.Forbidden
+    )]
+    [InlineData(BuiltInRoles.Admin, "/api/administration/audit-log/", HttpStatusCode.OK)]
     [InlineData(BuiltInRoles.Supervisor, "/api/administration/users/", HttpStatusCode.Forbidden)]
     [InlineData(
         BuiltInRoles.Supervisor,
@@ -110,8 +115,7 @@ public class AccessTests(InventoryApplication app) : IClassFixture<InventoryAppl
 
         Assert.Equal("named", me.Name);
         Assert.Equal(BuiltInRoles.Supervisor, me.Role);
-        Assert.Contains("company.view", me.Permissions);
-        Assert.DoesNotContain("company.edit", me.Permissions);
+        Assert.Equal(["inventory.view"], me.Permissions);
     }
 
     [Fact]

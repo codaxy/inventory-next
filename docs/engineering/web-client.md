@@ -362,6 +362,14 @@ for adding one to another license or a new one. The section is on the page only:
 changes none of it, leaves it out. The city and state a location offers are the chosen country's; a
 form whose only choice is made — one country, its one city — starts with it.
 
+**A role's permissions are a row per area**, the catalogue's order and names — Inventory, Audit log,
+Server log, Users, Roles, Settings: View and Edit ticks side by side in two fixed columns, an area with one
+permission — the Audit log's View, Users' Manage — under the first. Ticking Edit ticks View and locks it until Edit is cleared; a permission the
+reader does not hold cannot be ticked. In view the row says what it grants in words, "View, Edit" or a
+dash. The page loads the role only once the catalogue (`/api/administration/roles/catalogue`) is in,
+since the ticks are built from it. A role the reader may not change says why in place of Edit — System
+Admin, their own, or one granting more than theirs.
+
 **A printable document is a page of its own with its own print styles** — the handover sheet at
 `~/company/people/:id/handover`: the original's text word for word, in Serbian, and its look — a plain sans at
 10.5pt, not Montserrat, which reads as a form in running text; Codaxy's wordmark and a red "INTERNO"
@@ -472,7 +480,8 @@ instead** (`copyButton` and `copyCell` in `components/`) on every text value of 
 numbers, codes, people, places, descriptions, addresses; not counts, dates, money, status tags or a
 "+N" list, whose text is not the value. Shown only while the pointer is over the cell, after any badge,
 and never on a touch screen, which has no hover. It copies the value as shown and ticks for 1.5s.
-Under a mouse the value truncates before its badges, so a long name never hides one. **The
+Under a mouse the value truncates before its badges, so a long name never hides one. **Administration's pages have none** — users, roles, the logs,
+whatever is added there. **The
 button sits in the line**, moving what follows aside; **laid over it instead** (`"overlay"`) only where
 chosen — a device's inventory number before its holder on activations, which holds still — since past
 a value that fills its cell it would cover the next column. **An overlaid button shows only over its own

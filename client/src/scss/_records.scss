@@ -646,6 +646,15 @@
     }
 }
 
+// Roles: on a phone the name and the users; from `md` the description between them.
+.role-columns {
+    grid-template-columns: minmax(0, 1fr);
+
+    @media (min-width: 768px) {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 6rem);
+    }
+}
+
 // Manufacturers: the name, the URL muted, then the two counts narrow.
 .manufacturer-columns {
     grid-template-columns: minmax(0, 1fr);

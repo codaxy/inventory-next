@@ -12,27 +12,6 @@ public static class BuiltInRoles
     public const string Admin = "Admin";
     public const string Supervisor = "Supervisor";
 
-    private static readonly string[] Views =
-    [
-        P.DashboardView,
-        P.CompanyView,
-        P.ElectronicDevicesView,
-        P.LicensesView,
-        P.FurnitureView,
-        P.InformationView,
-        P.InfrastructureView,
-    ];
-
-    private static readonly string[] Edits =
-    [
-        P.CompanyEdit,
-        P.ElectronicDevicesEdit,
-        P.LicensesEdit,
-        P.FurnitureEdit,
-        P.InformationEdit,
-        P.InfrastructureEdit,
-    ];
-
     private sealed record Definition(
         string Name,
         string Description,
@@ -45,17 +24,23 @@ public static class BuiltInRoles
         new(SystemAdmin, "Everything, including permissions added later.", true, []),
         new(
             Admin,
-            "Views and edits every section, reads the audit log and manages users.",
+            "Views and edits the inventory, reads the audit log and manages users.",
             false,
-            [.. Views, .. Edits, P.AuditLogView, P.UsersManage]
+            [P.InventoryView, P.InventoryEdit, P.AuditLogView, P.UsersManage]
         ),
-        new(
-            Supervisor,
-            "Views every section and the audit log.",
-            false,
-            [.. Views, P.AuditLogView]
-        ),
+        new(Supervisor, "Views the inventory.", false, [P.InventoryView]),
     ];
+
+    /// <summary>
+    /// What Reset to default puts back on a built-in role — what a new database seeds it with — or
+    /// none for System Admin, which has no editor, and for a custom role.
+    /// </summary>
+    public static (string Description, IReadOnlyList<string> Permissions)? DefaultsOf(
+        string name
+    ) =>
+        Definitions.FirstOrDefault(d => d.Name == name && !d.IsSystemAdmin) is { } d
+            ? (d.Description, d.Permissions)
+            : null;
 
     /// <summary>
     /// A role's place in authority order: System Admin, the other built-in roles as listed, then
@@ -69,11 +54,33 @@ public static class BuiltInRoles
     /// <summary>
     /// Creates a built-in role that is missing, with its default permissions; leaves one that exists
     /// as it is, but for System Admin, whose rows follow the catalogue so a screen shows what it
-    /// grants. A stored permission the catalogue no longer has is dropped from every role.
+    /// grants. A per-section key from before the catalogue was coarse (<see cref="P.Legacy"/>) puts a
+    /// built-in role back to its defaults — nobody could edit one then — and becomes what it now is
+    /// on a custom role; any other stored permission the catalogue no longer has is dropped.
     /// </summary>
     public static async Task SeedAsync(InventoryContext context, CancellationToken cancellation)
     {
         var roles = await context.Roles.Include(r => r.Permissions).ToListAsync(cancellation);
+
+        foreach (
+            var role in roles.Where(r => r.Permissions.Any(p => P.Legacy.ContainsKey(p.Permission)))
+        )
+        {
+            if (role.IsBuiltIn && DefaultsOf(role.Name) is { } defaults)
+            {
+                role.Description = defaults.Description;
+                Roles.Grant(context, role, defaults.Permissions);
+            }
+            else
+                Grant(
+                    context,
+                    role,
+                    role.Permissions.Select(p => P.Legacy.GetValueOrDefault(p.Permission))
+                        .OfType<string>()
+                        .Distinct()
+                        .ToList()
+                );
+        }
 
         foreach (var definition in Definitions)
         {

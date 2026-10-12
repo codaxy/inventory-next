@@ -1,6 +1,7 @@
 using Codaxy.Inventory.App.Administration.Roles;
 using Codaxy.Inventory.App.Administration.Users;
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Access;
 using Codaxy.Inventory.Tests.Integration.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -95,7 +96,7 @@ public class SeedUsersTests(SeedUsersApplication app) : IClassFixture<SeedUsersA
         var supervisor = await context.Roles.SingleAsync(r => r.Name == BuiltInRoles.Supervisor);
         await context
             .RolePermissions.Where(p =>
-                p.RoleId == supervisor.Id && p.Permission == "dashboard.view"
+                p.RoleId == supervisor.Id && p.Permission == Permissions.InventoryView
             )
             .ExecuteDeleteAsync();
         context.RolePermissions.Add(
@@ -114,7 +115,43 @@ public class SeedUsersTests(SeedUsersApplication app) : IClassFixture<SeedUsersA
             .RolePermissions.Where(p => p.RoleId == supervisor.Id)
             .Select(p => p.Permission)
             .ToListAsync();
-        Assert.DoesNotContain("dashboard.view", held);
+        Assert.DoesNotContain(Permissions.InventoryView, held);
         Assert.DoesNotContain("gone.view", held);
+    }
+
+    [Fact]
+    public async Task Per_section_keys_from_before_become_the_coarse_ones()
+    {
+        using var scope = app.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<InventoryContext>();
+
+        var supervisor = await context
+            .Roles.Include(r => r.Permissions)
+            .SingleAsync(r => r.Name == BuiltInRoles.Supervisor);
+        Roles.Grant(
+            context,
+            supervisor,
+            ["company.view", "dashboard.view", Permissions.AuditLogView]
+        );
+        var custom = new Role { Id = Guid.CreateVersion7(), Name = "From before" };
+        context.Roles.Add(custom);
+        Roles.Grant(context, custom, ["company.view", "company.edit", Permissions.ServerLogView]);
+        await context.SaveChangesAsync();
+
+        await BuiltInRoles.SeedAsync(context, CancellationToken.None);
+
+        async Task<List<string>> Held(Guid id) =>
+            await context
+                .RolePermissions.Where(p => p.RoleId == id)
+                .Select(p => p.Permission)
+                .OrderBy(p => p)
+                .ToListAsync();
+
+        // A built-in role goes back to its defaults: nobody could edit one before.
+        Assert.Equal([Permissions.InventoryView], await Held(supervisor.Id));
+        Assert.Equal(
+            [Permissions.InventoryEdit, Permissions.InventoryView, Permissions.ServerLogView],
+            await Held(custom.Id)
+        );
     }
 }
