@@ -14,7 +14,7 @@ import {
 
 import { dateValue, numberValue } from "../../../bindings";
 import { expiryClass } from "../../../licensing";
-import { historyAction, moreActions } from "../../../components/moreActions";
+import { historyAction, deleteAction, moreActions } from "../../../components/moreActions";
 import { outlined } from "../../../components/recordPage";
 import { listReturn } from "../../../listAddress";
 import { externalLink } from "../../../components/externalLink";
@@ -23,6 +23,7 @@ import { inventoryNumber } from "../../../components/inventoryNumber";
 import $app from "../../../model";
 import Controller from "./Controller";
 import m from "./model";
+import { canEdit, mayEdit, permissions } from "../../../access";
 
 const l = m.license;
 const outline = outlined(l.viewing, l.loading);
@@ -60,6 +61,7 @@ export default createFunctionalComponent(() => (
                             <LinkButton
                                 mod="primary"
                                 href={expr(l.id, (id) => `~/licenses/${id}/edit`)}
+                                visible={canEdit}
                                 attrs={{ "aria-label": "Edit", title: "Edit" }}
                             >
                                 <Icon name="edit" class="size-4" />
@@ -70,9 +72,10 @@ export default createFunctionalComponent(() => (
                                 {
                                     text: "Duplicate",
                                     icon: "duplicate",
+                                    edits: true,
                                     href: expr(l.id, (id) => `~/licenses/new?from=${id}`),
                                 },
-                                { text: "Delete", icon: "delete", onClick: "remove", danger: true },
+                                deleteAction,
                             ])}
                         </div>
                     </div>
@@ -215,7 +218,9 @@ export default createFunctionalComponent(() => (
                                             visible={expr(
                                                 l.viewing,
                                                 m.$volume.activateHref,
-                                                (v, href) => !!v && !!href,
+                                                $app.url,
+                                                permissions,
+                                                (v, href, url, held) => !!v && !!href && mayEdit(url, held),
                                             )}
                                             href={m.$volume.activateHref}
                                             url={$app.url}

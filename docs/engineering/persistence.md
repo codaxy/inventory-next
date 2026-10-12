@@ -50,7 +50,8 @@ table with two id shapes and no way to tell which is which.
 The application allocates the id rather than letting the database default it, which is what lets an
 asset and its subtype row share one key before either is inserted.
 
-Besides the primary keys, `Asset.InventoryNumber` carries the only unique constraint in the database.
+Besides the primary keys, `Asset.InventoryNumber`, a user's email, a role's name and a role's
+permission are the only unique constraints in the database.
 Names in the codebooks and the company's records are not unique: whether two vendors may share one is a product
 question nobody has answered, so the schema does not answer it either. **Device types, tags, software or
 services, furniture types, information types and tags, virtual machines, cloud subscriptions, software
@@ -134,6 +135,9 @@ What the database lacks and the application works around; each is a migration of
   only through its volumes.
 - **A person's email is unique**, by an index on `lower(trim(email))`. The application refuses a
   duplicate, and two saves at once pass.
+- **A user is not linked to the person they are.** `app_user` and `person` both hold a name and an
+  email, and nothing ties them; where it matters — an employee's own equipment, the handover sheet's
+  signer — they are matched by email. A nullable `PersonId` on `AppUser` would make it a fact.
 - **No index serves any predicate.** Primary keys and the unique `inventory_number` are the whole of
   the indexing, and lists filter, sort and page with sequential scans. At the present size — under a
   thousand assets — that costs nothing measurable.

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Codaxy.Inventory.App.Administration.Users;
 using Codaxy.Inventory.App.Shared.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -29,7 +30,8 @@ public static class Endpoint
         HttpContext context,
         IOptions<AuthOptions> options,
         SignInPolicy policy,
-        IOneTimeCodeStore codes
+        IOneTimeCodeStore codes,
+        UserAccess access
     )
     {
         if (!options.Value.OneTimeCode.Enabled)
@@ -44,6 +46,14 @@ public static class Endpoint
             return Results.Problem(
                 title: "That code is not valid.",
                 statusCode: StatusCodes.Status401Unauthorized
+            );
+
+        // Only now, once the address is proven: said on requesting a code, it would tell anyone who is
+        // a user here.
+        if (await access.ForAsync(request.Email) is null)
+            return Results.Problem(
+                title: Messages.NoAccess,
+                statusCode: StatusCodes.Status403Forbidden
             );
 
         await context.SignInAsync(request.Email, displayName: null);

@@ -1,19 +1,30 @@
-using System.Security.Claims;
+using Codaxy.Inventory.App.Administration.Users;
 
 namespace Codaxy.Inventory.Web.Auth.Session.Me;
 
 public static class Endpoint
 {
     public static void Map(RouteGroupBuilder auth) =>
-        auth.MapGet(
-                "/me",
-                (ClaimsPrincipal user) =>
-                    new Response(
-                        user.FindFirstValue(SignIn.EmailClaim) ?? "",
-                        user.Identity?.Name ?? ""
-                    )
-            )
-            .RequireAuthorization();
+        auth.MapGet("/me", Handle).RequireAuthorization();
 
-    public sealed record Response(string Email, string Name);
+    /// <param name="Name">The user's name as an administrator gave it, not the provider's.</param>
+    /// <param name="Permissions">What the client shows; the server checks every request anyway.</param>
+    public sealed record Response(
+        string Email,
+        string Name,
+        string Role,
+        IReadOnlyList<string> Permissions
+    );
+
+    private static async Task<IResult> Handle(UserAccess access) =>
+        await access.CurrentAsync() is { } user
+            ? Results.Ok(
+                new Response(
+                    user.Email,
+                    user.Name,
+                    user.RoleName,
+                    user.Permissions.Order().ToList()
+                )
+            )
+            : Results.Unauthorized();
 }

@@ -55,7 +55,17 @@ on every load.
 and items as the original's menu has them, flat, with no collapsing — except that its directory is
 **Company**, and first: the people and organisations everything else is assigned to. `~/` lands on the
 **Dashboard**, the first item and in no section. An unmatched URL shows a not-found page inside the
-shell. `screens` in `routes/index.tsx` maps an item's href to its screen; an item without one routes
+shell.
+
+**The screens follow the reader's permissions**, which `/api/auth/me` sends; the server checks every
+request, so these only keep the screens from offering what it would refuse. A section in
+`navigation.ts` names its `view` and `edit` permissions, an item its own where it differs —
+Administration's each do — and `src/access.ts` answers from the address: the menu hides an item without
+its `view` and a section with none left; Add, Edit, Duplicate, Delete and a record's transitions show
+only with the `edit` of the page's item (`canEdit`, or `edits` on a ⋮ action), View history only with
+`audit_log.view`; an address the reader may not open — no `view`, or no `edit` where it is `new` or
+`…/edit` — is the not-found page; `~/` lands on the first item the reader can see. Hidden, never
+disabled: a button nobody can press says nothing about why. `screens` in `routes/index.tsx` maps an item's href to its screen; an item without one routes
 to `TodoScreen`, which names the programme step that builds it.
 
 **The Dashboard is one screen**, after Pulse's home: a lede, one card "Worth a look" holding a tile
@@ -78,7 +88,7 @@ is 1rem — so the list starts on the first screen.
 ## The phone is the hard case
 
 **The shell is Pulse's.** From `lg` (1024px) a 260px sidebar holds the navigation and, at its foot,
-the signed-in person alone; signing out is in the menu that opens above them, and under it, ruled
+the signed-in person alone — the name an administrator gave the user, not the provider's; signing out is in the menu that opens above them, and under it, ruled
 off and centred, the build the server runs (see [deployment.md](deployment.md)). Below `lg` the
 sidebar becomes a drawer over the content, as wide and never closer than 56px to the far edge, the page beside
 it not dimmed. Its contents stop at the dynamic viewport's foot, above Safari's floating toolbar, so the
@@ -477,7 +487,7 @@ line goes. A yes/no that
 most rows answer no — a type holding licenses — is a flag beside the name (`record-flag`), not a column
 of "No". A subscription's status is a tag (`status-tag`) — red once
 expired, amber within the fortnight, green after, grey on a record that has ended — and always says
-which in words, never by colour alone. A record that has ended — a deactivated activation — stays
+which in words, never by colour alone. A record that has ended — a deactivated activation or user — stays
 listed as history (`record-row-ended`): the row on the others' white, its text in
 `line-strong` — below AA on purpose, there to be found rather than scanned — its name no longer bold, a
 "Deactivated" flag saying why, and its license's expiry kept but grey, read rather than signalled.

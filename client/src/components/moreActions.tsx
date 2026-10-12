@@ -3,6 +3,7 @@ import { type BooleanProp, expr, type StringProp } from "cx/ui";
 import { Icon, Link, Menu, MenuItem } from "cx/widgets";
 
 import type { IconName } from "../layout/icons";
+import { can, canEdit } from "../access";
 import $app from "../model";
 
 export interface MoreAction {
@@ -14,6 +15,8 @@ export interface MoreAction {
     href?: StringProp;
     /** Red and last: it cannot be undone. */
     danger?: boolean;
+    /** It changes the record, so only whoever may edit its section is offered it. */
+    edits?: boolean;
     visible?: BooleanProp;
 }
 
@@ -25,7 +28,17 @@ export const historyAction = (id: AccessorChain<string | null | undefined>): Mor
     text: "View history",
     icon: "history",
     href: expr(id, (id) => `~/administration/audit-log?entityId=${id}`),
+    visible: can("audit_log.view"),
 });
+
+/** Delete, last and red: offered to whoever may edit. */
+export const deleteAction: MoreAction = {
+    text: "Delete",
+    icon: "delete",
+    onClick: "remove",
+    danger: true,
+    edits: true,
+};
 
 /**
  * The record's secondary actions behind a ⋮ beside its primary one — Duplicate, Delete — so the header
@@ -53,7 +66,7 @@ export const moreActions = (actions: MoreAction[]) => (
                         <cx>
                             <MenuItem
                                 class={{ "more-action": true, "more-action-danger": !!action.danger }}
-                                visible={action.visible ?? true}
+                                visible={action.edits ? canEdit : (action.visible ?? true)}
                                 onClick={action.onClick}
                                 autoClose
                             >

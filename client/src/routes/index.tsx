@@ -3,7 +3,8 @@ import { PureContainer, RedirectRoute, Route } from "cx/widgets";
 
 import { TodoScreen } from "../components/TodoScreen";
 import { AppLayout } from "../layout";
-import { landing, navigation } from "../layout/navigation";
+import { forbidden, landing } from "../access";
+import { navigation } from "../layout/navigation";
 import $app from "../model";
 import AuditLog from "./administration/audit-log";
 import Clients from "./company/clients";
@@ -20,6 +21,8 @@ import ProjectEditor from "./company/projects/editor";
 import Vendors from "./company/vendors";
 import VendorEditor from "./company/vendors/editor";
 import ServerLog from "./administration/server-log";
+import Users from "./administration/users";
+import UserEditor from "./administration/users/editor";
 import ElectronicDevices from "./electronic-devices";
 import ElectronicDevice from "./electronic-devices/device";
 import TagEditor from "./electronic-devices/tags/editor";
@@ -58,6 +61,7 @@ const screens: Record<string, any> = {
     "~/dashboard": Dashboard,
     "~/administration/audit-log": AuditLog,
     "~/administration/server-log": ServerLog,
+    "~/administration/users": Users,
     "~/company/clients": Clients,
     "~/company/locations": Locations,
     "~/company/manufacturers": Manufacturers,
@@ -101,6 +105,11 @@ export default (
                     <RedirectRoute route="~/" url={$app.url} redirect={landing} />
                     <RedirectRoute route="~/sign-in" url={$app.url} redirect={landing} />
 
+                    {/* A page the reader may not open, or not change, is not there for them. */}
+                    <PureContainer visible={forbidden}>
+                        <NotFound />
+                    </PureContainer>
+
                     {navigation.flatMap((section) =>
                         section.items.map((item) => {
                             const Screen = screens[item.href];
@@ -120,6 +129,12 @@ export default (
                     )}
 
                     {/* Editors, after the menu's own routes: `~/electronic-devices/tags` is one of them. */}
+                    <Route route="~/administration/users/:id/edit" url={$app.url}>
+                        <UserEditor />
+                    </Route>
+                    <Route route="~/administration/users/:id" url={$app.url}>
+                        <UserEditor />
+                    </Route>
                     <Route route="~/electronic-devices/tags/:id/edit" url={$app.url}>
                         <TagEditor />
                     </Route>

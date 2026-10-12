@@ -1,6 +1,8 @@
 ﻿#nullable disable
 
 using System.Linq;
+using Codaxy.Inventory.App.Administration.Roles;
+using Codaxy.Inventory.App.Administration.Users;
 using Codaxy.Inventory.App.Company.Clients;
 using Codaxy.Inventory.App.Company.Locations;
 using Codaxy.Inventory.App.Company.Manufacturers;
@@ -97,6 +99,10 @@ public class InventoryContext : DbContext
     public DbSet<Cloud> Clouds => Set<Cloud>();
 
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+
+    public DbSet<AppUser> AppUsers => Set<AppUser>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

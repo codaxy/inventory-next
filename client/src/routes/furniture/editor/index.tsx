@@ -3,12 +3,13 @@ import { Button, Icon, Link, LinkButton, ValidationGroup } from "cx/widgets";
 
 import { formFields } from "../../../components/formFields";
 import { inventoryNumber } from "../../../components/inventoryNumber";
-import { historyAction, moreActions } from "../../../components/moreActions";
+import { historyAction, deleteAction, moreActions } from "../../../components/moreActions";
 import { outlined } from "../../../components/recordPage";
 import { listReturn } from "../../../listAddress";
 import $app from "../../../model";
 import Controller from "./Controller";
 import m from "./model";
+import { canEdit } from "../../../access";
 
 const f = m.furniture;
 const outline = outlined(f.viewing, f.loading);
@@ -40,6 +41,7 @@ export default createFunctionalComponent(() => (
                             <LinkButton
                                 mod="primary"
                                 href={expr(f.id, (id) => `~/furniture/${id}/edit`)}
+                                visible={canEdit}
                                 attrs={{ "aria-label": "Edit", title: "Edit" }}
                             >
                                 <Icon name="edit" class="size-4" />
@@ -50,9 +52,10 @@ export default createFunctionalComponent(() => (
                                 {
                                     text: "Duplicate",
                                     icon: "duplicate",
+                                    edits: true,
                                     href: expr(f.id, (id) => `~/furniture/new?from=${id}`),
                                 },
-                                { text: "Delete", icon: "delete", onClick: "remove", danger: true },
+                                deleteAction,
                             ])}
                         </div>
                     </div>

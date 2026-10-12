@@ -23,9 +23,9 @@ difference between development and production shows up as a browser-specific fai
 reproduce. `npm start` exports the ASP.NET development certificate for Vite, so both are
 served with the one certificate the trust command above installed.
 
-`appsettings.Development.json` is committed and points at the compose defaults. Sign in with an
-address in one of `Auth:AllowedDomains` — `codaxy.com` out of the box — and the code arrives in
-Mailpit at http://localhost:8025, whether or not the mailbox exists.
+`appsettings.Development.json` is committed and points at the compose defaults. Sign in as
+`developer@codaxy.com`, the System Admin it seeds — add others under Administration → Users — and the
+code arrives in Mailpit at http://localhost:8025, whether or not the mailbox exists.
 
 ## Google sign-in in development
 

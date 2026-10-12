@@ -51,6 +51,8 @@ interface SearchList {
     cells: Column[];
     /** The spreadsheet's link, for a list that has one; its controller keeps it. */
     exportHref?: AccessorChain<string | undefined>;
+    /** A row that has ended — a deactivated user — stays listed as history. */
+    ended?: AccessorChain<boolean>;
 }
 
 /**
@@ -122,7 +124,14 @@ export function searchList(o: SearchList) {
                     })}
 
                     <Repeater records={s.rows as any} recordAlias={o.row} keyField="id">
-                        <Link class={`record-row ${o.columns}`} href={expr(o.row.id, o.href)} url={$app.url}>
+                        <Link
+                            class={{
+                                [`record-row ${o.columns}`]: true,
+                                "record-row-ended": o.ended ?? false,
+                            }}
+                            href={expr(o.row.id, o.href)}
+                            url={$app.url}
+                        >
                             {o.cells.map((c) => c.cell)}
                         </Link>
                     </Repeater>

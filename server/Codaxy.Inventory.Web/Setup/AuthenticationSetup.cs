@@ -1,8 +1,11 @@
-using Codaxy.Inventory.App.Administration.ServerLogs;
+using System.Security.Claims;
+using Codaxy.Inventory.App.Administration.Users;
+using Codaxy.Inventory.App.Shared.Access;
 using Codaxy.Inventory.Web.Auth;
 using Codaxy.Inventory.Web.Auth.OneTimeCodes;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Codaxy.Inventory.Web.Setup;
 
@@ -17,12 +20,20 @@ public static class AuthenticationSetup
         services.AddSingleton<IOneTimeCodeStore, InMemoryOneTimeCodeStore>();
         services.AddScoped<SignInPolicy>();
         services.AddScoped<IEmailSender, SmtpEmailSender>();
+        services.AddScoped<UserAccess>();
+        services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
-        // Every endpoint's policy that is more than "signed in" is named here, so tightening one is
-        // one line. The server log is readable by any session until roles exist.
-        services
-            .AddAuthorizationBuilder()
-            .AddPolicy(ServerLogOptions.ReadPolicy, policy => policy.RequireAuthenticatedUser());
+        // A policy per permission in the catalogue, and none for anything else: an endpoint naming a
+        // key outside it fails rather than letting every session through.
+        var authorization = services.AddAuthorizationBuilder();
+        foreach (var permission in Permissions.All)
+            authorization.AddPolicy(
+                PermissionPolicy.For(permission.Key),
+                policy =>
+                    policy
+                        .RequireAuthenticatedUser()
+                        .AddRequirements(new PermissionRequirement(permission.Key))
+            );
 
         var authentication = services
             .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -67,6 +78,22 @@ public static class AuthenticationSetup
         options.SlidingExpiration = true;
 
         // The API answers with status codes; only the client decides to show a sign-in screen.
+        // A cookie outlives the access it was issued for, so the user is looked up on every request:
+        // a deactivated one, or one no longer admitted, is signed out there, not in fourteen days.
+        options.Events.OnValidatePrincipal = async context =>
+        {
+            var email = context.Principal?.FindFirstValue(SignIn.EmailClaim);
+            var access = context.HttpContext.RequestServices.GetRequiredService<UserAccess>();
+
+            if (email is null || await access.ForAsync(email) is null)
+            {
+                context.RejectPrincipal();
+                await context.HttpContext.SignOutAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme
+                );
+            }
+        };
+
         options.Events.OnRedirectToLogin = Status(StatusCodes.Status401Unauthorized);
         options.Events.OnRedirectToAccessDenied = Status(StatusCodes.Status403Forbidden);
 

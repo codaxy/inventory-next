@@ -1,7 +1,7 @@
 # Authentication
 
-Sign-in is the whole of the application so far. There is no user table and no roles: who may sign in
-is a deployment decision, read from `Auth` in configuration.
+Who may sign in and what they may do. The deployment sets the outer limit — the domain — and inside
+it a user added by an administrator decides, through the role it holds.
 
 ## The session
 
@@ -34,13 +34,70 @@ where the cookie reuses the one that exists.
 
 ## Who may sign in
 
-`SignInPolicy` applies three rules in order, whichever provider the person came through:
-`AllowedDomains` when it is non-empty, the deny list, then `AllowedUsers` when it is non-empty. One
-place holds them so a second provider cannot arrive with its own idea of who is allowed.
+**`SignInPolicy` applies the domain**, `Auth:AllowedDomains`, whichever provider the person came
+through; empty, any domain. One place holds it so a second provider cannot arrive with its own idea of
+who is allowed. **Inside it, being an active user decides** (`UserAccess`): both providers end there
+once the address is proven.
 
-**An empty list means no restriction from that rule**, so an instance with nothing configured admits
-anyone who can receive email. That is deliberate — an instance already behind an allow list should not
-have to name a domain as well — and it is the reason a deployment states at least one of the two.
+**Someone who is not a user is told so only after proving the address** — "ask an administrator" on
+verifying a code, `/sign-in?error=no-access` from Google. Requesting a code still answers `204` for
+anyone in the domain, and sends the code, so the endpoint names nobody.
+
+**`Auth:AllowedUsers`, less `Auth:DeniedUsers`, sign in as Admin while not users yet**, so the
+release that brought users locked nobody out; a user, once added, decides for that address and the
+lists no longer matter for it. The Users screen lists those addresses beneath the users, each with Add,
+and a start logs a warning naming those still not added. Both settings, and this rule, go once every
+listed address is a user on every deployment.
+
+## Users, roles and permissions
+
+**The code checks a permission, never a role; a role is a named set of permissions; a user holds
+one.** The catalogue is `Shared/Access/Permissions`: per section `view` and `edit` — company,
+electronic devices, licenses, furniture, information, infrastructure, a section's types and tags going
+with it — then `dashboard.view`, `audit_log.view`, `server_log.view` and `users.manage`. **A permission
+nothing checks is not in it.** `audit_log.view` is all or nothing: the log holds every field of every
+section.
+
+**A section's endpoints carry its permissions by method** — `RequirePermissions(view, edit)` on the
+section's group: a `GET` reads and needs `view`, any other method writes and needs `edit`, and a write
+in a section without `edit` stops the start. Administration's items carry their own, and the Users
+item needs `users.manage` to read as well, since who has access is as much the job as changing it.
+The host registers a policy per catalogue entry and none for anything else, so a key outside it fails
+the request. **A test enumerates every `/api` endpoint** and fails on one without a catalogue
+permission, apart from `/api/version`, `/api/auth/*` and the documents' settings.
+
+**Roles are rows**: `role` and `role_permission`, which has an id of its own so the audit log records a
+permission granted or revoked. Three are built in and found by name, which therefore never changes:
+**System Admin** grants every permission, including ones added later — the seeder keeps its rows in
+step with the catalogue so a screen shows the truth, and nothing about it changes; **Admin** views and
+edits every section, reads the audit log and manages users; **Supervisor** views every section and the
+audit log. A built-in role missing from a database is seeded with its defaults; one that exists is left
+as it is. A stored permission the catalogue no longer has is dropped from every role.
+
+**A user is a row, `app_user`** — not `user`, which PostgreSQL reserves, so hand-written SQL against it
+would fail unquoted. Its email is stored trimmed and lower-case, unique, and fixed once added; its name
+is typed by whoever adds it, never taken from a provider, since it would then depend on which way
+someone first signed in; the application shows that name, the account menu included. A user is never
+deleted, only deactivated.
+
+**The user is read from the database on every request, uncached**: `OnValidatePrincipal` signs out a
+cookie whose user is deactivated or gone, and the permission handler reads the role for the request,
+so either change applies on the next one. One query, shared by both through the scoped `UserAccess`.
+`/api/auth/me` answers the name, the role and its permissions, for the screens to follow; the server
+checks every request regardless.
+
+**Bootstrap is `Auth:SeedUsers`** — email, name and a role's name — creating each user that does not
+exist at startup and never changing one that does; a role it does not know stops the start. **Empty in
+`appsettings.json`**: a named person there would be every deployment's System Admin. **A start with no
+active System Admin stops**, naming the setting. Development seeds one, so a checkout runs.
+
+**Nobody grants what they do not hold** — the subset rule: a user is added, given a role or changed only
+if everything the role grants is the manager's own, and managed at all only if their current role's is.
+So nobody acts on someone more powerful, and System Admin is touched only by System Admin. **Nobody
+changes their own user but its name**, and the last active System Admin keeps the role and stays
+active. Checked on the server; the screens offer only what passes. The checks take no lock: two System
+Admins demoting each other at once can both pass. The way back is SQL — set a row of `app_user` to
+System Admin's `role_id` and `is_active`.
 
 ## Google
 
@@ -67,17 +124,17 @@ Deliberately the simplest thing that works, and temporary:
   guessed; the cost is that a mistyped code means asking for another, and the cooldown means waiting
   for it.
 - **Requesting a code says only that the domain is refused**, never which domain would be accepted and
-  never that a particular person is not on the list. The first gives someone who mistyped their own
+  never that a particular person is not a user. The first gives someone who mistyped their own
   address something to act on and names nothing; the other two answer questions worth asking, so they
-  answer `204` exactly as an accepted address does.
+  answer `204` exactly as a user's address does.
 
 ## Development
 
-`appsettings.Development.json` is committed, with one-time codes on and the relay pointed at Mailpit.
-It holds no secret, and a checkout that runs and can be signed into is worth more than the convention
+`appsettings.Development.json` is committed, with one-time codes on, the relay pointed at Mailpit and
+`developer@codaxy.com` seeded as System Admin. It holds no secret, and a checkout that runs and can be signed into is worth more than the convention
 of gitignoring that file.
 
-**It does not relax who may sign in.** `AllowedDomains` applies in development as everywhere else, so
+**It does not relax who may sign in.** The domain and the users apply in development as everywhere else, so
 the rules being exercised are the rules that run in production — a development configuration that lets
 anyone in is a configuration nobody has tested.
 
@@ -108,9 +165,10 @@ behind one address — which the application cannot know.
 
 ## Traps
 
-**There are no roles.** Every signed-in person will be able to do everything, as in the original. The
-claims carried are name and email only; anything built on "everyone sees everything" will be revisited
-when roles arrive.
+**A record carries what other sections attach to it, whatever its reader holds** — a person's devices,
+a device's seats — the dashboard every tile, and option lookups more than ids and names. Every
+built-in role sees every section, so nothing shows it; a role that leaves a section out would still
+see that section's records there.
 
 **The caller limit counts addresses, not people.** Everyone behind one office address shares a
 partition, so the permit count has to allow for however many that is; and everyone on their own

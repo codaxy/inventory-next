@@ -1,3 +1,4 @@
+using Codaxy.Inventory.App.Administration.Users;
 using Codaxy.Inventory.App.Dashboard;
 using Codaxy.Inventory.App.Shared.Documents;
 using Codaxy.Inventory.Web.Auth;
@@ -12,6 +13,11 @@ public static class OptionsSetup
     )
     {
         services.AddOptions<AuthOptions>().Bind(configuration.GetSection(AuthOptions.Section));
+        services
+            .AddOptions<UserOptions>()
+            .Bind(configuration.GetSection(UserOptions.Section))
+            .ValidateBy(o => o.Problem)
+            .ValidateOnStart();
         services.AddOptions<SmtpOptions>().Bind(configuration.GetSection(SmtpOptions.Section));
         services
             .AddOptions<DashboardOptions>()

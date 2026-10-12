@@ -5,9 +5,31 @@ export interface AuthProviders {
     oneTimeCode: boolean;
 }
 
+/** The server's catalogue (`Permissions`); the server checks every request whatever the client shows. */
+export type Permission =
+    | "dashboard.view"
+    | "company.view"
+    | "company.edit"
+    | "electronic_devices.view"
+    | "electronic_devices.edit"
+    | "licenses.view"
+    | "licenses.edit"
+    | "furniture.view"
+    | "furniture.edit"
+    | "information.view"
+    | "information.edit"
+    | "infrastructure.view"
+    | "infrastructure.edit"
+    | "audit_log.view"
+    | "server_log.view"
+    | "users.manage";
+
 export interface CurrentUser {
     email: string;
+    /** As an administrator gave it, not the provider's. */
     name: string;
+    role: string;
+    permissions: Permission[];
 }
 
 export const getAuthProviders = () => send<AuthProviders>("/api/auth/options");

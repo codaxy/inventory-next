@@ -5,12 +5,6 @@ public sealed class ServerLogOptions
 {
     public const string Section = "ServerLog";
 
-    /// <summary>
-    /// Who may read the log. Signed in, until roles exist; restricting it to one is this policy's
-    /// definition, in the host, and nothing else.
-    /// </summary>
-    public const string ReadPolicy = "ServerLog";
-
     /// <summary>`server-yyyyMMdd.log`, and `server-yyyyMMdd_001.log` once a day passes the size cap.</summary>
     public const string FilePrefix = "server-";
 

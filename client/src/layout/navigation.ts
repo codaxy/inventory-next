@@ -1,3 +1,4 @@
+import type { Permission } from "../api/auth";
 import type { NavIconName } from "./icons";
 
 export interface NavItem {
@@ -6,12 +7,19 @@ export interface NavItem {
     title: string;
     href: string;
     icon: NavIconName;
+    /** The section's, unless the item has its own: Administration's items each do. */
+    view?: Permission;
+    edit?: Permission;
 }
 
 export interface NavSection {
     title?: string;
     /** The step of `docs/plans/global/0001-the-new-application.md` that builds these screens. */
     step: number;
+    /** What showing its items, and every page under them, takes. */
+    view?: Permission;
+    /** What adding, changing and deleting there takes; none where nothing is. */
+    edit?: Permission;
     items: NavItem[];
 }
 
@@ -20,11 +28,14 @@ export const navigation: NavSection[] = [
     {
         // Above every section and in none: where the day starts.
         step: 1,
+        view: "dashboard.view",
         items: [{ label: "Dashboard", title: "Dashboard", href: "~/dashboard", icon: "dashboard" }],
     },
     {
         title: "Company",
         step: 6,
+        view: "company.view",
+        edit: "company.edit",
         items: [
             { label: "People", title: "People", href: "~/company/people", icon: "people" },
             { label: "Clients", title: "Clients", href: "~/company/clients", icon: "clients" },
@@ -42,6 +53,8 @@ export const navigation: NavSection[] = [
     {
         title: "Electronic devices",
         step: 2,
+        view: "electronic_devices.view",
+        edit: "electronic_devices.edit",
         items: [
             {
                 label: "Electronic devices",
@@ -66,6 +79,8 @@ export const navigation: NavSection[] = [
     {
         title: "Licenses",
         step: 3,
+        view: "licenses.view",
+        edit: "licenses.edit",
         items: [
             { label: "Licenses", title: "Licenses", href: "~/licenses", icon: "licenses" },
             {
@@ -85,6 +100,8 @@ export const navigation: NavSection[] = [
     {
         title: "Furniture",
         step: 4,
+        view: "furniture.view",
+        edit: "furniture.edit",
         items: [
             { label: "Furniture", title: "Furniture", href: "~/furniture", icon: "furniture" },
             { label: "Types", title: "Furniture types", href: "~/furniture/types", icon: "furnitureTypes" },
@@ -93,6 +110,8 @@ export const navigation: NavSection[] = [
     {
         title: "Information",
         step: 5,
+        view: "information.view",
+        edit: "information.edit",
         items: [
             {
                 label: "Information",
@@ -117,6 +136,8 @@ export const navigation: NavSection[] = [
     {
         title: "Infrastructure",
         step: 4,
+        view: "infrastructure.view",
+        edit: "infrastructure.edit",
         items: [
             {
                 label: "Virtual machines",
@@ -137,21 +158,55 @@ export const navigation: NavSection[] = [
         title: "Administration",
         step: 7,
         items: [
-            { label: "Audit log", title: "Audit log", href: "~/administration/audit-log", icon: "auditLog" },
+            {
+                label: "Users",
+                title: "Users",
+                href: "~/administration/users",
+                icon: "users",
+                view: "users.manage",
+                edit: "users.manage",
+            },
+            {
+                label: "Audit log",
+                title: "Audit log",
+                href: "~/administration/audit-log",
+                icon: "auditLog",
+                view: "audit_log.view",
+            },
             {
                 label: "Server log",
                 title: "Server log",
                 href: "~/administration/server-log",
                 icon: "serverLog",
+                view: "server_log.view",
             },
         ],
     },
 ];
 
-/** Where `~/` lands: there is no home screen, as in the original. */
-export const landing = navigation[0].items[0].href;
+/** An item with the permissions it takes, its own or its section's. */
+export interface Destination extends NavItem {
+    view: Permission;
+    edit?: Permission;
+}
+
+export const destinations: Destination[] = navigation.flatMap((section) =>
+    section.items.map((item) => ({
+        ...item,
+        view: item.view ?? section.view!,
+        edit: item.view ? item.edit : section.edit,
+    })),
+);
+
+/** Where `~/` lands: the first item the reader can see. There is no home screen, as in the original. */
+export const landingFor = (permissions: readonly Permission[]) =>
+    destinations.find((d) => permissions.includes(d.view))?.href ?? "~/not-found";
 
 const hrefs = navigation.flatMap((section) => section.items.map((item) => item.href));
+
+/** The item an address belongs to — its own page, or a record under it — or none. */
+export const destinationOf = (url: string | null | undefined) =>
+    destinations.find((d) => isCurrent(d.href, url));
 
 /**
  * Whether the address is the item's — its own, or a record under it — rather than another item's

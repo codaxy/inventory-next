@@ -15,6 +15,7 @@ public class DataProtectionTests(InventoryApplication app) : IClassFixture<Inven
     {
         var client = app.CreateClient();
         const string email = "keyring@codaxy.com";
+        await app.UserAsync(email);
 
         await client.PostAsJsonAsync("/api/auth/one-time-code/request", new { email });
         var response = await client.PostAsJsonAsync(

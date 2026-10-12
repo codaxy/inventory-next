@@ -13,9 +13,10 @@ import {
 import { dateValue, numberValue } from "../../../../bindings";
 import { expiryClass } from "../../../../licensing";
 import { inventoryNumber } from "../../../../components/inventoryNumber";
-import { historyAction, moreActions } from "../../../../components/moreActions";
+import { historyAction, deleteAction, moreActions } from "../../../../components/moreActions";
 import { listReturn } from "../../../../listAddress";
 import { externalLink } from "../../../../components/externalLink";
+import { mayEdit, permissions } from "../../../../access";
 import $app from "../../../../model";
 import Controller from "./Controller";
 import m from "./model";
@@ -28,7 +29,18 @@ const v = a.view;
 const creating = expr(a.id, (id) => !id);
 const shown = hasValue(a.view);
 const active = expr(a.view, (view) => !!view?.active);
-const ended = expr(a.view, (view) => !!view && !view.active);
+const deactivatable = expr(
+    a.view,
+    $app.url,
+    permissions,
+    (view, url, held) => !!view?.active && mayEdit(url, held),
+);
+const reactivatable = expr(
+    a.view,
+    $app.url,
+    permissions,
+    (view, url, held) => !!view && !view.active && mayEdit(url, held),
+);
 const noVolume = expr(a.draft.volumeId, (id) => !id);
 
 /** A fact naming a record with a page: a link to it where there is one, the plain value otherwise. */
@@ -93,7 +105,7 @@ export default createFunctionalComponent(() => (
                         <div class="editor-heading-actions" visible={shown}>
                             <Button
                                 mod="primary"
-                                visible={active}
+                                visible={deactivatable}
                                 onClick="deactivate"
                                 attrs={{ "aria-label": "Deactivate", title: "Deactivate" }}
                             >
@@ -102,17 +114,14 @@ export default createFunctionalComponent(() => (
                             </Button>
                             <Button
                                 mod="primary"
-                                visible={ended}
+                                visible={reactivatable}
                                 onClick="reactivate"
                                 attrs={{ "aria-label": "Reactivate", title: "Reactivate" }}
                             >
                                 <Icon name="reactivate" class="size-4" />
                                 <span class="hidden sm:inline" text="Reactivate" />
                             </Button>
-                            {moreActions([
-                                historyAction(a.id),
-                                { text: "Delete", icon: "delete", onClick: "remove", danger: true },
-                            ])}
+                            {moreActions([historyAction(a.id), deleteAction])}
                         </div>
                     </div>
                 </div>

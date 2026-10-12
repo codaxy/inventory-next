@@ -42,6 +42,12 @@ must be supplied is present and empty rather than filled with a placeholder stri
 valid value, so it reaches whatever consumes it and comes back as a parse error instead of "this is
 not configured". `ConnectionStrings:PostgreSQL` is checked at startup and names itself when it is
 missing.
+**`Auth:SeedUsers` names the first users** — `Auth__SeedUsers__0__Email`, `__Name` and `__Role` (a
+role's name, `System Admin` for the first) — created at start when missing, never changed after. Empty
+in `appsettings.json`; **a start with no active System Admin stops**, so a fresh deployment names one.
+`Auth:AllowedUsers` admits its addresses as Admin until they are added as users (see
+[auth.md](auth.md)); a deployment limited by domain alone admits only its users.
+
 Google is off until a client id and secret arrive, which in compose is through the environment:
 
 ```

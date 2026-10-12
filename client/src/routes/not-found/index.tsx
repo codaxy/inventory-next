@@ -1,7 +1,7 @@
 import { createFunctionalComponent } from "cx/ui";
 import { Link } from "cx/widgets";
 
-import { landing } from "../../layout/navigation";
+import { landing } from "../../access";
 
 export default createFunctionalComponent(() => (
     <cx>

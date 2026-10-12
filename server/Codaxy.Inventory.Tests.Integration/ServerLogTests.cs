@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Codaxy.Inventory.App.Administration.Roles;
 using Codaxy.Inventory.App.Administration.ServerLogs;
 using Codaxy.Inventory.App.Shared.Paging;
 using Codaxy.Inventory.Tests.Integration.Infrastructure;
@@ -123,7 +124,7 @@ public class ServerLogTests(ServerLogApplication app) : IClassFixture<ServerLogA
 
     private async Task<Page<LogEntry>> List(string query)
     {
-        var client = await app.ClientAsync();
+        var client = await app.ClientAsync(role: BuiltInRoles.SystemAdmin);
         return (await client.GetFromJsonAsync<Page<LogEntry>>($"{Url}/?{query}"))!;
     }
 
@@ -138,7 +139,7 @@ public class ServerLogTests(ServerLogApplication app) : IClassFixture<ServerLogA
     [Fact]
     public async Task Days_are_the_dated_files_newest_first()
     {
-        var client = await app.ClientAsync();
+        var client = await app.ClientAsync(role: BuiltInRoles.SystemAdmin);
         var days = (
             await client.GetFromJsonAsync<App.Administration.ServerLogs.Days.Endpoint.Response>(
                 $"{Url}/days"
@@ -245,7 +246,7 @@ public class ServerLogTests(ServerLogApplication app) : IClassFixture<ServerLogA
     [InlineData(Tenth + "&pageSize=101")]
     public async Task Refuses_a_query_outside_the_convention(string query)
     {
-        var client = await app.ClientAsync();
+        var client = await app.ClientAsync(role: BuiltInRoles.SystemAdmin);
         var response = await client.GetAsync($"{Url}/?{query}");
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -254,7 +255,7 @@ public class ServerLogTests(ServerLogApplication app) : IClassFixture<ServerLogA
     [Fact]
     public async Task The_application_writes_its_own_requests_to_todays_file()
     {
-        var client = await app.ClientAsync();
+        var client = await app.ClientAsync(role: BuiltInRoles.SystemAdmin);
         await client.GetAsync($"{Url}/days");
 
         var now = DateTimeOffset.UtcNow;
@@ -303,7 +304,7 @@ public class ServerLogRetentionTests(RetentionApplication app) : IClassFixture<R
     public async Task A_day_past_the_retention_is_deleted_and_one_within_it_kept()
     {
         // The sink applies the retention when it opens today's file, on the first entry written.
-        var client = await app.ClientAsync();
+        var client = await app.ClientAsync(role: BuiltInRoles.SystemAdmin);
         await client.GetAsync("/api/administration/server-log/days");
 
         Assert.False(
@@ -315,7 +316,7 @@ public class ServerLogRetentionTests(RetentionApplication app) : IClassFixture<R
     [Fact]
     public async Task Outside_development_a_request_leaves_no_line()
     {
-        var client = await app.ClientAsync();
+        var client = await app.ClientAsync(role: BuiltInRoles.SystemAdmin);
         await client.GetAsync("/api/administration/server-log/days");
 
         var today = Path.Combine(app.ServerLogPath, RetentionApplication.FileFor(0));

@@ -17,10 +17,839 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.4")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Administration.Roles.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsBuiltIn")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_built_in");
+
+                    b.Property<bool>("IsSystemAdmin")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_system_admin");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_role");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_role_name");
+
+                    b.ToTable("role", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Administration.Roles.RolePermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Permission")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("permission");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_role_permission");
+
+                    b.HasIndex("RoleId", "Permission")
+                        .IsUnique()
+                        .HasDatabaseName("ix_role_permission_role_id_permission");
+
+                    b.ToTable("role_permission", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Administration.Users.AppUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("email");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_app_user");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("ix_app_user_email");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("ix_app_user_role_id");
+
+                    b.ToTable("app_user", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Clients.Client", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_client");
+
+                    b.ToTable("client", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.City", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CountryCode")
+                        .HasColumnType("character(2)")
+                        .HasColumnName("country_code");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_city");
+
+                    b.HasIndex("CountryCode")
+                        .HasDatabaseName("ix_city_country_code");
+
+                    b.ToTable("city", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.Country", b =>
+                {
+                    b.Property<string>("Code")
+                        .HasMaxLength(2)
+                        .HasColumnType("character(2)")
+                        .HasColumnName("code")
+                        .IsFixedLength();
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Code")
+                        .HasName("pk_country");
+
+                    b.ToTable("country", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.Location", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CityId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("city_id");
+
+                    b.Property<string>("CountryCode")
+                        .HasColumnType("character(2)")
+                        .HasColumnName("country_code");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
+
+                    b.Property<int?>("Floor")
+                        .HasColumnType("integer")
+                        .HasColumnName("floor");
+
+                    b.Property<int?>("HouseNumber")
+                        .HasColumnType("integer")
+                        .HasColumnName("house_number");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("PostalCode")
+                        .HasMaxLength(8)
+                        .HasColumnType("character varying(8)")
+                        .HasColumnName("postal_code");
+
+                    b.Property<string>("Room")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("room");
+
+                    b.Property<Guid?>("StateId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("state_id");
+
+                    b.Property<string>("Street")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("street");
+
+                    b.HasKey("Id")
+                        .HasName("pk_location");
+
+                    b.HasIndex("CityId")
+                        .HasDatabaseName("ix_location_city_id");
+
+                    b.HasIndex("CountryCode")
+                        .HasDatabaseName("ix_location_country_code");
+
+                    b.HasIndex("StateId")
+                        .HasDatabaseName("ix_location_state_id");
+
+                    b.ToTable("location", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.State", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CountryCode")
+                        .HasColumnType("character(2)")
+                        .HasColumnName("country_code");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_state");
+
+                    b.HasIndex("CountryCode")
+                        .HasDatabaseName("ix_state_country_code");
+
+                    b.ToTable("state", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Manufacturers.Manufacturer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("text")
+                        .HasColumnName("url");
+
+                    b.HasKey("Id")
+                        .HasName("pk_manufacturer");
+
+                    b.ToTable("manufacturer", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.People.Person", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_person");
+
+                    b.ToTable("person", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Projects.Project", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("client_id");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("ProjectOwnerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("project_owner_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_project");
+
+                    b.HasIndex("ClientId")
+                        .HasDatabaseName("ix_project_client_id");
+
+                    b.HasIndex("ProjectOwnerId")
+                        .HasDatabaseName("ix_project_project_owner_id");
+
+                    b.ToTable("project", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Vendors.Vendor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ContactPerson")
+                        .HasColumnType("text")
+                        .HasColumnName("contact_person");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("text")
+                        .HasColumnName("location");
+
+                    b.Property<string>("MobilePhone")
+                        .HasColumnType("text")
+                        .HasColumnName("mobile_phone");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("text")
+                        .HasColumnName("phone");
+
+                    b.Property<string>("RegistrationNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("registration_number");
+
+                    b.Property<string>("VATNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("vat_number");
+
+                    b.Property<string>("Web")
+                        .HasColumnType("text")
+                        .HasColumnName("web");
+
+                    b.HasKey("Id")
+                        .HasName("pk_vendor");
+
+                    b.ToTable("vendor", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Devices.ElectronicDevice", b =>
+                {
+                    b.Property<Guid>("AssetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("asset_id");
+
+                    b.Property<Guid?>("ElectronicDeviceTypeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("electronic_device_type_id");
+
+                    b.Property<DateOnly?>("GuaranteeExpirationDate")
+                        .HasColumnType("date")
+                        .HasColumnName("guarantee_expiration_date");
+
+                    b.Property<string>("GuaranteeNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("guarantee_number");
+
+                    b.Property<Guid?>("ManufacturerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("manufacturer_id");
+
+                    b.Property<DateOnly?>("ManufacturingDate")
+                        .HasColumnType("date")
+                        .HasColumnName("manufacturing_date");
+
+                    b.Property<string>("ModelCode")
+                        .HasColumnType("text")
+                        .HasColumnName("model_code");
+
+                    b.Property<string>("ModelName")
+                        .HasColumnType("text")
+                        .HasColumnName("model_name");
+
+                    b.Property<string>("SerialNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("serial_number");
+
+                    b.HasKey("AssetId")
+                        .HasName("pk_electronic_device");
+
+                    b.HasIndex("ElectronicDeviceTypeId")
+                        .HasDatabaseName("ix_electronic_device_electronic_device_type_id");
+
+                    b.HasIndex("ManufacturerId")
+                        .HasDatabaseName("ix_electronic_device_manufacturer_id");
+
+                    b.ToTable("electronic_device", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Tags.ElectronicDeviceTag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_electronic_device_tag");
+
+                    b.ToTable("electronic_device_tag", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Types.ElectronicDeviceType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("HoldLicences")
+                        .HasColumnType("boolean")
+                        .HasColumnName("hold_licences");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_electronic_device_type");
+
+                    b.ToTable("electronic_device_type", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Types.ElectronicDeviceTypeElectronicDeviceTag", b =>
+                {
+                    b.Property<Guid>("ElectronicDeviceTypeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("electronic_device_type_id");
+
+                    b.Property<Guid>("ElectronicDeviceTagId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("electronic_device_tag_id");
+
+                    b.HasKey("ElectronicDeviceTypeId", "ElectronicDeviceTagId")
+                        .HasName("pk_electronic_device_type_electronic_device_tag");
+
+                    b.HasIndex("ElectronicDeviceTagId")
+                        .HasDatabaseName("ix_electronic_device_type_electronic_device_tag_electronic_dev");
+
+                    b.ToTable("electronic_device_type_electronic_device_tag", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Furnitures.Items.Furniture", b =>
+                {
+                    b.Property<Guid>("AssetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("asset_id");
+
+                    b.Property<Guid?>("FurnitureTypeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("furniture_type_id");
+
+                    b.Property<string>("Model")
+                        .HasColumnType("text")
+                        .HasColumnName("model");
+
+                    b.HasKey("AssetId")
+                        .HasName("pk_furniture");
+
+                    b.HasIndex("FurnitureTypeId")
+                        .HasDatabaseName("ix_furniture_furniture_type_id");
+
+                    b.ToTable("furniture", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Furnitures.Types.FurnitureType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_furniture_type");
+
+                    b.ToTable("furniture_type", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Items.Information", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AccessRights")
+                        .HasColumnType("text")
+                        .HasColumnName("access_rights");
+
+                    b.Property<string>("Author")
+                        .HasColumnType("text")
+                        .HasColumnName("author");
+
+                    b.Property<Guid?>("AvailabilityId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("availability_id");
+
+                    b.Property<bool?>("ClientsPersonalInformation")
+                        .HasColumnType("boolean")
+                        .HasColumnName("clients_personal_information");
+
+                    b.Property<Guid?>("ConfidentialityId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("confidentiality_id");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<Guid?>("ImportanceId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("importance_id");
+
+                    b.Property<bool?>("Incomplete")
+                        .HasColumnType("boolean")
+                        .HasColumnName("incomplete");
+
+                    b.Property<Guid>("InformationTypeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("information_type_id");
+
+                    b.Property<Guid?>("IntegrityId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("integrity_id");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text")
+                        .HasColumnName("note");
+
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("person_id");
+
+                    b.Property<bool?>("PersonalInformation")
+                        .HasColumnType("boolean")
+                        .HasColumnName("personal_information");
+
+                    b.Property<Guid?>("ProjectId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("project_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_information");
+
+                    b.HasIndex("AvailabilityId")
+                        .HasDatabaseName("ix_information_availability_id");
+
+                    b.HasIndex("ConfidentialityId")
+                        .HasDatabaseName("ix_information_confidentiality_id");
+
+                    b.HasIndex("ImportanceId")
+                        .HasDatabaseName("ix_information_importance_id");
+
+                    b.HasIndex("InformationTypeId")
+                        .HasDatabaseName("ix_information_information_type_id");
+
+                    b.HasIndex("IntegrityId")
+                        .HasDatabaseName("ix_information_integrity_id");
+
+                    b.HasIndex("PersonId")
+                        .HasDatabaseName("ix_information_person_id");
+
+                    b.HasIndex("ProjectId")
+                        .HasDatabaseName("ix_information_project_id");
+
+                    b.ToTable("information", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Items.InformationLocation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid?>("CloudId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("cloud_id");
+
+                    b.Property<Guid?>("ElectronicDeviceId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("electronic_device_id");
+
+                    b.Property<Guid>("InformationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("information_id");
+
+                    b.Property<Guid?>("PhysicalLocationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("physical_location_id");
+
+                    b.Property<Guid?>("SoftwareId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("software_id");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("text")
+                        .HasColumnName("url");
+
+                    b.Property<Guid?>("VirtualMachineId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("virtual_machine_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_information_location");
+
+                    b.HasIndex("CloudId")
+                        .HasDatabaseName("ix_information_location_cloud_id");
+
+                    b.HasIndex("ElectronicDeviceId")
+                        .HasDatabaseName("ix_information_location_electronic_device_id");
+
+                    b.HasIndex("InformationId")
+                        .HasDatabaseName("ix_information_location_information_id");
+
+                    b.HasIndex("PhysicalLocationId")
+                        .HasDatabaseName("ix_information_location_physical_location_id");
+
+                    b.HasIndex("SoftwareId")
+                        .HasDatabaseName("ix_information_location_software_id");
+
+                    b.HasIndex("VirtualMachineId")
+                        .HasDatabaseName("ix_information_location_virtual_machine_id");
+
+                    b.ToTable("information_location", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Tags.InformationTag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_information_tag");
+
+                    b.ToTable("information_tag", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Tags.InformationTagInformation", b =>
+                {
+                    b.Property<Guid>("InformationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("information_id");
+
+                    b.Property<Guid>("InformationTagId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("information_tag_id");
+
+                    b.HasKey("InformationId", "InformationTagId")
+                        .HasName("pk_information_tag_information");
+
+                    b.HasIndex("InformationTagId")
+                        .HasDatabaseName("ix_information_tag_information_information_tag_id");
+
+                    b.ToTable("information_tag_information", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Types.InformationType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_information_type");
+
+                    b.ToTable("information_type", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.CloudSubscriptions.Cloud", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ManagementURL")
+                        .HasColumnType("text")
+                        .HasColumnName("management_url");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("VolumeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("volume_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_cloud");
+
+                    b.HasIndex("VolumeId")
+                        .HasDatabaseName("ix_cloud_volume_id");
+
+                    b.ToTable("cloud", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.Softwares.Software", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("VolumeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("volume_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_software");
+
+                    b.HasIndex("VolumeId")
+                        .HasDatabaseName("ix_software_volume_id");
+
+                    b.ToTable("software", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.VirtualMachines.VirtualMachine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("IPAddress")
+                        .HasColumnType("text")
+                        .HasColumnName("ip_address");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_virtual_machine");
+
+                    b.ToTable("virtual_machine", (string)null);
+                });
 
             modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Activations.Activation", b =>
                 {
@@ -66,6 +895,304 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .HasDatabaseName("ix_activation_volume_id");
 
                     b.ToTable("activation", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.Currency", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text")
+                        .HasColumnName("text");
+
+                    b.HasKey("Id")
+                        .HasName("pk_currency");
+
+                    b.ToTable("currency", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.License", b =>
+                {
+                    b.Property<Guid>("AssetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("asset_id");
+
+                    b.Property<bool?>("AutoRenew")
+                        .HasColumnType("boolean")
+                        .HasColumnName("auto_renew");
+
+                    b.Property<Guid?>("CurrencyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("currency_id");
+
+                    b.Property<string>("KeyIdentifier")
+                        .HasColumnType("text")
+                        .HasColumnName("key_identifier");
+
+                    b.Property<Guid?>("LicenseExpirationModelId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("license_expiration_model_id");
+
+                    b.Property<Guid?>("LicenseModelId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("license_model_id");
+
+                    b.Property<Guid?>("LicenseTypeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("license_type_id");
+
+                    b.Property<string>("ManagementConsoleUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("management_console_url");
+
+                    b.Property<Guid?>("PeriodId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("period_id");
+
+                    b.Property<string>("RegistrationNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("registration_number");
+
+                    b.Property<DateOnly?>("SubscriptionExpirationDate")
+                        .HasColumnType("date")
+                        .HasColumnName("subscription_expiration_date");
+
+                    b.Property<decimal?>("SubscriptionFee")
+                        .HasColumnType("numeric")
+                        .HasColumnName("subscription_fee");
+
+                    b.HasKey("AssetId")
+                        .HasName("pk_license");
+
+                    b.HasIndex("CurrencyId")
+                        .HasDatabaseName("ix_license_currency_id");
+
+                    b.HasIndex("LicenseExpirationModelId")
+                        .HasDatabaseName("ix_license_license_expiration_model_id");
+
+                    b.HasIndex("LicenseModelId")
+                        .HasDatabaseName("ix_license_license_model_id");
+
+                    b.HasIndex("LicenseTypeId")
+                        .HasDatabaseName("ix_license_license_type_id");
+
+                    b.HasIndex("PeriodId")
+                        .HasDatabaseName("ix_license_period_id");
+
+                    b.ToTable("license", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.LicenseCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text")
+                        .HasColumnName("text");
+
+                    b.HasKey("Id")
+                        .HasName("pk_license_category");
+
+                    b.ToTable("license_category", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.LicenseClass", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text")
+                        .HasColumnName("text");
+
+                    b.HasKey("Id")
+                        .HasName("pk_license_class");
+
+                    b.ToTable("license_class", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.LicenseExpirationModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text")
+                        .HasColumnName("text");
+
+                    b.HasKey("Id")
+                        .HasName("pk_license_expiration_model");
+
+                    b.ToTable("license_expiration_model", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.LicenseModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text")
+                        .HasColumnName("text");
+
+                    b.HasKey("Id")
+                        .HasName("pk_license_model");
+
+                    b.ToTable("license_model", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.LicenseType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text")
+                        .HasColumnName("text");
+
+                    b.HasKey("Id")
+                        .HasName("pk_license_type");
+
+                    b.ToTable("license_type", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.Period", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text")
+                        .HasColumnName("text");
+
+                    b.HasKey("Id")
+                        .HasName("pk_period");
+
+                    b.ToTable("period", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.SoftwareServices.SoftwareOrService", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ManufacturerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("manufacturer_id");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("SoftwareOrServiceCategoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("software_or_service_category_id");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("text")
+                        .HasColumnName("url");
+
+                    b.HasKey("Id")
+                        .HasName("pk_software_or_service");
+
+                    b.HasIndex("ManufacturerId")
+                        .HasDatabaseName("ix_software_or_service_manufacturer_id");
+
+                    b.HasIndex("SoftwareOrServiceCategoryId")
+                        .HasDatabaseName("ix_software_or_service_software_or_service_category_id");
+
+                    b.ToTable("software_or_service", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.SoftwareServices.SoftwareOrServiceCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_software_or_service_category");
+
+                    b.ToTable("software_or_service_category", (string)null);
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Persistence.AuditLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ActionType")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("action_type");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("email");
+
+                    b.Property<Guid>("EntityId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("entity_id");
+
+                    b.Property<string>("NewValuesJson")
+                        .HasColumnType("text")
+                        .HasColumnName("new_values_json");
+
+                    b.Property<string>("OldValuesJson")
+                        .HasColumnType("text")
+                        .HasColumnName("old_values_json");
+
+                    b.Property<string>("Table")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("table");
+
+                    b.Property<DateTimeOffset>("TimeCreated")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("time_created");
+
+                    b.Property<Guid?>("TransactionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("transaction_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_audit_log");
+
+                    b.HasIndex("Email")
+                        .HasDatabaseName("ix_audit_log_email");
+
+                    b.HasIndex("EntityId")
+                        .HasDatabaseName("ix_audit_log_entity_id");
+
+                    b.HasIndex("Table", "EntityId")
+                        .HasDatabaseName("ix_audit_log_table_entity_id");
+
+                    b.ToTable("audit_log", (string)null);
                 });
 
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Assets.Asset", b =>
@@ -286,89 +1413,6 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("asset_type", (string)null);
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Persistence.AuditLog", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("ActionType")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("action_type");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)")
-                        .HasColumnName("email");
-
-                    b.Property<Guid>("EntityId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("entity_id");
-
-                    b.Property<string>("NewValuesJson")
-                        .HasColumnType("text")
-                        .HasColumnName("new_values_json");
-
-                    b.Property<string>("OldValuesJson")
-                        .HasColumnType("text")
-                        .HasColumnName("old_values_json");
-
-                    b.Property<string>("Table")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("table");
-
-                    b.Property<DateTimeOffset>("TimeCreated")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("time_created");
-
-                    b.Property<Guid?>("TransactionId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("transaction_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_audit_log");
-
-                    b.HasIndex("Email")
-                        .HasDatabaseName("ix_audit_log_email");
-
-                    b.HasIndex("EntityId")
-                        .HasDatabaseName("ix_audit_log_entity_id");
-
-                    b.HasIndex("Table", "EntityId")
-                        .HasDatabaseName("ix_audit_log_table_entity_id");
-
-                    b.ToTable("audit_log", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Classification.Availability", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Level")
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)")
-                        .HasColumnName("level");
-
-                    b.Property<int>("Weight")
-                        .HasColumnType("integer")
-                        .HasColumnName("weight");
-
-                    b.HasKey("Id")
-                        .HasName("pk_availability");
-
-                    b.ToTable("availability", (string)null);
-                });
-
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Assets.BusinessEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -384,785 +1428,6 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .HasName("pk_business_entity");
 
                     b.ToTable("business_entity", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.City", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("CountryCode")
-                        .HasColumnType("character(2)")
-                        .HasColumnName("country_code");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_city");
-
-                    b.HasIndex("CountryCode")
-                        .HasDatabaseName("ix_city_country_code");
-
-                    b.ToTable("city", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.Clients.Client", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_client");
-
-                    b.ToTable("client", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.CloudSubscriptions.Cloud", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("ManagementURL")
-                        .HasColumnType("text")
-                        .HasColumnName("management_url");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<Guid>("VolumeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("volume_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_cloud");
-
-                    b.HasIndex("VolumeId")
-                        .HasDatabaseName("ix_cloud_volume_id");
-
-                    b.ToTable("cloud", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Classification.Confidentiality", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Level")
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)")
-                        .HasColumnName("level");
-
-                    b.Property<int>("Weight")
-                        .HasColumnType("integer")
-                        .HasColumnName("weight");
-
-                    b.HasKey("Id")
-                        .HasName("pk_confidentiality");
-
-                    b.ToTable("confidentiality", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.Country", b =>
-                {
-                    b.Property<string>("Code")
-                        .HasMaxLength(2)
-                        .HasColumnType("character(2)")
-                        .HasColumnName("code")
-                        .IsFixedLength();
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Code")
-                        .HasName("pk_country");
-
-                    b.ToTable("country", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.Currency", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("text")
-                        .HasColumnName("text");
-
-                    b.HasKey("Id")
-                        .HasName("pk_currency");
-
-                    b.ToTable("currency", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Devices.ElectronicDevice", b =>
-                {
-                    b.Property<Guid>("AssetId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("asset_id");
-
-                    b.Property<Guid?>("ElectronicDeviceTypeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("electronic_device_type_id");
-
-                    b.Property<DateOnly?>("GuaranteeExpirationDate")
-                        .HasColumnType("date")
-                        .HasColumnName("guarantee_expiration_date");
-
-                    b.Property<string>("GuaranteeNumber")
-                        .HasColumnType("text")
-                        .HasColumnName("guarantee_number");
-
-                    b.Property<Guid?>("ManufacturerId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("manufacturer_id");
-
-                    b.Property<DateOnly?>("ManufacturingDate")
-                        .HasColumnType("date")
-                        .HasColumnName("manufacturing_date");
-
-                    b.Property<string>("ModelCode")
-                        .HasColumnType("text")
-                        .HasColumnName("model_code");
-
-                    b.Property<string>("ModelName")
-                        .HasColumnType("text")
-                        .HasColumnName("model_name");
-
-                    b.Property<string>("SerialNumber")
-                        .HasColumnType("text")
-                        .HasColumnName("serial_number");
-
-                    b.HasKey("AssetId")
-                        .HasName("pk_electronic_device");
-
-                    b.HasIndex("ElectronicDeviceTypeId")
-                        .HasDatabaseName("ix_electronic_device_electronic_device_type_id");
-
-                    b.HasIndex("ManufacturerId")
-                        .HasDatabaseName("ix_electronic_device_manufacturer_id");
-
-                    b.ToTable("electronic_device", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Tags.ElectronicDeviceTag", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_electronic_device_tag");
-
-                    b.ToTable("electronic_device_tag", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Types.ElectronicDeviceType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<bool>("HoldLicences")
-                        .HasColumnType("boolean")
-                        .HasColumnName("hold_licences");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_electronic_device_type");
-
-                    b.ToTable("electronic_device_type", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Types.ElectronicDeviceTypeElectronicDeviceTag", b =>
-                {
-                    b.Property<Guid>("ElectronicDeviceTypeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("electronic_device_type_id");
-
-                    b.Property<Guid>("ElectronicDeviceTagId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("electronic_device_tag_id");
-
-                    b.HasKey("ElectronicDeviceTypeId", "ElectronicDeviceTagId")
-                        .HasName("pk_electronic_device_type_electronic_device_tag");
-
-                    b.HasIndex("ElectronicDeviceTagId")
-                        .HasDatabaseName("ix_electronic_device_type_electronic_device_tag_electronic_dev");
-
-                    b.ToTable("electronic_device_type_electronic_device_tag", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Furnitures.Items.Furniture", b =>
-                {
-                    b.Property<Guid>("AssetId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("asset_id");
-
-                    b.Property<Guid?>("FurnitureTypeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("furniture_type_id");
-
-                    b.Property<string>("Model")
-                        .HasColumnType("text")
-                        .HasColumnName("model");
-
-                    b.HasKey("AssetId")
-                        .HasName("pk_furniture");
-
-                    b.HasIndex("FurnitureTypeId")
-                        .HasDatabaseName("ix_furniture_furniture_type_id");
-
-                    b.ToTable("furniture", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Furnitures.Types.FurnitureType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_furniture_type");
-
-                    b.ToTable("furniture_type", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Classification.Importance", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Level")
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)")
-                        .HasColumnName("level");
-
-                    b.HasKey("Id")
-                        .HasName("pk_importance");
-
-                    b.ToTable("importance", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Items.Information", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("AccessRights")
-                        .HasColumnType("text")
-                        .HasColumnName("access_rights");
-
-                    b.Property<string>("Author")
-                        .HasColumnType("text")
-                        .HasColumnName("author");
-
-                    b.Property<Guid?>("AvailabilityId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("availability_id");
-
-                    b.Property<bool?>("ClientsPersonalInformation")
-                        .HasColumnType("boolean")
-                        .HasColumnName("clients_personal_information");
-
-                    b.Property<Guid?>("ConfidentialityId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("confidentiality_id");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<Guid?>("ImportanceId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("importance_id");
-
-                    b.Property<bool?>("Incomplete")
-                        .HasColumnType("boolean")
-                        .HasColumnName("incomplete");
-
-                    b.Property<Guid>("InformationTypeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("information_type_id");
-
-                    b.Property<Guid?>("IntegrityId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("integrity_id");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("text")
-                        .HasColumnName("note");
-
-                    b.Property<Guid>("PersonId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("person_id");
-
-                    b.Property<bool?>("PersonalInformation")
-                        .HasColumnType("boolean")
-                        .HasColumnName("personal_information");
-
-                    b.Property<Guid?>("ProjectId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("project_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_information");
-
-                    b.HasIndex("AvailabilityId")
-                        .HasDatabaseName("ix_information_availability_id");
-
-                    b.HasIndex("ConfidentialityId")
-                        .HasDatabaseName("ix_information_confidentiality_id");
-
-                    b.HasIndex("ImportanceId")
-                        .HasDatabaseName("ix_information_importance_id");
-
-                    b.HasIndex("InformationTypeId")
-                        .HasDatabaseName("ix_information_information_type_id");
-
-                    b.HasIndex("IntegrityId")
-                        .HasDatabaseName("ix_information_integrity_id");
-
-                    b.HasIndex("PersonId")
-                        .HasDatabaseName("ix_information_person_id");
-
-                    b.HasIndex("ProjectId")
-                        .HasDatabaseName("ix_information_project_id");
-
-                    b.ToTable("information", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Items.InformationLocation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid?>("CloudId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("cloud_id");
-
-                    b.Property<Guid?>("ElectronicDeviceId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("electronic_device_id");
-
-                    b.Property<Guid>("InformationId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("information_id");
-
-                    b.Property<Guid?>("PhysicalLocationId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("physical_location_id");
-
-                    b.Property<Guid?>("SoftwareId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("software_id");
-
-                    b.Property<string>("URL")
-                        .HasColumnType("text")
-                        .HasColumnName("url");
-
-                    b.Property<Guid?>("VirtualMachineId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("virtual_machine_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_information_location");
-
-                    b.HasIndex("CloudId")
-                        .HasDatabaseName("ix_information_location_cloud_id");
-
-                    b.HasIndex("ElectronicDeviceId")
-                        .HasDatabaseName("ix_information_location_electronic_device_id");
-
-                    b.HasIndex("InformationId")
-                        .HasDatabaseName("ix_information_location_information_id");
-
-                    b.HasIndex("PhysicalLocationId")
-                        .HasDatabaseName("ix_information_location_physical_location_id");
-
-                    b.HasIndex("SoftwareId")
-                        .HasDatabaseName("ix_information_location_software_id");
-
-                    b.HasIndex("VirtualMachineId")
-                        .HasDatabaseName("ix_information_location_virtual_machine_id");
-
-                    b.ToTable("information_location", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Tags.InformationTag", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_information_tag");
-
-                    b.ToTable("information_tag", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Tags.InformationTagInformation", b =>
-                {
-                    b.Property<Guid>("InformationId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("information_id");
-
-                    b.Property<Guid>("InformationTagId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("information_tag_id");
-
-                    b.HasKey("InformationId", "InformationTagId")
-                        .HasName("pk_information_tag_information");
-
-                    b.HasIndex("InformationTagId")
-                        .HasDatabaseName("ix_information_tag_information_information_tag_id");
-
-                    b.ToTable("information_tag_information", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Types.InformationType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_information_type");
-
-                    b.ToTable("information_type", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Classification.Integrity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Level")
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)")
-                        .HasColumnName("level");
-
-                    b.Property<int>("Weight")
-                        .HasColumnType("integer")
-                        .HasColumnName("weight");
-
-                    b.HasKey("Id")
-                        .HasName("pk_integrity");
-
-                    b.ToTable("integrity", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.License", b =>
-                {
-                    b.Property<Guid>("AssetId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("asset_id");
-
-                    b.Property<bool?>("AutoRenew")
-                        .HasColumnType("boolean")
-                        .HasColumnName("auto_renew");
-
-                    b.Property<Guid?>("CurrencyId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("currency_id");
-
-                    b.Property<string>("KeyIdentifier")
-                        .HasColumnType("text")
-                        .HasColumnName("key_identifier");
-
-                    b.Property<Guid?>("LicenseExpirationModelId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("license_expiration_model_id");
-
-                    b.Property<Guid?>("LicenseModelId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("license_model_id");
-
-                    b.Property<Guid?>("LicenseTypeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("license_type_id");
-
-                    b.Property<string>("ManagementConsoleUrl")
-                        .HasColumnType("text")
-                        .HasColumnName("management_console_url");
-
-                    b.Property<Guid?>("PeriodId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("period_id");
-
-                    b.Property<string>("RegistrationNumber")
-                        .HasColumnType("text")
-                        .HasColumnName("registration_number");
-
-                    b.Property<DateOnly?>("SubscriptionExpirationDate")
-                        .HasColumnType("date")
-                        .HasColumnName("subscription_expiration_date");
-
-                    b.Property<decimal?>("SubscriptionFee")
-                        .HasColumnType("numeric")
-                        .HasColumnName("subscription_fee");
-
-                    b.HasKey("AssetId")
-                        .HasName("pk_license");
-
-                    b.HasIndex("CurrencyId")
-                        .HasDatabaseName("ix_license_currency_id");
-
-                    b.HasIndex("LicenseExpirationModelId")
-                        .HasDatabaseName("ix_license_license_expiration_model_id");
-
-                    b.HasIndex("LicenseModelId")
-                        .HasDatabaseName("ix_license_license_model_id");
-
-                    b.HasIndex("LicenseTypeId")
-                        .HasDatabaseName("ix_license_license_type_id");
-
-                    b.HasIndex("PeriodId")
-                        .HasDatabaseName("ix_license_period_id");
-
-                    b.ToTable("license", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.LicenseCategory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("text")
-                        .HasColumnName("text");
-
-                    b.HasKey("Id")
-                        .HasName("pk_license_category");
-
-                    b.ToTable("license_category", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.LicenseClass", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("text")
-                        .HasColumnName("text");
-
-                    b.HasKey("Id")
-                        .HasName("pk_license_class");
-
-                    b.ToTable("license_class", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.LicenseExpirationModel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("text")
-                        .HasColumnName("text");
-
-                    b.HasKey("Id")
-                        .HasName("pk_license_expiration_model");
-
-                    b.ToTable("license_expiration_model", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.LicenseModel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("text")
-                        .HasColumnName("text");
-
-                    b.HasKey("Id")
-                        .HasName("pk_license_model");
-
-                    b.ToTable("license_model", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.LicenseType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("text")
-                        .HasColumnName("text");
-
-                    b.HasKey("Id")
-                        .HasName("pk_license_type");
-
-                    b.ToTable("license_type", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.Location", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("CityId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("city_id");
-
-                    b.Property<string>("CountryCode")
-                        .HasColumnType("character(2)")
-                        .HasColumnName("country_code");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("description");
-
-                    b.Property<int?>("Floor")
-                        .HasColumnType("integer")
-                        .HasColumnName("floor");
-
-                    b.Property<int?>("HouseNumber")
-                        .HasColumnType("integer")
-                        .HasColumnName("house_number");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("PostalCode")
-                        .HasMaxLength(8)
-                        .HasColumnType("character varying(8)")
-                        .HasColumnName("postal_code");
-
-                    b.Property<string>("Room")
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
-                        .HasColumnName("room");
-
-                    b.Property<Guid?>("StateId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("state_id");
-
-                    b.Property<string>("Street")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("street");
-
-                    b.HasKey("Id")
-                        .HasName("pk_location");
-
-                    b.HasIndex("CityId")
-                        .HasDatabaseName("ix_location_city_id");
-
-                    b.HasIndex("CountryCode")
-                        .HasDatabaseName("ix_location_country_code");
-
-                    b.HasIndex("StateId")
-                        .HasDatabaseName("ix_location_state_id");
-
-                    b.ToTable("location", (string)null);
                 });
 
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Assets.MaintenanceContract", b =>
@@ -1244,96 +1509,6 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("maintenance_type", (string)null);
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.Manufacturers.Manufacturer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<string>("URL")
-                        .HasColumnType("text")
-                        .HasColumnName("url");
-
-                    b.HasKey("Id")
-                        .HasName("pk_manufacturer");
-
-                    b.ToTable("manufacturer", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.Period", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("text")
-                        .HasColumnName("text");
-
-                    b.HasKey("Id")
-                        .HasName("pk_period");
-
-                    b.ToTable("period", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.People.Person", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text")
-                        .HasColumnName("email");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_person");
-
-                    b.ToTable("person", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.Projects.Project", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("ClientId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("client_id");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<Guid>("ProjectOwnerId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("project_owner_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_project");
-
-                    b.HasIndex("ClientId")
-                        .HasDatabaseName("ix_project_client_id");
-
-                    b.HasIndex("ProjectOwnerId")
-                        .HasDatabaseName("ix_project_project_owner_id");
-
-                    b.ToTable("project", (string)null);
-                });
-
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Assets.Sequence", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1353,175 +1528,108 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("sequence", (string)null);
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.Softwares.Software", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Classification.Availability", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
-                    b.Property<Guid>("VolumeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("volume_id");
+                    b.Property<string>("Level")
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)")
+                        .HasColumnName("level");
+
+                    b.Property<int>("Weight")
+                        .HasColumnType("integer")
+                        .HasColumnName("weight");
 
                     b.HasKey("Id")
-                        .HasName("pk_software");
+                        .HasName("pk_availability");
 
-                    b.HasIndex("VolumeId")
-                        .HasDatabaseName("ix_software_volume_id");
-
-                    b.ToTable("software", (string)null);
+                    b.ToTable("availability", (string)null);
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.SoftwareServices.SoftwareOrService", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Classification.Confidentiality", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("ManufacturerId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("manufacturer_id");
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
+                    b.Property<string>("Level")
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)")
+                        .HasColumnName("level");
 
-                    b.Property<Guid>("SoftwareOrServiceCategoryId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("software_or_service_category_id");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("text")
-                        .HasColumnName("url");
+                    b.Property<int>("Weight")
+                        .HasColumnType("integer")
+                        .HasColumnName("weight");
 
                     b.HasKey("Id")
-                        .HasName("pk_software_or_service");
+                        .HasName("pk_confidentiality");
 
-                    b.HasIndex("ManufacturerId")
-                        .HasDatabaseName("ix_software_or_service_manufacturer_id");
-
-                    b.HasIndex("SoftwareOrServiceCategoryId")
-                        .HasDatabaseName("ix_software_or_service_software_or_service_category_id");
-
-                    b.ToTable("software_or_service", (string)null);
+                    b.ToTable("confidentiality", (string)null);
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.SoftwareServices.SoftwareOrServiceCategory", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Classification.Importance", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Level")
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)")
+                        .HasColumnName("level");
 
                     b.HasKey("Id")
-                        .HasName("pk_software_or_service_category");
+                        .HasName("pk_importance");
 
-                    b.ToTable("software_or_service_category", (string)null);
+                    b.ToTable("importance", (string)null);
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.State", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Classification.Integrity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("CountryCode")
-                        .HasColumnType("character(2)")
-                        .HasColumnName("country_code");
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
+                    b.Property<string>("Level")
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying(15)")
+                        .HasColumnName("level");
 
-                    b.HasKey("Id")
-                        .HasName("pk_state");
-
-                    b.HasIndex("CountryCode")
-                        .HasDatabaseName("ix_state_country_code");
-
-                    b.ToTable("state", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.Vendors.Vendor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("ContactPerson")
-                        .HasColumnType("text")
-                        .HasColumnName("contact_person");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text")
-                        .HasColumnName("email");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("text")
-                        .HasColumnName("location");
-
-                    b.Property<string>("MobilePhone")
-                        .HasColumnType("text")
-                        .HasColumnName("mobile_phone");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("text")
-                        .HasColumnName("phone");
-
-                    b.Property<string>("RegistrationNumber")
-                        .HasColumnType("text")
-                        .HasColumnName("registration_number");
-
-                    b.Property<string>("VATNumber")
-                        .HasColumnType("text")
-                        .HasColumnName("vat_number");
-
-                    b.Property<string>("Web")
-                        .HasColumnType("text")
-                        .HasColumnName("web");
+                    b.Property<int>("Weight")
+                        .HasColumnType("integer")
+                        .HasColumnName("weight");
 
                     b.HasKey("Id")
-                        .HasName("pk_vendor");
+                        .HasName("pk_integrity");
 
-                    b.ToTable("vendor", (string)null);
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.VirtualMachines.VirtualMachine", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("IPAddress")
-                        .HasColumnType("text")
-                        .HasColumnName("ip_address");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_virtual_machine");
-
-                    b.ToTable("virtual_machine", (string)null);
+                    b.ToTable("integrity", (string)null);
                 });
 
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Volumes.Volume", b =>
@@ -1585,133 +1693,26 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("volume_type", (string)null);
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Activations.Activation", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Administration.Roles.RolePermission", b =>
                 {
-                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.Asset", "Asset")
-                        .WithMany()
-                        .HasForeignKey("AssetId")
-                        .HasConstraintName("fk_activation_assets_asset_id");
-
-                    b.HasOne("Codaxy.Inventory.App.Company.People.Person", "Person")
-                        .WithMany()
-                        .HasForeignKey("PersonId")
-                        .HasConstraintName("fk_activation_persons_person_id");
-
-                    b.HasOne("Codaxy.Inventory.App.Shared.Volumes.Volume", "Volume")
-                        .WithMany("Activations")
-                        .HasForeignKey("VolumeId")
+                    b.HasOne("Codaxy.Inventory.App.Administration.Roles.Role", null)
+                        .WithMany("Permissions")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_activation_volumes_volume_id");
-
-                    b.Navigation("Asset");
-
-                    b.Navigation("Person");
-
-                    b.Navigation("Volume");
+                        .HasConstraintName("fk_role_permission_role_role_id");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Assets.Asset", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Administration.Users.AppUser", b =>
                 {
-                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.AssetSubstatus", "AssetSubstatus")
+                    b.HasOne("Codaxy.Inventory.App.Administration.Roles.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("AssetSubstatusId")
-                        .HasConstraintName("fk_asset_asset_substatuses_asset_substatus_id");
-
-                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.AssetType", "AssetType")
-                        .WithMany()
-                        .HasForeignKey("AssetTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("fk_asset_asset_types_asset_type_id");
+                        .HasConstraintName("fk_app_user_roles_role_id");
 
-                    b.HasOne("Codaxy.Inventory.App.Shared.Classification.Availability", "Availability")
-                        .WithMany("Asset")
-                        .HasForeignKey("AvailabilityId")
-                        .HasConstraintName("fk_asset_availabilities_availability_id");
-
-                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.BusinessEntity", "BusinessEntity")
-                        .WithMany()
-                        .HasForeignKey("BusinessEntityId")
-                        .HasConstraintName("fk_asset_business_entities_business_entity_id");
-
-                    b.HasOne("Codaxy.Inventory.App.Shared.Classification.Confidentiality", "Confidentiality")
-                        .WithMany("Asset")
-                        .HasForeignKey("ConfidentialityId")
-                        .HasConstraintName("fk_asset_confidentialities_confidentiality_id");
-
-                    b.HasOne("Codaxy.Inventory.App.Shared.Classification.Importance", "Importance")
-                        .WithMany("Asset")
-                        .HasForeignKey("ImportanceId")
-                        .HasConstraintName("fk_asset_importances_importance_id");
-
-                    b.HasOne("Codaxy.Inventory.App.Shared.Classification.Integrity", "Integrity")
-                        .WithMany("Asset")
-                        .HasForeignKey("IntegrityId")
-                        .HasConstraintName("fk_asset_integrities_integrity_id");
-
-                    b.HasOne("Codaxy.Inventory.App.Company.Locations.Location", "Location")
-                        .WithMany("Asset")
-                        .HasForeignKey("LocationId")
-                        .HasConstraintName("fk_asset_locations_location_id");
-
-                    b.HasOne("Codaxy.Inventory.App.Company.People.Person", "Person")
-                        .WithMany()
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_asset_persons_person_id");
-
-                    b.HasOne("Codaxy.Inventory.App.Company.Vendors.Vendor", "Vendor")
-                        .WithMany()
-                        .HasForeignKey("VendorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_asset_vendors_vendor_id");
-
-                    b.Navigation("AssetSubstatus");
-
-                    b.Navigation("AssetType");
-
-                    b.Navigation("Availability");
-
-                    b.Navigation("BusinessEntity");
-
-                    b.Navigation("Confidentiality");
-
-                    b.Navigation("Importance");
-
-                    b.Navigation("Integrity");
-
-                    b.Navigation("Location");
-
-                    b.Navigation("Person");
-
-                    b.Navigation("Vendor");
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Assets.AssetSubstatus", b =>
-                {
-                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.AssetStatus", "AssetStatus")
-                        .WithMany("AssetSubstatus")
-                        .HasForeignKey("AssetStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_asset_substatus_asset_status_asset_status_id");
-
-                    b.Navigation("AssetStatus");
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Assets.AssetType", b =>
-                {
-                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.AssetCategory", "AssetCategory")
-                        .WithMany("AssetType")
-                        .HasForeignKey("AssetCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_asset_type_asset_category_asset_category_id");
-
-                    b.Navigation("AssetCategory");
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.City", b =>
@@ -1724,16 +1725,61 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.CloudSubscriptions.Cloud", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.Location", b =>
                 {
-                    b.HasOne("Codaxy.Inventory.App.Shared.Volumes.Volume", "Volume")
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.City", "City")
                         .WithMany()
-                        .HasForeignKey("VolumeId")
+                        .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_cloud_volumes_volume_id");
+                        .HasConstraintName("fk_location_city_city_id");
 
-                    b.Navigation("Volume");
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryCode")
+                        .HasConstraintName("fk_location_country_country_code");
+
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.State", "State")
+                        .WithMany()
+                        .HasForeignKey("StateId")
+                        .HasConstraintName("fk_location_states_state_id");
+
+                    b.Navigation("City");
+
+                    b.Navigation("Country");
+
+                    b.Navigation("State");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.State", b =>
+                {
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryCode")
+                        .HasConstraintName("fk_state_country_country_code");
+
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Projects.Project", b =>
+                {
+                    b.HasOne("Codaxy.Inventory.App.Company.Clients.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_project_client_client_id");
+
+                    b.HasOne("Codaxy.Inventory.App.Company.People.Person", "ProjectOwner")
+                        .WithMany()
+                        .HasForeignKey("ProjectOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_project_person_project_owner_id");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("ProjectOwner");
                 });
 
             modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Devices.ElectronicDevice", b =>
@@ -1926,6 +1972,56 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.Navigation("InformationTag");
                 });
 
+            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.CloudSubscriptions.Cloud", b =>
+                {
+                    b.HasOne("Codaxy.Inventory.App.Shared.Volumes.Volume", "Volume")
+                        .WithMany()
+                        .HasForeignKey("VolumeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_cloud_volumes_volume_id");
+
+                    b.Navigation("Volume");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.Softwares.Software", b =>
+                {
+                    b.HasOne("Codaxy.Inventory.App.Shared.Volumes.Volume", "Volume")
+                        .WithMany()
+                        .HasForeignKey("VolumeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_software_volumes_volume_id");
+
+                    b.Navigation("Volume");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Activations.Activation", b =>
+                {
+                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.Asset", "Asset")
+                        .WithMany()
+                        .HasForeignKey("AssetId")
+                        .HasConstraintName("fk_activation_assets_asset_id");
+
+                    b.HasOne("Codaxy.Inventory.App.Company.People.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .HasConstraintName("fk_activation_persons_person_id");
+
+                    b.HasOne("Codaxy.Inventory.App.Shared.Volumes.Volume", "Volume")
+                        .WithMany("Activations")
+                        .HasForeignKey("VolumeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_activation_volumes_volume_id");
+
+                    b.Navigation("Asset");
+
+                    b.Navigation("Person");
+
+                    b.Navigation("Volume");
+                });
+
             modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.License", b =>
                 {
                     b.HasOne("Codaxy.Inventory.App.Shared.Assets.Asset", "Asset")
@@ -1973,30 +2069,128 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.Navigation("Period");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.Location", b =>
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.SoftwareServices.SoftwareOrService", b =>
                 {
-                    b.HasOne("Codaxy.Inventory.App.Company.Locations.City", "City")
+                    b.HasOne("Codaxy.Inventory.App.Company.Manufacturers.Manufacturer", "Manufacturer")
                         .WithMany()
-                        .HasForeignKey("CityId")
+                        .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_location_city_city_id");
+                        .HasConstraintName("fk_software_or_service_manufacturer_manufacturer_id");
 
-                    b.HasOne("Codaxy.Inventory.App.Company.Locations.Country", "Country")
+                    b.HasOne("Codaxy.Inventory.App.Licenses.SoftwareServices.SoftwareOrServiceCategory", "SoftwareOrServiceCategory")
                         .WithMany()
-                        .HasForeignKey("CountryCode")
-                        .HasConstraintName("fk_location_country_country_code");
+                        .HasForeignKey("SoftwareOrServiceCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_software_or_service_software_or_service_categories_software");
 
-                    b.HasOne("Codaxy.Inventory.App.Company.Locations.State", "State")
+                    b.Navigation("Manufacturer");
+
+                    b.Navigation("SoftwareOrServiceCategory");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Assets.Asset", b =>
+                {
+                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.AssetSubstatus", "AssetSubstatus")
                         .WithMany()
-                        .HasForeignKey("StateId")
-                        .HasConstraintName("fk_location_states_state_id");
+                        .HasForeignKey("AssetSubstatusId")
+                        .HasConstraintName("fk_asset_asset_substatuses_asset_substatus_id");
 
-                    b.Navigation("City");
+                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.AssetType", "AssetType")
+                        .WithMany()
+                        .HasForeignKey("AssetTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_asset_asset_types_asset_type_id");
 
-                    b.Navigation("Country");
+                    b.HasOne("Codaxy.Inventory.App.Shared.Classification.Availability", "Availability")
+                        .WithMany("Asset")
+                        .HasForeignKey("AvailabilityId")
+                        .HasConstraintName("fk_asset_availabilities_availability_id");
 
-                    b.Navigation("State");
+                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.BusinessEntity", "BusinessEntity")
+                        .WithMany()
+                        .HasForeignKey("BusinessEntityId")
+                        .HasConstraintName("fk_asset_business_entities_business_entity_id");
+
+                    b.HasOne("Codaxy.Inventory.App.Shared.Classification.Confidentiality", "Confidentiality")
+                        .WithMany("Asset")
+                        .HasForeignKey("ConfidentialityId")
+                        .HasConstraintName("fk_asset_confidentialities_confidentiality_id");
+
+                    b.HasOne("Codaxy.Inventory.App.Shared.Classification.Importance", "Importance")
+                        .WithMany("Asset")
+                        .HasForeignKey("ImportanceId")
+                        .HasConstraintName("fk_asset_importances_importance_id");
+
+                    b.HasOne("Codaxy.Inventory.App.Shared.Classification.Integrity", "Integrity")
+                        .WithMany("Asset")
+                        .HasForeignKey("IntegrityId")
+                        .HasConstraintName("fk_asset_integrities_integrity_id");
+
+                    b.HasOne("Codaxy.Inventory.App.Company.Locations.Location", "Location")
+                        .WithMany("Asset")
+                        .HasForeignKey("LocationId")
+                        .HasConstraintName("fk_asset_locations_location_id");
+
+                    b.HasOne("Codaxy.Inventory.App.Company.People.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_asset_persons_person_id");
+
+                    b.HasOne("Codaxy.Inventory.App.Company.Vendors.Vendor", "Vendor")
+                        .WithMany()
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_asset_vendors_vendor_id");
+
+                    b.Navigation("AssetSubstatus");
+
+                    b.Navigation("AssetType");
+
+                    b.Navigation("Availability");
+
+                    b.Navigation("BusinessEntity");
+
+                    b.Navigation("Confidentiality");
+
+                    b.Navigation("Importance");
+
+                    b.Navigation("Integrity");
+
+                    b.Navigation("Location");
+
+                    b.Navigation("Person");
+
+                    b.Navigation("Vendor");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Assets.AssetSubstatus", b =>
+                {
+                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.AssetStatus", "AssetStatus")
+                        .WithMany("AssetSubstatus")
+                        .HasForeignKey("AssetStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_asset_substatus_asset_status_asset_status_id");
+
+                    b.Navigation("AssetStatus");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Shared.Assets.AssetType", b =>
+                {
+                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.AssetCategory", "AssetCategory")
+                        .WithMany("AssetType")
+                        .HasForeignKey("AssetCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_asset_type_asset_category_asset_category_id");
+
+                    b.Navigation("AssetCategory");
                 });
 
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Assets.MaintenanceContract", b =>
@@ -2023,70 +2217,6 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.Navigation("MaintenanceType");
 
                     b.Navigation("Vendor");
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.Projects.Project", b =>
-                {
-                    b.HasOne("Codaxy.Inventory.App.Company.Clients.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_project_client_client_id");
-
-                    b.HasOne("Codaxy.Inventory.App.Company.People.Person", "ProjectOwner")
-                        .WithMany()
-                        .HasForeignKey("ProjectOwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_project_person_project_owner_id");
-
-                    b.Navigation("Client");
-
-                    b.Navigation("ProjectOwner");
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Infrastructure.Softwares.Software", b =>
-                {
-                    b.HasOne("Codaxy.Inventory.App.Shared.Volumes.Volume", "Volume")
-                        .WithMany()
-                        .HasForeignKey("VolumeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_software_volumes_volume_id");
-
-                    b.Navigation("Volume");
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.SoftwareServices.SoftwareOrService", b =>
-                {
-                    b.HasOne("Codaxy.Inventory.App.Company.Manufacturers.Manufacturer", "Manufacturer")
-                        .WithMany()
-                        .HasForeignKey("ManufacturerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_software_or_service_manufacturer_manufacturer_id");
-
-                    b.HasOne("Codaxy.Inventory.App.Licenses.SoftwareServices.SoftwareOrServiceCategory", "SoftwareOrServiceCategory")
-                        .WithMany()
-                        .HasForeignKey("SoftwareOrServiceCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_software_or_service_software_or_service_categories_software");
-
-                    b.Navigation("Manufacturer");
-
-                    b.Navigation("SoftwareOrServiceCategory");
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.State", b =>
-                {
-                    b.HasOne("Codaxy.Inventory.App.Company.Locations.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryCode")
-                        .HasConstraintName("fk_state_country_country_code");
-
-                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Volumes.Volume", b =>
@@ -2117,6 +2247,48 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.Navigation("SoftwareOrService");
 
                     b.Navigation("VolumeType");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Administration.Roles.Role", b =>
+                {
+                    b.Navigation("Permissions");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.Location", b =>
+                {
+                    b.Navigation("Asset");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Tags.ElectronicDeviceTag", b =>
+                {
+                    b.Navigation("Types");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Types.ElectronicDeviceType", b =>
+                {
+                    b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Items.Information", b =>
+                {
+                    b.Navigation("InformationLocations");
+
+                    b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Tags.InformationTag", b =>
+                {
+                    b.Navigation("Informations");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.License", b =>
+                {
+                    b.Navigation("Volumes");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.SoftwareServices.SoftwareOrService", b =>
+                {
+                    b.Navigation("Volumes");
                 });
 
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Assets.Asset", b =>
@@ -2150,51 +2322,14 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.Navigation("Asset");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Tags.ElectronicDeviceTag", b =>
-                {
-                    b.Navigation("Types");
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.ElectronicDevices.Types.ElectronicDeviceType", b =>
-                {
-                    b.Navigation("Tags");
-                });
-
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Classification.Importance", b =>
                 {
                     b.Navigation("Asset");
                 });
 
-            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Items.Information", b =>
-                {
-                    b.Navigation("InformationLocations");
-
-                    b.Navigation("Tags");
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Informations.Tags.InformationTag", b =>
-                {
-                    b.Navigation("Informations");
-                });
-
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Classification.Integrity", b =>
                 {
                     b.Navigation("Asset");
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.Licenses.License", b =>
-                {
-                    b.Navigation("Volumes");
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Company.Locations.Location", b =>
-                {
-                    b.Navigation("Asset");
-                });
-
-            modelBuilder.Entity("Codaxy.Inventory.App.Licenses.SoftwareServices.SoftwareOrService", b =>
-                {
-                    b.Navigation("Volumes");
                 });
 
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Volumes.Volume", b =>

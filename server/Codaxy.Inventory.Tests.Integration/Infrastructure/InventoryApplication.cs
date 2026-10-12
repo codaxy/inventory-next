@@ -1,3 +1,4 @@
+using Codaxy.Inventory.App.Administration.Roles;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.Web.Auth;
 using Codaxy.Inventory.Web.Setup;
@@ -12,7 +13,7 @@ namespace Codaxy.Inventory.Tests.Integration.Infrastructure;
 
 /// <summary>
 /// The application as it runs, against a real PostgreSQL container, with the mail relay replaced so a
-/// test can read the one-time code. The `Testing` environment is what skips migrating and seeding;
+/// test can read the one-time code, and the built-in roles seeded. The `Testing` environment is what skips migrating and seeding;
 /// the schema here comes from the model, and the migrations are proven separately by
 /// <see cref="MigrationsTests"/>.
 /// </summary>
@@ -78,9 +79,11 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
         await postgres.StartAsync();
 
         using var scope = Services.CreateScope();
-        await scope
-            .ServiceProvider.GetRequiredService<InventoryContext>()
-            .Database.EnsureCreatedAsync();
+        var context = scope.ServiceProvider.GetRequiredService<InventoryContext>();
+        await context.Database.EnsureCreatedAsync();
+
+        // The roles are the application's, not a test's: every database has them.
+        await BuiltInRoles.SeedAsync(context, CancellationToken.None);
     }
 
     public new async Task DisposeAsync()

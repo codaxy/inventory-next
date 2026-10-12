@@ -7,7 +7,8 @@ import $app from "../model";
 import type { RecordState } from "../recordController";
 import { holdingSections } from "./holdings";
 import { inventoryNumber } from "./inventoryNumber";
-import { historyAction, type MoreAction, moreActions } from "./moreActions";
+import { historyAction, type MoreAction, deleteAction, moreActions } from "./moreActions";
+import { canEdit, mayEdit, permissions } from "../access";
 
 interface RecordPage {
     r: AccessorChain<RecordState<any>>;
@@ -27,6 +28,10 @@ interface RecordPage {
     duplicate?: boolean;
     /** "Save and replicate" behind a chevron on Save, on a new record: a batch entered one by one. */
     another?: boolean;
+    /** Delete behind the ⋮; a record that is deactivated instead, never deleted, has none. */
+    deletable?: boolean;
+    /** Whether this record may be changed by the reader, beyond the section's edit: a user whose role grants more may not. */
+    changeable?: AccessorChain<boolean | undefined>;
 }
 
 /** A record's page is outlined (`record-loading`) while the record it shows in view is on the way. */
@@ -123,6 +128,16 @@ export function recordPage(o: RecordPage) {
                             <LinkButton
                                 mod="primary"
                                 href={expr(r.id, (id) => `${o.path}/${id}/edit`)}
+                                visible={
+                                    o.changeable
+                                        ? expr(
+                                              $app.url,
+                                              permissions,
+                                              o.changeable,
+                                              (url, held, c) => mayEdit(url, held) && c !== false,
+                                          )
+                                        : canEdit
+                                }
                                 attrs={{ "aria-label": "Edit", title: "Edit" }}
                             >
                                 <Icon name="edit" class="size-4" />
@@ -135,12 +150,13 @@ export function recordPage(o: RecordPage) {
                                           {
                                               text: "Duplicate",
                                               icon: "duplicate",
+                                              edits: true,
                                               href: expr(r.id, (id) => `${o.path}/new?from=${id}`),
                                           } satisfies MoreAction,
                                       ]
                                     : []),
                                 ...(o.more ?? []),
-                                { text: "Delete", icon: "delete", onClick: "remove", danger: true },
+                                ...(o.deletable === false ? [] : [deleteAction]),
                             ])}
                         </div>
                     </div>

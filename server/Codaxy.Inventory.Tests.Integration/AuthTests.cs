@@ -44,6 +44,7 @@ public class AuthTests(InventoryApplication app) : IClassFixture<InventoryApplic
     {
         var client = Client();
         const string email = "someone@codaxy.com";
+        await app.UserAsync(email);
 
         var requested = await client.PostAsJsonAsync(
             "/api/auth/one-time-code/request",
@@ -71,6 +72,7 @@ public class AuthTests(InventoryApplication app) : IClassFixture<InventoryApplic
     {
         var client = Client();
         const string email = "signs-out@codaxy.com";
+        await app.UserAsync(email);
 
         await client.PostAsJsonAsync("/api/auth/one-time-code/request", new { email });
         await client.PostAsJsonAsync(

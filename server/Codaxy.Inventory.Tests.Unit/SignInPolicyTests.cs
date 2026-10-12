@@ -65,37 +65,12 @@ public class SignInPolicyTests
         Assert.True(policy.Evaluate("someone@example.com").IsAllowed);
     }
 
-    [Fact]
-    public void Refuses_an_address_outside_a_non_empty_allow_list()
-    {
-        var policy = Policy(new AuthOptions { AllowedUsers = ["one@codaxy.com"] });
-
-        Assert.False(policy.Evaluate("two@codaxy.com").IsAllowed);
-        Assert.True(policy.Evaluate("one@codaxy.com").IsAllowed);
-    }
-
-    [Fact]
-    public void Refuses_a_denied_address_even_when_it_is_also_allowed()
-    {
-        var policy = Policy(
-            new AuthOptions { AllowedUsers = ["one@codaxy.com"], DeniedUsers = ["one@codaxy.com"] }
-        );
-
-        Assert.False(policy.Evaluate("one@codaxy.com").IsAllowed);
-    }
-
     [Theory]
     [InlineData("SOMEONE@CODAXY.COM")]
     [InlineData(" someone@codaxy.com ")]
     public void Ignores_case_and_surrounding_space(string email)
     {
-        var policy = Policy(
-            new AuthOptions
-            {
-                AllowedDomains = ["codaxy.com"],
-                AllowedUsers = ["someone@codaxy.com"],
-            }
-        );
+        var policy = Policy(new AuthOptions { AllowedDomains = ["codaxy.com"] });
 
         Assert.True(policy.Evaluate(email).IsAllowed);
     }

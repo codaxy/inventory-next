@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Codaxy.Inventory.App.Administration.Users;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Codaxy.Inventory.Web.Auth.Google.Callback;
@@ -7,7 +8,11 @@ public static class Endpoint
 {
     public static void Map(RouteGroupBuilder google) => google.MapGet("/callback", Handle);
 
-    private static async Task<IResult> Handle(HttpContext context, SignInPolicy policy)
+    private static async Task<IResult> Handle(
+        HttpContext context,
+        SignInPolicy policy,
+        UserAccess access
+    )
     {
         var result = await context.AuthenticateAsync(AuthEndpoints.ExternalScheme);
 
@@ -21,6 +26,9 @@ public static class Endpoint
 
         if (!decision.IsAllowed)
             return Results.Redirect("/sign-in?error=refused");
+
+        if (await access.ForAsync(email!) is null)
+            return Results.Redirect("/sign-in?error=no-access");
 
         await context.SignInAsync(email!, result.Principal.FindFirstValue(ClaimTypes.Name));
         return Results.Redirect("/");

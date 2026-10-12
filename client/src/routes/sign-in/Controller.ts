@@ -4,6 +4,9 @@ import { getAuthProviders, requestOneTimeCode, verifyOneTimeCode } from "../../a
 import { ApiError } from "../../api/http";
 import m from "./model";
 
+/** The server's words for a proven address that is not a user, for Google's round trip too. */
+const noAccess = "You do not have access to Inventory yet. Ask an administrator to add you.";
+
 export default class extends Controller {
     onInit() {
         this.store.set(m.signin.providers, { google: false, oneTimeCode: false });
@@ -29,7 +32,9 @@ export default class extends Controller {
                 m.signin.error,
                 error === "refused"
                     ? "That account is not allowed to sign in."
-                    : "Signing in with Google did not work.",
+                    : error === "no-access"
+                      ? noAccess
+                      : "Signing in with Google did not work.",
             );
     }
 
@@ -60,7 +65,10 @@ export default class extends Controller {
             await verifyOneTimeCode(email, code ?? "");
             window.location.href = "/";
         } catch (error) {
-            this.fail(error, m.signin.codeError);
+            // A proven address that is not a user: nothing about the code to fix.
+            if (error instanceof ApiError && error.status === 403)
+                this.store.set(m.signin.error, error.message);
+            else this.fail(error, m.signin.codeError);
         } finally {
             this.store.set(m.signin.busy, false);
         }

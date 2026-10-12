@@ -2,12 +2,13 @@ import { createFunctionalComponent, expr, hasValue } from "cx/ui";
 import { Button, Icon, Link, LinkButton, ValidationGroup } from "cx/widgets";
 
 import { formFields } from "../../../../components/formFields";
-import { historyAction, moreActions } from "../../../../components/moreActions";
+import { historyAction, deleteAction, moreActions } from "../../../../components/moreActions";
 import { outlined } from "../../../../components/recordPage";
 import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import Controller from "./Controller";
 import m from "./model";
+import { canEdit } from "../../../../access";
 
 const t = m.type;
 const outline = outlined(t.viewing, t.loading);
@@ -35,15 +36,13 @@ export default createFunctionalComponent(() => (
                             <LinkButton
                                 mod="primary"
                                 href={expr(t.id, (id) => `~/furniture/types/${id}/edit`)}
+                                visible={canEdit}
                                 attrs={{ "aria-label": "Edit", title: "Edit" }}
                             >
                                 <Icon name="edit" class="size-4" />
                                 <span class="hidden sm:inline" text="Edit" />
                             </LinkButton>
-                            {moreActions([
-                                historyAction(t.id),
-                                { text: "Delete", icon: "delete", onClick: "remove", danger: true },
-                            ])}
+                            {moreActions([historyAction(t.id), deleteAction])}
                         </div>
                     </div>
                 </div>

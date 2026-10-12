@@ -5,6 +5,7 @@ import { Logo } from "../components/Logo";
 import $app from "../model";
 import { AccountMenu } from "./AccountMenu";
 import { isCurrent, navigation } from "./navigation";
+import { can } from "../access";
 
 const closeDrawer = (_e: unknown, { store }: any) => store.set($app.ui.drawerOpen, false);
 
@@ -12,7 +13,8 @@ const closeDrawer = (_e: unknown, { store }: any) => store.set($app.ui.drawerOpe
  * The navigation: a column from `lg` up, a drawer over the content below it. One component, so the two
  * cannot drift apart. Any tap inside it, a link included, closes the drawer.
  *
- * The menu is static, so it is built here rather than repeated from the store. Which item is lit is
+ * The menu is static, so it is built here rather than repeated from the store; an item the reader
+ * may not view is hidden, and a section with none of its items left. Which item is lit is
  * worked out from the address (`isCurrent`), not by cx's `match`: `~/licenses/:id` belongs to Licenses
  * but `~/licenses/activations` does not, and no single `match` says both.
  */
@@ -43,11 +45,16 @@ export const Sidebar = createFunctionalComponent(() => (
             <nav class="nav-scroll flex-1 overflow-y-auto overscroll-contain lg:overscroll-auto px-2 pb-4">
                 {navigation.map((section) => (
                     <cx>
-                        <div>
+                        <div
+                            visible={expr($app.session.user.permissions, (held) =>
+                                section.items.some((item) => !!held?.includes(item.view ?? section.view!)),
+                            )}
+                        >
                             <div class="nav-section" text={section.title} visible={!!section.title} />
                             {section.items.map((item) => (
                                 <cx>
                                     <Link
+                                        visible={can(item.view ?? section.view!)}
                                         href={item.href}
                                         url={$app.url}
                                         class={{

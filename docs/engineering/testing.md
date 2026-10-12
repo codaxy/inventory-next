@@ -36,6 +36,10 @@ PostgreSQL through Docker and drives the host over HTTP.
 
 ## Isolation
 
+**A test signs in as a user holding a role** — Admin unless it needs another — created by
+`ClientAsync` before the sign-in, its audit rows removed, since a test's setup is not what an audit log
+under test recorded. The built-in roles are seeded for every fixture: they are the application's.
+
 **Every factory that starts the application gives it scratch folders** — the key ring, and the server
 log through `UseScratchServerLog()`. The log's default is `logs` under the content root, which is the
 source tree: a test host left on it writes into the developer's own log, beside a running `dotnet run`.
@@ -88,6 +92,8 @@ A percentage rewards testing what is easy to test. These are covered whatever th
 - **Sign-in.** The original replaced it wholesale with a test handler, so token minting, validation
   and the allowed-user rules were exercised by nothing end to end. This application mints its own
   tokens; the path is covered here.
+- **Every `/api` endpoint requires a permission from the catalogue**, but for a named few that any
+  caller may reach. A forgotten one means "everyone signed in", which every other test passes.
 - **Every state transition endpoint**, in both directions, including the one that undoes.
 - **Every paged list**, at the boundaries: the first page, the last, past the last, and the page size
   refused as too large.

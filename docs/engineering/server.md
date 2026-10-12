@@ -68,6 +68,7 @@ together — never a bin sorted by kind:
   contracts, business entities: `Asset` is the base of devices, furniture and licenses alike.
 - **`Shared/Classification`** — confidentiality, integrity, availability and importance, which assets
   and information always carry as a set.
+- **`Shared/Access`** — the permission catalogue and the policy a section's endpoints carry.
 - **`Shared/Volumes`** — `Volume` and its type. Licenses, software and services, cloud subscriptions, software and
   activations all point at a volume.
 
@@ -120,12 +121,10 @@ parameters, exact unless their name says otherwise, ANDed. A range is `from` inc
 exclusive, so adjacent ranges neither overlap nor leave a gap.
 
 **The menu's endpoints are one `/api` group that requires a session**, mapped by `MapInventoryApi`
-beside `MapAuth`. Each level of the menu lists only its children, in the menu's order:
+beside `MapAuth`, and each section's behind its permissions (see [auth.md](auth.md)). Each level of the menu lists only its children, in the menu's order:
 `MapInventoryApi` the sections and the Dashboard, a section's `Endpoints` its items, and an item's
 `Endpoints` its group beneath `/api`, named after its URL, and its use cases. A new use case touches
-only its item. **An item whose readers will
-narrow has its own named policy now**, defined in the host — the server log's `ServerLog`, today any
-session — so restricting it to a role is one line, not a search for every endpoint it covers.
+only its item, and takes its section's permission from its method: a read `view`, a write `edit`.
 
 **An asset is written through `Shared/Assets/AssetWrites`**: the inventory number taken from
 `Sequence`, the asset type found by its seeded name on the server, the importance computed, and

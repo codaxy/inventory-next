@@ -2,6 +2,7 @@ import type { AccessorChain } from "cx/data";
 import type { StringProp } from "cx/ui";
 import { Icon, LinkButton } from "cx/widgets";
 
+import { canEdit } from "../access";
 import { inViewerZone } from "../download";
 import { downloadButton } from "./downloadButton";
 
@@ -11,7 +12,7 @@ interface ListHeading {
     actions?: any;
     /** The spreadsheet of what the list selects, for a list that has one. */
     exportHref?: AccessorChain<string | undefined>;
-    /** Where Add leads, for a list whose records are added here. */
+    /** Where Add leads, for a list whose records are added here; shown to whoever may edit. */
     addHref?: StringProp;
     /** "Add"; "Activate" for a seat. */
     addText?: string;
@@ -45,6 +46,7 @@ export function listHeading(o: ListHeading) {
                             <LinkButton
                                 mod="primary"
                                 class="list-new"
+                                visible={canEdit}
                                 attrs={{ "aria-label": o.addLabel, title: o.addLabel }}
                                 href={o.addHref}
                             >

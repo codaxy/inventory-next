@@ -11,13 +11,14 @@ import {
 } from "cx/widgets";
 
 import { inventoryNumber } from "../../../../components/inventoryNumber";
-import { historyAction, moreActions } from "../../../../components/moreActions";
+import { historyAction, deleteAction, moreActions } from "../../../../components/moreActions";
 import { outlined } from "../../../../components/recordPage";
 import { listReturn } from "../../../../listAddress";
 import { externalLink } from "../../../../components/externalLink";
 import $app from "../../../../model";
 import Controller from "./Controller";
 import m, { volumesText } from "./model";
+import { canEdit } from "../../../../access";
 
 /** The server's message goes in a line under its field; cx's hover tooltip would hide it. */
 const noErrorText = false as unknown as Config;
@@ -48,15 +49,13 @@ export default createFunctionalComponent(() => (
                             <LinkButton
                                 mod="primary"
                                 href={expr(e.id, (id) => `~/licenses/software-services/${id}/edit`)}
+                                visible={canEdit}
                                 attrs={{ "aria-label": "Edit", title: "Edit" }}
                             >
                                 <Icon name="edit" class="size-4" />
                                 <span class="hidden sm:inline" text="Edit" />
                             </LinkButton>
-                            {moreActions([
-                                historyAction(e.id),
-                                { text: "Delete", icon: "delete", onClick: "remove", danger: true },
-                            ])}
+                            {moreActions([historyAction(e.id), deleteAction])}
                         </div>
                     </div>
                 </div>
@@ -246,6 +245,7 @@ export default createFunctionalComponent(() => (
                                                 />
                                                 <Link
                                                     class="editor-link volume-activations"
+                                                    visible={canEdit}
                                                     href={m.$volume.activateHref}
                                                     url={$app.url}
                                                     text="Activate"
