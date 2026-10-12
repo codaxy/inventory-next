@@ -134,8 +134,6 @@ What the database lacks and the application works around; each is a migration of
   only through its volumes.
 - **A person's email is unique**, by an index on `lower(trim(email))`. The application refuses a
   duplicate, and two saves at once pass.
-- **A person may name their manager.** A nullable self-reference on `Person`, so the handover
-  sheet can fill in *Odgovorno lice ili nadređeni*; until then the line is written by hand.
 - **No index serves any predicate.** Primary keys and the unique `inventory_number` are the whole of
   the indexing, and lists filter, sort and page with sequential scans. At the present size — under a
   thousand assets — that costs nothing measurable.
