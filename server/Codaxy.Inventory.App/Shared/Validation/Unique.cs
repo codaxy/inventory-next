@@ -5,7 +5,7 @@ namespace Codaxy.Inventory.App.Shared.Validation;
 
 /// <summary>
 /// A value no other record holds, whatever its case, both sides trimmed — the original saved values
-/// with stray spaces. Checked here, not by an index: the schema is frozen, so two saves at once can
+/// with stray spaces. Checked here, not by an index: none exists yet, so two saves at once can
 /// still both pass.
 /// </summary>
 public static class Unique

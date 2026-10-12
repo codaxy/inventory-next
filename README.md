@@ -1,8 +1,7 @@
 # Inventory Next
 
-A rewrite of Codaxy.Inventory against the same PostgreSQL database — paged, phone-first, and honest
-about what an endpoint may change. Both applications run until this one reaches parity; see
-[docs/engineering/co-existence.md](docs/engineering/co-existence.md).
+A rewrite of Codaxy.Inventory, on its PostgreSQL database — paged, phone-first, and honest about
+what an endpoint may change.
 
 So far it signs you in and does nothing else.
 

@@ -27,7 +27,7 @@ changes its namespace; for an entity, the migrations have to follow (see Traps).
 own logic — and sits in the folder of the menu item it belongs to. What is not a slice is named as
 such: `Shared/`, `Persistence/`, and the host in `Web`. Taken from the pattern: the cut by feature. Not
 taken: boundaries between items enforced by tests, since review holds them; data access or a contracts
-layer per slice, since the schema is one frozen graph and the context is shared.
+layer per slice, since the schema is one graph and the context is shared.
 
 `App` mirrors the client's menu: a folder per section, and in it a folder per item —
 `Licenses/Activations`, `Company/Locations` — so a screen has the same path on both sides. An item in
@@ -77,18 +77,18 @@ and `IIdentifiable`. It is neither an item nor shared domain.
 Any item may read another's entities and hold a foreign key to them; only the owner writes them.
 **A link table belongs to both sides of its many-to-many**: a tag's editor writes the tag–type pairs,
 and so will a type's. The
-schema is one graph and frozen, so an entity referencing another item's is a foreign key, not a breach.
+schema is one graph, so an entity referencing another item's is a foreign key, not a breach.
 What an item's *code* reaches into is review's to hold; nothing enforces it.
 
 ## Naming
 
 **"License", never "licence"** — in what a person reads, URLs, DTOs and their JSON, folders,
-identifiers, tests and these documents, as the menu and the original have it. Only what a migration
-would have to rename keeps the original's spelling: entity members and columns,
-`ElectronicDeviceType.HoldLicences` and `hold_licences`.
+identifiers, tests and these documents, as the menu has it. Entity members and columns are the
+exception until a migration renames them: `ElectronicDeviceType.HoldLicences` and `hold_licences`.
 
 **No folder takes the name of a class it would shadow.** A namespace wins every lookup from inside
-`Codaxy.Inventory.App`, and entity names are frozen by the audit log. Where the plain name is taken, a
+`Codaxy.Inventory.App`, and renaming an entity splits the audit log (see
+[persistence.md](persistence.md)). Where the plain name is taken, a
 folder takes the mechanical plural its `DbSet` already uses: `Furnitures/`, `Informations/`,
 `Infrastructure/Softwares/`, `Administration/AuditLogs/`.
 

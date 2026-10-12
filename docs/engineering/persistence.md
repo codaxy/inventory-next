@@ -36,8 +36,8 @@ name, and walking that renames constraints whenever an entity changes namespace.
 places build a context — the app, the integration factory and the migrations fixture — and one that
 configures the model differently from the others builds a model that no longer matches the snapshot.
 
-It is a database convention only: the CLR entities and properties keep their PascalCase names, and
-must, because the audit log has recorded them in every row it has ever written.
+It is a database convention only: the CLR entities and properties keep their PascalCase names, which
+are what the audit log records.
 
 ## Keys
 
@@ -55,11 +55,10 @@ Names in the codebooks and the company's records are not unique: whether two ven
 question nobody has answered, so the schema does not answer it either. **Device types, tags, software or
 services, furniture types, information types and tags, virtual machines, cloud subscriptions, software
 entries, and every company record — people, clients, projects, vendors,
-manufacturers, locations — are unique by name, whatever the case** — the original's editors refused a duplicate — and **people
-by email too**, since an email is what a sign-in would be matched against. The application enforces
-it, as a field error, since the frozen schema cannot: two saves at once can still both pass, and the
-original can still write a duplicate. Both sides are compared trimmed — the original saved values
-with stray spaces.
+manufacturers, locations — are unique by name, whatever the case** — and **people by email too**,
+since an email is what a sign-in would be matched against. The application enforces it, as a field
+error; no index backs it yet, so two saves at once can still both pass. Both sides are compared
+trimmed — older rows carry stray spaces.
 
 ## Migrations
 
@@ -72,26 +71,27 @@ deployment decision, and an application that knows what "Testing" means has a te
 into it. The integration tests turn it off and build their schema from the model; `MigrationsTests`
 is what runs the migrations, against a database of its own.
 
-**The migrations are the original's files, their bodies unchanged** — block-scoped namespaces and
-all, because EF Core's generator ignores the file-scoped setting in `.editorconfig` and a converted
-history would diverge from what the next `migrations add` writes. The namespace itself follows the
-project, `Codaxy.Inventory.App.Persistence.Migrations`, which is what that command generates. Everything
-else carried over was converted.
+**Migrations are left as `migrations add` writes them** — block-scoped namespaces and all, because
+EF Core's generator ignores the file-scoped setting in `.editorconfig` and a converted history would
+diverge from what the next `migrations add` writes. The namespace follows the project,
+`Codaxy.Inventory.App.Persistence.Migrations`, which is what that command generates.
 
 **Their designer files and the model snapshot are not history.** Each carries the CLR type names of
 the model, so renaming a namespace has to reach them: the snapshot is what EF diffs against. They name
 types as strings, so a stale one still compiles and passes every test. The migration bodies name
 nothing but tables and columns.
 
-**The history is copied from the original application and does not grow here** until that application
-is deleted — see [co-existence.md](co-existence.md). A migration added on one side only would leave
-the two describing different schemas with nothing to say which is right.
+**A schema change is a migration added here**, from `server/`:
+`dotnet ef migrations add <Name> --project Codaxy.Inventory.App --startup-project Codaxy.Inventory.Web`.
+`MigrationsTests` fails until the model and the history agree.
 
 ## Seeding
 
 `SeedData()` is idempotent per table — each block runs only when its table is empty — and fills the
 codebooks and the company's starting records with the values the product expects. It is safe to run against a
-populated database, but it will not repair or update a table that already has any row in it.
+populated database, but it will not repair or update a table that already has any row in it. The
+emptiness check takes no lock: two instances starting at once against an empty database can both
+insert.
 
 ## Audit log
 
@@ -101,7 +101,7 @@ holding the entity's class name, its id, the user's email (`system` without one)
 `Update` / `Delete`, and the complete before/after property set as JSON. `AuditLog` is excluded so the
 log cannot log itself. Rows written in one `SaveChanges` share a `TransactionId`.
 
-**The format is the original application's, because both write into one log**: indented, every
+**One format for the whole log**, which holds rows from 2022 on: indented, every
 property in EF's order — the key, then by name — changed or not; `DateOnly` as `yyyy-MM-dd`; non-ASCII
 written as it is. `AuditLogInterceptorTests` holds it to that.
 
@@ -121,6 +121,25 @@ the key's target entity and the first of its `Name`, `Text`, `Level`, `Status`, 
 no name of its own and shares the asset's id; it is labelled from the asset, or from the asset's last
 logged values once the asset is deleted.
 
+## Schema changes wanted
+
+What the database lacks and the application works around; each is a migration of its own.
+
+- **"Guarantee" is warranty.** `ElectronicDevice.GuaranteeNumber` and `GuaranteeExpirationDate` name
+  a warranty; the screens and the API models say so, and the entity keeps the old names until this
+  rename.
+- **A license may name its software or service.** Optional: a license of one product — most are —
+  names it, and its volumes can then only be of that software; one without keeps volumes of any. It
+  needs a nullable `SoftwareOrServiceId` on `License`; until then a license is attached to software
+  only through its volumes.
+- **A person's email is unique**, by an index on `lower(trim(email))`. The application refuses a
+  duplicate, and two saves at once pass.
+- **A person may name their manager.** A nullable self-reference on `Person`, so the handover
+  sheet can fill in *Odgovorno lice ili nadređeni*; until then the line is written by hand.
+- **No index serves any predicate.** Primary keys and the unique `inventory_number` are the whole of
+  the indexing, and lists filter, sort and page with sequential scans. At the present size — under a
+  thousand assets — that costs nothing measurable.
+
 ## Traps
 
 **An explicit `ToTable` or `HasColumnName` overrides the convention silently**, leaving one table in
@@ -137,6 +156,10 @@ naming migration.
 literal GUID, so most codebook ids differ between every database that was ever seeded separately.
 Nothing may hard-code one, and data cannot be moved between environments by id. The client already
 works around it by looking codebook entries up by text.
+
+**Renaming an entity or a property splits the audit log.** Earlier rows keep the old name, in
+`table` and inside their JSON, and the viewer labels by the current model; a rename migration
+rewrites them in the same step.
 
 **The audit log stores every column of every tracked row, in clear.** That includes license key
 identifiers and anything in `Information` marked as personal data. It is readable by every signed-in

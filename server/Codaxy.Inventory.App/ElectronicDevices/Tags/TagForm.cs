@@ -52,7 +52,7 @@ internal static class Tags
 
     /// <summary>
     /// No other tag holds the name, whatever its case — the original refused duplicates too. Checked
-    /// here, not by an index: the schema is frozen, so two saves at once can still both pass.
+    /// here, not by an index: none exists yet, so two saves at once can still both pass.
     /// </summary>
     public static async Task<IResult?> CheckNameAsync(
         InventoryContext context,

@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 namespace Codaxy.Inventory.App.Persistence;
 
 /// <summary>
-/// One <see cref="AuditLog"/> row for every entity a save adds, modifies or deletes. The format is
-/// the original application's, because both write into one log: the entity's class name, its id, the
-/// user's address (<see cref="SystemUser"/> without one), <c>Create</c>/<c>Update</c>/<c>Delete</c>, and the
+/// One <see cref="AuditLog"/> row for every entity a save adds, modifies or deletes, in the format
+/// of the whole log, rows written before this application included: the entity's class name, its id,
+/// the user's address (<see cref="SystemUser"/> without one), <c>Create</c>/<c>Update</c>/<c>Delete</c>, and the
 /// complete property set before and after as indented JSON in EF's property order. Rows of one save
 /// share a transaction id.
 ///

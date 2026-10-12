@@ -19,15 +19,11 @@ wrong.
 
 ## Not negotiable
 
-- **No migration is added until the original is deleted.** Shortcomings in the schema are recorded in
-  [co-existence.md](../../engineering/co-existence.md) and left alone.
 - **Paging, filtering and sorting happen in the database**, on every list, from the first one.
 - **The phone is the hard case**, not an afterthought — a layout that works there is what each screen
   is designed against.
 - **Line coverage is at least 80% and CI enforces it**, from the first step rather than as a late
   push — see [testing.md](../../engineering/testing.md).
-- **Behaviour matches the original** unless the difference is forced by the above. Better features
-  come after parity, not during it.
 
 ## The steps
 
@@ -54,8 +50,10 @@ wrong.
    request, and is the first list: step 1's paging convention is the one it set, with a search
    modernised rather than kept at parity. The log viewer followed it, reading a daily JSON-lines file
    the application now writes.
-8. **Deprecation.** Delete the original, then the first migration: the deferred schema changes, and
-   whatever roles turn out to need.
+8. **Deprecation.** Delete the original, then the first migration: the schema changes wanted in
+   [persistence.md](../../engineering/persistence.md), and whatever roles turn out to need. Amended:
+   the original is retired, and nothing here holds the schema or behaviour to it any more; the
+   migrations follow as their own work.
 
 ## Why that order
 
@@ -87,8 +85,6 @@ either application at a time. It is the new application's to fix after deprecati
 **Sharing sign-in.** It would mean keeping the hand-minted ASOS ticket and its unmaintained validation
 package, which is one of the things this exists to leave behind. Signing in twice while both run is
 cheaper.
-
-**Schema changes to suit the new application.** See [Not negotiable](#not-negotiable).
 
 ## Done when
 

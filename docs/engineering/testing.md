@@ -16,9 +16,9 @@ What the percentage is measured over decides whether it means anything:
   on its own.
 - **Excluded: composition.** Startup, dependency registration and configuration binding. They are
   exercised by every integration test that boots the host, and asserting on them tests the framework.
-- **Excluded: the persistence carried over from the original.** The entity classes, the context and
-  the seed data are declarations, frozen by [co-existence.md](co-existence.md), and `MigrationsTests`
-  proves the whole schema they describe rather than a line at a time.
+- **Excluded: the persistence declarations.** The entity classes, the context and the seed data are
+  declarations, and `MigrationsTests` proves the whole schema they describe rather than a line at a
+  time.
 - **Included: everything else.**
 
 The exclusions live in `server/coverlet.runsettings`. **Not coverlet's `Threshold` property**: it
@@ -91,6 +91,5 @@ A percentage rewards testing what is easy to test. These are covered whatever th
 - **Every state transition endpoint**, in both directions, including the one that undoes.
 - **Every paged list**, at the boundaries: the first page, the last, past the last, and the page size
   refused as too large.
-- **The schema match.** `MigrationsTests` runs the copied history and compares the result against the
-  model. It is not coverage, it is the thing that catches the copy drifting from the original — see
-  [co-existence.md](co-existence.md).
+- **The schema match.** `MigrationsTests` runs the history and compares the result against the
+  model. It is not coverage, it is the thing that catches a migration drifting from the model.

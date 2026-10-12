@@ -9,11 +9,8 @@ runs as `$APP_UID`, not root.
 **The image is published by CI, and only once the tests have passed**: the `publish` job in
 `ci.yml` needs the server and the client jobs, and runs on a push to `main` or `production` of
 Codaxy's own repository — a fork or a copy elsewhere cannot push to Codaxy's registry —
-`ghcr.io/codaxy/inventory-next:latest` from `main`, `:stable` from `production`, as the original
-tags its image, and every image also carries its commit's sha, so any one can be run again. The
-original published before any test ran; here a red build publishes nothing. The name is not the
-original's `ghcr.io/codaxy/inventory`, so neither workflow overwrites the other's image and a
-deployment switches between the two by changing one line.
+`ghcr.io/codaxy/inventory-next:latest` from `main`, `:stable` from `production`, and every image
+also carries its commit's sha, so any one can be run again. A red build publishes nothing.
 
 **The version is the commit's, stamped when CI builds the image** — never a commit of its own:
 `26.9.29+1222.eaea98a`, the commit's UTC date as year, month and day, then its hour and minute and
@@ -30,7 +27,7 @@ session, and the account menu shows it under Sign out.
 the application from an IDE needs. **`docker compose --profile app up` runs the built image beside
 them.**
 
-Ports are deliberately not the original application's, so both stacks can run at once: PostgreSQL on
+Ports: PostgreSQL on
 55432, pgAdmin on 55050, the application on 8090, Mailpit's web interface on 8025 and its relay on
 1025.
 
@@ -140,10 +137,9 @@ number parses and hides it, anything else fails the publish. The version travels
 missing or renamed profile means development settings are never loaded and the application stops at
 the connection string it cannot find.
 
-**Both applications migrate the same database at startup.** The connection string in compose points
-at this stack's own PostgreSQL, which is empty until something restores into it — it is not the
-original's database. Pointing both at one database is the co-existence arrangement, and it needs the
-migration histories to be identical; see [co-existence.md](co-existence.md).
+**Starting the application migrates the database it points at.** The connection string in compose
+points at this stack's own PostgreSQL, which is empty until something restores into it; pointed at a
+shared one, a branch with a new migration applies it there.
 
 **A log folder the process cannot write is an empty server log, not an error.** Serilog's file sink
 swallows the failure, so the screen shows nothing and startup succeeds; `logs/` under the image's
