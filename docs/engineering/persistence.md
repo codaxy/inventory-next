@@ -84,7 +84,9 @@ nothing but tables and columns.
 
 **A schema change is a migration added here**, from `server/`:
 `dotnet ef migrations add <Name> --project Codaxy.Inventory.App --startup-project Codaxy.Inventory.Web`.
-`MigrationsTests` fails until the model and the history agree.
+`MigrationsTests` fails until the model and the history agree. **`dotnet ef` is a local tool**, pinned in
+`.config/dotnet-tools.json` and installed by `dotnet tool restore`; its version is the EF Core
+packages', and moves with them.
 
 ## Seeding
 
