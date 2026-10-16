@@ -10,15 +10,10 @@ function initials(name: string | undefined): string {
 }
 
 const displayName = expr($app.session.user.name, $app.session.user.email, (name, email) => name || email);
-const showEmail = expr(
-    $app.session.user.name,
-    $app.session.user.email,
-    (name, email) => !!name && name != email,
-);
 
 /**
- * The signed-in person, at the foot of the navigation; clicking opens a menu above it that holds
- * signing out, and beneath it the build the server runs. A cx `MenuItem` dropdown rather than a
+ * The signed-in person and their role, at the foot of the navigation; clicking opens a menu above it
+ * that holds the address they signed in with, signing out, and beneath it the build the server runs. A cx `MenuItem` dropdown rather than a
  * hand-built popover: it brings Enter, Escape, arrow keys and closing when focus leaves.
  *
  * `openOnFocus` is off so tabbing through the navigation does not pop the menu open.
@@ -46,16 +41,14 @@ export const AccountMenu = createFunctionalComponent(() => (
                     />
                     <div class="min-w-0 flex-1">
                         <div class="truncate text-[13px] font-semibold text-nav-ink" text={displayName} />
-                        <div
-                            class="truncate text-[11px] text-nav-ink-dim"
-                            text={$app.session.user.email}
-                            visible={showEmail}
-                        />
+                        <div class="truncate text-[11px] text-nav-ink-dim" text={$app.session.user.role} />
                     </div>
                     <Icon name="accountMenu" class="account-chevron" />
                 </div>
 
                 <Menu putInto="dropdown">
+                    {/* Not a MenuItem, as the version below. */}
+                    <div class="account-email" text={$app.session.user.email} />
                     <MenuItem class="account-action account-sign-out" onClick="onSignOut" autoClose>
                         <div class="flex items-center gap-2.5">
                             <Icon name="signOut" class="nav-icon" />

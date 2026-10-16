@@ -61,6 +61,16 @@
     color: color-mix(in oklch, var(--color-danger) 55%, white);
 }
 
+// The address signed in with, above Sign out: the trigger has room for the name and the role only.
+.account-email {
+    margin-bottom: 0.25rem;
+    padding: 0.5rem 0.5rem 0.625rem;
+    border-bottom: 1px solid var(--color-nav-line);
+    font-size: 12px;
+    color: var(--color-nav-ink-dim);
+    overflow-wrap: anywhere;
+}
+
 // The build the server runs, under Sign out: looked up, not glanced at, so it waits in the menu.
 // Ruled off from the action above, as a menu separates groups of different kinds, and monospace, so
 // it reads as a value, not an action.
