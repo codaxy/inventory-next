@@ -467,11 +467,17 @@
 
 // The details: a panel sliding in from the right, the whole width on a phone.
 // Beneath the bar, not over it: the page sits in its own stacking layer, under the bar's.
-// Its wash, blur and fade are the modals' (`_surfaces.scss`).
+// Its wash, blur and fade are the modals' (`_surfaces.scss`). The whole window, not the page's
+// width: the page caps every child of its body at it, and zoomed out that left a strip undimmed.
 .mine-backdrop {
     position: fixed;
     inset: var(--shell-top, 0) 0 0;
     z-index: 60;
+}
+
+// As specific as the cap it lifts (`.page-body > :not(.page-top)`), and later.
+.mine > .mine-backdrop {
+    max-width: none;
 }
 
 .mine-panel {
