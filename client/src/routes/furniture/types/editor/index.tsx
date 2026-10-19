@@ -3,6 +3,7 @@ import { Button, Icon, Link, LinkButton, ValidationGroup } from "cx/widgets";
 
 import { recordTitle } from "../../../../components/documentTitle";
 import { formFields } from "../../../../components/formFields";
+import { iconPicker } from "../../../../components/iconPicker";
 import { historyAction, deleteAction, moreActions } from "../../../../components/moreActions";
 import { outlined } from "../../../../components/recordPage";
 import { listReturn } from "../../../../listAddress";
@@ -58,7 +59,12 @@ export default createFunctionalComponent(() => (
                 <ValidationGroup valid={t.valid} visited={t.visited} viewMode={t.viewing}>
                     <section class="editor-section">
                         <div class="editor-grid">
-                            {text("Name", "name", 100, { required: true, wide: true })}
+                            {text("Name", "name", 100, {
+                                required: true,
+                                wide: true,
+                                focused: t.nameFocused,
+                            })}
+                            {iconPicker("furniture", t.draft.icon, t.viewing, t.iconOpen, "pickIcon")}
                             {prose("Description", "description", 1000)}
                             <div class="editor-wide" visible={t.viewing}>
                                 {label("Furniture of this type")}

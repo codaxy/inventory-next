@@ -9,6 +9,7 @@ import type {
 } from "../../api/myEquipment";
 import type { IconName } from "../../layout/icons";
 import { formatDate } from "../../licensing";
+import { glyphOf } from "../../typeIcons";
 
 /** Each section's own tint, carried by its cards' icons. */
 export type Tone = "device" | "furniture" | "software";
@@ -119,56 +120,11 @@ export const noticesShown = 3;
 /** Above this many things, a search. */
 export const searchFrom = 20;
 
-/**
- * An icon by the recorded type, the first match winning; the furniture types are recorded in the
- * office's own language. Anything unmatched gets its section's generic one.
- */
-const deviceIcons: [RegExp, IconName][] = [
-    [/laptop|notebook/, "thingLaptop"],
-    [/desktop|computer|\bpc\b/, "thingDesktop"],
-    [/monitor|display|screen|\btv\b/, "thingMonitor"],
-    [/dock|hub|usb/, "thingDock"],
-    [/headset/, "thingHeadset"],
-    [/earbud|headphone/, "thingEarbuds"],
-    [/keyboard/, "thingKeyboard"],
-    [/mouse/, "thingMouse"],
-    [/webcam/, "thingWebcam"],
-    [/camera|cctv/, "thingCamera"],
-    // Before "phone", which "microphone" holds.
-    [/microphone/, "thingMicrophone"],
-    [/phone/, "thingPhone"],
-    [/tablet|pencil/, "thingTablet"],
-    [/print|mfp|copier|scanner|fax/, "thingPrinter"],
-    [/access point|wi-?fi/, "thingWifi"],
-    [/firewall/, "thingFirewall"],
-    [/router|switch|gateway|modem|bridge|kvm/, "thingRouter"],
-    [/server|rack|storage/, "thingServer"],
-    [/speaker/, "thingSpeaker"],
-    [/\bups\b|power/, "thingPower"],
-    [/drive|ssd|hdd/, "thingStorage"],
-    [/console|\bvr\b/, "thingConsole"],
-    [/projector|prezenter|presenter/, "thingProjector"],
-];
-
-const furnitureIcons: [RegExp, IconName][] = [
-    [/stolica|chair/, "thingChair"],
-    [/fotelja|armchair/, "thingArmchair"],
-    [/trosjed|garnitura|sofa|couch/, "thingSofa"],
-    [/komoda|dresser/, "thingDresser"],
-    [/ladičar|ladicar|drawer/, "thingDrawers"],
-    [/ormar|wardrobe|cabinet/, "thingWardrobe"],
-    [/poličar|policar|shel/, "thingShelf"],
-    [/radni sto|desk/, "thingDesk"],
-    [/stolić|stolic|\bsto\b|table/, "thingTable"],
-];
-
+/** A thing's icon: its type's, as an admin chose it (`typeIcons.ts`); an app's or a license's. */
 function thingIcon(t: EquipmentThing): IconName {
     if (t.kind === "license") return "thingLicense";
     if (t.kind === "seat") return "thingApp";
-    const type = (t.type ?? "").toLowerCase();
-    const table = t.kind === "device" ? deviceIcons : furnitureIcons;
-    const fallback: IconName = t.kind === "device" ? "thingDevice" : "thingChair";
-    return table.find(([pattern]) => pattern.test(type))?.[1] ?? fallback;
+    return glyphOf(t.kind, t.icon);
 }
 
 /** Computers and phones first — what someone thinks of as theirs — then as the server ordered them. */

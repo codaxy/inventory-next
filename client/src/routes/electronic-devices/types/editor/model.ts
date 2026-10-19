@@ -11,6 +11,8 @@ export interface TypeDraft {
     holdsLicenses: boolean;
     description?: string | null;
     tags: Option[];
+    /** None, the generic one. */
+    icon?: string | null;
 }
 
 export interface TypeEditorState {
@@ -23,6 +25,12 @@ export interface TypeEditorState {
     /** How many devices are of the type: what keeps it from being deleted. */
     deviceCount: number;
     tagOptions: Option[];
+    /** The icon was picked, not guessed: a name typed later leaves it alone. */
+    iconPicked: boolean;
+    /** Whether the name has focus: leaving it guesses the icon. */
+    nameFocused?: boolean;
+    /** Whether the icon picker's grid is open. */
+    iconOpen?: boolean;
     loading: boolean;
     saving: boolean;
     /** Not found, or a failure no field owns. */
@@ -48,6 +56,7 @@ export const toForm = (draft: TypeDraft) => ({
     holdsLicenses: !!draft.holdsLicenses,
     description: draft.description?.trim() || null,
     tagIds: draft.tags.map((t) => t.id),
+    icon: draft.icon ?? null,
 });
 
 export const devicesText = (n: number) =>

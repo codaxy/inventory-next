@@ -260,6 +260,23 @@ public class ElectronicDeviceTypeTests(TypeApplication app) : IClassFixture<Type
     }
 
     [Fact]
+    public async Task A_type_keeps_the_icon_it_is_given_and_refuses_one_it_cannot_have()
+    {
+        var client = await Client();
+
+        var given = await client.PostAsJsonAsync(Url, new { name = "Icon test", icon = "webcam" });
+        var none = await client.PostAsJsonAsync(Url, new { name = "No icon" });
+        var wrong = await client.PostAsJsonAsync(Url, new { name = "Wrong icon", icon = "chair" });
+
+        Assert.Equal("webcam", (await given.Content.ReadFromJsonAsync<TypeDetail>())!.Icon);
+        Assert.Null((await none.Content.ReadFromJsonAsync<TypeDetail>())!.Icon);
+        Assert.Contains(
+            "icon",
+            (await wrong.Content.ReadFromJsonAsync<ValidationProblemDetails>())!.Errors.Keys
+        );
+    }
+
+    [Fact]
     public async Task Refuses_a_name_or_description_past_their_length()
     {
         var client = await Client();

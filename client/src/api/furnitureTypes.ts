@@ -8,11 +8,15 @@ export interface FurnitureTypeItem {
     furnitureCount: number;
 }
 
-export interface FurnitureTypeDetail extends FurnitureTypeItem {}
+export interface FurnitureTypeDetail extends FurnitureTypeItem {
+    /** An icon key of `furnitureIcons`; none, the generic one. */
+    icon: string | null;
+}
 
 export interface FurnitureTypeForm {
     name: string;
     description: string | null;
+    icon: string | null;
 }
 
 export type FurnitureTypeSort = `${"" | "-"}${"name" | "furniture"}`;

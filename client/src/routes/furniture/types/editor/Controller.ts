@@ -13,6 +13,7 @@ import { guardLeaving } from "../../../../leaveGuard";
 import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import { piecesOfFurniture } from "../../../../furniture";
+import { guessIcon } from "../../../../typeIcons";
 import m, { type TypeDraft, type TypeEditorState, toForm } from "./model";
 
 const list = "~/furniture/types";
@@ -29,6 +30,11 @@ export default class extends Controller {
         this.addTrigger("description-edited", [t.draft.description], () =>
             this.store.delete(t.errors.description),
         );
+
+        // Leaving the name guesses the icon from it.
+        this.addTrigger("name-left", [t.nameFocused], (focused) => {
+            if (focused === false) this.guessIcon();
+        });
 
         this.addTrigger("address", [$app.url], () => this.open(), true);
     }
@@ -51,6 +57,7 @@ export default class extends Controller {
         this.store.set(t.errors, {});
         this.store.set(t.visited, false);
         this.store.set(t.valid, true);
+        this.store.set(t.iconPicked, false);
         this.show(null, {}, id ? "" : "New type");
 
         this.release?.();
@@ -60,7 +67,11 @@ export default class extends Controller {
             getFurnitureType(id)
                 .then((type) => {
                     if (this.store.get(t.id) !== id) return;
-                    this.show(type, { name: type.name, description: type.description }, type.name);
+                    this.show(
+                        type,
+                        { name: type.name, description: type.description, icon: type.icon },
+                        type.name,
+                    );
                 })
                 .catch((error) =>
                     this.store.set(
@@ -75,7 +86,7 @@ export default class extends Controller {
 
     private show(type: FurnitureTypeDetail | null, draft: TypeDraft, title: string) {
         // Text keys stay absent rather than empty: '' is a value, and `required` would pass on it.
-        const clean: TypeDraft = {};
+        const clean: TypeDraft = { icon: draft.icon ?? null };
         if (draft.name) clean.name = draft.name;
         if (draft.description) clean.description = draft.description;
 
@@ -86,6 +97,22 @@ export default class extends Controller {
         this.store.set(t.furnitureText, count > 0 ? `${count} ${piecesOfFurniture(count)}` : undefined);
         this.store.set(t.furnitureHref, type ? `~/furniture?typeId=${type.id}` : undefined);
         this.saved = JSON.stringify(toForm(clean));
+    }
+
+    /** An icon picked: kept whatever the name becomes. */
+    pickIcon(key: string | null) {
+        this.store.set(t.draft.icon, key);
+        this.store.set(t.iconPicked, true);
+    }
+
+    /**
+     * Leaving the name of a type being created, the icon it suggests, unless one was picked; a name
+     * that suggests none leaves the icon as it is. An existing type's icon changes only when picked.
+     */
+    guessIcon() {
+        if (this.store.get(t.id) || this.store.get(t.iconPicked)) return;
+        const guess = guessIcon("furniture", this.store.get(t.draft.name));
+        if (guess) this.store.set(t.draft.icon, guess);
     }
 
     dirty() {

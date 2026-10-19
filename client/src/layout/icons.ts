@@ -48,7 +48,6 @@ import {
     UserIcon,
     UserLock01Icon,
     UserShield01Icon,
-    MonitorIcon,
     UsbConnected02Icon,
     HeadsetIcon,
     HeadphonesIcon,
@@ -68,7 +67,6 @@ import {
     HardDriveIcon,
     GamepadIcon,
     ProjectorIcon,
-    Package01Icon,
     SofaSingleIcon,
     Sofa01Icon,
     Cabinet01Icon,
@@ -81,6 +79,23 @@ import {
     Alert02Icon,
     ShieldCheckIcon,
     ShieldOffIcon,
+    UsbIcon,
+    ComputerDesk01Icon,
+    Tv02Icon,
+    Chair05Icon,
+    CctvCameraIcon,
+    Pen01Icon,
+    Watch01Icon,
+    VrGlassesIcon,
+    RemoteControlIcon,
+    Backpack01Icon,
+    RefrigeratorIcon,
+    Fan01Icon,
+    Coffee01Icon,
+    LampDeskIcon,
+    WhiteboardIcon,
+    SafeIcon,
+    HangerIcon,
 } from "@hugeicons/core-free-icons";
 
 /**
@@ -158,13 +173,14 @@ const uiIcons = {
 } satisfies Record<string, IconData>;
 
 /**
- * What an employee's things look like on their page, by kind of thing: picked from the recorded type
- * by `thingIcon` in the page's model.
+ * What an employee's things look like on their page, by kind of thing: a type's icon (`typeIcons.ts`),
+ * an app's or a license's.
  */
+// No glyph twice in a picker: the generic ones are the menu's ("electronicDevices", "furniture").
 const thingIcons = {
     thingLaptop: LaptopIcon,
-    thingDesktop: ComputerIcon,
-    thingMonitor: MonitorIcon,
+    thingDesktop: ComputerDesk01Icon,
+    thingMonitor: Tv02Icon,
     thingDock: UsbConnected02Icon,
     thingHeadset: HeadsetIcon,
     thingEarbuds: HeadphonesIcon,
@@ -185,8 +201,17 @@ const thingIcons = {
     thingStorage: HardDriveIcon,
     thingConsole: GamepadIcon,
     thingProjector: ProjectorIcon,
-    thingDevice: Package01Icon,
-    thingChair: Chair01Icon,
+    thingHub: UsbIcon,
+    thingCctv: CctvCameraIcon,
+    thingPen: Pen01Icon,
+    thingWatch: Watch01Icon,
+    thingVr: VrGlassesIcon,
+    thingPresenter: RemoteControlIcon,
+    thingBackpack: Backpack01Icon,
+    thingFridge: RefrigeratorIcon,
+    thingAir: Fan01Icon,
+    thingCoffee: Coffee01Icon,
+    thingChair: Chair05Icon,
     thingArmchair: SofaSingleIcon,
     thingSofa: Sofa01Icon,
     thingDresser: Cabinet01Icon,
@@ -195,6 +220,10 @@ const thingIcons = {
     thingShelf: Bookshelf01Icon,
     thingDesk: Desk01Icon,
     thingTable: Table01Icon,
+    thingLamp: LampDeskIcon,
+    thingWhiteboard: WhiteboardIcon,
+    thingSafe: SafeIcon,
+    thingHanger: HangerIcon,
     thingApp: AppStoreIcon,
     thingLicense: SoftwareLicenseIcon,
     attention: Alert02Icon,

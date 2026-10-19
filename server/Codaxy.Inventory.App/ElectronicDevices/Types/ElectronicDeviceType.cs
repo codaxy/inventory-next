@@ -14,5 +14,8 @@ public class ElectronicDeviceType : IIdentifiable<Guid>
     public string Name { get; set; }
     public bool HoldLicences { get; set; }
     public string Description { get; set; }
+
+    /// <summary>A key of <c>TypeIcons.Device</c>; none is the generic icon.</summary>
+    public string Icon { get; set; }
     public virtual ICollection<ElectronicDeviceTypeElectronicDeviceTag> Tags { get; set; }
 }

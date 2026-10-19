@@ -12,6 +12,7 @@ import { confirm } from "../../../../components/confirm";
 import { guardLeaving } from "../../../../leaveGuard";
 import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
+import { guessIcon } from "../../../../typeIcons";
 import m, { devicesText, type TypeDraft, type TypeEditorState, toForm } from "./model";
 
 const list = "~/electronic-devices/types";
@@ -28,6 +29,11 @@ export default class extends Controller {
             this.store.delete(m.type.errors.description),
         );
         this.addTrigger("tags-edited", [m.type.draft.tags], () => this.store.delete(m.type.errors.tagIds));
+
+        // Leaving the name guesses the icon from it.
+        this.addTrigger("name-left", [m.type.nameFocused], (focused) => {
+            if (focused === false) this.guessIcon();
+        });
 
         // `new` and an id match one route: the address, not the mount, says which record and mode.
         this.addTrigger("address", [$app.url], () => this.open(), true);
@@ -53,6 +59,7 @@ export default class extends Controller {
         this.store.set(m.type.errors, {});
         this.store.set(m.type.visited, false);
         this.store.set(m.type.valid, true);
+        this.store.set(m.type.iconPicked, false);
         this.load({ holdsLicenses: false, tags: [] }, id ? "" : "New type");
 
         // Only an editor can hold unsaved changes; the read-only view has nothing to lose.
@@ -70,6 +77,7 @@ export default class extends Controller {
                             holdsLicenses: type.holdsLicenses,
                             description: type.description,
                             tags: type.tags.map((t) => ({ id: t.id, text: t.name })),
+                            icon: type.icon,
                         },
                         type.name,
                     );
@@ -91,13 +99,33 @@ export default class extends Controller {
 
     private load(draft: TypeDraft, title: string) {
         // Text keys stay absent rather than empty: '' is a value, and `required` would pass on it.
-        const clean: TypeDraft = { holdsLicenses: draft.holdsLicenses, tags: draft.tags };
+        const clean: TypeDraft = {
+            holdsLicenses: draft.holdsLicenses,
+            tags: draft.tags,
+            icon: draft.icon ?? null,
+        };
         if (draft.name) clean.name = draft.name;
         if (draft.description) clean.description = draft.description;
 
         this.store.set(m.type.draft, clean);
         this.store.set(m.type.title, title);
         this.saved = JSON.stringify(toForm(clean));
+    }
+
+    /** An icon picked: kept whatever the name becomes. */
+    pickIcon(key: string | null) {
+        this.store.set(m.type.draft.icon, key);
+        this.store.set(m.type.iconPicked, true);
+    }
+
+    /**
+     * Leaving the name of a type being created, the icon it suggests, unless one was picked; a name
+     * that suggests none leaves the icon as it is. An existing type's icon changes only when picked.
+     */
+    guessIcon() {
+        if (this.store.get(m.type.id) || this.store.get(m.type.iconPicked)) return;
+        const guess = guessIcon("device", this.store.get(m.type.draft.name));
+        if (guess) this.store.set(m.type.draft.icon, guess);
     }
 
     dirty() {

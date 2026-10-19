@@ -31,6 +31,13 @@ kind of thing — `Mobile`, `HasData` — and the link table is the whole of the
 is offered when an activation is assigned to a device. **A type a device or a piece of furniture uses
 is not deleted** — the foreign key does not cascade — while a tag goes with its links.
 
+**A device type and a furniture type carry an icon**, a key from a fixed set (`TypeIcons`, its keys
+validated on save); none is the generic one, the menu's. It is what an employee's own equipment shows a
+thing as, and only that for now. A new type's form guesses it from the name when the name is left — in
+English or the office's own language ("Ormar" a wardrobe), the first match winning, a picked icon left
+alone — and the migration that added it filled the existing types the same way, once; the seeded types
+carry theirs as data.
+
 **A device with seats activated on it or information kept on it is not deleted**; its maintenance
 contracts go with it, in the same save — they restrict the asset, so they are removed first there,
 never from the browser in a request of their own. A copy of a device leaves out what no two devices

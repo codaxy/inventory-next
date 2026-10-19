@@ -81,6 +81,30 @@ public class FurnitureTests(FurnitureApplication app) : IClassFixture<FurnitureA
 
     private async Task<HttpClient> Client() => await app.ClientAsync(Editor);
 
+    [Fact]
+    public async Task A_furniture_type_keeps_the_icon_it_is_given_and_refuses_one_it_cannot_have()
+    {
+        var client = await Client();
+
+        var given = await client.PostAsJsonAsync(
+            Types,
+            new { name = "Ormar test", icon = "wardrobe" }
+        );
+        var wrong = await client.PostAsJsonAsync(
+            Types,
+            new { name = "Wrong icon", icon = "laptop" }
+        );
+
+        Assert.Equal(
+            "wardrobe",
+            (await given.Content.ReadFromJsonAsync<App.Furnitures.Types.TypeDetail>())!.Icon
+        );
+        Assert.Contains(
+            "icon",
+            (await wrong.Content.ReadFromJsonAsync<ValidationProblemDetails>())!.Errors.Keys
+        );
+    }
+
     private async Task<Options> OptionsAsync() =>
         (await (await Client()).GetFromJsonAsync<Options>($"{Url}/options"))!;
 

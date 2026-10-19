@@ -53,6 +53,10 @@ public class MyEquipmentApplication : PeopleSignInApplication
         Laptop = await Device(context, "Mia's laptop", mia, Today.AddDays(10));
         Monitor = await Device(context, "Mia's monitor", mia, Today.AddDays(200));
         Tablet = await Device(context, "Mia's tablet", mia, Today.AddDays(-1000));
+        // Their type carries an icon, which the cards show.
+        (await context.ElectronicDeviceTypes.SingleAsync(t => t.Name == "Seed laptop")).Icon =
+            "laptop";
+        await context.SaveChangesAsync();
         OthersDevice = await Device(context, "Ole's laptop", other, Today.AddDays(5));
         UmasDevice = await Device(context, "Uma's laptop", uma, Today.AddDays(300));
 
@@ -193,6 +197,7 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
         var monitor = mine.Devices.Single(t => t.Id == app.Monitor);
 
         Assert.Equal("Seed laptop", laptop.Title);
+        Assert.Equal("laptop", laptop.Icon);
         Assert.Equal("Mia's laptop", laptop.Name);
         Assert.Equal("soon", laptop.Status);
         Assert.DoesNotContain("Warranty", laptop.StatusText);

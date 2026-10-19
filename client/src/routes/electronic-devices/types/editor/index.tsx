@@ -13,6 +13,7 @@ import {
 } from "cx/widgets";
 
 import { recordTitle } from "../../../../components/documentTitle";
+import { iconPicker } from "../../../../components/iconPicker";
 import { historyAction, deleteAction, moreActions } from "../../../../components/moreActions";
 import { outlined } from "../../../../components/recordPage";
 import { listReturn } from "../../../../listAddress";
@@ -79,6 +80,8 @@ export default createFunctionalComponent(() => (
                                     value={t.draft.name}
                                     required
                                     maxLength={100}
+                                    focused={t.nameFocused}
+                                    trackFocus
                                     error={t.errors.name}
                                     errorTooltip={noErrorText}
                                     inputAttrs={{ "aria-label": "Name" }}
@@ -89,6 +92,7 @@ export default createFunctionalComponent(() => (
                                     text={t.errors.name}
                                 />
                             </div>
+                            {iconPicker("device", t.draft.icon, t.viewing, t.iconOpen, "pickIcon")}
                             <div class="editor-wide">
                                 <div class="editor-label" text="Licenses" />
                                 <Checkbox

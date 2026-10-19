@@ -1,11 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 using Codaxy.Inventory.App.ElectronicDevices.Tags;
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Icons;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codaxy.Inventory.App.ElectronicDevices.Types;
 
-/// <summary>What creating and editing a type take: its words, whether it holds licenses, its tags.</summary>
+/// <summary>
+/// What creating and editing a type take: its words, whether it holds licenses, its tags, its icon
+/// (none, the generic one).
+/// </summary>
 public sealed record TypeForm(
     [property:
         Required(ErrorMessage = "Give the type a name."),
@@ -15,7 +19,8 @@ public sealed record TypeForm(
     bool HoldsLicenses,
     [property: StringLength(1000, ErrorMessage = "A description is at most 1000 characters.")]
         string? Description,
-    IReadOnlyList<Guid>? TagIds
+    IReadOnlyList<Guid>? TagIds,
+    [property: DeviceIcon] string? Icon = null
 );
 
 /// <summary>A type as its page shows it.</summary>
@@ -25,7 +30,8 @@ public sealed record TypeDetail(
     bool HoldsLicenses,
     string? Description,
     IReadOnlyList<TagRef> Tags,
-    int DeviceCount
+    int DeviceCount,
+    string? Icon
 );
 
 public sealed record TagRef(Guid Id, string Name);
@@ -94,6 +100,7 @@ internal static class DeviceTypes
     {
         type.Name = form.Name!.Trim();
         type.HoldLicences = form.HoldsLicenses;
+        type.Icon = form.Icon;
         type.Description = string.IsNullOrWhiteSpace(form.Description)
             ? null
             : form.Description.Trim();
@@ -132,7 +139,8 @@ internal static class DeviceTypes
                 t.Tags.OrderBy(l => l.ElectronicDeviceTag.Name)
                     .Select(l => new TagRef(l.ElectronicDeviceTagId, l.ElectronicDeviceTag.Name))
                     .ToList(),
-                context.ElectronicDevices.Count(d => d.ElectronicDeviceTypeId == t.Id)
+                context.ElectronicDevices.Count(d => d.ElectronicDeviceTypeId == t.Id),
+                t.Icon
             ))
             .FirstOrDefaultAsync(cancellationToken);
 }

@@ -26,11 +26,12 @@ public sealed record App(Guid Id, string Name, string? Status, string? StatusTex
 /// ride along for the search, not for the card.
 /// </summary>
 /// <param name="Kind"><c>device</c>, <c>furniture</c>, <c>license</c> or <c>seat</c>.</param>
-/// <param name="Type">The type as recorded, for the page to pick an icon by.</param>
+/// <param name="Type">The type as recorded.</param>
 /// <param name="Title">The type, or the name where there is none: "Laptop".</param>
 /// <param name="Subtitle">The make and model, or whatever names it next best: "Lenovo ThinkPad E16 Gen2".</param>
 /// <param name="Status"><c>ok</c>, <c>soon</c> or <c>expired</c>: a warranty or a subscription, where it says something.</param>
 /// <param name="Apps">On a device, the seats on it.</param>
+/// <param name="Icon">Its type's icon, a key of <c>TypeIcons</c>; none, the generic one.</param>
 /// <param name="Gone">Where it went, written off or sold: the disposal location's name. It still
 /// counts as theirs, last and pale.</param>
 public sealed record Thing(
@@ -45,7 +46,8 @@ public sealed record Thing(
     string? Status,
     string? StatusText,
     IReadOnlyList<App> Apps,
-    string? Gone = null
+    string? Gone = null,
+    string? Icon = null
 );
 
 /// <summary>
@@ -172,6 +174,7 @@ internal static class Mine
                 a.Name,
                 a.InventoryNumber,
                 Type = a.ElectronicDevice.ElectronicDeviceType.Name,
+                Icon = a.ElectronicDevice.ElectronicDeviceType.Icon,
                 Maker = a.ElectronicDevice.Manufacturer.Name,
                 Model = a.ElectronicDevice.ModelName,
                 Serial = a.ElectronicDevice.SerialNumber,
@@ -186,6 +189,7 @@ internal static class Mine
                 a.Name,
                 a.InventoryNumber,
                 Type = a.Furniture.FurnitureType.Name,
+                Icon = a.Furniture.FurnitureType.Icon,
                 Gone = a.Location != null && a.Location.IsDisposal ? a.Location.Name : null,
                 a.Furniture.Model,
             })
@@ -302,7 +306,8 @@ internal static class Mine
                     d.Gone is null ? status : null,
                     d.Gone is null ? text : null,
                     [.. appsOn[d.Id].OrderBy(a => a.Name)],
-                    d.Gone
+                    d.Gone,
+                    d.Icon
                 );
             })
             // Written off or sold last: still theirs on paper, no longer in their hands.
@@ -326,7 +331,8 @@ internal static class Mine
                 null,
                 null,
                 [],
-                f.Gone
+                f.Gone,
+                f.Icon
             ))
             .OrderBy(t => t.Gone is not null)
             .ThenBy(t => t.Title)

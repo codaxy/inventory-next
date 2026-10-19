@@ -105,8 +105,17 @@ export function formFields(state: FormState, prefix: string) {
         </cx>
     );
 
-    /** A text field; a `url` field has its open-in-a-new-tab button at the end of the line. */
-    const text = (text: string, key: string, max: number, opts: Layout & { url?: boolean } = {}) => (
+    /**
+     * A text field; a `url` field has its open-in-a-new-tab button at the end of the line. `focused`
+     * is bound to whether the field has focus (cx tracks it only with `trackFocus`), for a controller
+     * to act when it is left: cx's `onBlur` is declared but never called.
+     */
+    const text = (
+        text: string,
+        key: string,
+        max: number,
+        opts: Layout & { url?: boolean; focused?: AccessorChain<boolean | undefined> } = {},
+    ) => (
         <cx>
             <div class={{ "editor-wide": !!opts.wide }}>
                 {label(text, opts.required)}
@@ -119,6 +128,8 @@ export function formFields(state: FormState, prefix: string) {
                         error={errors[key]}
                         errorTooltip={noErrorText}
                         inputAttrs={{ "aria-label": text }}
+                        focused={opts.focused}
+                        trackFocus={!!opts.focused}
                     />
                     {opts.url ? externalLink(d[key], state.viewing) : null}
                 </div>

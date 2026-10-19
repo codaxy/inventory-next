@@ -24,6 +24,8 @@ export interface TypeDetail {
     description: string | null;
     tags: TagRef[];
     deviceCount: number;
+    /** An icon key of `deviceIcons`; none, the generic one. */
+    icon: string | null;
 }
 
 export interface TypeForm {
@@ -31,6 +33,7 @@ export interface TypeForm {
     holdsLicenses: boolean;
     description: string | null;
     tagIds: string[];
+    icon: string | null;
 }
 
 export type TypeSort = "name" | "-name" | "tags" | "-tags" | "devices" | "-devices";

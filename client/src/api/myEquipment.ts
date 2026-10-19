@@ -39,6 +39,8 @@ export interface EquipmentThing {
     apps: EquipmentApp[];
     /** Written off or sold: where it went. */
     gone: string | null;
+    /** Its type's icon key; none, the generic one. */
+    icon: string | null;
 }
 
 export interface MyEquipment {

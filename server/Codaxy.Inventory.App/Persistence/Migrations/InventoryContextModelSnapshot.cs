@@ -511,6 +511,10 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("hold_licences");
 
+                    b.Property<string>("Icon")
+                        .HasColumnType("text")
+                        .HasColumnName("icon");
+
                     b.Property<string>("Name")
                         .HasColumnType("text")
                         .HasColumnName("name");
@@ -573,6 +577,10 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text")
                         .HasColumnName("description");
+
+                    b.Property<string>("Icon")
+                        .HasColumnType("text")
+                        .HasColumnName("icon");
 
                     b.Property<string>("Name")
                         .HasColumnType("text")

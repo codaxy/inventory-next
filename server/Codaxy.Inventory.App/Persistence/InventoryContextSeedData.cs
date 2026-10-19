@@ -1,4 +1,4 @@
-﻿#nullable disable
+#nullable disable
 
 using System;
 using System.Collections.Generic;
@@ -816,204 +816,238 @@ public class InventoryContextSeedData
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Desktop",
+                        Icon = "desktop",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Laptop",
+                        Icon = "laptop",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Tablet",
+                        Icon = "tablet",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Mobile phone",
+                        Icon = "phone",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Monitor",
+                        Icon = "monitor",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Keyboard",
+                        Icon = "keyboard",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Mouse",
+                        Icon = "mouse",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Headset",
+                        Icon = "headset",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Microphone",
+                        Icon = "microphone",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Speakers",
+                        Icon = "speaker",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Camera",
+                        Icon = "camera",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "CCTV",
+                        Icon = "cctv",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Printer",
+                        Icon = "printer",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Scanner",
+                        Icon = "printer",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Copier",
+                        Icon = "printer",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Fax",
+                        Icon = "printer",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Power bank",
+                        Icon = "power",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "KVM switch",
+                        Icon = "router",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "KVM console",
+                        Icon = "router",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Computer rack",
+                        Icon = "server",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Rack part",
+                        Icon = "server",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Docking station",
+                        Icon = "dock",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "External optical drive",
+                        Icon = "storage",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "External hard drive",
+                        Icon = "storage",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Computer components",
+                        Icon = "desktop",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Server",
+                        Icon = "server",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Data storage",
+                        Icon = "storage",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Firewall",
+                        Icon = "firewall",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Gateway",
+                        Icon = "router",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Router",
+                        Icon = "router",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Network bridge",
+                        Icon = "router",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Modem",
+                        Icon = "router",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Wireless access point",
+                        Icon = "wifi",
                         Description = "",
                     },
                     new ElectronicDeviceType
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Switch",
+                        Icon = "router",
                         Description = "",
                     },
                 }

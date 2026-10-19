@@ -4,6 +4,8 @@ import { createModel } from "cx/ui";
 export interface TypeDraft {
     name?: string | null;
     description?: string | null;
+    /** None, the generic one. */
+    icon?: string | null;
 }
 
 export interface TypeEditorState {
@@ -19,6 +21,12 @@ export interface TypeEditorState {
     furnitureText?: string;
     /** The furniture list filtered to this type. */
     furnitureHref?: string;
+    /** The icon was picked, not guessed: a name typed later leaves it alone. */
+    iconPicked: boolean;
+    /** Whether the name has focus: leaving it guesses the icon. */
+    nameFocused?: boolean;
+    /** Whether the icon picker's grid is open. */
+    iconOpen?: boolean;
     loading: boolean;
     saving: boolean;
     /** Not found, or a failure no field owns. */
@@ -41,4 +49,5 @@ export default createModel<Model>();
 export const toForm = (draft: TypeDraft) => ({
     name: (draft.name ?? "").trim(),
     description: draft.description?.trim() || null,
+    icon: draft.icon ?? null,
 });

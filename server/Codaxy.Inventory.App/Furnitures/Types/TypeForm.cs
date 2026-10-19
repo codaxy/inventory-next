@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Icons;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codaxy.Inventory.App.Furnitures.Types;
 
-/// <summary>What creating and editing a furniture type take.</summary>
+/// <summary>What creating and editing a furniture type take: its words and its icon (none, the generic one).</summary>
 public sealed record TypeForm(
     [property:
         Required(ErrorMessage = "Give the type a name."),
@@ -12,11 +13,18 @@ public sealed record TypeForm(
     ]
         string? Name,
     [property: StringLength(1000, ErrorMessage = "A description is at most 1000 characters.")]
-        string? Description
+        string? Description,
+    [property: FurnitureIcon] string? Icon = null
 );
 
 /// <summary>A furniture type as its page shows it.</summary>
-public sealed record TypeDetail(Guid Id, string Name, string? Description, int FurnitureCount);
+public sealed record TypeDetail(
+    Guid Id,
+    string Name,
+    string? Description,
+    int FurnitureCount,
+    string? Icon
+);
 
 internal static class FurnitureTypes
 {
@@ -50,6 +58,7 @@ internal static class FurnitureTypes
     public static void Apply(FurnitureType type, TypeForm form)
     {
         type.Name = form.Name!.Trim();
+        type.Icon = form.Icon;
         type.Description = string.IsNullOrWhiteSpace(form.Description)
             ? null
             : form.Description.Trim();
@@ -67,7 +76,8 @@ internal static class FurnitureTypes
                 t.Id,
                 t.Name,
                 t.Description,
-                context.Furnitures.Count(f => f.FurnitureTypeId == t.Id)
+                context.Furnitures.Count(f => f.FurnitureTypeId == t.Id),
+                t.Icon
             ))
             .FirstOrDefaultAsync(cancellationToken);
 }
