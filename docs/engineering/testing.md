@@ -2,11 +2,15 @@
 
 ## The threshold
 
-**Line coverage is at least 80%, checked before a branch merges and again in CI.** A number that
-is not enforced is the same as no number. **One script computes it,
-`scripts/coverage.sh`**, and both run it: the pre-merge check (`scripts/premerge.sh`) on any branch
-touching `server/`, and CI's server job. CI alone notices too late — shipping pushes before it runs.
-A branch that cannot touch the figure skips it: it measures the server alone.
+**Line coverage is at least 80%, checked before a branch merges.** A number that is not enforced is
+the same as no number. **One script computes it, `scripts/coverage.sh`**: the pre-merge check
+(`scripts/premerge.sh`) runs it on any branch touching `server/`, and CI on a pull request ready for
+review. A branch that cannot touch the figure skips it: it measures the server alone.
+
+**CI checks pull requests only, as heavily as they are ready**: a draft gets the formatting, the
+server built with its unit tests, and the client type-checked and built; ready for review, the
+integration tests with the threshold besides. A push to `main` or `production` is checked by nothing:
+shipping merges locally, after the pre-merge check, and CI there would only repeat it.
 
 What the percentage is measured over decides whether it means anything:
 
@@ -53,23 +57,22 @@ starts last, and the other's tests then read ids from the wrong database — pas
 the order they happened to start in.
 
 **No test prints through Chromium**: the PDF endpoint is tested against a recording printer, and the
-sheet's text and layout are the client's, which no test reads. CI's image step has its browser print a
-page before the image is published.
+sheet's text and layout are the client's, which no test reads. Nothing checks that the image's
+browser runs: a browser that installs and does not start passes everything.
 
 ## Formatting
 
 CSharpier formats the server and Prettier the client, both pinned and both checked — before every
-merge by `scripts/premerge.sh` and in CI, with the same commands — so formatting is never a review
-comment. **The check is over the tree, not a record of the hook**: a hook not installed, skipped or
-unstable in one pass is caught all the same, and fixed by running the formatter and committing —
-never by redoing the hook's job by hand. **A pre-commit hook applies them**, which usually makes
-the check a formality: Husky.Net, a dotnet
-tool beside CSharpier, so the repository root carries no `package.json`. It runs on staged files
-only, with exactly the globs CI checks — a hook broader than CI rewrites files CI never looks at,
-and a narrower one lets a commit fail CI — then re-stages them. Prettier runs from the client's own
-install, so its version is pinned once. The server's restore installs the hook through a target in
-`Codaxy.Inventory.Web.csproj`; `HUSKY=0` turns that off in the image build and CI, which have no
-repository to hook.
+merge by `scripts/premerge.sh` and on every pull request, with the same commands — so formatting
+is never a review comment. **The check is over the tree, not a record of the hook**: a hook not
+installed, skipped or unstable in one pass is caught all the same, and fixed by running the
+formatter and committing — never by redoing the hook's job by hand. **A pre-commit hook applies
+them**, which usually makes the check a formality: Husky.Net, a dotnet tool beside CSharpier, so the
+repository root carries no `package.json`. It runs on staged files only, with exactly the globs CI
+checks — a hook broader than CI rewrites files CI never looks at, and a narrower one lets a commit
+fail CI — then re-stages them. Prettier runs from the client's own install, so its version is pinned
+once. The server's restore installs the hook through a target in `Codaxy.Inventory.Web.csproj`;
+`HUSKY=0` turns that off in the image build and CI, which have no repository to hook.
 
 **The hook formats moved files too**: Husky.Net's own `${staged}` lists only added and modified
 files, so a file renamed — or renamed and edited — in a commit went through unformatted and failed

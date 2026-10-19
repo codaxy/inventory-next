@@ -6,11 +6,11 @@ runs as `$APP_UID`, not root.
 
 ## Publishing
 
-**The image is published by CI, and only once the tests have passed**: the `publish` job in
-`ci.yml` needs the server and the client jobs, and runs on a push to `main` or `production` of
-Codaxy's own repository — a fork or a copy elsewhere cannot push to Codaxy's registry —
-`ghcr.io/codaxy/inventory-next:latest` from `main`, `:stable` from `production`, and every image
-also carries its commit's sha, so any one can be run again. A red build publishes nothing.
+**The image is published by CI on a push to `main` or `production`**, unchecked — the checks come
+before, in the pre-merge check and on pull requests (see [testing.md](testing.md)) — and only from
+Codaxy's own repository: a fork or a copy elsewhere cannot push to Codaxy's registry.
+`ghcr.io/codaxy/inventory-next:latest` from `main`, `:stable` from `production`, and every image also
+carries its commit's sha, so any one can be run again.
 
 **The version is the commit's, stamped when CI builds the image** — never a commit of its own:
 `26.9.29+1222.eaea98a`, the commit's UTC date as year, month and day, then its hour and minute and
@@ -81,9 +81,9 @@ update brings the matching browser. Its libraries come from the list it ships (`
 `apt-get satisfy`, less what the headless shell does not link — GTK, CUPS, curl, Cairo, Pango,
 Vulkan, udev — with `fonts-liberation` for the sheet's Arial-metric sans, the image having no other
 font. `Pdf:Sandbox` is false there: Chromium's sandbox cannot start as an unprivileged user in a
-container, and it loads only the application's own pages. About 490 MB of the image. **CI has the
-image's browser print a page before it publishes the image**: no test prints, so a browser that
-installs and does not run passes them all.
+container, and it loads only the application's own pages. About 490 MB of the image. **Nothing
+checks that it runs**: no test prints, so a browser that installs and does not start is found by the
+first PDF asked for.
 
 **A deployment behind a reverse proxy sets `ASPNETCORE_FORWARDEDHEADERS_ENABLED=true`; the image
 does not.** It trusts `X-Forwarded-For` and `X-Forwarded-Proto` from any sender, known-proxy lists
