@@ -87,13 +87,18 @@ export const glyphOf = (kind: IconKind, key: string | null | undefined): IconNam
  */
 const devicePatterns: [RegExp, string][] = [
     [/microphone|mikrofon/, "microphone"],
+    // The specific object before the broad word it sits beside: "Laptop bag", "Laptop docking
+    // station", "Projector screen".
+    [/backpack|ranac|\bbag\b/, "backpack"],
+    [/dock/, "dock"],
+    [/projector|projektor|beamer/, "projector"],
+    [/prezenter|presenter|clicker/, "presenter"],
     [/laptop|notebook|prijenosn/, "laptop"],
     [/server|\brack/, "server"],
     [/drive|\bssd|\bhdd|storage|\bnas\b/, "storage"],
     [/component|komponent|\bparts?\b|dijelov/, "parts"],
     [/desktop|computer|\bpc\b|ra[cč]unar|workstation/, "desktop"],
     [/monitor|display|screen|\btv\b|televizor|ekran/, "monitor"],
-    [/dock/, "dock"],
     [/\bhub\b|\busb/, "hub"],
     [/headset|slu[sš]alic/, "headset"],
     [/earbud|airpod|headphone/, "earbuds"],
@@ -115,18 +120,18 @@ const devicePatterns: [RegExp, string][] = [
     [/\bups\b|power|napaja/, "power"],
     [/console|playstation|xbox|gaming/, "console"],
     [/\bvr\b|virtual reality|oculus/, "vr"],
-    [/projector|projektor|beamer/, "projector"],
-    [/prezenter|presenter|clicker/, "presenter"],
-    [/backpack|ranac|\bbag\b/, "backpack"],
     [/fridge|fri[zž]ider|hladnjak|vitrina|refrigerat/, "fridge"],
     [/air purifier|pre[cč]i[sš][cć]iva[cč]|\bfan\b|ventilator|air condition|klima/, "air"],
     [/coffee|kafe|espresso/, "coffee"],
 ];
 
 const furniturePatterns: [RegExp, string][] = [
+    // Before "chair", which "armchair" holds.
+    [/fotelja|armchair/, "armchair"],
     // A chair is the generic icon; matched still, so that "stolica" is not taken for "stolić".
     [/stolica|chair/, ""],
-    [/fotelja|armchair/, "armchair"],
+    // Before the desk or table it stands on: "Desk lamp".
+    [/lamp|svjetiljka/, "lamp"],
     [/trosjed|dvosjed|garnitura|sofa|couch|kau[cč]/, "sofa"],
     [/radni sto|desk|pisa[cć]i/, "desk"],
     [/komoda|dresser/, "dresser"],
@@ -134,7 +139,6 @@ const furniturePatterns: [RegExp, string][] = [
     [/ormar|wardrobe|cabinet|plakar/, "wardrobe"],
     [/poli[cč]ar|polica|shel|regal|bookcase/, "shelf"],
     [/stoli[cć]|(^|\s)sto($|\s)|(^|\s)stol($|\s)|table/, "table"],
-    [/lamp|svjetiljka/, "lamp"],
     [/whiteboard|tabla|plo[cč]a/, "whiteboard"],
     [/(^|\s)sef($|\s)|\bsafe\b/, "safe"],
     [/[cč]iviluk|coat|hanger|vje[sš]alic/, "hanger"],

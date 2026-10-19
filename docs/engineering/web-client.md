@@ -132,11 +132,13 @@ nothing either way.
 `typeIcons.ts`), the generic one where none was chosen; an app's and a license's are fixed. The type
 lists show it too, muted before the name in the name's own cell rather than in a column of its own, so
 the grid keeps its columns and the name still leads the row. The type forms pick it with `iconPicker`:
-a button showing the chosen glyph, opening a grid of glyphs — no names but a screen reader's, no glyph
-twice, the generic icon first — which a pick, a click outside or Escape closes; they guess it from the
-name when a new type's name is left (`guessIcon`, the only guesser, here so that leaving the name costs
-no request; the seeded types carry their icons as data). Leaving the name is read from cx's `focused`
-binding with `trackFocus`: `TextField` declares `onBlur` but never calls it.
+a button showing the chosen glyph, opening a grid of plain buttons, the chosen one pressed — no names
+but a screen reader's, no glyph twice, the generic icon first, no radio group's promise of arrow keys —
+which a pick, a click outside or Escape closes, the server's message for the icon beneath it; they
+guess it from the name when a new type's name is left changed (`TypeIconGuess`, one for both editors,
+over `guessIcon`, the only guesser, here so that leaving the name costs no request; the seeded types
+carry their icons as data). Leaving the name is read from cx's `focused` binding with `trackFocus`:
+`TextField` declares `onBlur` but never calls it.
 
 **The Dashboard is one screen**, after Pulse's home: a lede, one card "Worth a look" holding a tile
 per rule in [domain.md](domain.md) — its count and what it counts — and beneath it the selected tile's

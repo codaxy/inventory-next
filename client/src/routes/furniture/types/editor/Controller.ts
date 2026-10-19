@@ -13,7 +13,7 @@ import { guardLeaving } from "../../../../leaveGuard";
 import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import { piecesOfFurniture } from "../../../../furniture";
-import { guessIcon } from "../../../../typeIcons";
+import { TypeIconGuess } from "../../../../typeIconGuess";
 import m, { type TypeDraft, type TypeEditorState, toForm } from "./model";
 
 const list = "~/furniture/types";
@@ -23,8 +23,13 @@ export default class extends Controller {
     /** The form as loaded; what "unsaved" is measured against. */
     private saved = "";
     private release?: () => void;
-    /** The name the icon was last guessed from: leaving it unchanged guesses nothing. */
-    private guessedFrom?: string;
+    private icons = new TypeIconGuess("furniture", {
+        id: t.id,
+        name: t.draft.name,
+        icon: t.draft.icon,
+        nameFocused: t.nameFocused,
+        error: t.errors.icon,
+    });
 
     onInit() {
         // A field's own message goes once its value changes.
@@ -33,10 +38,7 @@ export default class extends Controller {
             this.store.delete(t.errors.description),
         );
 
-        // Leaving the name guesses the icon from it.
-        this.addTrigger("name-left", [t.nameFocused], (focused) => {
-            if (focused === false) this.guessIcon();
-        });
+        this.icons.watch(this);
 
         this.addTrigger("address", [$app.url], () => this.open(), true);
     }
@@ -59,7 +61,7 @@ export default class extends Controller {
         this.store.set(t.errors, {});
         this.store.set(t.visited, false);
         this.store.set(t.valid, true);
-        this.guessedFrom = undefined;
+        this.icons.reset();
         this.show(null, {}, id ? "" : "New type");
 
         this.release?.();
@@ -102,22 +104,7 @@ export default class extends Controller {
     }
 
     pickIcon(key: string | null) {
-        this.store.set(t.draft.icon, key);
-    }
-
-    /**
-     * Leaving the name of a type being created, changed since it was last left: the icon it suggests,
-     * over one picked before — the icon is just below, so the change is seen and undone in a click. A
-     * name left unchanged guesses nothing, so tabbing through it keeps a pick; a name that suggests
-     * nothing leaves the icon as it is. An existing type's icon changes only when picked.
-     */
-    guessIcon() {
-        if (this.store.get(t.id)) return;
-        const name = (this.store.get(t.draft.name) ?? "").trim();
-        if (name === this.guessedFrom) return;
-        this.guessedFrom = name;
-        const guess = guessIcon("furniture", name);
-        if (guess !== undefined) this.store.set(t.draft.icon, guess);
+        this.icons.pick(this.store, key);
     }
 
     dirty() {

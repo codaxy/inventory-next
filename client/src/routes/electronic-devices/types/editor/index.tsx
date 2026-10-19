@@ -92,7 +92,14 @@ export default createFunctionalComponent(() => (
                                     text={t.errors.name}
                                 />
                             </div>
-                            {iconPicker("device", t.draft.icon, t.viewing, t.iconOpen, "pickIcon")}
+                            {iconPicker(
+                                "device",
+                                t.draft.icon,
+                                t.viewing,
+                                t.iconOpen,
+                                "pickIcon",
+                                t.errors.icon,
+                            )}
                             <div class="editor-wide">
                                 <div class="editor-label" text="Licenses" />
                                 <Checkbox

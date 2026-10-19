@@ -12,7 +12,7 @@ import { confirm } from "../../../../components/confirm";
 import { guardLeaving } from "../../../../leaveGuard";
 import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
-import { guessIcon } from "../../../../typeIcons";
+import { TypeIconGuess } from "../../../../typeIconGuess";
 import m, { devicesText, type TypeDraft, type TypeEditorState, toForm } from "./model";
 
 const list = "~/electronic-devices/types";
@@ -21,8 +21,13 @@ export default class extends Controller {
     /** The form as loaded; what "unsaved" is measured against. */
     private saved = "";
     private release?: () => void;
-    /** The name the icon was last guessed from: leaving it unchanged guesses nothing. */
-    private guessedFrom?: string;
+    private icons = new TypeIconGuess("device", {
+        id: m.type.id,
+        name: m.type.draft.name,
+        icon: m.type.draft.icon,
+        nameFocused: m.type.nameFocused,
+        error: m.type.errors.icon,
+    });
 
     onInit() {
         // A field's own message goes once its value changes.
@@ -32,10 +37,7 @@ export default class extends Controller {
         );
         this.addTrigger("tags-edited", [m.type.draft.tags], () => this.store.delete(m.type.errors.tagIds));
 
-        // Leaving the name guesses the icon from it.
-        this.addTrigger("name-left", [m.type.nameFocused], (focused) => {
-            if (focused === false) this.guessIcon();
-        });
+        this.icons.watch(this);
 
         // `new` and an id match one route: the address, not the mount, says which record and mode.
         this.addTrigger("address", [$app.url], () => this.open(), true);
@@ -61,7 +63,7 @@ export default class extends Controller {
         this.store.set(m.type.errors, {});
         this.store.set(m.type.visited, false);
         this.store.set(m.type.valid, true);
-        this.guessedFrom = undefined;
+        this.icons.reset();
         this.load({ holdsLicenses: false, tags: [] }, id ? "" : "New type");
 
         // Only an editor can hold unsaved changes; the read-only view has nothing to lose.
@@ -115,22 +117,7 @@ export default class extends Controller {
     }
 
     pickIcon(key: string | null) {
-        this.store.set(m.type.draft.icon, key);
-    }
-
-    /**
-     * Leaving the name of a type being created, changed since it was last left: the icon it suggests,
-     * over one picked before — the icon is just below, so the change is seen and undone in a click. A
-     * name left unchanged guesses nothing, so tabbing through it keeps a pick; a name that suggests
-     * nothing leaves the icon as it is. An existing type's icon changes only when picked.
-     */
-    guessIcon() {
-        if (this.store.get(m.type.id)) return;
-        const name = (this.store.get(m.type.draft.name) ?? "").trim();
-        if (name === this.guessedFrom) return;
-        this.guessedFrom = name;
-        const guess = guessIcon("device", name);
-        if (guess !== undefined) this.store.set(m.type.draft.icon, guess);
+        this.icons.pick(this.store, key);
     }
 
     dirty() {

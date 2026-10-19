@@ -277,6 +277,27 @@ public class ElectronicDeviceTypeTests(TypeApplication app) : IClassFixture<Type
     }
 
     [Fact]
+    public async Task A_save_that_leaves_the_icon_out_keeps_it_but_null_is_the_generic_one()
+    {
+        var client = await Client();
+        var created = (
+            await (
+                await client.PostAsJsonAsync(Url, new { name = "Kept icon", icon = "monitor" })
+            ).Content.ReadFromJsonAsync<TypeDetail>()
+        )!;
+
+        // A client from before icons sends none: the icon stays.
+        var left = await client.PutAsJsonAsync($"{Url}/{created.Id}", new { name = "Kept icon 2" });
+        var cleared = await client.PutAsJsonAsync(
+            $"{Url}/{created.Id}",
+            new { name = "Kept icon 3", icon = (string?)null }
+        );
+
+        Assert.Equal("monitor", (await left.Content.ReadFromJsonAsync<TypeDetail>())!.Icon);
+        Assert.Null((await cleared.Content.ReadFromJsonAsync<TypeDetail>())!.Icon);
+    }
+
+    [Fact]
     public async Task Refuses_a_name_or_description_past_their_length()
     {
         var client = await Client();

@@ -64,7 +64,14 @@ export default createFunctionalComponent(() => (
                                 wide: true,
                                 focused: t.nameFocused,
                             })}
-                            {iconPicker("furniture", t.draft.icon, t.viewing, t.iconOpen, "pickIcon")}
+                            {iconPicker(
+                                "furniture",
+                                t.draft.icon,
+                                t.viewing,
+                                t.iconOpen,
+                                "pickIcon",
+                                t.errors.icon,
+                            )}
                             {prose("Description", "description", 1000)}
                             <div class="editor-wide" visible={t.viewing}>
                                 {label("Furniture of this type")}

@@ -1,5 +1,5 @@
 import type { AccessorChain } from "cx/data";
-import { expr, falsy, truthy } from "cx/ui";
+import { expr, falsy, hasValue, truthy } from "cx/ui";
 import { Icon } from "cx/widgets";
 
 import { genericIcon, glyphOf, type IconKind, iconsOf } from "../typeIcons";
@@ -18,10 +18,10 @@ function focusLater(selector: string, frames = 10) {
 
 /**
  * A type's icon, for an employee's equipment to show its things by: a button showing the chosen glyph,
- * which opens the generic one and the kind's set as a grid — glyphs alone, named for a screen reader
- * only, behaving as one radio group. Picking one, clicking outside or Escape closes it. Read-only, the
+ * which opens the generic one and the kind's set as a grid of plain buttons — glyphs alone, named for
+ * a screen reader only, the chosen one pressed; no radio group, which would promise arrow keys. Picking one, clicking outside or Escape closes it. Read-only, the
  * chosen glyph. `open` holds whether the grid shows; `onPick` is the controller's method, given the
- * key or `null` for the generic one.
+ * key or `null` for the generic one; `error` is the server's message for the field, shown beneath.
  */
 export const iconPicker = (
     kind: IconKind,
@@ -29,6 +29,7 @@ export const iconPicker = (
     viewing: AccessorChain<boolean>,
     open: AccessorChain<boolean | undefined>,
     onPick: string,
+    error: AccessorChain<string | undefined>,
 ) => {
     const choices = [genericIcon[kind], ...iconsOf(kind)];
     const label = (key: string | null | undefined) =>
@@ -90,7 +91,7 @@ export const iconPicker = (
                     <div class="type-icon-popover" visible={truthy(open)}>
                         <div
                             class="type-icons"
-                            attrs={{ role: "radiogroup", "aria-labelledby": `${kind}-icon-label` }}
+                            attrs={{ role: "group", "aria-labelledby": `${kind}-icon-label` }}
                         >
                             {choices.map((choice) => (
                                 <cx>
@@ -101,8 +102,7 @@ export const iconPicker = (
                                             "type-icon-on": expr(value, (key) => (key ?? "") === choice.key),
                                         }}
                                         attrs={{
-                                            role: "radio",
-                                            "aria-checked": expr(value, (key) =>
+                                            "aria-pressed": expr(value, (key) =>
                                                 (key ?? "") === choice.key ? "true" : "false",
                                             ),
                                             "aria-label": choice.label,
@@ -119,6 +119,7 @@ export const iconPicker = (
                         </div>
                     </div>
                 </div>
+                <p class="field-message" visible={hasValue(error)} text={error} />
             </div>
         </cx>
     );

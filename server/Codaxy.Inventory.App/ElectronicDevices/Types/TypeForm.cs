@@ -20,7 +20,7 @@ public sealed record TypeForm(
     [property: StringLength(1000, ErrorMessage = "A description is at most 1000 characters.")]
         string? Description,
     IReadOnlyList<Guid>? TagIds,
-    [property: DeviceIcon] string? Icon = null
+    [property: DeviceIcon] string? Icon = TypeIcons.Unsent
 );
 
 /// <summary>A type as its page shows it.</summary>
@@ -100,7 +100,8 @@ internal static class DeviceTypes
     {
         type.Name = form.Name!.Trim();
         type.HoldLicences = form.HoldsLicenses;
-        type.Icon = form.Icon;
+        if (form.Icon != TypeIcons.Unsent)
+            type.Icon = form.Icon;
         type.Description = string.IsNullOrWhiteSpace(form.Description)
             ? null
             : form.Description.Trim();

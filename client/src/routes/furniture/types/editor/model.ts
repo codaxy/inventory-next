@@ -30,7 +30,7 @@ export interface TypeEditorState {
     /** Not found, or a failure no field owns. */
     error?: string;
     /** The server's messages by field. */
-    errors: { name?: string; description?: string };
+    errors: { name?: string; description?: string; icon?: string };
     valid: boolean;
     visited: boolean;
 }

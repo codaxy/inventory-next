@@ -10,6 +10,12 @@ namespace Codaxy.Inventory.App.Shared.Icons;
 /// </summary>
 public static class TypeIcons
 {
+    /// <summary>
+    /// What a form's icon is when the request leaves it out — a client from before icons — so saving
+    /// keeps the type's icon rather than clearing it; null is the generic one. No icon's key.
+    /// </summary>
+    public const string Unsent = "\u0000unsent";
+
     public static readonly IReadOnlyList<string> Device =
     [
         "laptop",
@@ -64,9 +70,9 @@ public static class TypeIcons
         "hanger",
     ];
 
-    /// <summary>Whether <paramref name="icon"/> is none, or one of <paramref name="set"/>.</summary>
+    /// <summary>Whether <paramref name="icon"/> is none, one of <paramref name="set"/>, or left out.</summary>
     public static bool IsValid(string? icon, IReadOnlyList<string> set) =>
-        icon is null || set.Contains(icon);
+        icon is null || icon == Unsent || set.Contains(icon);
 }
 
 /// <summary>An icon key a device type may carry, or none.</summary>

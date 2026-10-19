@@ -5,6 +5,7 @@ import { copyButton } from "../../components/copyButton";
 import { documentTitle } from "../../components/documentTitle";
 import type Controller from "./Controller";
 import ControllerClass from "./Controller";
+import { glyphOf } from "../../typeIcons";
 import m, { tileTone } from "./model";
 
 const d = m.mine;
@@ -252,7 +253,7 @@ export default createFunctionalComponent(() => (
                     <span
                         class={expr(p.tone, (t) => `mine-thing mine-thing-large mine-thing-${t ?? "device"}`)}
                     >
-                        <Icon name={expr(p.icon, (i) => i ?? "thingDevice")} />
+                        <Icon name={expr(p.icon, (i) => i ?? glyphOf("device", null))} />
                     </span>
                     <h2 id="mine-panel-title" class="mine-panel-title" text={p.title} />
                     <p class="mine-card-subtitle" visible={hasValue(p.subtitle)} text={p.subtitle} />

@@ -14,7 +14,7 @@ public sealed record TypeForm(
         string? Name,
     [property: StringLength(1000, ErrorMessage = "A description is at most 1000 characters.")]
         string? Description,
-    [property: FurnitureIcon] string? Icon = null
+    [property: FurnitureIcon] string? Icon = TypeIcons.Unsent
 );
 
 /// <summary>A furniture type as its page shows it.</summary>
@@ -58,7 +58,8 @@ internal static class FurnitureTypes
     public static void Apply(FurnitureType type, TypeForm form)
     {
         type.Name = form.Name!.Trim();
-        type.Icon = form.Icon;
+        if (form.Icon != TypeIcons.Unsent)
+            type.Icon = form.Icon;
         type.Description = string.IsNullOrWhiteSpace(form.Description)
             ? null
             : form.Description.Trim();
