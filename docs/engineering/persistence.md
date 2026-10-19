@@ -140,9 +140,6 @@ or say the log never saw it.
 
 What the database lacks and the application works around; each is a migration of its own.
 
-- **"Guarantee" is warranty.** `ElectronicDevice.GuaranteeNumber` and `GuaranteeExpirationDate` name
-  a warranty; the screens and the API models say so, and the entity keeps the old names until this
-  rename.
 - **A license may name its software or service.** Optional: a license of one product — most are —
   names it, and its volumes can then only be of that software; one without keeps volumes of any. It
   needs a nullable `SoftwareOrServiceId` on `License`; until then a license is attached to software
@@ -175,7 +172,8 @@ works around it by looking codebook entries up by text.
 
 **Renaming an entity or a property splits the audit log.** Earlier rows keep the old name, in
 `table` and inside their JSON, and the viewer labels by the current model; a rename migration
-rewrites them in the same step.
+rewrites them in the same step. A key renamed in place stays where the old name sorted, and an entry
+lists its fields in that order.
 
 **The audit log stores every column of every tracked row, in clear.** That includes license key
 identifiers and anything in `Information` marked as personal data. It is readable by every signed-in

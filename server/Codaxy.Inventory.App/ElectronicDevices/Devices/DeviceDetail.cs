@@ -37,7 +37,6 @@ public sealed record InformationRow(Guid Id, string Name, string? Type);
 /// <summary>
 /// A device as its page shows it: the asset's fields and the device's own, flat, the names beside the
 /// ids; the tags of its type; its contracts; and what is attached to it — seats and information.
-/// "Guarantee" in the entity is warranty everywhere else.
 /// </summary>
 public sealed record DeviceDetail(
     Guid Id,
@@ -133,8 +132,8 @@ internal static class DeviceReads
                 d.ModelName,
                 d.ModelCode,
                 d.SerialNumber,
-                d.GuaranteeNumber,
-                d.GuaranteeExpirationDate,
+                d.WarrantyNumber,
+                d.WarrantyExpirationDate,
                 d.Asset.LastModified,
             })
             .FirstOrDefaultAsync(cancellationToken);
@@ -217,8 +216,8 @@ internal static class DeviceReads
             d.ModelName,
             d.ModelCode,
             d.SerialNumber,
-            d.GuaranteeNumber,
-            d.GuaranteeExpirationDate,
+            d.WarrantyNumber,
+            d.WarrantyExpirationDate,
             d.LastModified,
             contracts,
             seats,

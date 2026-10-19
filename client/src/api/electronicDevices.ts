@@ -85,7 +85,7 @@ export interface DeviceOptions extends AssetOptions {
     typeTags: Record<string, Option[]>;
 }
 
-/** An asset's fields and the device's own, as the server takes them; "warranty" is the entity's "guarantee". */
+/** An asset's fields and the device's own, as the server takes them. */
 export interface DeviceForm extends AssetForm {
     typeId: string | null;
     manufacturerId: string | null;

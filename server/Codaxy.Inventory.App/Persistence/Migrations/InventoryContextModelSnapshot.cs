@@ -421,14 +421,6 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("electronic_device_type_id");
 
-                    b.Property<DateOnly?>("GuaranteeExpirationDate")
-                        .HasColumnType("date")
-                        .HasColumnName("guarantee_expiration_date");
-
-                    b.Property<string>("GuaranteeNumber")
-                        .HasColumnType("text")
-                        .HasColumnName("guarantee_number");
-
                     b.Property<Guid?>("ManufacturerId")
                         .HasColumnType("uuid")
                         .HasColumnName("manufacturer_id");
@@ -448,6 +440,14 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.Property<string>("SerialNumber")
                         .HasColumnType("text")
                         .HasColumnName("serial_number");
+
+                    b.Property<DateOnly?>("WarrantyExpirationDate")
+                        .HasColumnType("date")
+                        .HasColumnName("warranty_expiration_date");
+
+                    b.Property<string>("WarrantyNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("warranty_number");
 
                     b.HasKey("AssetId")
                         .HasName("pk_electronic_device");

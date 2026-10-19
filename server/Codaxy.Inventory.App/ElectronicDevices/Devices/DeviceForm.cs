@@ -7,8 +7,7 @@ namespace Codaxy.Inventory.App.ElectronicDevices.Devices;
 
 /// <summary>
 /// What creating and editing a device take: the asset's fields — validated, checked and applied by
-/// <see cref="AssetWrites"/>, as every asset's are — and the device's own. "Warranty" is the entity's
-/// "guarantee".
+/// <see cref="AssetWrites"/>, as every asset's are — and the device's own.
 /// </summary>
 public sealed record DeviceForm(
     string? Name,
@@ -88,7 +87,7 @@ internal static class DeviceWrites
         device.ModelName = Text(form.ModelName);
         device.ModelCode = Text(form.ModelCode);
         device.SerialNumber = Text(form.SerialNumber);
-        device.GuaranteeNumber = Text(form.WarrantyNumber);
-        device.GuaranteeExpirationDate = form.WarrantyExpirationDate;
+        device.WarrantyNumber = Text(form.WarrantyNumber);
+        device.WarrantyExpirationDate = form.WarrantyExpirationDate;
     }
 }

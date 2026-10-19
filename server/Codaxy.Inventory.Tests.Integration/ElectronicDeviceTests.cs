@@ -108,8 +108,8 @@ public class ElectronicDeviceApplication : InventoryApplication
         laptop.ElectronicDevice.ModelName = "E16 Gen2";
         laptop.ElectronicDevice.ModelCode = "21MA";
         laptop.ElectronicDevice.SerialNumber = "PF-123";
-        laptop.ElectronicDevice.GuaranteeNumber = "W-9";
-        laptop.ElectronicDevice.GuaranteeExpirationDate = new DateOnly(2028, 5, 4);
+        laptop.ElectronicDevice.WarrantyNumber = "W-9";
+        laptop.ElectronicDevice.WarrantyExpirationDate = new DateOnly(2028, 5, 4);
         var contractType =
             await context.MaintenanceTypes.FirstOrDefaultAsync()
             ?? context

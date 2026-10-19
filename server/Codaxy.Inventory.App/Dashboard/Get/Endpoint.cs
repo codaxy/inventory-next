@@ -119,10 +119,10 @@ public static class Endpoint
         var endedSince = today.AddDays(-endedDays);
         var warrantyEnd = today.AddDays(endingDays);
         var warrantiesEnded = devices.Where(d =>
-            d.GuaranteeExpirationDate < today && d.GuaranteeExpirationDate >= endedSince
+            d.WarrantyExpirationDate < today && d.WarrantyExpirationDate >= endedSince
         );
         var warranties = devices.Where(d =>
-            d.GuaranteeExpirationDate >= today && d.GuaranteeExpirationDate < warrantyEnd
+            d.WarrantyExpirationDate >= today && d.WarrantyExpirationDate < warrantyEnd
         );
 
         var anyDisposal = await context.Locations.AnyAsync(l => l.IsDisposal, cancellationToken);
@@ -215,7 +215,7 @@ public static class Endpoint
                     warrantiesEnded,
                     q =>
                         Warranties(
-                            q.OrderByDescending(d => d.GuaranteeExpirationDate)
+                            q.OrderByDescending(d => d.WarrantyExpirationDate)
                                 .ThenBy(d => d.AssetId)
                         ),
                     cancellationToken
@@ -223,9 +223,7 @@ public static class Endpoint
                 await AssetHoldings.SectionAsync(
                     warranties,
                     q =>
-                        Warranties(
-                            q.OrderBy(d => d.GuaranteeExpirationDate).ThenBy(d => d.AssetId)
-                        ),
+                        Warranties(q.OrderBy(d => d.WarrantyExpirationDate).ThenBy(d => d.AssetId)),
                     cancellationToken
                 ),
                 !anyDisposal
@@ -285,6 +283,6 @@ public static class Endpoint
             d.Asset.InventoryNumber,
             d.Asset.Name,
             d.Asset.Person.Name,
-            d.GuaranteeExpirationDate!.Value
+            d.WarrantyExpirationDate!.Value
         ));
 }

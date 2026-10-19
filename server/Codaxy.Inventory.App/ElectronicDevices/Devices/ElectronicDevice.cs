@@ -17,8 +17,8 @@ public class ElectronicDevice : IIdentifiableReadOnly<Guid>
     public Guid AssetId { get; set; }
     public Guid? ManufacturerId { get; set; }
     public DateOnly? ManufacturingDate { get; set; }
-    public DateOnly? GuaranteeExpirationDate { get; set; }
-    public string GuaranteeNumber { get; set; }
+    public DateOnly? WarrantyExpirationDate { get; set; }
+    public string WarrantyNumber { get; set; }
     public string SerialNumber { get; set; }
     public string ModelCode { get; set; }
     public string ModelName { get; set; }

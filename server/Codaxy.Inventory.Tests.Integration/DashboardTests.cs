@@ -183,7 +183,7 @@ public class DashboardApplication : InventoryApplication
             var asset = await context
                 .Assets.Include(a => a.ElectronicDevice)
                 .SingleAsync(a => a.Id == id);
-            asset.ElectronicDevice.GuaranteeExpirationDate = warranty;
+            asset.ElectronicDevice.WarrantyExpirationDate = warranty;
             asset.LocationId = location;
             asset.Incomplete = incomplete;
             await context.SaveChangesAsync();
