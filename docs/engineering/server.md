@@ -195,12 +195,13 @@ on white, and an inline colour cannot be undone in a dark theme. Every name with
 the plain text says the same, a page's address on a line of its own.
 
 **Expiry alerts are a check, not a schedule** (`Shared/ExpiryAlerts`): a hosted worker in `Web` runs
-`ExpiryAlerts.SendDueAsync` at start and every `ExpiryAlerts:Interval`, which reads the settings and the
-dates as they are, sends one email listing whatever is due and not yet sent, and records it once the
-send succeeds; a failure is logged and the next check tries again. Not an alert row stored per record:
-every change of a date would have to keep it in step, and records that exist would need one each.
-One email per check, not per record: a first check can find dozens. A single instance is assumed —
-two would both send.
+`ExpiryAlertCheck.SendDueAsync` at start, every `ExpiryAlerts:Interval` and as soon as the alert settings
+are saved (`ExpiryAlertRequests`) — recipients just named hear at once — which reads the settings and
+the dates as they are, sends one email listing whatever is due and not yet sent, and records it once
+the send succeeds; a failure is logged and the next check tries again. Not an alert row stored per
+record: every change of a date would have to keep it in step, and records that exist would need one
+each. One email per check, not per record: a first check can find dozens. A single instance is assumed
+— two would both send.
 
 **A PDF is the client's own page, printed by the server in headless Chromium** — the handover
 sheet's, `GET …/people/{id}/handover.pdf?tz=…&lang=…` — through `Shared/Printing/IPagePrinter`,

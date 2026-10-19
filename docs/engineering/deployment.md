@@ -66,10 +66,12 @@ beside it. **`Smtp:UserName` and `Password` sign in to it** — Gmail and most h
 only from an account; empty, nothing signs in, as Mailpit needs. A name without its password stops
 the start. STARTTLS is used whenever the relay offers it.
 
-**Expiry alerts go out through `Smtp:*`**, as sign-in codes do, every `ExpiryAlerts:Interval` (an
-hour); who receives them and how early are settings. **`ExpiryAlerts:ApplicationUrl`** — the address
-people open the application at — puts a link to each record in the email; empty, there are none,
-since the server cannot know the address it is reached by.
+**`ApplicationUrl`, at the top level, is the address people open the application at**, for any link
+that leaves it — an email's; empty, there are none, since the server cannot know the address it is
+reached by. Top level because it belongs to the deployment, not to one area.
+
+**Expiry alerts go out through `Smtp:*`**, every `ExpiryAlerts:Interval` (an hour) and when their
+settings are saved; who receives them and how early are settings.
 
 **`Pdf:ChromiumPath` names the browser that prints PDFs**; empty, nothing is printed and the
 handover sheet offers no download, and a path that names no file stops the start. **The image carries

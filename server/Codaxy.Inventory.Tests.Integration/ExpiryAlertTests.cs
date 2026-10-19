@@ -1,3 +1,6 @@
+using System.Net;
+using System.Net.Http.Json;
+using Codaxy.Inventory.App.Administration.Roles;
 using Codaxy.Inventory.App.Company.Locations;
 using Codaxy.Inventory.App.Company.Manufacturers;
 using Codaxy.Inventory.App.Licenses.SoftwareServices;
@@ -30,7 +33,7 @@ public class ExpiryAlertApplication : InventoryApplication
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         base.ConfigureWebHost(builder);
-        builder.UseSetting("ExpiryAlerts:ApplicationUrl", Url);
+        builder.UseSetting("ApplicationUrl", Url);
     }
 
     public override async Task InitializeAsync()
@@ -325,5 +328,44 @@ public class ExpiryAlertWorkerTests(ExpiryAlertWorkerApplication app)
             await Task.Delay(100);
 
         Assert.Single(app.Emails.All, e => e.Body.Contains("Entered inside the lead"));
+    }
+}
+
+/// <summary>The hosted check on its hourly interval, so only being asked runs it in time.</summary>
+public class ExpiryAlertOnSaveApplication : ExpiryAlertApplication
+{
+    protected override bool RunsExpiryAlertWorker => true;
+}
+
+public class ExpiryAlertOnSaveTests(ExpiryAlertOnSaveApplication app)
+    : IClassFixture<ExpiryAlertOnSaveApplication>
+{
+    [Fact]
+    public async Task Saving_the_alert_settings_checks_at_once()
+    {
+        await app.LicenseAsync(
+            "Due when someone is named",
+            ExpiryAlertApplication.Today.AddDays(3)
+        );
+        var client = await app.ClientAsync("settings.admin@codaxy.com", BuiltInRoles.SystemAdmin);
+
+        var saved = await client.PutAsJsonAsync(
+            "/api/administration/settings/alerts",
+            new Dictionary<string, object>
+            {
+                ["alerts.recipients"] = new[] { "it@codaxy.com" },
+                ["alerts.lead"] = new { amount = 2, unit = "months" },
+            }
+        );
+
+        Assert.Equal(HttpStatusCode.OK, saved.StatusCode);
+        var deadline = DateTime.UtcNow.AddSeconds(10);
+        while (
+            DateTime.UtcNow < deadline
+            && !app.Emails.All.Any(e => e.Body.Contains("Due when someone is named"))
+        )
+            await Task.Delay(100);
+
+        Assert.Single(app.Emails.All, e => e.Body.Contains("Due when someone is named"));
     }
 }

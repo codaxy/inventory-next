@@ -4,21 +4,24 @@ using Microsoft.Extensions.Options;
 namespace Codaxy.Inventory.Web.ExpiryAlerts;
 
 /// <summary>
-/// Checks for expiry alerts at start and every <see cref="ExpiryAlertOptions.Interval"/>. A failed
-/// check is logged and left to the next one, which finds the same alerts still due.
+/// Checks for expiry alerts at start, every <see cref="ExpiryAlertOptions.Interval"/>, and whenever
+/// <see cref="ExpiryAlertRequests"/> asks — the interval counted again from each check. A failed check
+/// is logged and left to the next one, which finds the same alerts still due.
 /// </summary>
 public sealed class ExpiryAlertWorker(
     IServiceScopeFactory scopes,
+    ExpiryAlertRequests requests,
     IOptions<ExpiryAlertOptions> options,
     ILogger<ExpiryAlertWorker> logger
 ) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using var timer = new PeriodicTimer(options.Value.Interval);
-
-        do await CheckAsync(stoppingToken);
-        while (await timer.WaitForNextTickAsync(stoppingToken));
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            await CheckAsync(stoppingToken);
+            await requests.WaitAsync(options.Value.Interval, stoppingToken);
+        }
     }
 
     private async Task CheckAsync(CancellationToken stoppingToken)

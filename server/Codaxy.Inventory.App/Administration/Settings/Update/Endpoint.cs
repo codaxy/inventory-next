@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Access;
+using Codaxy.Inventory.App.Shared.ExpiryAlerts;
 using Codaxy.Inventory.App.Shared.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ public static class Endpoint
         string group,
         [FromBody] Dictionary<string, JsonElement> values,
         InventoryContext context,
+        ExpiryAlertRequests alerts,
         CancellationToken cancellationToken
     )
     {
@@ -76,6 +78,10 @@ public static class Endpoint
         }
 
         await context.SaveChangesAsync(cancellationToken);
+
+        // Recipients just named hear at once of what is due, not at the next interval.
+        if (group == ExpiryAlertSettings.Lead.Group)
+            alerts.CheckNow();
 
         return Results.Ok(await List.Endpoint.ReadAsync(context, cancellationToken));
     }

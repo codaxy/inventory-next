@@ -16,6 +16,7 @@ public static class ExpiryAlertSetup
             .ValidateBy(o => o.Problem)
             .ValidateOnStart();
         services.AddScoped<ExpiryAlertCheck>();
+        services.AddSingleton<ExpiryAlertRequests>();
         services.AddHostedService<ExpiryAlertWorker>();
 
         return services;

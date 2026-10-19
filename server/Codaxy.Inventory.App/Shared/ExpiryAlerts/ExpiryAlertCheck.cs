@@ -1,6 +1,7 @@
 using Codaxy.Inventory.App.Licenses.Licenses;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Email;
+using Codaxy.Inventory.App.Shared.Links;
 using Codaxy.Inventory.App.Shared.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -17,7 +18,7 @@ public sealed class ExpiryAlertCheck(
     SettingStore settings,
     IEmailSender email,
     TimeProvider clock,
-    IOptions<ExpiryAlertOptions> options,
+    IOptions<ApplicationOptions> application,
     ILogger<ExpiryAlertCheck> logger
 )
 {
@@ -36,7 +37,12 @@ public sealed class ExpiryAlertCheck(
         if (due.Count == 0)
             return 0;
 
-        var message = ExpiryAlertMessage.Compose(due, today, lead, options.Value.ApplicationUrl);
+        var message = ExpiryAlertMessage.Compose(
+            due,
+            today,
+            lead,
+            application.Value.ApplicationUrl
+        );
         await email.SendAsync(
             recipients,
             message.Subject,

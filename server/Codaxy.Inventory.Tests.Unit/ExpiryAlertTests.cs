@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Codaxy.Inventory.App.Shared.ExpiryAlerts;
+using Codaxy.Inventory.App.Shared.Links;
 
 namespace Codaxy.Inventory.Tests.Unit;
 
@@ -72,23 +73,27 @@ public class ExpiryAlertTests
     }
 
     [Theory]
-    [InlineData("00:00:00", "", "ExpiryAlerts:Interval must be longer than zero.")]
-    [InlineData(
-        "01:00:00",
-        "inventory.codaxy.com",
-        "ExpiryAlerts:ApplicationUrl is not an http or https address: inventory.codaxy.com."
-    )]
-    [InlineData("01:00:00", "https://inventory.codaxy.com", null)]
-    [InlineData("01:00:00", "", null)]
-    public void Options_say_what_stops_the_start(string interval, string url, string? problem) =>
+    [InlineData("00:00:00", "ExpiryAlerts:Interval must be longer than zero.")]
+    [InlineData("01:00:00", null)]
+    public void Options_say_what_stops_the_start(string interval, string? problem) =>
         Assert.Equal(
             problem,
-            new ExpiryAlertOptions
-            {
-                Interval = TimeSpan.Parse(interval),
-                ApplicationUrl = url,
-            }.Problem
+            new ExpiryAlertOptions { Interval = TimeSpan.Parse(interval) }.Problem
         );
+
+    [Theory]
+    [InlineData(
+        "inventory.codaxy.com",
+        "ApplicationUrl is not an http or https address: inventory.codaxy.com."
+    )]
+    [InlineData(
+        "ftp://inventory.codaxy.com",
+        "ApplicationUrl is not an http or https address: ftp://inventory.codaxy.com."
+    )]
+    [InlineData("https://inventory.codaxy.com", null)]
+    [InlineData("", null)]
+    public void The_application_s_address_is_an_http_address_or_none(string url, string? problem) =>
+        Assert.Equal(problem, new ApplicationOptions { ApplicationUrl = url }.Problem);
 
     private static readonly Guid Rider = Guid.CreateVersion7();
     private static readonly Guid Laptop = Guid.CreateVersion7();
