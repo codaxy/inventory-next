@@ -1,8 +1,10 @@
 name: CI
 
+# Only the two branches that publish an image. The checks run before production alone: the pre-merge
+# check is the gate to main (docs/engineering/testing.md).
 on:
   push:
-  pull_request:
+    branches: [main, production]
 
 # The server build would otherwise install the pre-commit hook into the runner's checkout.
 env:
@@ -10,6 +12,7 @@ env:
 
 jobs:
   server:
+    if: github.ref_name == 'production'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,6 +51,7 @@ jobs:
         run: scripts/coverage.sh --no-build
 
   client:
+    if: github.ref_name == 'production'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -66,13 +70,15 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
 
-  # The image, published only once the server and the client have passed: a push to `main` is
-  # `:latest`, to `production` `:stable`, and every one also carries its commit's sha to roll back to.
+  # The image: a push to `main` is `:latest`, to `production` `:stable` once the server and the client
+  # have passed, and every one also carries its commit's sha to roll back to. On main the two are
+  # skipped, which `!failure() && !cancelled()` lets through where a bare `needs` would skip this too.
   # Only from Codaxy's repository: a fork or a copy elsewhere cannot push to Codaxy's registry.
   publish:
     needs: [server, client]
     if: >-
-      github.repository_owner == 'codaxy' && github.event_name == 'push'
+      !failure() && !cancelled()
+      && github.repository_owner == 'codaxy' && github.event_name == 'push'
       && (github.ref_name == 'main' || github.ref_name == 'production')
     runs-on: ubuntu-latest
     permissions:

@@ -7,7 +7,7 @@ deployable serves both, so there is no separate host and no CORS to configure.
 
 `<cx>` blocks are compiled by Vite through CxJS's JSX runtime (`oxc.jsx.importSource: "cx"`), and
 TypeScript only type-checks them:
-`npm run typecheck` is a separate step, and CI runs it. **TypeScript takes its JSX types from cx**
+`npm run typecheck` is a separate step, which the pre-merge check and CI run. **TypeScript takes its JSX types from cx**
 (`"jsx": "react-jsx"`, `"jsxImportSource": "cx"`), which declares `<cx>` and gives HTML elements
 CxJS's attributes — `class`, `text`, `visible`. Resolved through React's typings instead, every widget
 is reported as not a valid JSX component and every `class` as a typo for `className`.

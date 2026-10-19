@@ -2,11 +2,15 @@
 
 ## The threshold
 
-**Line coverage is at least 80%, checked before a branch merges and again in CI.** A number that
-is not enforced is the same as no number. **One script computes it,
+**Line coverage is at least 80%, checked before a branch merges and again before production.** A
+number that is not enforced is the same as no number. **One script computes it,
 `scripts/coverage.sh`**, and both run it: the pre-merge check (`scripts/premerge.sh`) on any branch
-touching `server/`, and CI's server job. CI alone notices too late — shipping pushes before it runs.
-A branch that cannot touch the figure skips it: it measures the server alone.
+touching `server/`, and CI's server job on a push to `production`. A branch that cannot touch the
+figure skips it: it measures the server alone.
+
+**CI checks nothing before production** — no branch, pull request or push to `main`. The pre-merge
+check is the gate to `main`, and CI there would repeat it after a push it can no longer stop.
+`production` keeps it, since its image is what runs: a red build publishes no `:stable`.
 
 What the percentage is measured over decides whether it means anything:
 
@@ -59,8 +63,8 @@ page before the image is published.
 ## Formatting
 
 CSharpier formats the server and Prettier the client, both pinned and both checked — before every
-merge by `scripts/premerge.sh` and in CI, with the same commands — so formatting is never a review
-comment. **The check is over the tree, not a record of the hook**: a hook not installed, skipped or
+merge by `scripts/premerge.sh` and by CI before production, with the same commands — so formatting
+is never a review comment. **The check is over the tree, not a record of the hook**: a hook not installed, skipped or
 unstable in one pass is caught all the same, and fixed by running the formatter and committing —
 never by redoing the hook's job by hand. **A pre-commit hook applies them**, which usually makes
 the check a formality: Husky.Net, a dotnet
