@@ -368,15 +368,20 @@ for adding one to another license or a new one. The section is on the page only:
 changes none of it, leaves it out. The city and state a location offers are the chosen country's; a
 form whose only choice is made — one country, its one city — starts with it.
 
-**Administration → Settings is a card per group** — Sign-in, Dashboard, Expiry alerts, Documents — each in view
-until its Edit, then its own Cancel and Save at its foot, as a record's form; the others stay in view,
-and unsaved edits ask before leaving. On the Dashboard's card, a window that is not its default says
-so while editing, with "Reset to default" beside it; the documents' values have none worth returning
-to. **A Time zone card shows what is not a choice yet** — the interface in the browser's zone, every
-export asked for in the same — naming the zone, with no Edit. The domains are chips — removable while editing, a field
-and Add beneath — and "Any domain" in view when there are none; the alerts' recipients the same, "None:
-no alerts are sent" in view. The alerts' lead is a number and a unit side by side, read as "2 months
-before". The server tidies what is typed.
+**Administration → Settings is a card per group** — Sign-in, Dashboard, Documents, Expiry alerts —
+each in view until its Edit, then its own Cancel and Save at its foot, as a record's form; the others
+stay in view, and unsaved edits ask before leaving. On the Dashboard's card, a window that is not its
+default says so while editing, with "Reset to default" beside it; the documents' values have none
+worth returning to. **A Mail card shows how mail is sent** — server, sender, the account it signs in
+as — from the server's configuration, with no Edit, and **Send test email**, to the reader's own
+address once they confirm it, naming the address and server: the line beneath says it went, or what
+the mail server answered. **A Time zone card shows what is not a choice yet** — the interface in the
+browser's zone, every export asked for in the same — naming the zone, with no Edit. The domains are
+chips — removable while editing, a field and Add beneath — and "Any domain" in view when there are
+none; the alerts' recipients the same, "None: no alerts are sent" in view. The alerts' lead is a
+number and a unit side by side, read as "2 months before". The server tidies what is typed. **The
+cards that can be edited come first, then what is only shown** — Mail, then Time zone — and Expiry
+alerts sits just above Mail, which is chiefly what sends them.
 
 **A role's permissions are a row per area**, the catalogue's order and names — Inventory, Audit log,
 Server log, Users, Roles, Settings: View and Edit ticks side by side in two fixed columns, an area with one

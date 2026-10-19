@@ -46,7 +46,7 @@ export interface Groups {
 
 export type GroupName = keyof Groups;
 
-export const groupNames: GroupName[] = ["sign_in", "dashboard", "alerts", "documents"];
+export const groupNames: GroupName[] = ["sign_in", "dashboard", "documents", "alerts"];
 
 export interface Model {
     settings: Groups & {
@@ -56,6 +56,18 @@ export interface Model {
         newDomain?: string | null;
         /** The address being typed, before Add puts it among the recipients. */
         newRecipient?: string | null;
+        /** How mail is sent, read-only. */
+        mail?: {
+            server: string;
+            sender: string;
+            signsInAs: string;
+        };
+        test: {
+            sending: boolean;
+            /** What the last test came to, a line for the card. */
+            result?: string;
+            sent?: boolean;
+        };
     };
     $chip: string;
 }

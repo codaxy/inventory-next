@@ -192,8 +192,15 @@ sender beneath — no dark banner, imagery or call to action, which read as an a
 skipped; the heading is the greeting. **The page, the card and their text are coloured together**, a
 light set and a dark one by `prefers-color-scheme`, in the stylesheet and never inline: a client that
 follows a dark theme for the text but keeps its own white behind it showed white on white, and an
-inline colour cannot be undone in a dark theme. Every name with a page links to it; the plain text
-says the same, a page's address on a line of its own.
+inline colour cannot be undone in a dark theme. Every name with a page links to it, and so does a page
+named in the text — "Administration → Settings"; the plain text says the same, a page's address on a
+line of its own. **The settings screen describes the relay through `IEmailRelay`** — host, port,
+sender, the account it signs in as, never the password — and sends a test to the signed-in
+administrator only, never to an address typed in, so the button mails nobody else. A failed test
+answers 200 with what the relay said: it is the answer asked for, not a failed request. **The SMTP
+settings stay configuration**: Gmail sends only as the account that signs in, so the sender belongs
+with the account, and a password in the database would need encrypting and keeping out of the audit
+log, which stores every value in clear.
 
 **Expiry alerts are a check, not a schedule** (`Shared/ExpiryAlerts`): a hosted worker in `Web` runs
 `ExpiryAlertCheck.SendDueAsync` at start, every `ExpiryAlerts:Interval` and as soon as the alert settings

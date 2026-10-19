@@ -289,6 +289,53 @@ function alertsCard() {
 }
 
 /**
+ * How mail is sent — the server's configuration, so shown and not edited, the password never — and a
+ * test email to the signed-in administrator, which says what the mail server answered.
+ */
+function mailCard() {
+    const mail = m.settings.mail;
+    const test = m.settings.test;
+    const row = (label: string, value: any) => (
+        <cx>
+            <div>
+                <div class="editor-label" text={label} />
+                <div class="editor-value" text={value} />
+            </div>
+        </cx>
+    );
+    return (
+        <cx>
+            <section class="editor-section">
+                <div class="editor-section-head">
+                    <h2 class="editor-section-title" text="Mail" />
+                    <Button mod="hollow" disabled={test.sending} onClick={on((c) => c.sendTest())}>
+                        <Icon name="send" class="size-4" />
+                        <span text={expr(test.sending, (s) => (s ? "Sending…" : "Send test email"))} />
+                    </Button>
+                </div>
+                <p
+                    class="settings-hint"
+                    text="Set in the server's configuration. A test email goes to you."
+                />
+                <div class="editor-grid">
+                    {row("Server", mail.server)}
+                    {row("Sender", mail.sender)}
+                    {row("Signs in as", mail.signsInAs)}
+                </div>
+                <p
+                    class={expr(
+                        test.sent,
+                        (sent) => `settings-test ${sent ? "settings-test-sent" : "settings-test-failed"}`,
+                    )}
+                    visible={hasValue(test.result)}
+                    text={test.result}
+                />
+            </section>
+        </cx>
+    );
+}
+
+/**
  * The time zones, which are not a choice yet: the interface shows instants in the browser's zone, and
  * every export — a spreadsheet, a PDF — is asked for in the same one. Shown, so it is plain which.
  */
@@ -340,8 +387,9 @@ export default createFunctionalComponent(() => (
                 <div visible={falsy(m.settings.loading)}>
                     {signInCard()}
                     {dashboardCard()}
-                    {alertsCard()}
                     {documentsCard()}
+                    {alertsCard()}
+                    {mailCard()}
                     {timeZoneCard()}
                 </div>
             </div>

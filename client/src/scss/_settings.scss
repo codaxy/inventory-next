@@ -75,3 +75,18 @@
         width: 8rem;
     }
 }
+
+// What the last test email came to, under the mail card's values.
+.settings-test {
+    margin: 0.75rem 0 0;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.settings-test-sent {
+    color: var(--color-success-text);
+}
+
+.settings-test-failed {
+    color: var(--color-danger-text);
+}

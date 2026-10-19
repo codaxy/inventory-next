@@ -2,8 +2,10 @@ import type { AccessorChain } from "cx/data";
 import { Controller } from "cx/ui";
 
 import { ApiError } from "../../../api/http";
-import { getSettings, saveSettings, type SettingList } from "../../../api/settings";
+import { getMail, getSettings, saveSettings, sendTestEmail, type SettingList } from "../../../api/settings";
+import { confirm } from "../../../components/confirm";
 import { guardLeaving } from "../../../leaveGuard";
+import $app from "../../../model";
 import m, { type GroupName, groupNames } from "./model";
 
 const group = (name: GroupName) => m.settings[name] as any;
@@ -16,6 +18,7 @@ export default class extends Controller {
     onInit() {
         this.store.set(m.settings.loading, true);
         this.store.delete(m.settings.error);
+        this.store.set(m.settings.test, { sending: false });
         for (const name of groupNames)
             this.store.set(group(name), {
                 saved: {},
@@ -37,8 +40,13 @@ export default class extends Controller {
 
     async load() {
         try {
-            const list = await getSettings();
+            const [list, mail] = await Promise.all([getSettings(), getMail()]);
             for (const name of groupNames) this.take(name, list);
+            this.store.set(m.settings.mail, {
+                server: `${mail.host}:${mail.port}`,
+                sender: mail.fromName ? `${mail.fromName} <${mail.from}>` : mail.from,
+                signsInAs: mail.signsInAs || "No sign-in",
+            });
         } catch (error) {
             this.store.set(
                 m.settings.error,
@@ -138,5 +146,35 @@ export default class extends Controller {
 
     removeChip(list: AccessorChain<string[]>, value: string) {
         this.store.update(list, (values) => (values ?? []).filter((v) => v !== value));
+    }
+
+    /** A test email to the signed-in administrator; the card says what came of it. */
+    async sendTest() {
+        const to = this.store.get($app.session.user)?.email;
+        const confirmed = await confirm({
+            title: "Send a test email?",
+            message: `A test email goes to ${to}, through ${this.store.get(m.settings.mail)?.server}.`,
+            confirmText: "Send test email",
+            cancelText: "Don't send",
+        });
+        if (!confirmed) return;
+
+        this.store.set(m.settings.test, { sending: true });
+        try {
+            const result = await sendTestEmail();
+            this.store.set(m.settings.test, {
+                sending: false,
+                sent: result.sent,
+                result: result.sent
+                    ? `Sent to ${result.to}. Check your inbox.`
+                    : `Not sent: ${result.problem ?? "the mail server did not take it"}`,
+            });
+        } catch (error) {
+            this.store.set(m.settings.test, {
+                sending: false,
+                sent: false,
+                result: error instanceof ApiError ? error.message : "The test email could not be sent.",
+            });
+        }
     }
 }

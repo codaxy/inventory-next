@@ -16,6 +16,7 @@ public static class EmailSetup
             .ValidateBy(o => o.Problem)
             .ValidateOnStart();
         services.AddScoped<IEmailSender, SmtpEmailSender>();
+        services.AddSingleton<IEmailRelay, SmtpEmailRelay>();
 
         return services;
     }

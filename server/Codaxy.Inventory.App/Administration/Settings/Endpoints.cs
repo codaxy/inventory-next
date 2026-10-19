@@ -12,5 +12,7 @@ public static class Endpoints
 
         List.Endpoint.Map(settings);
         Update.Endpoint.Map(settings);
+        Mail.Endpoint.Map(settings);
+        TestEmail.Endpoint.Map(settings);
     }
 }

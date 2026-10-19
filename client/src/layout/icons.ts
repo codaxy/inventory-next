@@ -1,4 +1,5 @@
 import {
+    MailSend01Icon,
     Settings01Icon,
     SquareArrowUpRightIcon,
     Download01Icon,
@@ -102,6 +103,7 @@ const uiIcons = {
     oldestFirst: SortingUpIcon,
     recordHistory: Clock01Icon,
     created: Add01Icon,
+    send: MailSend01Icon,
     updated: PencilEdit01Icon,
     deleted: Delete02Icon,
     refresh: RefreshIcon,

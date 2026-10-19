@@ -17,10 +17,10 @@ public static class SettingCatalogue
         DashboardSettings.SubscriptionsExpiringDays,
         DashboardSettings.WarrantiesEndedDays,
         DashboardSettings.WarrantiesEndingDays,
-        ExpiryAlertSettings.Recipients,
-        ExpiryAlertSettings.Lead,
         DocumentSettings.Place,
         DocumentSettings.DefaultLanguage,
+        ExpiryAlertSettings.Recipients,
+        ExpiryAlertSettings.Lead,
     ];
 
     /// <summary>

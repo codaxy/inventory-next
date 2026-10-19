@@ -28,7 +28,9 @@ public sealed class SmtpEmailSender(IOptions<SmtpOptions> options) : IEmailSende
         foreach (var address in to)
             message.To.Add(MailboxAddress.Parse(address));
 
-        using var client = new SmtpClient();
+        // A relay that does not answer fails the send in seconds, not MailKit's two minutes: a test
+        // from the settings screen waits on it.
+        using var client = new SmtpClient { Timeout = 20_000 };
 
         // Mailpit and every other local relay speak plaintext on 1025; requiring TLS here would make
         // the development loop need certificates it has no reason to have.
