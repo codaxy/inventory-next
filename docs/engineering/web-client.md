@@ -517,7 +517,9 @@ line goes. A yes/no that
 most rows answer no — a type holding licenses, a disposal location — is a flag beside the name (`record-flag`), not a column
 of "No". A subscription's status is a tag (`status-tag`) — red once
 expired, amber within the fortnight, green after, grey on a record that has ended — and always says
-which in words, never by colour alone. A record that has ended — a deactivated activation or user — stays
+which in words, never by colour alone. **On the dashboard a warranty's end is tagged the same way** —
+"Ends …" in amber, "Ended …" in red — so both kinds of ending read alike; a warranty has no status
+anywhere else. A record that has ended — a deactivated activation or user — stays
 listed as history (`record-row-ended`): the row on the others' white, its text in
 `line-strong` — below AA on purpose, there to be found rather than scanned — its name no longer bold, a
 "Deactivated" flag saying why, and its license's expiry kept but grey, read rather than signalled.
