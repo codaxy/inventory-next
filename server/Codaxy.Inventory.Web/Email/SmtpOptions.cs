@@ -1,4 +1,4 @@
-namespace Codaxy.Inventory.Web.Auth;
+namespace Codaxy.Inventory.Web.Email;
 
 public sealed class SmtpOptions
 {

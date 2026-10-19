@@ -183,6 +183,17 @@ and throws under a culture it does not ship; not EPPlus, licensed commercially.
 columns, then the record's own fields, names resolved and counts kept; its file is `<List>.Export`,
 the list's name without spaces.
 
+**Mail is `Shared/Email/IEmailSender`**, one message to every recipient — a failure then sends to
+none rather than some — implemented in `Web` over SMTP (`Smtp:*`).
+
+**Expiry alerts are a check, not a schedule** (`Shared/ExpiryAlerts`): a hosted worker in `Web` runs
+`ExpiryAlerts.SendDueAsync` at start and every `ExpiryAlerts:Interval`, which reads the settings and the
+dates as they are, sends one email listing whatever is due and not yet sent, and records it once the
+send succeeds; a failure is logged and the next check tries again. Not an alert row stored per record:
+every change of a date would have to keep it in step, and records that exist would need one each.
+One email per check, not per record: a first check can find dozens. A single instance is assumed —
+two would both send.
+
 **A PDF is the client's own page, printed by the server in headless Chromium** — the handover
 sheet's, `GET …/people/{id}/handover.pdf?tz=…&lang=…` — through `Shared/Printing/IPagePrinter`,
 implemented in `Web` by PuppeteerSharp. Chromium opens the page on the server's own address, signed in

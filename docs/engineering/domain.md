@@ -106,6 +106,17 @@ definition; the rest depend. The four windows are settings (`DashboardSettings`,
   marked, the dashboard has no section for them.
 - **A record is incomplete** when an asset or a piece of information carries its `Incomplete` flag.
 
+## Expiry alerts
+
+**An email before a subscription or a warranty ends**, to the addresses set under Administration →
+Settings (`ExpiryAlertSettings`): a license with a subscription expiration date and a device with a
+warranty expiration date, **once the date is within the lead** — a setting, a number of days, weeks or
+months, two months by default — and not yet past. No record has a switch: what has such a date is
+alerted, a license with no seats in use too. **Once per date**: a sent alert is recorded against the
+asset and the date, so a date that moves alerts again, and one entered inside the lead alerts at the
+next check. **The email says what changes the reading** — a subscription that renews automatically,
+and an asset at a disposal location, named. With no addresses, nothing is sent and nothing recorded.
+
 ## Codebooks
 
 The lookup tables — countries, cities, states, currencies, periods, confidentiality, integrity,

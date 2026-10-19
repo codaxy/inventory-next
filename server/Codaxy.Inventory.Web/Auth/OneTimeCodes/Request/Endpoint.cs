@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Codaxy.Inventory.App.Shared.Email;
 using Codaxy.Inventory.App.Shared.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -53,7 +54,7 @@ public static class Endpoint
 
             if (code is not null)
                 await email.SendAsync(
-                    request.Email,
+                    [request.Email],
                     "Your Inventory sign-in code",
                     $"Your sign-in code is {code}. It is valid for "
                         + $"{options.Value.OneTimeCode.Validity.TotalMinutes:0} minutes.",

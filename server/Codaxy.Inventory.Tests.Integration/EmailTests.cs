@@ -1,4 +1,4 @@
-﻿using Codaxy.Inventory.Web.Auth;
+﻿using Codaxy.Inventory.Web.Email;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using Microsoft.Extensions.Options;
@@ -38,7 +38,7 @@ public class EmailTests : IAsyncLifetime
             )
         );
 
-        await sender.SendAsync("someone@codaxy.com", "Your code", "Your sign-in code is 123456.");
+        await sender.SendAsync(["someone@codaxy.com"], "Your code", "Your sign-in code is 123456.");
 
         using var http = new HttpClient
         {

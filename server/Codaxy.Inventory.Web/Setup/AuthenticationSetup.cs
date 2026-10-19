@@ -19,7 +19,6 @@ public static class AuthenticationSetup
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton<IOneTimeCodeStore, InMemoryOneTimeCodeStore>();
         services.AddScoped<SignInPolicy>();
-        services.AddScoped<IEmailSender, SmtpEmailSender>();
         services.AddScoped<UserAccess>();
         services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 

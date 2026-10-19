@@ -2,6 +2,7 @@ using Codaxy.Inventory.App.Dashboard;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Access;
 using Codaxy.Inventory.App.Shared.Documents;
+using Codaxy.Inventory.App.Shared.ExpiryAlerts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codaxy.Inventory.App.Shared.Settings;
@@ -16,6 +17,8 @@ public static class SettingCatalogue
         DashboardSettings.SubscriptionsExpiringDays,
         DashboardSettings.WarrantiesEndedDays,
         DashboardSettings.WarrantiesEndingDays,
+        ExpiryAlertSettings.Recipients,
+        ExpiryAlertSettings.Lead,
         DocumentSettings.Place,
         DocumentSettings.DefaultLanguage,
     ];

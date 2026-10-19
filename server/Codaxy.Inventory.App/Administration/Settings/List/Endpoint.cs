@@ -33,10 +33,7 @@ public static class Endpoint
             SettingCatalogue
                 .All.Select(d =>
                 {
-                    var json =
-                        stored.TryGetValue(d.Key, out var value) && d.StoredProblem(value) is null
-                            ? value
-                            : d.DefaultJson;
+                    var json = d.CurrentJson(stored.GetValueOrDefault(d.Key));
 
                     return new Item(
                         d.Key,

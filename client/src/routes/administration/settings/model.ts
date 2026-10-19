@@ -11,6 +11,14 @@ export interface Dashboard {
     warranties_ending_days: number | null;
 }
 
+/** As the server's `AlertLead.Units`. */
+export const AlertUnits = ["days", "weeks", "months"] as const;
+
+export interface Alerts {
+    recipients: string[];
+    lead: { amount: number | null; unit: string | null };
+}
+
 export interface Documents {
     place?: string | null;
     default_language: string | null;
@@ -32,12 +40,13 @@ export interface Group<T> {
 export interface Groups {
     sign_in: Group<SignIn>;
     dashboard: Group<Dashboard>;
+    alerts: Group<Alerts>;
     documents: Group<Documents>;
 }
 
 export type GroupName = keyof Groups;
 
-export const groupNames: GroupName[] = ["sign_in", "dashboard", "documents"];
+export const groupNames: GroupName[] = ["sign_in", "dashboard", "alerts", "documents"];
 
 export interface Model {
     settings: Groups & {
@@ -45,8 +54,10 @@ export interface Model {
         error?: string;
         /** The domain being typed, before Add puts it among the chips. */
         newDomain?: string | null;
+        /** The address being typed, before Add puts it among the recipients. */
+        newRecipient?: string | null;
     };
-    $domain: string;
+    $chip: string;
 }
 
 export default createModel<Model>();

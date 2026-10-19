@@ -1638,6 +1638,35 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.ToTable("integrity", (string)null);
                 });
 
+            modelBuilder.Entity("Codaxy.Inventory.App.Shared.ExpiryAlerts.ExpiryAlert", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("AssetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("asset_id");
+
+                    b.Property<DateOnly>("ExpirationDate")
+                        .HasColumnType("date")
+                        .HasColumnName("expiration_date");
+
+                    b.Property<DateTimeOffset>("SentAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("sent_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_expiry_alert");
+
+                    b.HasIndex("AssetId", "ExpirationDate")
+                        .IsUnique()
+                        .HasDatabaseName("ix_expiry_alert_asset_id_expiration_date");
+
+                    b.ToTable("expiry_alert", (string)null);
+                });
+
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Settings.Setting", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2251,6 +2280,18 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                     b.Navigation("MaintenanceType");
 
                     b.Navigation("Vendor");
+                });
+
+            modelBuilder.Entity("Codaxy.Inventory.App.Shared.ExpiryAlerts.ExpiryAlert", b =>
+                {
+                    b.HasOne("Codaxy.Inventory.App.Shared.Assets.Asset", "Asset")
+                        .WithMany()
+                        .HasForeignKey("AssetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_expiry_alert_asset_asset_id");
+
+                    b.Navigation("Asset");
                 });
 
             modelBuilder.Entity("Codaxy.Inventory.App.Shared.Volumes.Volume", b =>

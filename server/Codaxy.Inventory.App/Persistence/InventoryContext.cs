@@ -25,6 +25,7 @@ using Codaxy.Inventory.App.Licenses.Licenses;
 using Codaxy.Inventory.App.Licenses.SoftwareServices;
 using Codaxy.Inventory.App.Shared.Assets;
 using Codaxy.Inventory.App.Shared.Classification;
+using Codaxy.Inventory.App.Shared.ExpiryAlerts;
 using Codaxy.Inventory.App.Shared.Settings;
 using Codaxy.Inventory.App.Shared.Volumes;
 using Microsoft.EntityFrameworkCore;
@@ -106,6 +107,8 @@ public class InventoryContext : DbContext
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 
     public DbSet<Setting> Settings => Set<Setting>();
+
+    public DbSet<ExpiryAlert> ExpiryAlerts => Set<ExpiryAlert>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -21,6 +21,8 @@ builder
     .AddInventoryPersistence(builder.Configuration)
     .AddInventoryDataProtection(builder.Configuration)
     .AddInventoryAuthentication(builder.Configuration)
+    .AddInventoryEmail(builder.Configuration)
+    .AddInventoryExpiryAlerts(builder.Configuration)
     .AddInventoryRateLimiting(builder.Configuration)
     .AddInventoryHttpLogging()
     .AddInventoryPrinting(builder.Configuration)

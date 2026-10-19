@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using System.Text.Json.Nodes;
 using Codaxy.Inventory.App.Dashboard;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Access;
@@ -28,7 +29,7 @@ public class SettingSeedTests(SettingSeedApplication app) : IClassFixture<Settin
         Assert.Equal(
             SettingCatalogue
                 .All.Where(d => d != SignInSettings.AllowedDomains)
-                .Select(d => (d.Key, d.DefaultJson))
+                .Select(d => (d.Key, Normalised(d.DefaultJson)))
                 .OrderBy(s => s.Key),
             await WithContextAsync(async context =>
                 (await context.Settings.AsNoTracking().ToListAsync())
@@ -90,6 +91,18 @@ public class SettingSeedTests(SettingSeedApplication app) : IClassFixture<Settin
     }
 
     /// <summary>PostgreSQL writes <c>jsonb</c> back in its own spacing.</summary>
+    /// <summary>Compact, an object's keys in order: jsonb keeps them in an order of its own.</summary>
     private static string Normalised(string json) =>
-        System.Text.Json.JsonSerializer.Serialize(System.Text.Json.JsonDocument.Parse(json));
+        Sorted(JsonNode.Parse(json))?.ToJsonString() ?? "null";
+
+    private static JsonNode? Sorted(JsonNode? node) =>
+        node switch
+        {
+            JsonObject o => new JsonObject(
+                o.OrderBy(p => p.Key, StringComparer.Ordinal)
+                    .Select(p => KeyValuePair.Create(p.Key, Sorted(p.Value)))
+            ),
+            JsonArray a => new JsonArray([.. a.Select(Sorted)]),
+            _ => node?.DeepClone(),
+        };
 }

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Codaxy.Inventory.App.Dashboard;
 using Codaxy.Inventory.App.Shared.Documents;
 using Codaxy.Inventory.App.Shared.Settings;
@@ -11,7 +12,12 @@ public class SettingDefinitionTests
     public void Every_default_may_be_saved() =>
         Assert.All(
             SettingCatalogue.All,
-            definition => Assert.Null(definition.StoredProblem(definition.DefaultJson))
+            definition =>
+                Assert.Null(
+                    definition
+                        .Accept(JsonDocument.Parse(definition.DefaultJson).RootElement)
+                        .Problem
+                )
         );
 
     [Fact]

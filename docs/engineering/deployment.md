@@ -61,6 +61,11 @@ read for them. Configuration holds what belongs to the deployment.
 Mailpit and one-time codes on, so a fresh checkout runs. Development credentials live in user
 secrets; see [auth.md](auth.md).
 
+**Expiry alerts go out through `Smtp:*`**, as sign-in codes do, every `ExpiryAlerts:Interval` (an
+hour); who receives them and how early are settings. **`ExpiryAlerts:ApplicationUrl`** — the address
+people open the application at — puts a link to each record in the email; empty, there are none,
+since the server cannot know the address it is reached by.
+
 **`Pdf:ChromiumPath` names the browser that prints PDFs**; empty, nothing is printed and the
 handover sheet offers no download, and a path that names no file stops the start. **The image carries
 the Chrome headless shell its PuppeteerSharp is tested against**, downloaded when the image is built

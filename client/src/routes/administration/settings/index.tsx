@@ -1,15 +1,16 @@
 import type { AccessorChain } from "cx/data";
 import { createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
-import { Button, Icon, LookupField, Repeater, TextField, ValidationGroup } from "cx/widgets";
+import { Button, Icon, LookupField, NumberField, Repeater, TextField, ValidationGroup } from "cx/widgets";
 
 import { mayEdit, permissions } from "../../../access";
+import { numberValue } from "../../../bindings";
 import { documentTitle } from "../../../components/documentTitle";
 import { formFields } from "../../../components/formFields";
 import { documentLanguages } from "../../../documents/languages";
 import { zoneLabel } from "../../../download";
 import $app from "../../../model";
 import Controller from "./Controller";
-import m, { type GroupName } from "./model";
+import m, { type Alerts, AlertUnits, type GroupName } from "./model";
 
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -135,66 +136,153 @@ function documentsCard() {
     );
 }
 
-function signInCard() {
-    const s = m.settings.sign_in;
-    const domains = s.draft.allowed_domains;
-    return card(
-        "sign_in",
-        "Sign-in",
-        "Only users added under Users sign in; these domains narrow who that can be.",
+interface Chips {
+    label: string;
+    values: AccessorChain<string[]>;
+    /** What is being typed, before Add puts it among the chips. */
+    typed: AccessorChain<string | null | undefined>;
+    viewing: AccessorChain<boolean>;
+    error: AccessorChain<string | undefined>;
+    /** Shown in view when there are none. */
+    none: string;
+    /** Shown while editing when there are none. */
+    noneHint: string;
+    placeholder: string;
+    /** The field's name for a screen reader: "Domain to add". */
+    adding: string;
+    /** The remove button's name: "Remove domain". */
+    removing: string;
+}
+
+/** A list of values as chips: removable while editing, a field and Add beneath. */
+function chips(o: Chips) {
+    return (
         <cx>
             <div class="editor-wide">
-                <div class="editor-label" text="Allowed domains" />
-                <div class="editor-chips" visible={s.viewing}>
-                    <Repeater records={domains} recordAlias={m.$domain}>
-                        <span class="editor-chip" text={m.$domain} />
+                <div class="editor-label" text={o.label} />
+                <div class="editor-chips" visible={o.viewing}>
+                    <Repeater records={o.values} recordAlias={m.$chip}>
+                        <span class="editor-chip" text={m.$chip} />
                     </Repeater>
                 </div>
                 <div
                     class="editor-value editor-empty"
-                    visible={expr(s.viewing, domains, (v, list) => !!v && !list?.length)}
-                    text="Any domain"
+                    visible={expr(o.viewing, o.values, (v, list) => !!v && !list?.length)}
+                    text={o.none}
                 />
-                <div visible={falsy(s.viewing)}>
-                    <div class="editor-chips" visible={expr(domains, (list) => !!list?.length)}>
-                        <Repeater records={domains} recordAlias={m.$domain}>
+                <div visible={falsy(o.viewing)}>
+                    <div class="editor-chips" visible={expr(o.values, (list) => !!list?.length)}>
+                        <Repeater records={o.values} recordAlias={m.$chip}>
                             <button
                                 type="button"
                                 class="chip"
                                 onClick={(_e: unknown, instance: any) =>
-                                    (instance.controller as Controller).removeDomain(
-                                        instance.store.get(m.$domain),
+                                    (instance.controller as Controller).removeChip(
+                                        o.values,
+                                        instance.store.get(m.$chip),
                                     )
                                 }
-                                attrs={{ "aria-label": "Remove domain" }}
+                                attrs={{ "aria-label": o.removing }}
                             >
-                                <span text={m.$domain} />
+                                <span text={m.$chip} />
                                 <Icon name="close" class="size-3.5" />
                             </button>
                         </Repeater>
                     </div>
                     <div class="settings-add">
                         <TextField
-                            value={m.settings.newDomain}
-                            placeholder="example.com"
-                            inputAttrs={{ "aria-label": "Domain to add", autoCapitalize: "off" }}
+                            value={o.typed}
+                            placeholder={o.placeholder}
+                            inputAttrs={{ "aria-label": o.adding, autoCapitalize: "off" }}
                         />
-                        <Button mod="hollow" onClick={on((c) => c.addDomain())}>
+                        <Button mod="hollow" onClick={on((c) => c.addChip(o.values, o.typed))}>
                             <Icon name="created" class="size-4" />
                             <span text="Add" />
                         </Button>
                     </div>
                     <p
                         class="editor-hint"
-                        visible={expr(domains, (list) => !list?.length)}
-                        text="None: any domain, for whoever is added under Users."
+                        visible={expr(o.values, (list) => !list?.length)}
+                        text={o.noneHint}
                     />
                 </div>
-                <p
-                    class="field-message"
-                    visible={hasValue(s.errors.allowed_domains)}
-                    text={s.errors.allowed_domains}
-                />
+                <p class="field-message" visible={hasValue(o.error)} text={o.error} />
+            </div>
+        </cx>
+    );
+}
+
+function signInCard() {
+    const s = m.settings.sign_in;
+    return card(
+        "sign_in",
+        "Sign-in",
+        "Only users added under Users sign in; these domains narrow who that can be.",
+        chips({
+            label: "Allowed domains",
+            values: s.draft.allowed_domains,
+            typed: m.settings.newDomain,
+            viewing: s.viewing,
+            error: s.errors.allowed_domains,
+            none: "Any domain",
+            noneHint: "None: any domain, for whoever is added under Users.",
+            placeholder: "example.com",
+            adding: "Domain to add",
+            removing: "Remove domain",
+        }),
+    );
+}
+
+const units = AlertUnits.map((unit) => ({ id: unit, text: unit }));
+
+/** "2 months before", "1 week before". */
+const leadText = (lead: Alerts["lead"] | null | undefined) =>
+    lead?.amount && lead.unit
+        ? `${lead.amount} ${lead.amount === 1 ? lead.unit.slice(0, -1) : lead.unit} before`
+        : "—";
+
+function alertsCard() {
+    const a = m.settings.alerts;
+    const lead = a.draft.lead;
+    return card(
+        "alerts",
+        "Expiry alerts",
+        "An email before a subscription or a warranty ends, once for each date.",
+        <cx>
+            {chips({
+                label: "Recipients",
+                values: a.draft.recipients,
+                typed: m.settings.newRecipient,
+                viewing: a.viewing,
+                error: a.errors.recipients,
+                none: "None: no alerts are sent",
+                noneHint: "None: no alerts are sent until someone is added.",
+                placeholder: "it@codaxy.com",
+                adding: "Address to add",
+                removing: "Remove address",
+            })}
+            <div>
+                <div id="settings-alerts-unit-label" class="editor-label" text="Sent" />
+                <div class="editor-value" visible={a.viewing} text={expr(lead, leadText)} />
+                <div class="settings-lead" visible={falsy(a.viewing)}>
+                    <NumberField
+                        value={numberValue(lead.amount)}
+                        required
+                        minValue={1}
+                        maxValue={999}
+                        format="n;0"
+                        inputAttrs={{ "aria-label": "How many", inputMode: "numeric" }}
+                    />
+                    <LookupField
+                        id="settings-alerts-unit"
+                        value={lead.unit}
+                        options={units as any}
+                        required
+                    />
+                    <span text="before" />
+                </div>
+                {resetLine("alerts", "lead", leadText)}
+                <p class="field-message" visible={hasValue(a.errors.lead)} text={a.errors.lead} />
             </div>
         </cx>,
     );
@@ -252,6 +340,7 @@ export default createFunctionalComponent(() => (
                 <div visible={falsy(m.settings.loading)}>
                     {signInCard()}
                     {dashboardCard()}
+                    {alertsCard()}
                     {documentsCard()}
                     {timeZoneCard()}
                 </div>

@@ -16,7 +16,6 @@ public static class OptionsSetup
             .Bind(configuration.GetSection(UserOptions.Section))
             .ValidateBy(o => o.Problem)
             .ValidateOnStart();
-        services.AddOptions<SmtpOptions>().Bind(configuration.GetSection(SmtpOptions.Section));
 
         return services;
     }

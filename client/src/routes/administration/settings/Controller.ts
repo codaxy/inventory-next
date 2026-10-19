@@ -1,3 +1,4 @@
+import type { AccessorChain } from "cx/data";
 import { Controller } from "cx/ui";
 
 import { ApiError } from "../../../api/http";
@@ -81,7 +82,8 @@ export default class extends Controller {
         this.store.set(g.errors, {});
         this.store.set(g.visited, false);
         this.store.set(g.viewing, true);
-        if (name === "sign_in") this.store.delete(m.settings.newDomain);
+        this.store.delete(m.settings.newDomain);
+        this.store.delete(m.settings.newRecipient);
     }
 
     async save(name: GroupName) {
@@ -96,7 +98,8 @@ export default class extends Controller {
         this.store.set(g.saving, true);
         try {
             this.take(name, await saveSettings(name, values));
-            if (name === "sign_in") this.store.delete(m.settings.newDomain);
+            this.store.delete(m.settings.newDomain);
+            this.store.delete(m.settings.newRecipient);
         } catch (error) {
             if (error instanceof ApiError && error.status === 400)
                 this.store.set(
@@ -124,19 +127,16 @@ export default class extends Controller {
         this.store.set(g.draft[field], structuredClone(this.store.get(g.defaults[field])));
     }
 
-    /** The typed domain among the chips, once; the server tidies and checks it on save. */
-    addDomain() {
-        const domain = this.store.get(m.settings.newDomain)?.trim();
-        if (!domain) return;
-        const domains = this.store.get(m.settings.sign_in.draft.allowed_domains) ?? [];
-        if (!domains.includes(domain))
-            this.store.set(m.settings.sign_in.draft.allowed_domains, [...domains, domain]);
-        this.store.delete(m.settings.newDomain);
+    /** The typed value among the chips, once; the server tidies and checks it on save. */
+    addChip(list: AccessorChain<string[]>, typed: AccessorChain<string | null | undefined>) {
+        const value = this.store.get(typed)?.trim();
+        if (!value) return;
+        const values = this.store.get(list) ?? [];
+        if (!values.includes(value)) this.store.set(list, [...values, value]);
+        this.store.delete(typed);
     }
 
-    removeDomain(domain: string) {
-        this.store.update(m.settings.sign_in.draft.allowed_domains, (domains) =>
-            (domains ?? []).filter((d) => d !== domain),
-        );
+    removeChip(list: AccessorChain<string[]>, value: string) {
+        this.store.update(list, (values) => (values ?? []).filter((v) => v !== value));
     }
 }

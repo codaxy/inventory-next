@@ -1,14 +1,16 @@
 using Codaxy.Inventory.App.Administration.Roles;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Access;
+using Codaxy.Inventory.App.Shared.Email;
 using Codaxy.Inventory.App.Shared.Settings;
-using Codaxy.Inventory.Web.Auth;
+using Codaxy.Inventory.Web.ExpiryAlerts;
 using Codaxy.Inventory.Web.Setup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Testcontainers.PostgreSql;
 
 namespace Codaxy.Inventory.Tests.Integration.Infrastructure;
@@ -26,6 +28,9 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
     ).Build();
 
     public RecordingEmailSender Emails { get; } = new();
+
+    /// <summary>Whether the hosted expiry alert check runs, as it does in the application.</summary>
+    protected virtual bool RunsExpiryAlertWorker => false;
 
     /// <summary>Its own ring per run, so a test never writes to the configured path.</summary>
     public string KeyRingPath { get; } =
@@ -90,6 +95,12 @@ public class InventoryApplication : WebApplicationFactory<Program>, IAsyncLifeti
         {
             services.RemoveAll<IEmailSender>();
             services.AddSingleton<IEmailSender>(Emails);
+
+            // A test runs the check when it means to: left running, it would mail on its own clock.
+            if (!RunsExpiryAlertWorker)
+                services.Remove(
+                    services.Single(d => d.ImplementationType == typeof(ExpiryAlertWorker))
+                );
         });
     }
 

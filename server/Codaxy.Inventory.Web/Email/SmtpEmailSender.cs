@@ -1,26 +1,17 @@
+using Codaxy.Inventory.App.Shared.Email;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace Codaxy.Inventory.Web.Auth;
-
-public interface IEmailSender
-{
-    Task SendAsync(
-        string to,
-        string subject,
-        string body,
-        CancellationToken cancellation = default
-    );
-}
+namespace Codaxy.Inventory.Web.Email;
 
 public sealed class SmtpEmailSender(IOptions<SmtpOptions> options) : IEmailSender
 {
     private readonly SmtpOptions options = options.Value;
 
     public async Task SendAsync(
-        string to,
+        IReadOnlyList<string> to,
         string subject,
         string body,
         CancellationToken cancellation = default
@@ -33,7 +24,8 @@ public sealed class SmtpEmailSender(IOptions<SmtpOptions> options) : IEmailSende
         };
 
         message.From.Add(MailboxAddress.Parse(options.From));
-        message.To.Add(MailboxAddress.Parse(to));
+        foreach (var address in to)
+            message.To.Add(MailboxAddress.Parse(address));
 
         using var client = new SmtpClient();
 

@@ -18,8 +18,11 @@ public abstract class SettingDefinition(string key)
     /// <summary>The default, as stored: what a database without the setting is seeded with.</summary>
     public abstract string DefaultJson { get; }
 
-    /// <summary>Why a stored value cannot be used, or null.</summary>
-    public abstract string? StoredProblem(string json);
+    /// <summary>
+    /// The value in force, written as this definition writes it: the stored one, or the default where
+    /// there is none or it cannot be used. Never the stored text, whose object keys jsonb reorders.
+    /// </summary>
+    public abstract string CurrentJson(string? stored);
 
     /// <summary>
     /// A value from the screen, tidied as it is stored — trimmed, say — or why it may not be saved.
@@ -66,7 +69,8 @@ public sealed class SettingDefinition<T>(
         return Problem(value) is { } wrong ? (Default, wrong) : (value, null);
     }
 
-    public override string? StoredProblem(string json) => Read(json).Problem;
+    public override string CurrentJson(string? stored) =>
+        stored is null ? DefaultJson : Serialize(Read(stored).Value);
 
     public override (string? Json, string? Problem) Accept(JsonElement value)
     {

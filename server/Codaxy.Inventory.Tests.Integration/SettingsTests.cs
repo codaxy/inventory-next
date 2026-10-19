@@ -126,6 +126,46 @@ public class SettingsTests(SettingsApplication app) : IClassFixture<SettingsAppl
     }
 
     [Fact]
+    public async Task The_alerts_are_saved_tidied_and_read_as_their_definition_writes_them()
+    {
+        var client = await SystemAdminAsync();
+
+        var saved = await client.PutAsJsonAsync(
+            $"{Url}/alerts",
+            new Dictionary<string, object>
+            {
+                ["alerts.recipients"] = new[] { " IT@codaxy.com ", "it@codaxy.com" },
+                ["alerts.lead"] = new { unit = "Weeks", amount = 3 },
+            }
+        );
+        var alerts = (await client.GetFromJsonAsync<Response>(Url))!
+            .Settings.Where(s => s.Group == "alerts")
+            .ToDictionary(s => s.Key, s => (s.Value.GetRawText(), s.Default.GetRawText()));
+        await client.PutAsJsonAsync(
+            $"{Url}/alerts",
+            new Dictionary<string, object>
+            {
+                ["alerts.recipients"] = Array.Empty<string>(),
+                ["alerts.lead"] = new { amount = 2, unit = "months" },
+            }
+        );
+
+        Assert.Equal(HttpStatusCode.OK, saved.StatusCode);
+        // jsonb stores the lead's keys as {"unit","amount"}; the screen compares the text.
+        Assert.Equal(
+            new Dictionary<string, (string, string)>
+            {
+                ["alerts.recipients"] = ("[\"it@codaxy.com\"]", "[]"),
+                ["alerts.lead"] = (
+                    "{\"amount\":3,\"unit\":\"weeks\"}",
+                    "{\"amount\":2,\"unit\":\"months\"}"
+                ),
+            },
+            alerts
+        );
+    }
+
+    [Fact]
     public async Task An_unknown_group_is_not_found() =>
         Assert.Equal(
             HttpStatusCode.NotFound,

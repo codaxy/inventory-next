@@ -51,7 +51,8 @@ The application allocates the id rather than letting the database default it, wh
 asset and its subtype row share one key before either is inserted.
 
 Besides the primary keys, `Asset.InventoryNumber`, a user's email, a role's name, a role's
-permission and a setting's key are the only unique constraints in the database.
+permission, a setting's key and an expiry alert's asset and date are the only unique constraints in
+the database.
 Names in the codebooks and the company's records are not unique: whether two vendors may share one is a product
 question nobody has answered, so the schema does not answer it either. **Device types, tags, software or
 services, furniture types, information types and tags, virtual machines, cloud subscriptions, software
@@ -119,7 +120,7 @@ request records `system`.
 **What it cannot record**: a link table's rows — `ElectronicDeviceTypeElectronicDeviceTag` and the
 like have a composite key and no id, so tagging a type leaves no trace — and
 anything the database cascades without EF tracking it. Seeding a fresh database is audited like any
-save.
+save. **`expiry_alert` is left out on purpose**: it records mail sent, which nobody edits.
 
 **Reading it, what changed is computed, not stored**: both documents hold every property, so an update's
 changes are the properties whose JSON differs. A foreign key's value is named through the EF model —
@@ -182,6 +183,11 @@ user — see [auth.md](auth.md).
 **`TransactionId` names something that does not exist.** No code opens a transaction, so the value is
 a fresh GUID per `SaveChanges`. It groups a save, and reading it as a business transaction is wrong.
 
+
+**`jsonb` keeps an object's keys in an order of its own**, shortest first: a setting saved as
+`{"amount":2,"unit":"months"}` reads back as `{"unit":"months","amount":2}`. A setting is served as
+its definition writes it (`CurrentJson`), never as stored, since the screen compares a value with its
+default as text.
 
 **An instant must be `DateTimeOffset`.** It maps to `timestamp with time zone` and keeps its offset
 all the way to the browser, which is why `AuditLog.TimeCreated` and `Asset.LastModified` display
