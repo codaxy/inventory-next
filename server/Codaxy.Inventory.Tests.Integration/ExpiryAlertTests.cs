@@ -115,12 +115,29 @@ public class ExpiryAlertApplication : InventoryApplication
         await context.SaveChangesAsync();
     }
 
-    public async Task SettingsAsync(string[] recipients, AlertLead lead)
+    public async Task SettingsAsync(
+        string[] recipients,
+        AlertLead lead,
+        params AlertLead[] reminders
+    )
     {
         using var scope = Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<InventoryContext>();
         await Seed.SettingAsync(context, ExpiryAlertSettings.Recipients, recipients);
         await Seed.SettingAsync(context, ExpiryAlertSettings.Lead, lead);
+        await Seed.SettingAsync(context, ExpiryAlertSettings.Reminders, reminders);
+    }
+
+    /// <summary>The stages recorded as sent for an asset's date, in order.</summary>
+    public async Task<int[]> StagesAsync(Guid asset)
+    {
+        using var scope = Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<InventoryContext>();
+        return await context
+            .ExpiryAlerts.Where(a => a.AssetId == asset)
+            .OrderBy(a => a.Stage)
+            .Select(a => a.Stage)
+            .ToArrayAsync();
     }
 
     /// <summary>One check, and the email it sent, if any.</summary>
@@ -277,6 +294,48 @@ public class ExpiryAlertTests(ExpiryAlertApplication app) : IClassFixture<Expiry
     }
 
     [Fact]
+    public async Task A_reminder_follows_the_first_notice_once_its_point_is_reached()
+    {
+        await app.SettingsAsync(ExpiryAlertApplication.Recipients, TwoMonths);
+        var license = await app.LicenseAsync("Reminded later", Today.AddDays(10));
+        Assert.Contains("Reminded later", (await app.CheckAsync()).Email!.Body);
+
+        // Ten days out is within a reminder at two weeks: it is that reminder's turn.
+        await app.SettingsAsync(
+            ExpiryAlertApplication.Recipients,
+            TwoMonths,
+            new AlertLead(14, "days")
+        );
+        var (_, email) = await app.CheckAsync();
+
+        Assert.Contains(
+            "Reminder: subscription expires on",
+            Section(email!.Body, "Reminded later")
+        );
+        Assert.Equal(new[] { 0, 1 }, await app.StagesAsync(license));
+        Assert.Equal(0, (await app.CheckAsync()).Alerted);
+    }
+
+    [Fact]
+    public async Task A_record_gets_the_furthest_stage_it_has_reached_not_the_ones_it_skipped()
+    {
+        await app.SettingsAsync(
+            ExpiryAlertApplication.Recipients,
+            TwoMonths,
+            new AlertLead(14, "days"),
+            new AlertLead(2, "days")
+        );
+        var device = await app.DeviceAsync("Entered two days out", Today.AddDays(2));
+
+        var (_, email) = await app.CheckAsync();
+
+        Assert.Single(email!.Body.Split('\n'), line => line.StartsWith("Entered two days out"));
+        Assert.Contains("Reminder: warranty ends on", Section(email.Body, "Entered two days out"));
+        Assert.Equal(new[] { 2 }, await app.StagesAsync(device));
+        Assert.Equal(0, (await app.CheckAsync()).Alerted);
+    }
+
+    [Fact]
     public async Task Deleting_an_asset_takes_its_alerts()
     {
         await app.SettingsAsync(ExpiryAlertApplication.Recipients, TwoMonths);
@@ -355,6 +414,7 @@ public class ExpiryAlertOnSaveTests(ExpiryAlertOnSaveApplication app)
             {
                 ["alerts.recipients"] = new[] { "it@codaxy.com" },
                 ["alerts.lead"] = new { amount = 2, unit = "months" },
+                ["alerts.reminders"] = Array.Empty<object>(),
             }
         );
 

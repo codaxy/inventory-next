@@ -1,6 +1,15 @@
 import type { AccessorChain } from "cx/data";
 import { createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
-import { Button, Icon, LookupField, NumberField, Repeater, TextField, ValidationGroup } from "cx/widgets";
+import {
+    Button,
+    Icon,
+    LookupField,
+    NumberField,
+    Repeater,
+    Switch,
+    TextField,
+    ValidationGroup,
+} from "cx/widgets";
 
 import { mayEdit, permissions } from "../../../access";
 import { numberValue } from "../../../bindings";
@@ -10,7 +19,7 @@ import { documentLanguages } from "../../../documents/languages";
 import { zoneLabel } from "../../../download";
 import $app from "../../../model";
 import Controller from "./Controller";
-import m, { type Alerts, AlertUnits, type GroupName } from "./model";
+import m, { AlertUnits, type GroupName, type Lead, type Slot } from "./model";
 
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -233,21 +242,140 @@ function signInCard() {
     );
 }
 
-const units = AlertUnits.map((unit) => ({ id: unit, text: unit }));
+/** The units as the number before them reads: "1 week", "2 weeks". The stored value is the plural. */
+const units = (amount: number | null | undefined) =>
+    AlertUnits.map((unit) => ({ id: unit, text: amount === 1 ? unit.slice(0, -1) : unit }));
 
 /** "2 months before", "1 week before". */
-const leadText = (lead: Alerts["lead"] | null | undefined) =>
+/** "2 months", "1 week". */
+const span = (lead: Lead | null | undefined) =>
     lead?.amount && lead.unit
-        ? `${lead.amount} ${lead.amount === 1 ? lead.unit.slice(0, -1) : lead.unit} before`
+        ? `${lead.amount} ${lead.amount === 1 ? lead.unit.slice(0, -1) : lead.unit}`
         : "—";
+
+/** "2 months before". */
+const leadText = (lead: Lead | null | undefined) => `${span(lead)} before`;
+
+/** "2 months before, no reminders"; "2 months before, then 2 weeks and 2 days before". */
+const timingText = (lead: Lead | null | undefined, reminders: Lead[] | null | undefined) =>
+    reminders?.length
+        ? `${leadText(lead)}, then ${reminders.map(span).join(" and ")} before`
+        : `${leadText(lead)}, no reminders`;
+
+/** A notice's number and unit side by side, read on as "… before". */
+function leadCells(lead: AccessorChain<Lead>, id: string, label: string) {
+    return (
+        <cx>
+            <NumberField
+                value={numberValue(lead.amount)}
+                required
+                minValue={1}
+                maxValue={999}
+                format="n;0"
+                inputAttrs={{ "aria-label": `${label}: how many`, inputMode: "numeric" }}
+            />
+            <LookupField id={id} value={lead.unit} options={expr(lead.amount, units) as any} required />
+            <span class="settings-before" text="before" />
+        </cx>
+    );
+}
+
+/**
+ * A reminder's field: its label with a switch, and while on, its lead beneath; "Off" in view.
+ * `shown`: whether the field is there at all — the second reminder only once the first is on.
+ */
+function reminderField(slot: AccessorChain<Slot>, id: string, label: string, shown: any = true) {
+    const a = m.settings.alerts;
+    return (
+        <cx>
+            <div class="editor-wide" visible={shown}>
+                <div class="settings-switch-label">
+                    <div id={`${id}-label`} class="editor-label" text={label} />
+                    <Switch
+                        value={slot.on}
+                        visible={falsy(a.viewing)}
+                        inputAttrs={{ "aria-label": `${label} on` }}
+                    />
+                </div>
+                <div
+                    class="editor-value"
+                    visible={a.viewing}
+                    text={expr(slot, (s) => (s?.on ? leadText(s) : "Off"))}
+                />
+                <div class="settings-lead" visible={expr(a.viewing, slot.on, (v, o) => !v && !!o)}>
+                    {leadCells(slot as any, id, label)}
+                </div>
+            </div>
+        </cx>
+    );
+}
+
+/**
+ * When alerts go out, as fields like every other setting: the first notice, always on, and two
+ * reminders switched on as needed — a reminder's number and unit only while it is on, the second
+ * reminder only once the first is. One column, a field to a row: they are a sequence, read top to
+ * bottom. One reset for all of it.
+ */
+function timing() {
+    const a = m.settings.alerts;
+    const lead = a.draft.lead;
+    const slots = m.settings.slots;
+    const changed = expr(
+        a.viewing,
+        lead,
+        a.draft.reminders,
+        a.defaults.lead,
+        a.defaults.reminders,
+        (v, l, r, dl, dr) => !v && (!same(l ?? null, dl) || !same(r ?? [], dr ?? [])),
+    );
+    return (
+        <cx>
+            <div class="editor-wide">
+                <div id="settings-alerts-unit-label" class="editor-label" text="First notice" />
+                <div class="editor-value" visible={a.viewing} text={expr(lead, leadText)} />
+                <div class="settings-lead" visible={falsy(a.viewing)}>
+                    {leadCells(lead, "settings-alerts-unit", "First notice")}
+                </div>
+            </div>
+            {reminderField(slots.first, "settings-alerts-first-reminder", "First reminder")}
+            {reminderField(
+                slots.second,
+                "settings-alerts-second-reminder",
+                "Second reminder",
+                slots.first.on,
+            )}
+            <div class="editor-wide" visible={falsy(a.viewing)}>
+                <p class="editor-hint settings-default" visible={changed}>
+                    <span
+                        text={expr(
+                            a.defaults.lead,
+                            a.defaults.reminders,
+                            (l, r) => `Default: ${timingText(l, r)}.`,
+                        )}
+                    />
+                    <Button
+                        mod="hollow"
+                        class="settings-reset"
+                        text="Reset to default"
+                        onClick={on((c) => {
+                            c.reset("alerts", "lead");
+                            c.reset("alerts", "reminders");
+                        })}
+                    />
+                </p>
+                <p class="field-message" visible={hasValue(a.errors.lead)} text={a.errors.lead} />
+                <p class="field-message" visible={hasValue(a.errors.reminders)} text={a.errors.reminders} />
+            </div>
+        </cx>
+    );
+}
 
 function alertsCard() {
     const a = m.settings.alerts;
-    const lead = a.draft.lead;
     return card(
         "alerts",
         "Expiry alerts",
-        "An email before a subscription or a warranty ends, once for each date.",
+        "An email before a subscription or a warranty ends, once for each date, and an optional reminder or two.",
         <cx>
             {chips({
                 label: "Recipients",
@@ -261,29 +389,7 @@ function alertsCard() {
                 adding: "Address to add",
                 removing: "Remove address",
             })}
-            <div>
-                <div id="settings-alerts-unit-label" class="editor-label" text="Sent" />
-                <div class="editor-value" visible={a.viewing} text={expr(lead, leadText)} />
-                <div class="settings-lead" visible={falsy(a.viewing)}>
-                    <NumberField
-                        value={numberValue(lead.amount)}
-                        required
-                        minValue={1}
-                        maxValue={999}
-                        format="n;0"
-                        inputAttrs={{ "aria-label": "How many", inputMode: "numeric" }}
-                    />
-                    <LookupField
-                        id="settings-alerts-unit"
-                        value={lead.unit}
-                        options={units as any}
-                        required
-                    />
-                    <span text="before" />
-                </div>
-                {resetLine("alerts", "lead", leadText)}
-                <p class="field-message" visible={hasValue(a.errors.lead)} text={a.errors.lead} />
-            </div>
+            {timing()}
         </cx>,
     );
 }

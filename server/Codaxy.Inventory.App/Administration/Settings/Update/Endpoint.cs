@@ -55,6 +55,17 @@ public static class Endpoint
         )
             problems[SignInSettings.AllowedDomains.Key] = [shutOut];
 
+        if (
+            accepted.TryGetValue(ExpiryAlertSettings.Lead.Key, out var leadJson)
+            && accepted.TryGetValue(ExpiryAlertSettings.Reminders.Key, out var remindersJson)
+            && ExpiryAlertSettings.OrderProblem(
+                ExpiryAlertSettings.Lead.Read(leadJson).Value,
+                ExpiryAlertSettings.Reminders.Read(remindersJson).Value
+            )
+                is { } order
+        )
+            problems[ExpiryAlertSettings.Reminders.Key] = [order];
+
         if (problems.Count > 0)
             return Results.ValidationProblem(problems);
 

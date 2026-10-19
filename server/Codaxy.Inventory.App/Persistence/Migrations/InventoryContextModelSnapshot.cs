@@ -1657,12 +1657,18 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("sent_at");
 
+                    b.Property<int>("Stage")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("stage");
+
                     b.HasKey("Id")
                         .HasName("pk_expiry_alert");
 
-                    b.HasIndex("AssetId", "ExpirationDate")
+                    b.HasIndex("AssetId", "ExpirationDate", "Stage")
                         .IsUnique()
-                        .HasDatabaseName("ix_expiry_alert_asset_id_expiration_date");
+                        .HasDatabaseName("ix_expiry_alert_asset_id_expiration_date_stage");
 
                     b.ToTable("expiry_alert", (string)null);
                 });

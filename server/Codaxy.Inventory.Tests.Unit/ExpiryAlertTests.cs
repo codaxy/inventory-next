@@ -247,5 +247,52 @@ public class ExpiryAlertTests
             Compose("", Subscription(Today) with { Number = null }).Text
         );
 
+    [Fact]
+    public void No_reminders_by_default_and_at_most_two() =>
+        Assert.Equal(
+            (null, "At most two reminders."),
+            (
+                ExpiryAlertSettings.Reminders.Accept(Json(Array.Empty<object>())).Problem,
+                ExpiryAlertSettings
+                    .Reminders.Accept(
+                        Json(
+                            new[]
+                            {
+                                new { amount = 3, unit = "weeks" },
+                                new { amount = 2, unit = "weeks" },
+                                new { amount = 1, unit = "weeks" },
+                            }
+                        )
+                    )
+                    .Problem
+            )
+        );
+
+    [Fact]
+    public void A_reminder_is_held_to_a_lead_s_rules() =>
+        Assert.Equal(
+            "Days, weeks or months.",
+            ExpiryAlertSettings
+                .Reminders.Accept(Json(new[] { new { amount = 2, unit = "fortnights" } }))
+                .Problem
+        );
+
+    [Fact]
+    public void Reminders_out_of_order_are_left_out_from_the_first_that_breaks_it() =>
+        Assert.Equal(
+            [new AlertLead(2, "weeks")],
+            ExpiryAlertSettings.InOrder(
+                new AlertLead(2, "months"),
+                [new(2, "weeks"), new(3, "weeks")]
+            )
+        );
+
+    [Fact]
+    public void A_reminder_s_line_says_so() =>
+        Assert.Contains(
+            "Rider #100875\nReminder: subscription expires on 19 Oct 2026 (today).\n",
+            Compose("", Subscription(Today) with { Stage = 1 }).Text
+        );
+
     private static JsonElement Json(object value) => JsonSerializer.SerializeToElement(value);
 }

@@ -136,6 +136,7 @@ public class SettingsTests(SettingsApplication app) : IClassFixture<SettingsAppl
             {
                 ["alerts.recipients"] = new[] { " IT@codaxy.com ", "it@codaxy.com" },
                 ["alerts.lead"] = new { unit = "Weeks", amount = 3 },
+                ["alerts.reminders"] = new[] { new { amount = 1, unit = "weeks" } },
             }
         );
         var alerts = (await client.GetFromJsonAsync<Response>(Url))!
@@ -147,6 +148,7 @@ public class SettingsTests(SettingsApplication app) : IClassFixture<SettingsAppl
             {
                 ["alerts.recipients"] = Array.Empty<string>(),
                 ["alerts.lead"] = new { amount = 2, unit = "months" },
+                ["alerts.reminders"] = Array.Empty<object>(),
             }
         );
 
@@ -160,8 +162,42 @@ public class SettingsTests(SettingsApplication app) : IClassFixture<SettingsAppl
                     "{\"amount\":3,\"unit\":\"weeks\"}",
                     "{\"amount\":2,\"unit\":\"months\"}"
                 ),
+                ["alerts.reminders"] = ("[{\"amount\":1,\"unit\":\"weeks\"}]", "[]"),
             },
             alerts
+        );
+    }
+
+    [Theory]
+    [InlineData(2, "weeks", 3, "weeks")]
+    [InlineData(30, "days", 1, "months")]
+    [InlineData(3, "months", 1, "days")]
+    public async Task A_reminder_must_come_closer_to_the_date_than_the_one_before_it(
+        int firstAmount,
+        string firstUnit,
+        int secondAmount,
+        string secondUnit
+    )
+    {
+        var problems = await ProblemsAsync(
+            await (await SystemAdminAsync()).PutAsJsonAsync(
+                $"{Url}/alerts",
+                new Dictionary<string, object>
+                {
+                    ["alerts.recipients"] = Array.Empty<string>(),
+                    ["alerts.lead"] = new { amount = 2, unit = "months" },
+                    ["alerts.reminders"] = new[]
+                    {
+                        new { amount = firstAmount, unit = firstUnit },
+                        new { amount = secondAmount, unit = secondUnit },
+                    },
+                }
+            )
+        );
+
+        Assert.Equal(
+            ["Each reminder comes closer to the date than the one before it."],
+            problems["alerts.reminders"]
         );
     }
 

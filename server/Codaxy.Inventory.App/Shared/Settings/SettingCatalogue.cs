@@ -21,6 +21,7 @@ public static class SettingCatalogue
         DocumentSettings.DefaultLanguage,
         ExpiryAlertSettings.Recipients,
         ExpiryAlertSettings.Lead,
+        ExpiryAlertSettings.Reminders,
     ];
 
     /// <summary>

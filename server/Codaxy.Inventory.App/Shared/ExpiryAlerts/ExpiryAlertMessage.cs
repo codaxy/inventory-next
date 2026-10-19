@@ -21,7 +21,8 @@ public sealed record DueAlert(
     int? Number,
     DateOnly Date,
     bool RenewsAutomatically,
-    Disposal? DisposedAt
+    Disposal? DisposedAt,
+    int Stage = 0
 );
 
 public sealed record AlertEmail(string Subject, string Text, string Html);
@@ -117,7 +118,13 @@ public static class ExpiryAlertMessage
 
     /// <summary>"Subscription expires on 12 Dec 2026 (in 54 days)."</summary>
     private static string Line(DueAlert alert, DateOnly today) =>
-        $"{Ends(alert)} on {Date(alert.Date)} ({When(alert.Date, today)}).";
+        $"{What(alert)} on {Date(alert.Date)} ({When(alert.Date, today)}).";
+
+    /// <summary>"Subscription expires", or for a reminder "Reminder: subscription expires".</summary>
+    private static string What(DueAlert alert) =>
+        alert.Stage == 0
+            ? Ends(alert)
+            : $"Reminder: {char.ToLowerInvariant(Ends(alert)[0])}{Ends(alert)[1..]}";
 
     private const string RenewsAutomatically =
         "Renews automatically on that date unless it is cancelled.";

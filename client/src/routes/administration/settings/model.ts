@@ -14,9 +14,21 @@ export interface Dashboard {
 /** As the server's `AlertLead.Units`. */
 export const AlertUnits = ["days", "weeks", "months"] as const;
 
+export interface Lead {
+    amount: number | null;
+    unit: string | null;
+}
+
+/** A reminder's place on the card: its switch, and its lead kept while it is off. */
+export interface Slot extends Lead {
+    on: boolean;
+}
+
 export interface Alerts {
     recipients: string[];
-    lead: { amount: number | null; unit: string | null };
+    lead: Lead;
+    /** Up to two, each closer to the date than the one before. */
+    reminders: Lead[];
 }
 
 export interface Documents {
@@ -56,6 +68,8 @@ export interface Model {
         newDomain?: string | null;
         /** The address being typed, before Add puts it among the recipients. */
         newRecipient?: string | null;
+        /** The two reminder slots as the card edits them; what is on becomes `alerts.draft.reminders`. */
+        slots: { first: Slot; second: Slot };
         /** How mail is sent, read-only. */
         mail?: {
             server: string;

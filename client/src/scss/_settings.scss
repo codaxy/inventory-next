@@ -61,7 +61,7 @@
     color: var(--color-ink-muted);
 }
 
-// The alerts' lead: a number and a unit, read on as "… before".
+// A notice's value while editing: number, unit and "before" side by side, a reminder's Remove after.
 .settings-lead {
     display: flex;
     align-items: center;
@@ -73,6 +73,25 @@
 
     .cxb-lookupfield {
         width: 8rem;
+    }
+}
+
+// Read with the fields beside it, so at their size: an input's, larger on a touch screen.
+.settings-before {
+    font-size: var(--cx-input-font-size);
+}
+
+// A reminder's label with its switch beside it, at a plain label's height, so the fields beneath line
+// up with the first notice's: the switch overhangs the line rather than growing it.
+.settings-switch-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    height: 1.25rem;
+    margin-bottom: 0.375rem;
+
+    .editor-label {
+        margin-bottom: 0;
     }
 }
 

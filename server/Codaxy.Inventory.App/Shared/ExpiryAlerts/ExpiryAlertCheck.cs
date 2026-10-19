@@ -32,8 +32,12 @@ public sealed class ExpiryAlertCheck(
             return 0;
 
         var lead = values.Get(ExpiryAlertSettings.Lead);
+        var reminders = ExpiryAlertSettings.InOrder(
+            lead,
+            values.Get(ExpiryAlertSettings.Reminders)
+        );
         var today = Expiry.Today(clock);
-        var due = await DueAsync(today, lead.Until(today), cancellationToken);
+        var due = await DueAsync(today, [lead, .. reminders], cancellationToken);
         if (due.Count == 0)
             return 0;
 
@@ -58,6 +62,7 @@ public sealed class ExpiryAlertCheck(
                 Id = Guid.CreateVersion7(),
                 AssetId = d.AssetId,
                 ExpirationDate = d.Date,
+                Stage = d.Stage,
                 SentAt = now,
             })
         );
@@ -71,58 +76,90 @@ public sealed class ExpiryAlertCheck(
         return due.Count;
     }
 
+    /// <summary>
+    /// The records within the first lead, each at the furthest stage it has reached — the last lead
+    /// whose reach covers its date — where that is beyond the last stage sent for the date. A stage
+    /// skipped is never sent: one entry per record, whatever it missed.
+    /// </summary>
     private async Task<List<DueAlert>> DueAsync(
         DateOnly today,
-        DateOnly until,
+        IReadOnlyList<AlertLead> leads,
         CancellationToken cancellationToken
     )
     {
+        var until = leads[0].Until(today);
         var alerted = context.ExpiryAlerts;
 
         var subscriptions = await context
             .Licenses.AsNoTracking()
             .Where(l =>
-                l.SubscriptionExpirationDate >= today
-                && l.SubscriptionExpirationDate <= until
-                && !alerted.Any(a =>
-                    a.AssetId == l.AssetId && a.ExpirationDate == l.SubscriptionExpirationDate
-                )
+                l.SubscriptionExpirationDate >= today && l.SubscriptionExpirationDate <= until
             )
-            .Select(l => new DueAlert(
-                l.AssetId,
-                DueKind.Subscription,
-                l.Asset.Name,
-                l.Asset.InventoryNumber,
-                l.SubscriptionExpirationDate!.Value,
-                l.AutoRenew == true,
-                l.Asset.Location != null && l.Asset.Location.IsDisposal
-                    ? new Disposal(l.Asset.Location.Id, l.Asset.Location.Name)
-                    : null
+            .Select(l => new Candidate(
+                new DueAlert(
+                    l.AssetId,
+                    DueKind.Subscription,
+                    l.Asset.Name,
+                    l.Asset.InventoryNumber,
+                    l.SubscriptionExpirationDate!.Value,
+                    l.AutoRenew == true,
+                    l.Asset.Location != null && l.Asset.Location.IsDisposal
+                        ? new Disposal(l.Asset.Location.Id, l.Asset.Location.Name)
+                        : null
+                ),
+                alerted
+                    .Where(a =>
+                        a.AssetId == l.AssetId && a.ExpirationDate == l.SubscriptionExpirationDate
+                    )
+                    .Max(a => (int?)a.Stage)
             ))
             .ToListAsync(cancellationToken);
 
         var warranties = await context
             .ElectronicDevices.AsNoTracking()
-            .Where(d =>
-                d.WarrantyExpirationDate >= today
-                && d.WarrantyExpirationDate <= until
-                && !alerted.Any(a =>
-                    a.AssetId == d.AssetId && a.ExpirationDate == d.WarrantyExpirationDate
-                )
-            )
-            .Select(d => new DueAlert(
-                d.AssetId,
-                DueKind.Warranty,
-                d.Asset.Name,
-                d.Asset.InventoryNumber,
-                d.WarrantyExpirationDate!.Value,
-                false,
-                d.Asset.Location != null && d.Asset.Location.IsDisposal
-                    ? new Disposal(d.Asset.Location.Id, d.Asset.Location.Name)
-                    : null
+            .Where(d => d.WarrantyExpirationDate >= today && d.WarrantyExpirationDate <= until)
+            .Select(d => new Candidate(
+                new DueAlert(
+                    d.AssetId,
+                    DueKind.Warranty,
+                    d.Asset.Name,
+                    d.Asset.InventoryNumber,
+                    d.WarrantyExpirationDate!.Value,
+                    false,
+                    d.Asset.Location != null && d.Asset.Location.IsDisposal
+                        ? new Disposal(d.Asset.Location.Id, d.Asset.Location.Name)
+                        : null
+                ),
+                alerted
+                    .Where(a =>
+                        a.AssetId == d.AssetId && a.ExpirationDate == d.WarrantyExpirationDate
+                    )
+                    .Max(a => (int?)a.Stage)
             ))
             .ToListAsync(cancellationToken);
 
-        return [.. subscriptions.Concat(warranties).OrderBy(d => d.Date).ThenBy(d => d.Name)];
+        return
+        [
+            .. subscriptions
+                .Concat(warranties)
+                .Select(c => (c.Alert, c.Sent, Stage: Reached(c.Alert.Date, today, leads)))
+                .Where(c => c.Stage > (c.Sent ?? -1))
+                .Select(c => c.Alert with { Stage = c.Stage })
+                .OrderBy(d => d.Date)
+                .ThenBy(d => d.Name),
+        ];
+    }
+
+    /// <summary>A record within reach, and the furthest stage already sent for its date.</summary>
+    private sealed record Candidate(DueAlert Alert, int? Sent);
+
+    /// <summary>The last lead whose reach from today covers the date; the first always does here.</summary>
+    private static int Reached(DateOnly date, DateOnly today, IReadOnlyList<AlertLead> leads)
+    {
+        var stage = 0;
+        for (var i = 1; i < leads.Count; i++)
+            if (leads[i].Until(today) >= date)
+                stage = i;
+        return stage;
     }
 }

@@ -112,12 +112,17 @@ definition; the rest depend. The four windows are settings (`DashboardSettings`,
 Settings (`ExpiryAlertSettings`): a license with a subscription expiration date and a device with a
 warranty expiration date, **once the date is within the lead** — a setting, a number of days, weeks or
 months, two months by default — and not yet past. No record has a switch: what has such a date is
-alerted, a license with no seats in use too. **Once per date**: a sent alert is recorded against the
-asset and the date, so a date that moves alerts again, and one entered inside the lead alerts at the
-next check. **The email says what changes the reading** — a subscription that renews automatically,
-and an asset at a disposal location, named. **There are no addresses until an administrator adds
-them**: who is told is each deployment's choice, and a default would mail someone at the first start.
-With none, nothing is sent and nothing recorded, so whatever is due goes out once someone is named.
+alerted, a license with no seats in use too. **Up to two reminders may follow**, each closer to the
+date than the one before — a setting too, none by default — and every record has them alike,
+auto-renewing and disposed ones included. **Once per stage and date**: what is sent is recorded
+against the asset, the date and the stage — the first notice or a reminder — so a date that moves
+starts over, and one entered inside the lead alerts at the next check. **A record is sent the furthest
+stage it has reached, never the ones it skipped**: a date entered five days out gets one email, not
+three, and a reminder added later reaches records already past its point once. **The email says what
+changes the reading** — a subscription that renews automatically, and an asset at a disposal location,
+named. **There are no addresses until an administrator adds them**: who is told is each deployment's
+choice, and a default would mail someone at the first start. With none, nothing is sent and nothing
+recorded, so whatever is due goes out once someone is named.
 
 ## Codebooks
 

@@ -6,7 +6,7 @@ import { getMail, getSettings, saveSettings, sendTestEmail, type SettingList } f
 import { confirm } from "../../../components/confirm";
 import { guardLeaving } from "../../../leaveGuard";
 import $app from "../../../model";
-import m, { type GroupName, groupNames } from "./model";
+import m, { type GroupName, groupNames, type Lead, type Slot } from "./model";
 
 const group = (name: GroupName) => m.settings[name] as any;
 
@@ -31,6 +31,7 @@ export default class extends Controller {
                 visited: false,
             });
         this.release = guardLeaving(() => groupNames.some((name) => this.dirty(name)));
+        this.addTrigger("reminder-slots", [m.settings.slots], (slots) => this.slotsToDraft(slots));
         this.load();
     }
 
@@ -73,6 +74,7 @@ export default class extends Controller {
         this.store.set(g.errors, {});
         this.store.set(g.viewing, true);
         this.store.set(g.visited, false);
+        if (name === "alerts") this.slotsFromDraft();
     }
 
     dirty(name: GroupName) {
@@ -92,6 +94,7 @@ export default class extends Controller {
         this.store.set(g.viewing, true);
         this.store.delete(m.settings.newDomain);
         this.store.delete(m.settings.newRecipient);
+        if (name === "alerts") this.slotsFromDraft();
     }
 
     async save(name: GroupName) {
@@ -133,6 +136,35 @@ export default class extends Controller {
     reset(name: GroupName, field: string) {
         const g = group(name);
         this.store.set(g.draft[field], structuredClone(this.store.get(g.defaults[field])));
+        if (name === "alerts" && field === "reminders") this.slotsFromDraft();
+    }
+
+    /** The reminder slots from the draft: one on per reminder, the rest off and ready with a value. */
+    slotsFromDraft() {
+        const reminders = this.store.get(m.settings.alerts.draft.reminders) ?? [];
+        const slot = (lead: Lead | undefined, fallback: Lead): Slot =>
+            lead ? { on: true, amount: lead.amount, unit: lead.unit } : { on: false, ...fallback };
+        this.store.set(m.settings.slots, {
+            first: slot(reminders[0], { amount: 1, unit: "weeks" }),
+            second: slot(reminders[1], { amount: 1, unit: "days" }),
+        });
+    }
+
+    /**
+     * The slots into the draft. The first reminder off turns the second off too — "second" alone
+     * reads oddly — each keeping its value, so switching them back on restores both as they were.
+     */
+    slotsToDraft(slots: { first: Slot; second: Slot } | undefined) {
+        if (!slots) return;
+        const { first, second } = slots;
+        if (!first.on && second.on) {
+            this.store.set(m.settings.slots.second.on, false);
+            return;
+        }
+        const lead = ({ amount, unit }: Slot): Lead => ({ amount, unit });
+        const reminders = [first, second].filter((s) => s.on).map(lead);
+        if (!same(reminders, this.store.get(m.settings.alerts.draft.reminders) ?? []))
+            this.store.set(m.settings.alerts.draft.reminders, reminders);
     }
 
     /** The typed value among the chips, once; the server tidies and checks it on save. */
