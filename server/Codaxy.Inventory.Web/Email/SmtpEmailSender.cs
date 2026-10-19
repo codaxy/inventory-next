@@ -24,7 +24,7 @@ public sealed class SmtpEmailSender(IOptions<SmtpOptions> options) : IEmailSende
             Body = new BodyBuilder { TextBody = text, HtmlBody = html }.ToMessageBody(),
         };
 
-        message.From.Add(MailboxAddress.Parse(options.From));
+        message.From.Add(new MailboxAddress(options.FromName, options.From));
         foreach (var address in to)
             message.To.Add(MailboxAddress.Parse(address));
 
@@ -38,6 +38,8 @@ public sealed class SmtpEmailSender(IOptions<SmtpOptions> options) : IEmailSende
             SecureSocketOptions.StartTlsWhenAvailable,
             cancellation
         );
+        if (options.UserName != "")
+            await client.AuthenticateAsync(options.UserName, options.Password, cancellation);
         await client.SendAsync(message, cancellation);
         await client.DisconnectAsync(true, cancellation);
     }

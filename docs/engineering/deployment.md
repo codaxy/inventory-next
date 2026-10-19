@@ -61,6 +61,11 @@ read for them. Configuration holds what belongs to the deployment.
 Mailpit and one-time codes on, so a fresh checkout runs. Development credentials live in user
 secrets; see [auth.md](auth.md).
 
+**Mail goes through the relay `Smtp:Host` and `Port` name, as `Smtp:From`** with `Smtp:FromName`
+beside it. **`Smtp:UserName` and `Password` sign in to it** — Gmail and most hosted relays take mail
+only from an account; empty, nothing signs in, as Mailpit needs. A name without its password stops
+the start. STARTTLS is used whenever the relay offers it.
+
 **Expiry alerts go out through `Smtp:*`**, as sign-in codes do, every `ExpiryAlerts:Interval` (an
 hour); who receives them and how early are settings. **`ExpiryAlerts:ApplicationUrl`** — the address
 people open the application at — puts a link to each record in the email; empty, there are none,

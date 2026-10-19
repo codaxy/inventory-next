@@ -10,7 +10,11 @@ public static class EmailSetup
         IConfiguration configuration
     )
     {
-        services.AddOptions<SmtpOptions>().Bind(configuration.GetSection(SmtpOptions.Section));
+        services
+            .AddOptions<SmtpOptions>()
+            .Bind(configuration.GetSection(SmtpOptions.Section))
+            .ValidateBy(o => o.Problem)
+            .ValidateOnStart();
         services.AddScoped<IEmailSender, SmtpEmailSender>();
 
         return services;
