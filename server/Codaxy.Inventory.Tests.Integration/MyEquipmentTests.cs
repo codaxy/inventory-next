@@ -271,13 +271,10 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
         )!;
 
         Assert.Equal(
-            ("Device name", "Mia's laptop", true),
-            (laptop.Facts[0].Label, laptop.Facts[0].Value, laptop.Facts[0].Copy)
+            ("Device name", "Mia's laptop"),
+            (laptop.Facts[0].Label, laptop.Facts[0].Value)
         );
-        Assert.Contains(
-            laptop.Facts,
-            f => f.Label == "Warranty expires" && !f.Copy && f.Standing == "soon"
-        );
+        Assert.Contains(laptop.Facts, f => f.Label == "Warranty expires" && f.Standing == "soon");
         Assert.Equal(["Suite"], laptop.Apps.Select(a => a.Name).ToList());
         Assert.Equal("Suite", seatDetails.Facts.Single(f => f.Label == "Software").Value);
         Assert.Null(seatDetails.Facts.Single(f => f.Label == "Since").Standing);

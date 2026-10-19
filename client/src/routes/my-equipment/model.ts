@@ -46,7 +46,6 @@ export interface Fact {
     label: string;
     value: string;
     number?: string;
-    copy: boolean;
     standing?: Standing;
 }
 

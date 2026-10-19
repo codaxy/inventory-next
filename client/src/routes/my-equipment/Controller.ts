@@ -206,7 +206,6 @@ export default class extends Controller {
                     label: f.label,
                     value: f.value,
                     number: f.number ? `#${f.number}` : undefined,
-                    copy: f.copy,
                     standing: f.standing ?? undefined,
                 })),
             );

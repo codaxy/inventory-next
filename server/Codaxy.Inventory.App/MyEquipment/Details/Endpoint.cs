@@ -21,8 +21,7 @@ public static class Endpoint
 
     /// <summary>
     /// A fact as the page shows it: a label and its value, in order; <paramref name="Number"/> the
-    /// inventory number of what the value names, which the page mutes beside it; <paramref name="Copy"/>
-    /// for a code someone would paste into a ticket; <paramref name="Standing"/>, on the date a
+    /// inventory number of what the value names, which the page mutes beside it; <paramref name="Standing"/>, on the date a
     /// warranty or a subscription expires on, how it stands — <c>ok</c>, <c>soon</c> by the
     /// dashboard's window ahead, <c>ended</c> — for the page to show that date as the card's pill.
     /// </summary>
@@ -30,7 +29,6 @@ public static class Endpoint
         string Label,
         string Value,
         int? Number = null,
-        bool Copy = false,
         string? Standing = null
     );
 
@@ -63,11 +61,11 @@ public static class Endpoint
                 .Select(f => new Fact(f.Label, f.Value!)),
         ];
 
-    /// <summary>The codes that name a thing to IT, those it has, each to copy.</summary>
+    /// <summary>The codes that name a thing to IT, those it has.</summary>
     private static IEnumerable<Fact> Codes(params (string Label, string? Value)[] codes) =>
         codes
             .Where(c => !string.IsNullOrWhiteSpace(c.Value))
-            .Select(c => new Fact(c.Label, c.Value!.Trim(), Copy: true));
+            .Select(c => new Fact(c.Label, c.Value!.Trim()));
 
     private static async Task<IResult> Handle(
         string kind,

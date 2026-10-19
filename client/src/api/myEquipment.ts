@@ -61,8 +61,6 @@ export interface EquipmentFact {
     value: string;
     /** The inventory number of what the value names, shown muted beside it. */
     number: number | null;
-    /** A code someone would paste into a ticket. */
-    copy: boolean;
     /** On the date a warranty or a subscription expires on, how it stands: shown as a pill, in full. */
     standing: Standing | null;
 }

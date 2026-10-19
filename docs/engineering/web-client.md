@@ -110,7 +110,7 @@ phones come first, then by type, make and model, alike things by inventory numbe
 
 **The codes stay off the cards**: a card opens a panel beside the page — over it on a phone, beneath
 the bar — headed "For the help desk" ("What to tell IT" in capitals read as "it"): the device's name,
-inventory, serial, model and warranty numbers, each with a copy button on hover, its location, the apps
+inventory, serial, model and warranty numbers, its location, the apps
 on it with their licenses, and the maintenance contract's who to call; a license's vendor and term; a
 seat's software and license, and when it began. Captions are smaller and lighter than their values, on
 the value's baseline, so the values are what reads down the column. A date is a value like the rest,

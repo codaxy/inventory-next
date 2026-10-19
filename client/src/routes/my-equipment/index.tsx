@@ -1,7 +1,6 @@
 import { createFunctionalComponent, expr, hasValue, truthy } from "cx/ui";
 import { Icon, Repeater, Switch, TextField } from "cx/widgets";
 
-import { copyButton } from "../../components/copyButton";
 import { documentTitle } from "../../components/documentTitle";
 import type Controller from "./Controller";
 import ControllerClass from "./Controller";
@@ -282,9 +281,6 @@ export default createFunctionalComponent(() => (
                                         visible={hasValue(m.$fact.number)}
                                         text={m.$fact.number}
                                     />
-                                    <span visible={truthy(m.$fact.copy)} class="mine-copy">
-                                        {copyButton(m.$fact.value, "value")}
-                                    </span>
                                 </dd>
                             </div>
                         </Repeater>

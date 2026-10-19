@@ -590,7 +590,7 @@
         color: var(--color-ink-label);
     }
 
-    // A row of its own so the copy button centres on the value, however the value wraps.
+    // A row of its own so the muted number centres on the value, however the value wraps.
     dd {
         display: flex;
         flex-wrap: wrap;
@@ -602,22 +602,6 @@
         > span {
             min-width: 0;
         }
-    }
-}
-
-// The copy button shows while the pointer is over its row, as a list cell's does; a touch screen,
-// with no hover, selects the text instead.
-.mine-copy {
-    display: inline-flex;
-
-    .copy-button {
-        margin: -3px 0 -3px 0.25rem;
-    }
-}
-
-@media (hover: hover) and (pointer: fine) {
-    .mine-fact:hover .mine-copy .copy-button {
-        display: inline-grid;
     }
 }
 
