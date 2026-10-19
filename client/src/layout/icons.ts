@@ -180,7 +180,7 @@ const thingIcons = {
     thingLaptop: LaptopIcon,
     thingDesktop: PcCaseIcon,
     thingParts: Shapes01Icon,
-    thingMonitor: Tv02Icon,
+    thingTv: Tv02Icon,
     thingDock: UsbConnected02Icon,
     thingHeadset: HeadsetIcon,
     thingEarbuds: HeadphonesIcon,

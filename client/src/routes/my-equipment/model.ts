@@ -133,7 +133,6 @@ const ranks: Partial<Record<IconName, number>> = {
     thingDesktop: 1,
     thingPhone: 2,
     thingTablet: 3,
-    thingMonitor: 4,
 };
 
 /**

@@ -21,7 +21,9 @@ public static class TypeIcons
         "laptop",
         "desktop",
         "parts",
+        // Drawn as the generic icon; still valid, since types carry it.
         "monitor",
+        "tv",
         "dock",
         "hub",
         "headset",
