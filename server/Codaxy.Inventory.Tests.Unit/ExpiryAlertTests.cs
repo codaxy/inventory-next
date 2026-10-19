@@ -65,10 +65,10 @@ public class ExpiryAlertTests
     ) => Assert.Equal(problem, ExpiryAlertSettings.Lead.Accept(Json(new { amount, unit })).Problem);
 
     [Fact]
-    public void The_lead_is_two_months_and_nobody_receives_alerts_by_default()
+    public void The_lead_is_two_months_and_the_administrators_receive_alerts_by_default()
     {
         Assert.Equal(new AlertLead(2, "months"), ExpiryAlertSettings.Lead.Default);
-        Assert.Empty(ExpiryAlertSettings.Recipients.Default);
+        Assert.Equal(["admin@codaxy.com"], ExpiryAlertSettings.Recipients.Default);
     }
 
     [Theory]
@@ -92,37 +92,26 @@ public class ExpiryAlertTests
 
     private static readonly Guid Rider = Guid.CreateVersion7();
     private static readonly Guid Laptop = Guid.CreateVersion7();
+    private static readonly Disposal Otpis = new(Guid.CreateVersion7(), "Otpis");
 
-    private static DueAlert Subscription(
-        DateOnly date,
-        bool renews = false,
-        string? disposedAt = null
-    ) => new(Rider, DueKind.Subscription, "Rider", 100875, date, renews, disposedAt);
+    private static DueAlert Subscription(DateOnly date, bool renews = false) =>
+        new(Rider, DueKind.Subscription, "Rider", 100875, date, renews, null);
 
-    private static DueAlert Warranty(DateOnly date, string? disposedAt = null) =>
+    private static DueAlert Warranty(DateOnly date, Disposal? disposedAt = null) =>
         new(Laptop, DueKind.Warranty, "lap-dub-gc", 100893, date, false, disposedAt);
 
-    private static (string Subject, string Body) Compose(string url, params DueAlert[] due) =>
+    private static AlertEmail Compose(string url, params DueAlert[] due) =>
         ExpiryAlertMessage.Compose(due, Today, new AlertLead(2, "months"), url);
 
     [Fact]
-    public void One_record_is_named_in_the_subject()
+    public void The_subject_counts_what_ends_by_kind()
     {
         Assert.Equal(
-            "Rider #100875: subscription expires on 19 Dec 2026",
-            Compose("", Subscription(new(2026, 12, 19))).Subject
-        );
-        Assert.Equal(
-            "lap-dub-gc #100893: warranty ends on 2 Nov 2026",
+            "Expiry alert: 1 warranty ending",
             Compose("", Warranty(new(2026, 11, 2))).Subject
         );
-    }
-
-    [Fact]
-    public void Several_are_counted_by_kind_in_the_subject()
-    {
         Assert.Equal(
-            "2 subscriptions and 1 warranty ending",
+            "Expiry alert: 2 subscriptions and 1 warranty ending",
             Compose(
                 "",
                 Subscription(Today),
@@ -131,7 +120,7 @@ public class ExpiryAlertTests
             ).Subject
         );
         Assert.Equal(
-            "2 warranties ending",
+            "Expiry alert: 2 warranties ending",
             Compose("", Warranty(Today), Warranty(Today.AddDays(1))).Subject
         );
     }
@@ -139,51 +128,118 @@ public class ExpiryAlertTests
     [Fact]
     public void Each_record_says_when_it_ends_counted_from_today()
     {
-        var body = Compose(
+        var email = Compose(
             "",
             Subscription(Today),
             Warranty(Today.AddDays(1)),
             Subscription(Today.AddDays(61))
-        ).Body;
+        );
 
-        Assert.StartsWith("Ending within 2 months:\n", body);
-        Assert.Contains("Rider #100875\nSubscription expires on 19 Oct 2026, today.\n", body);
-        Assert.Contains("lap-dub-gc #100893\nWarranty ends on 20 Oct 2026, tomorrow.\n", body);
-        Assert.Contains("Subscription expires on 19 Dec 2026, in 61 days.\n", body);
+        Assert.StartsWith(
+            "2 subscriptions and 1 warranty ending\n\nThese end within the next 2 months.\n",
+            email.Text
+        );
+        Assert.Contains(
+            "Rider #100875\nSubscription expires on 19 Oct 2026 (today).\n",
+            email.Text
+        );
+        Assert.Contains(
+            "lap-dub-gc #100893\nWarranty ends on 20 Oct 2026 (tomorrow).\n",
+            email.Text
+        );
+        Assert.Contains("Subscription expires on 19 Dec 2026 (in 61 days).\n", email.Text);
+        Assert.Contains(">2 subscriptions and 1 warranty ending</h1>", email.Html);
+        Assert.Contains(">These end within the next 2 months.</p>", email.Html);
+        Assert.Contains("Subscription expires on 19 Dec 2026 (in 61 days).", email.Html);
     }
 
     [Fact]
     public void Says_a_subscription_renews_automatically_and_where_a_disposed_asset_is()
     {
-        var body = Compose(
-            "",
-            Subscription(Today, renews: true),
-            Warranty(Today, disposedAt: "Otpis")
-        ).Body;
+        var email = Compose("", Subscription(Today, renews: true), Warranty(Today, Otpis));
 
-        Assert.Contains("Renews automatically on that date unless it is cancelled.\n", body);
-        Assert.Contains("Disposed of, at Otpis.\n", body);
+        Assert.Contains("Renews automatically on that date unless it is cancelled.\n", email.Text);
+        Assert.Contains("Disposed of, at Otpis.\n", email.Text);
+        Assert.Contains("Renews automatically on that date unless it is cancelled.", email.Html);
+        Assert.Contains("Disposed of, at Otpis.", email.Html);
     }
 
     [Fact]
-    public void Links_each_record_only_where_the_application_s_address_is_known()
+    public void Links_each_record_its_disposal_location_and_the_application()
     {
-        var linked = Compose(
+        var email = Compose(
             "https://inventory.codaxy.com/",
             Subscription(Today),
-            Warranty(Today)
-        ).Body;
+            Warranty(Today, Otpis)
+        );
 
-        Assert.Contains($"https://inventory.codaxy.com/licenses/{Rider}\n", linked);
-        Assert.Contains($"https://inventory.codaxy.com/electronic-devices/{Laptop}\n", linked);
-        Assert.DoesNotContain("http", Compose("", Subscription(Today)).Body);
+        Assert.Contains($"https://inventory.codaxy.com/licenses/{Rider}\n", email.Text);
+        Assert.Contains($"https://inventory.codaxy.com/electronic-devices/{Laptop}\n", email.Text);
+        Assert.Contains($"href=\"https://inventory.codaxy.com/licenses/{Rider}\"", email.Html);
+        Assert.Contains(
+            $"href=\"https://inventory.codaxy.com/electronic-devices/{Laptop}\"",
+            email.Html
+        );
+        Assert.Contains(
+            $"href=\"https://inventory.codaxy.com/company/locations/{Otpis.LocationId}\"",
+            email.Html
+        );
+        Assert.Contains("href=\"https://inventory.codaxy.com/\"", email.Html);
     }
+
+    [Fact]
+    public void Links_nothing_where_the_application_s_address_is_not_known()
+    {
+        var email = Compose("", Subscription(Today), Warranty(Today, Otpis));
+
+        Assert.DoesNotContain("http", email.Text);
+        Assert.DoesNotContain("href", email.Html);
+    }
+
+    [Fact]
+    public void Sets_the_page_and_its_text_together_for_a_light_and_a_dark_theme()
+    {
+        var html = Compose("", Subscription(Today)).Html;
+
+        Assert.Contains("<meta name=\"color-scheme\" content=\"light dark\">", html);
+        Assert.Contains(".card { background: #ffffff; color: #101a2b; }", html);
+        Assert.Contains(
+            ".card { background: #1b1f27 !important; color: #e7eaf0 !important; }",
+            html
+        );
+        // Inline, a colour would hold in a dark theme too, where the stylesheet cannot undo it.
+        Assert.DoesNotMatch("<body[^>]*(color|background)", html);
+    }
+
+    [Fact]
+    public void One_record_is_it()
+    {
+        var email = Compose("", Warranty(Today));
+
+        Assert.StartsWith("1 warranty ending\n\nIt ends within the next 2 months.\n", email.Text);
+    }
+
+    [Fact]
+    public void Ends_with_who_sent_it()
+    {
+        var email = Compose("", Subscription(Today));
+
+        Assert.EndsWith("\nSent by Inventory\n", email.Text);
+        Assert.Contains(">Sent by Inventory</td>", email.Html);
+    }
+
+    [Fact]
+    public void Names_are_escaped_in_the_html() =>
+        Assert.Contains(
+            "R&amp;D &lt;tools&gt;",
+            Compose("", Subscription(Today) with { Name = "R&D <tools>" }).Html
+        );
 
     [Fact]
     public void A_record_without_a_number_is_named_alone() =>
-        Assert.Equal(
-            "Rider: subscription expires on 19 Oct 2026",
-            Compose("", Subscription(Today) with { Number = null }).Subject
+        Assert.Contains(
+            "\nRider\nSubscription expires",
+            Compose("", Subscription(Today) with { Number = null }).Text
         );
 
     private static JsonElement Json(object value) => JsonSerializer.SerializeToElement(value);

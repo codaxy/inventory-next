@@ -58,7 +58,7 @@ public static class Endpoint
                     "Your Inventory sign-in code",
                     $"Your sign-in code is {code}. It is valid for "
                         + $"{options.Value.OneTimeCode.Validity.TotalMinutes:0} minutes.",
-                    cancellation
+                    cancellation: cancellation
                 );
         }
         else

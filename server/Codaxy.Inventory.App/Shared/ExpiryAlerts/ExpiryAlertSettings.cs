@@ -25,12 +25,12 @@ public sealed record AlertLead(int Amount, string Unit)
 public static partial class ExpiryAlertSettings
 {
     /// <summary>
-    /// The addresses every alert goes to, in one email; none, nothing is sent. Stored trimmed,
-    /// lower-case, once each.
+    /// The addresses every alert goes to, in one email — Codaxy's administrators by default; none,
+    /// nothing is sent. Stored trimmed, lower-case, once each.
     /// </summary>
     public static readonly SettingDefinition<string[]> Recipients = new(
         "alerts.recipients",
-        [],
+        ["admin@codaxy.com"],
         addresses =>
             addresses.FirstOrDefault(a => !Address().IsMatch(a)) is { } wrong
                 ? $"\"{wrong}\" is not an email address."

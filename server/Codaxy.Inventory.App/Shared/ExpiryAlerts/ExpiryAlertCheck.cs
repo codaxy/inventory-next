@@ -36,13 +36,14 @@ public sealed class ExpiryAlertCheck(
         if (due.Count == 0)
             return 0;
 
-        var (subject, body) = ExpiryAlertMessage.Compose(
-            due,
-            today,
-            lead,
-            options.Value.ApplicationUrl
+        var message = ExpiryAlertMessage.Compose(due, today, lead, options.Value.ApplicationUrl);
+        await email.SendAsync(
+            recipients,
+            message.Subject,
+            message.Text,
+            message.Html,
+            cancellationToken
         );
-        await email.SendAsync(recipients, subject, body, cancellationToken);
 
         var now = clock.GetUtcNow();
         context.ExpiryAlerts.AddRange(
@@ -89,7 +90,7 @@ public sealed class ExpiryAlertCheck(
                 l.SubscriptionExpirationDate!.Value,
                 l.AutoRenew == true,
                 l.Asset.Location != null && l.Asset.Location.IsDisposal
-                    ? l.Asset.Location.Name
+                    ? new Disposal(l.Asset.Location.Id, l.Asset.Location.Name)
                     : null
             ))
             .ToListAsync(cancellationToken);
@@ -111,7 +112,7 @@ public sealed class ExpiryAlertCheck(
                 d.WarrantyExpirationDate!.Value,
                 false,
                 d.Asset.Location != null && d.Asset.Location.IsDisposal
-                    ? d.Asset.Location.Name
+                    ? new Disposal(d.Asset.Location.Id, d.Asset.Location.Name)
                     : null
             ))
             .ToListAsync(cancellationToken);

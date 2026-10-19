@@ -183,8 +183,16 @@ and throws under a culture it does not ship; not EPPlus, licensed commercially.
 columns, then the record's own fields, names resolved and counts kept; its file is `<List>.Export`,
 the list's name without spaces.
 
-**Mail is `Shared/Email/IEmailSender`**, one message to every recipient — a failure then sends to
-none rather than some — implemented in `Web` over SMTP (`Smtp:*`).
+**Mail is `Shared/Email/IEmailSender`**, one message to every recipient — a failure then sends to none
+rather than some — plain text, with an HTML version where there is one, implemented in `Web` over SMTP
+(`Smtp:*`). **An email reads as a notification, not a newsletter**: one white card on a grey page
+under a thin bar in Inventory's violet, the mark and a heading that says what happened, then the
+content and the sender beneath — no dark banner, imagery or call to action, which read as an
+advertisement and get skipped; the heading is the greeting. **The page, the card and their text are
+coloured together**, a light set and a dark one by `prefers-color-scheme`, in the stylesheet and never
+inline: a client that follows a dark theme for the text but keeps its own white behind it showed white
+on white, and an inline colour cannot be undone in a dark theme. Every name with a page links to it;
+the plain text says the same, a page's address on a line of its own.
 
 **Expiry alerts are a check, not a schedule** (`Shared/ExpiryAlerts`): a hosted worker in `Web` runs
 `ExpiryAlerts.SendDueAsync` at start and every `ExpiryAlerts:Interval`, which reads the settings and the

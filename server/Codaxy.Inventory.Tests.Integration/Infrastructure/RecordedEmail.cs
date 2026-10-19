@@ -3,7 +3,7 @@ using Codaxy.Inventory.App.Shared.Email;
 
 namespace Codaxy.Inventory.Tests.Integration.Infrastructure;
 
-public sealed record SentEmail(IReadOnlyList<string> To, string Subject, string Body);
+public sealed record SentEmail(IReadOnlyList<string> To, string Subject, string Body, string? Html);
 
 /// <summary>Holds what would have been sent, so a test can read the code out of it.</summary>
 public sealed class RecordingEmailSender : IEmailSender
@@ -17,13 +17,14 @@ public sealed class RecordingEmailSender : IEmailSender
         IReadOnlyList<string> to,
         string subject,
         string body,
+        string? html = null,
         CancellationToken cancellation = default
     )
     {
         if (Failing)
             throw new IOException("The relay is down.");
 
-        sent.Enqueue(new(to, subject, body));
+        sent.Enqueue(new(to, subject, body, html));
         return Task.CompletedTask;
     }
 

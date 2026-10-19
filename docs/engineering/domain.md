@@ -115,7 +115,8 @@ months, two months by default — and not yet past. No record has a switch: what
 alerted, a license with no seats in use too. **Once per date**: a sent alert is recorded against the
 asset and the date, so a date that moves alerts again, and one entered inside the lead alerts at the
 next check. **The email says what changes the reading** — a subscription that renews automatically,
-and an asset at a disposal location, named. With no addresses, nothing is sent and nothing recorded.
+and an asset at a disposal location, named. The addresses are `admin@codaxy.com` until an
+administrator changes them; with none, nothing is sent and nothing recorded.
 
 ## Codebooks
 

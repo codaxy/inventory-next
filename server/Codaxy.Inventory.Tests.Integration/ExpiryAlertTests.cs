@@ -220,6 +220,7 @@ public class ExpiryAlertTests(ExpiryAlertApplication app) : IClassFixture<Expiry
 
         Assert.Contains($"{ExpiryAlertApplication.Url}/licenses/{license}", email!.Body);
         Assert.Contains($"{ExpiryAlertApplication.Url}/electronic-devices/{device}", email.Body);
+        Assert.Contains($"href=\"{ExpiryAlertApplication.Url}/licenses/{license}\"", email.Html);
     }
 
     [Fact]

@@ -13,14 +13,15 @@ public sealed class SmtpEmailSender(IOptions<SmtpOptions> options) : IEmailSende
     public async Task SendAsync(
         IReadOnlyList<string> to,
         string subject,
-        string body,
+        string text,
+        string? html = null,
         CancellationToken cancellation = default
     )
     {
         var message = new MimeMessage
         {
             Subject = subject,
-            Body = new TextPart("plain") { Text = body },
+            Body = new BodyBuilder { TextBody = text, HtmlBody = html }.ToMessageBody(),
         };
 
         message.From.Add(MailboxAddress.Parse(options.From));
