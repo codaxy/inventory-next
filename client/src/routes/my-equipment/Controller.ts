@@ -14,6 +14,7 @@ import m, {
     searchFrom,
     shown,
     sortCards,
+    tileTone,
     toCard,
 } from "./model";
 
@@ -189,7 +190,7 @@ export default class extends Controller {
             loading: true,
             kind: card.kind,
             icon: card.icon,
-            tone: card.kind !== "device" && card.status === "ended" ? "expired" : card.tone,
+            tone: tileTone(card.tone, card.kind, card.status, card.gone),
             title: card.title,
             subtitle: card.subtitle,
         });

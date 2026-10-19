@@ -367,17 +367,8 @@
     }
 }
 
-// Written off or sold: the whole card pale, its pill saying where it went.
-.mine-card-gone {
-    box-shadow: none;
-    background: var(--color-raised);
-    opacity: 0.55;
-
-    &:hover {
-        opacity: 0.85;
-    }
-}
-
+// Written off or sold: shown only when asked for, so not faded — a grey icon (`tileTone`), last in its
+// section, its pill saying where it went.
 .mine-standing-gone {
     padding-left: 0.5rem;
     background: var(--color-line-soft);

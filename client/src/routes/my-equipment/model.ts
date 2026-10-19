@@ -180,6 +180,14 @@ const ranks: Partial<Record<IconName, number>> = {
     thingMonitor: 4,
 };
 
+/**
+ * The tint of a card's icon: grey for what no longer works or is no longer theirs to use — an expired
+ * activation or license, anything retired — else its section's. A device's expired warranty is no such
+ * thing: it works on.
+ */
+export const tileTone = (tone: Tone, kind: ThingKind, status?: string, gone?: string) =>
+    gone || (kind !== "device" && status === "ended") ? "expired" : tone;
+
 export type Searchable = Card & { search: string };
 
 export function toCard(t: EquipmentThing, tone: Tone): Searchable {

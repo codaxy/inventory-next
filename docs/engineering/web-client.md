@@ -124,7 +124,8 @@ search, which shows every match. **What was written off or sold is hidden** unti
 search includes it: "Include retired (3)" — "include", since the counts change with it; what counts is
 the data's, a disposal location, so the label names no location, each card's pill does, and "retired"
 covers written off and sold alike. Remembered per browser. With it, such things come last in their
-sections, pale, with a seat on such a device and the greeting's and the sections' counts; they warn of
+sections — not faded, since they were asked for, but with a grey icon (`tileTone`, as an expired
+activation's) — with a seat on such a device and the greeting's and the sections' counts; they warn of
 nothing either way.
 
 **The icons are a guess, and a known gap.** `thingIcon` matches keywords against the type's name, a

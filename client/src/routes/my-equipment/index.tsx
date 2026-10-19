@@ -5,7 +5,7 @@ import { copyButton } from "../../components/copyButton";
 import { documentTitle } from "../../components/documentTitle";
 import type Controller from "./Controller";
 import ControllerClass from "./Controller";
-import m from "./model";
+import m, { tileTone } from "./model";
 
 const d = m.mine;
 const s = m.$section;
@@ -136,7 +136,7 @@ export default createFunctionalComponent(() => (
                         <Repeater records={s.cards} recordAlias={c} keyField="key">
                             <button
                                 type="button"
-                                class={{ "mine-card": true, "mine-card-gone": hasValue(c.gone) }}
+                                class="mine-card"
                                 onClick={(_e: unknown, { store, controller }: any) =>
                                     (controller as Controller).open(store.get(c))
                                 }
@@ -147,10 +147,9 @@ export default createFunctionalComponent(() => (
                                             c.tone,
                                             c.kind,
                                             c.status,
-                                            // An expired activation or license greys its icon, as
-                                            // everywhere else it shows; a device's stays its own.
-                                            (tone, kind, status) =>
-                                                `mine-thing mine-thing-${kind !== "device" && status === "ended" ? "expired" : tone}`,
+                                            c.gone,
+                                            (tone, kind, status, gone) =>
+                                                `mine-thing mine-thing-${tileTone(tone, kind, status, gone)}`,
                                         )}
                                     >
                                         <Icon name={c.icon} />
