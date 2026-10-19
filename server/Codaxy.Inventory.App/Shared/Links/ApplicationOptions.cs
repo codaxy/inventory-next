@@ -9,6 +9,9 @@ public sealed class ApplicationOptions
     /// </summary>
     public string ApplicationUrl { get; set; } = "";
 
+    /// <summary>The application's front page, or null without its address.</summary>
+    public string? Home => ApplicationUrl == "" ? null : $"{ApplicationUrl.TrimEnd('/')}/";
+
     public string? Problem =>
         ApplicationUrl != ""
         && !(

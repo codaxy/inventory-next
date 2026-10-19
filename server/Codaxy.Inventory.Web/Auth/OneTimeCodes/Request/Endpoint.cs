@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Codaxy.Inventory.App.Shared.Email;
+using Codaxy.Inventory.App.Shared.Links;
 using Codaxy.Inventory.App.Shared.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -23,6 +24,7 @@ public static class Endpoint
     private static async Task<IResult> Handle(
         [FromBody] Body request,
         IOptions<AuthOptions> options,
+        IOptions<ApplicationOptions> application,
         SignInPolicy policy,
         IOneTimeCodeStore codes,
         IEmailSender email,
@@ -53,13 +55,20 @@ public static class Endpoint
             var code = codes.Issue(request.Email);
 
             if (code is not null)
+            {
+                var message = CodeEmails.Compose(
+                    code,
+                    options.Value.OneTimeCode.Validity,
+                    application.Value.Home
+                );
                 await email.SendAsync(
                     [request.Email],
-                    "Your Inventory sign-in code",
-                    $"Your sign-in code is {code}. It is valid for "
-                        + $"{options.Value.OneTimeCode.Validity.TotalMinutes:0} minutes.",
-                    cancellation: cancellation
+                    message.Subject,
+                    message.Text,
+                    message.Html,
+                    cancellation
                 );
+            }
         }
         else
         {
