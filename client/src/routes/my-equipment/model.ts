@@ -1,0 +1,283 @@
+import { createModel } from "cx/ui";
+
+import type {
+    EquipmentThing,
+    EquipmentWarning,
+    MyEquipment,
+    Standing,
+    ThingKind,
+} from "../../api/myEquipment";
+import type { IconName } from "../../layout/icons";
+import { formatDate } from "../../licensing";
+
+/** Each section's own tint, carried by its cards' icons. */
+export type Tone = "device" | "furniture" | "software";
+
+export interface Card {
+    key: string;
+    kind: ThingKind;
+    id: string;
+    icon: IconName;
+    tone: Tone;
+    /** "Written off", "Sold": still theirs on paper, shown last and pale. */
+    gone?: string;
+    /** "#100631", under the icon: the number IT asks for, and what tells two alike apart. */
+    number?: string;
+    title: string;
+    subtitle?: string;
+    status?: Standing;
+    statusText?: string;
+    apps: { key: string; name: string; status?: string; statusText?: string }[];
+}
+
+export interface Section {
+    key: "devices" | "furniture" | "software" | "licenses";
+    title: string;
+    count: number;
+    cards: Card[];
+    /** "Show all 375", while some are held back. */
+    more?: string;
+    /** Opened past its first few, and so closable again: "Show fewer". */
+    fewer: boolean;
+}
+
+export interface Fact {
+    label: string;
+    value: string;
+    number?: string;
+    copy: boolean;
+    standing?: Standing;
+}
+
+export interface Panel {
+    open: boolean;
+    loading: boolean;
+    error?: string;
+    kind?: ThingKind;
+    icon?: IconName;
+    tone?: Tone;
+    title?: string;
+    subtitle?: string;
+    status?: Standing;
+    statusText?: string;
+    facts: Fact[];
+    contracts: string[];
+    apps: { name: string; license: string; ends?: string }[];
+}
+
+export interface Notice {
+    key: string;
+    text: string;
+}
+
+export interface Model {
+    mine: {
+        loading: boolean;
+        loaded: boolean;
+        error?: string;
+        initials?: string;
+        /** "Hi, Abigail." */
+        greeting?: string;
+        /** "3 devices · 1 piece of furniture · 1 license activation" */
+        summary?: string;
+        notices: Notice[];
+        /** "Show 4 more", past the first few notices. */
+        moreNotices?: string;
+        /** Every notice shown. */
+        noticesAll?: boolean;
+        /** Only for someone holding enough to need it. */
+        searchable: boolean;
+        /** Whether the written-off and the sold are shown: off unless the reader turns it on. */
+        includeGone: boolean;
+        /** How many of their things were written off or sold; no switch without any. */
+        goneCount: number;
+        /** Everything of theirs went, and the switch hides it. */
+        onlyGone: boolean;
+        q?: string | null;
+        sections: Section[];
+        /** No card matches the search. */
+        nothingFound: boolean;
+        empty: boolean;
+        panel: Panel;
+    };
+    $section: Section;
+    $card: Card;
+    $app: Card["apps"][number];
+    $notice: Notice;
+    $fact: Fact;
+    $contract: string;
+    $panelApp: Panel["apps"][number];
+}
+
+export default createModel<Model>();
+
+/** Cards a section shows before "Show all": four rows of three. */
+export const shown = 12;
+
+/** Notices shown before "Show more". */
+export const noticesShown = 3;
+
+/** Above this many things, a search. */
+export const searchFrom = 20;
+
+/**
+ * An icon by the recorded type, the first match winning; the furniture types are recorded in the
+ * office's own language. Anything unmatched gets its section's generic one.
+ */
+const deviceIcons: [RegExp, IconName][] = [
+    [/laptop|notebook/, "thingLaptop"],
+    [/desktop|computer|\bpc\b/, "thingDesktop"],
+    [/monitor|display|screen|\btv\b/, "thingMonitor"],
+    [/dock|hub|usb/, "thingDock"],
+    [/headset/, "thingHeadset"],
+    [/earbud|headphone/, "thingEarbuds"],
+    [/keyboard/, "thingKeyboard"],
+    [/mouse/, "thingMouse"],
+    [/webcam/, "thingWebcam"],
+    [/camera|cctv/, "thingCamera"],
+    // Before "phone", which "microphone" holds.
+    [/microphone/, "thingMicrophone"],
+    [/phone/, "thingPhone"],
+    [/tablet|pencil/, "thingTablet"],
+    [/print|mfp|copier|scanner|fax/, "thingPrinter"],
+    [/access point|wi-?fi/, "thingWifi"],
+    [/firewall/, "thingFirewall"],
+    [/router|switch|gateway|modem|bridge|kvm/, "thingRouter"],
+    [/server|rack|storage/, "thingServer"],
+    [/speaker/, "thingSpeaker"],
+    [/\bups\b|power/, "thingPower"],
+    [/drive|ssd|hdd/, "thingStorage"],
+    [/console|\bvr\b/, "thingConsole"],
+    [/projector|prezenter|presenter/, "thingProjector"],
+];
+
+const furnitureIcons: [RegExp, IconName][] = [
+    [/stolica|chair/, "thingChair"],
+    [/fotelja|armchair/, "thingArmchair"],
+    [/trosjed|garnitura|sofa|couch/, "thingSofa"],
+    [/komoda|dresser/, "thingDresser"],
+    [/ladičar|ladicar|drawer/, "thingDrawers"],
+    [/ormar|wardrobe|cabinet/, "thingWardrobe"],
+    [/poličar|policar|shel/, "thingShelf"],
+    [/radni sto|desk/, "thingDesk"],
+    [/stolić|stolic|\bsto\b|table/, "thingTable"],
+];
+
+function thingIcon(t: EquipmentThing): IconName {
+    if (t.kind === "license") return "thingLicense";
+    if (t.kind === "seat") return "thingApp";
+    const type = (t.type ?? "").toLowerCase();
+    const table = t.kind === "device" ? deviceIcons : furnitureIcons;
+    const fallback: IconName = t.kind === "device" ? "thingDevice" : "thingChair";
+    return table.find(([pattern]) => pattern.test(type))?.[1] ?? fallback;
+}
+
+/** Computers and phones first — what someone thinks of as theirs — then as the server ordered them. */
+const ranks: Partial<Record<IconName, number>> = {
+    thingLaptop: 0,
+    thingDesktop: 1,
+    thingPhone: 2,
+    thingTablet: 3,
+    thingMonitor: 4,
+};
+
+export type Searchable = Card & { search: string };
+
+export function toCard(t: EquipmentThing, tone: Tone): Searchable {
+    return {
+        key: `${t.kind}-${t.id}`,
+        kind: t.kind,
+        id: t.id,
+        icon: thingIcon(t),
+        tone,
+        // A seat's number is its license's, not a thing of theirs.
+        number: t.kind !== "seat" && t.number ? `#${t.number}` : undefined,
+        gone: t.gone ?? undefined,
+        title: t.title,
+        subtitle: t.subtitle ?? undefined,
+        status: t.status ?? undefined,
+        statusText: t.statusText ?? undefined,
+        apps: t.apps.map((a) => ({
+            key: a.id,
+            name: a.name,
+            status: a.status ?? undefined,
+            statusText: a.statusText ?? undefined,
+        })),
+        search: [t.title, t.subtitle, t.name, t.number, t.serial, ...t.apps.map((a) => a.name)]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase(),
+    };
+}
+
+/** What they have before what went; among each, computers and phones first. */
+export const sortCards = (cards: Searchable[]) =>
+    [...cards].sort(
+        (a, b) => Number(!!a.gone) - Number(!!b.gone) || (ranks[a.icon] ?? 9) - (ranks[b.icon] ?? 9),
+    );
+
+const count = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+
+/**
+ * The greeting, and what they hold by kind — counted as the page shows it, so the written-off and the
+ * sold count only while they are shown.
+ */
+export function hello(name: string, counts: Partial<Record<Section["key"], number>>) {
+    const first = name.split(" ")[0] || name;
+    const { devices = 0, furniture = 0, software = 0, licenses = 0 } = counts;
+    const parts = [
+        devices ? count(devices, "device", "devices") : undefined,
+        furniture ? count(furniture, "piece of furniture", "pieces of furniture") : undefined,
+        software ? count(software, "license activation", "license activations") : undefined,
+        licenses ? count(licenses, "license", "licenses") : undefined,
+    ].filter(Boolean);
+    return {
+        initials: name
+            .split(/\s+/)
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((w) => w[0]!.toUpperCase())
+            .join(""),
+        greeting: `Hi, ${first}.`,
+        summary: parts.length ? parts.join(" · ") : undefined,
+    };
+}
+
+/** "Laptop" reads "laptop" mid-sentence; "MFP" or "HUB" stays as it is. */
+const lower = (s: string) => (/^[A-Z][a-z]/.test(s) ? s[0]!.toLowerCase() + s.slice(1) : s);
+
+/** "laptops", "switches", "mice": enough English for the kinds of device recorded. */
+const plural = (s: string) =>
+    /mouse$/i.test(s) ? s.replace(/ouse$/i, "ice") : /(s|x|ch|sh)$/i.test(s) ? `${s}es` : `${s}s`;
+
+/**
+ * What ends soon, in plain sentences: "Your laptop's warranty expires on 3 Nov 2026." A device is
+ * named by what it is, as on its card; a subscription by the software it serves. Several alike ending
+ * the same day are one sentence — "The warranties on 2 of your wireless access points expire on
+ * 3 Nov 2026.", "2 Rider subscriptions expire on 8 Feb 2027." — not the same sentence twice. What has
+ * ended is no news here: its card says so.
+ */
+export function notices(warnings: EquipmentWarning[], devices: EquipmentThing[]): Notice[] {
+    const grouped = new Map<string, { w: EquipmentWarning; what?: string; n: number }>();
+    for (const w of warnings) {
+        const device = w.kind === "warranty" ? devices.find((d) => d.id === w.id) : undefined;
+        const what =
+            w.kind === "subscription" ? (w.uses ?? w.name) : device?.type ? lower(device.title) : undefined;
+        const key = what ? `${w.kind}|${what}|${w.date}` : `${w.kind}-${w.id}`;
+        const group = grouped.get(key);
+        if (group) group.n++;
+        else grouped.set(key, { w, what, n: 1 });
+    }
+    return [...grouped.entries()].map(([key, { w, what, n }]) => {
+        const day = formatDate(w.date);
+        let text: string;
+        if (w.kind === "subscription")
+            text =
+                n > 1
+                    ? `${n} ${what} subscriptions expire on ${day}.`
+                    : `${w.uses ? `The ${w.uses} subscription` : `Your ${w.name} subscription`} expires on ${day}.`;
+        else if (n > 1) text = `The warranties on ${n} of your ${plural(what!)} expire on ${day}.`;
+        else text = `${what ? `Your ${what}'s` : `${w.name}'s`} warranty expires on ${day}.`;
+        return { key, text };
+    });
+}

@@ -49,11 +49,12 @@ default, the master switch), a person whose email matches the address, trimmed a
 and who may sign in (`Person.CanSignIn`) gets a session of their own: "My equipment", nothing else.
 **`UserAccess.MaySignInAsync` is the one answer** — for a code, for Google, and for the cookie on
 every request, so turning either off ends a session on the next one. **A person's session holds no
-permission**: `CurrentAsync` is a user's access only, so every `/api` endpoint refuses it with no
-exception to keep. `/api/auth/me` says which kind is signed in. **`CanSignIn` is a decision about
-that person**, true for everyone until it is turned off — a leaver, a placeholder holder — and never
-derived from the setting, which would leave everyone added while it was off shut out once it is on
-for no reason anyone made.
+permission**: `CurrentAsync` is a user's access only, so every `/api` endpoint refuses it but one,
+`/api/my-equipment`, which answers a person's session alone and only about that person — the identity
+stands for the permission, and it is on the permission test's short list for that reason.
+`/api/auth/me` says which kind is signed in. **`CanSignIn` is a decision about that person**, true for
+everyone until it is turned off — a leaver, a placeholder holder — and never derived from the setting,
+which would leave everyone added while it was off shut out once it is on for no reason anyone made.
 
 **Someone who is not a user is told so only after proving the address** — "ask an administrator" on
 verifying a code, `/sign-in?error=no-access` from Google. Requesting a code still answers `204` for

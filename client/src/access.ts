@@ -46,6 +46,9 @@ export const myEquipment = "~/my-equipment";
 /** Whether the session is an employee's, not a user's. */
 export const isPerson = expr($app.session.user.kind, (kind) => kind === "person");
 
+/** Whether the session is a user's: anything but an employee's. */
+export const isUser = expr($app.session.user.kind, (kind) => kind !== "person");
+
 /** Where `~/` and sign-in land: an employee's own equipment, else the first item the reader can see. */
 export const landing = expr($app.session.user, (user) =>
     user?.kind === "person" ? myEquipment : landingFor(user?.permissions ?? []),

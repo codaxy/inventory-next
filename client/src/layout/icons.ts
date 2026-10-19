@@ -1,5 +1,4 @@
 import {
-    ConstructionIcon,
     LaptopIcon,
     MailSend01Icon,
     Settings01Icon,
@@ -49,6 +48,39 @@ import {
     UserIcon,
     UserLock01Icon,
     UserShield01Icon,
+    MonitorIcon,
+    UsbConnected02Icon,
+    HeadsetIcon,
+    HeadphonesIcon,
+    KeyboardIcon,
+    Mouse01Icon,
+    WebcamIcon,
+    Camera01Icon,
+    SmartPhone01Icon,
+    Tablet01Icon,
+    RouterIcon,
+    Wifi01Icon,
+    Shield01Icon,
+    ServerStack02Icon,
+    Speaker01Icon,
+    Mic01Icon,
+    PlugSocketIcon,
+    HardDriveIcon,
+    GamepadIcon,
+    ProjectorIcon,
+    Package01Icon,
+    SofaSingleIcon,
+    Sofa01Icon,
+    Cabinet01Icon,
+    Cabinet02Icon,
+    Cabinet03Icon,
+    Bookshelf01Icon,
+    Desk01Icon,
+    Table01Icon,
+    SoftwareLicenseIcon,
+    Alert02Icon,
+    ShieldCheckIcon,
+    ShieldOffIcon,
 } from "@hugeicons/core-free-icons";
 
 /**
@@ -106,7 +138,6 @@ const uiIcons = {
     recordHistory: Clock01Icon,
     created: Add01Icon,
     send: MailSend01Icon,
-    todo: ConstructionIcon,
     myEquipment: LaptopIcon,
     updated: PencilEdit01Icon,
     deleted: Delete02Icon,
@@ -125,7 +156,53 @@ const uiIcons = {
     reactivate: Undo02Icon,
 } satisfies Record<string, IconData>;
 
-export const icons = { ...navIcons, ...uiIcons };
+/**
+ * What an employee's things look like on their page, by kind of thing: picked from the recorded type
+ * by `thingIcon` in the page's model.
+ */
+const thingIcons = {
+    thingLaptop: LaptopIcon,
+    thingDesktop: ComputerIcon,
+    thingMonitor: MonitorIcon,
+    thingDock: UsbConnected02Icon,
+    thingHeadset: HeadsetIcon,
+    thingEarbuds: HeadphonesIcon,
+    thingKeyboard: KeyboardIcon,
+    thingMouse: Mouse01Icon,
+    thingWebcam: WebcamIcon,
+    thingCamera: Camera01Icon,
+    thingPhone: SmartPhone01Icon,
+    thingTablet: Tablet01Icon,
+    thingPrinter: PrinterIcon,
+    thingRouter: RouterIcon,
+    thingWifi: Wifi01Icon,
+    thingFirewall: Shield01Icon,
+    thingServer: ServerStack02Icon,
+    thingSpeaker: Speaker01Icon,
+    thingMicrophone: Mic01Icon,
+    thingPower: PlugSocketIcon,
+    thingStorage: HardDriveIcon,
+    thingConsole: GamepadIcon,
+    thingProjector: ProjectorIcon,
+    thingDevice: Package01Icon,
+    thingChair: Chair01Icon,
+    thingArmchair: SofaSingleIcon,
+    thingSofa: Sofa01Icon,
+    thingDresser: Cabinet01Icon,
+    thingDrawers: Cabinet02Icon,
+    thingWardrobe: Cabinet03Icon,
+    thingShelf: Bookshelf01Icon,
+    thingDesk: Desk01Icon,
+    thingTable: Table01Icon,
+    thingApp: AppStoreIcon,
+    thingLicense: SoftwareLicenseIcon,
+    attention: Alert02Icon,
+    covered: ShieldCheckIcon,
+    expiring: Shield01Icon,
+    expired: ShieldOffIcon,
+} satisfies Record<string, IconData>;
+
+export const icons = { ...navIcons, ...uiIcons, ...thingIcons };
 
 export type IconName = keyof typeof icons;
 export type NavIconName = keyof typeof navIcons;

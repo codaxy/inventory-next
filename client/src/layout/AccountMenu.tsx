@@ -18,50 +18,52 @@ const displayName = expr($app.session.user.name, $app.session.user.email, (name,
  *
  * `openOnFocus` is off so tabbing through the navigation does not pop the menu open.
  */
-export const AccountMenu = createFunctionalComponent(() => (
-    <cx>
-        <Menu class="account-menu">
-            <MenuItem
-                class="account-trigger"
-                openOnFocus={false}
-                placement="up"
-                dropdownOptions={{
-                    matchWidth: true,
-                    placementOrder: "up down",
-                    offset: 6,
-                    class: "account-dropdown",
-                }}
-            >
-                <div class="flex items-center gap-2.5">
-                    <div
-                        class="grid size-8 shrink-0 place-items-center rounded-full bg-nav-avatar text-[11px] font-bold text-nav-avatar-ink"
-                        text={expr($app.session.user.name, $app.session.user.email, (name, email) =>
-                            initials(name || email),
-                        )}
-                    />
-                    <div class="min-w-0 flex-1">
-                        <div class="truncate text-[13px] font-semibold text-nav-ink" text={displayName} />
+export const AccountMenu = createFunctionalComponent(
+    ({ placement = "up" }: { placement?: "up" | "down" }) => (
+        <cx>
+            <Menu class="account-menu">
+                <MenuItem
+                    class="account-trigger"
+                    openOnFocus={false}
+                    placement={placement}
+                    dropdownOptions={{
+                        matchWidth: true,
+                        placementOrder: placement === "up" ? "up down" : "down up",
+                        offset: 6,
+                        class: "account-dropdown",
+                    }}
+                >
+                    <div class="flex items-center gap-2.5">
                         <div
-                            class="truncate text-[11px] text-nav-ink-dim"
-                            text={expr($app.session.user, (u) => u?.role ?? "Employee")}
+                            class="grid size-8 shrink-0 place-items-center rounded-full bg-nav-avatar text-[11px] font-bold text-nav-avatar-ink"
+                            text={expr($app.session.user.name, $app.session.user.email, (name, email) =>
+                                initials(name || email),
+                            )}
                         />
-                    </div>
-                    <Icon name="accountMenu" class="account-chevron" />
-                </div>
-
-                <Menu putInto="dropdown">
-                    {/* Not a MenuItem, as the version below. */}
-                    <div class="account-email" text={$app.session.user.email} />
-                    <MenuItem class="account-action account-sign-out" onClick="onSignOut" autoClose>
-                        <div class="flex items-center gap-2.5">
-                            <Icon name="signOut" class="nav-icon" />
-                            <span text="Sign out" />
+                        <div class="min-w-0 flex-1">
+                            <div class="truncate text-[13px] font-semibold text-nav-ink" text={displayName} />
+                            <div
+                                class="truncate text-[11px] text-nav-ink-dim"
+                                text={expr($app.session.user, (u) => u?.role ?? "Employee")}
+                            />
                         </div>
-                    </MenuItem>
-                    {/* Not a MenuItem: nothing to do with it, so neither a click nor the arrow keys land on it. */}
-                    <div class="account-version" text={$app.version} visible={hasValue($app.version)} />
-                </Menu>
-            </MenuItem>
-        </Menu>
-    </cx>
-));
+                        <Icon name="accountMenu" class="account-chevron" />
+                    </div>
+
+                    <Menu putInto="dropdown">
+                        {/* Not a MenuItem, as the version below. */}
+                        <div class="account-email" text={$app.session.user.email} />
+                        <MenuItem class="account-action account-sign-out" onClick="onSignOut" autoClose>
+                            <div class="flex items-center gap-2.5">
+                                <Icon name="signOut" class="nav-icon" />
+                                <span text="Sign out" />
+                            </div>
+                        </MenuItem>
+                        {/* Not a MenuItem: nothing to do with it, so neither a click nor the arrow keys land on it. */}
+                        <div class="account-version" text={$app.version} visible={hasValue($app.version)} />
+                    </Menu>
+                </MenuItem>
+            </Menu>
+        </cx>
+    ),
+);

@@ -116,6 +116,10 @@ page past the last is empty with the real total, since the list can shrink under
 `Shared/Paging` holds the convention: `Paging.Read` validates, `ToPageAsync` counts and then reads the
 window.
 
+**One page is not paged at all, an employee's own equipment** (`MyEquipment/Get`): one person's
+things are a few hundred at most, across four kinds of record no single query pages, so the page takes
+them whole and shortens and searches them itself. Every list pages in the database.
+
 **Offset paging with a count**, not keyset: a screen shows "page 3 of 40" and jumps to a page, which
 keyset cannot, and at this data's size the count is free. Not a page of `pageSize + 1` rows either — it
 knows only whether a next page exists, so the pager can say neither where the reader is nor how far is

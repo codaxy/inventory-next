@@ -189,3 +189,12 @@
         font-weight: 600;
     }
 }
+
+// An employee's shell: its bar at every width, so the page sits beneath it on a desktop too.
+.shell-person {
+    --shell-top: 60px;
+}
+
+.person-bar-account {
+    width: min(240px, 60vw);
+}
