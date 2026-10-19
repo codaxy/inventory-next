@@ -98,6 +98,7 @@ export default class extends Controller {
     }
 
     async save(name: GroupName) {
+        this.addTyped(name);
         const g = group(name);
         if (!this.store.get(g.valid)) return this.store.set(g.visited, true);
 
@@ -167,13 +168,25 @@ export default class extends Controller {
             this.store.set(m.settings.alerts.draft.reminders, reminders);
     }
 
-    /** The typed value among the chips, once; the server tidies and checks it on save. */
+    /**
+     * What is typed among the chips — several at once where commas, semicolons or spaces separate
+     * them, as a pasted list does — each once; the server tidies and checks them on save.
+     */
     addChip(list: AccessorChain<string[]>, typed: AccessorChain<string | null | undefined>) {
-        const value = this.store.get(typed)?.trim();
-        if (!value) return;
+        const entries = (this.store.get(typed) ?? "").split(/[\s,;]+/).filter((e) => e !== "");
+        if (entries.length === 0) return;
         const values = this.store.get(list) ?? [];
-        if (!values.includes(value)) this.store.set(list, [...values, value]);
+        this.store.set(list, [
+            ...values,
+            ...entries.filter((e, i) => !values.includes(e) && entries.indexOf(e) === i),
+        ]);
         this.store.delete(typed);
+    }
+
+    /** What is still typed in a card's chip field joins its chips: Save never drops it unseen. */
+    addTyped(name: GroupName) {
+        if (name === "sign_in") this.addChip(m.settings.sign_in.draft.allowed_domains, m.settings.newDomain);
+        if (name === "alerts") this.addChip(m.settings.alerts.draft.recipients, m.settings.newRecipient);
     }
 
     removeChip(list: AccessorChain<string[]>, value: string) {

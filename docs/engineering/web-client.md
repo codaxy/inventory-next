@@ -377,16 +377,18 @@ as — from the server's configuration, with no Edit, and **Send test email**, t
 address once they confirm it, naming the address and server: the line beneath says it went, or what
 the mail server answered. **A Time zone card shows what is not a choice yet** — the interface in the
 browser's zone, every export asked for in the same — naming the zone, with no Edit. The domains are
-chips — removable while editing, a field and Add beneath — and "Any domain" in view when there are
-none; the alerts' recipients the same, "None: no alerts are sent" in view. **The alerts' timing is
-fields like any other setting** — First notice, First reminder, Second reminder, a label with the
-value beneath, **one column, a field to a row**: they are a sequence, and in two columns the eye
-reached the second reminder before the first — each reminder a switch beside its label, its number and
-unit beneath only while it is on, "Off" in view; **the second reminder is there only once the first is
-on**, in view as in editing, and the first off turns the second off too, each keeping its value.
-Editing, a number, a unit and "before" side by side; one reset for the whole of it. The server tidies
-what is typed. **The cards that can be edited come first, then what is only shown** — Mail, then Time
-zone — and Expiry alerts sits just above Mail, which is chiefly what sends them.
+chips — removable while editing, a field and Add beneath; Enter adds as Add does, a pasted list splits
+on commas, semicolons and spaces, and Save takes what is still typed rather than dropping it unseen —
+and "Any domain" in view when there are none; the alerts' recipients the same, "None: no alerts are
+sent" in view. **The alerts' timing is fields like any other setting** — First notice, First reminder,
+Second reminder, a label with the value beneath, **one column, a field to a row**: they are a
+sequence, and in two columns the eye reached the second reminder before the first — each reminder a
+switch beside its label, its number and unit beneath only while it is on, "Off" in view; **the second
+reminder is there only once the first is on**, in view as in editing, and the first off turns the
+second off too, each keeping its value. Editing, a number, a unit and "before" side by side; one reset
+for the whole of it. The server tidies what is typed. **The cards that can be edited come first, then
+what is only shown** — Mail, then Time zone — and Expiry alerts sits just above Mail, which is chiefly
+what sends them.
 
 **A role's permissions are a row per area**, the catalogue's order and names — Inventory, Audit log,
 Server log, Users, Roles, Settings: View and Edit ticks side by side in two fixed columns, an area with one

@@ -202,6 +202,14 @@ function chips(o: Chips) {
                         <TextField
                             value={o.typed}
                             placeholder={o.placeholder}
+                            onKeyDown={(e: any, instance: any) => {
+                                // Enter adds what is typed, as the button does, and the field stays for the next.
+                                if (e.key !== "Enter") return;
+                                e.preventDefault();
+                                instance.store.set(o.typed, e.target.value);
+                                (instance.controller as Controller).addChip(o.values, o.typed);
+                                return false;
+                            }}
                             inputAttrs={{ "aria-label": o.adding, autoCapitalize: "off" }}
                         />
                         <Button mod="hollow" onClick={on((c) => c.addChip(o.values, o.typed))}>
