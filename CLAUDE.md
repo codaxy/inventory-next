@@ -209,7 +209,8 @@ neither file is worth having if it cannot be trusted.
 
 **Nothing merges to `main` before `scripts/premerge.sh` passes** — the formatting and the client's
 type check always, the coverage threshold when the branch touches `server/`. It is the only gate
-before `main`: CI checks no branch, pull request or push to `main`, only a push to `production`.
+before `main`: CI tests no branch, pull request or push to `main`, only a push to `production`; a
+pull request it only builds and type-checks.
 A failure is unfinished work: format and commit, or add the tests. Whether the pre-commit hook ran
 does not matter; the script checks the tree.
 

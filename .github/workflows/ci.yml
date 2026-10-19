@@ -1,10 +1,11 @@
 name: CI
 
-# Only the two branches that publish an image. The checks run before production alone: the pre-merge
-# check is the gate to main (docs/engineering/testing.md).
+# The two branches that publish an image, and pull requests. The checks run before production alone:
+# the pre-merge check is the gate to main (docs/engineering/testing.md). A pull request only builds.
 on:
   push:
     branches: [main, production]
+  pull_request:
 
 # The server build would otherwise install the pre-commit hook into the runner's checkout.
 env:
@@ -69,6 +70,35 @@ jobs:
       - run: npm run format:check
       - run: npm run typecheck
       - run: npm run build
+
+  # A pull request: does it build and type-check? No formatting and no tests — the pre-merge check
+  # runs them before main, CI before production — so a pull request shows red or green in a few
+  # minutes, and a merge from GitHub's button, which skips the pre-merge check, is not blind.
+  pull-request:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Build the server
+        run: dotnet build server/Codaxy.Inventory.slnx --configuration Release
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Type-check and build the client
+        working-directory: client
+        run: |
+          npm ci
+          npm run typecheck
+          npm run build
 
   # The image: a push to `main` is `:latest`, to `production` `:stable` once the server and the client
   # have passed, and every one also carries its commit's sha to roll back to. On main the two are

@@ -8,9 +8,12 @@ number that is not enforced is the same as no number. **One script computes it,
 touching `server/`, and CI's server job on a push to `production`. A branch that cannot touch the
 figure skips it: it measures the server alone.
 
-**CI checks nothing before production** — no branch, pull request or push to `main`. The pre-merge
+**CI tests nothing before production** — no branch, pull request or push to `main`. The pre-merge
 check is the gate to `main`, and CI there would repeat it after a push it can no longer stop.
-`production` keeps it, since its image is what runs: a red build publishes no `:stable`.
+`production` keeps it, since its image is what runs: a red build publishes no `:stable`. **A pull
+request only builds**: the server, and the client type-checked — no formatting, no tests — so it
+shows red or green in minutes, and a merge from GitHub's button, which skips the pre-merge check, is
+not blind.
 
 What the percentage is measured over decides whether it means anything:
 
