@@ -6,6 +6,11 @@ on:
   push:
     branches: [main, production]
 
+# A push delivered twice runs once, then again behind the first, finding its image to tag.
+concurrency:
+  group: publish-${{ github.ref_name }}-${{ github.sha }}
+  cancel-in-progress: false
+
 jobs:
   # Only from Codaxy's repository: a fork or a copy elsewhere cannot push to Codaxy's registry.
   publish:
@@ -14,6 +19,10 @@ jobs:
     permissions:
       contents: read
       packages: write
+      actions: read
+    env:
+      IMAGE: ghcr.io/codaxy/inventory-next
+      TAG: ${{ github.ref_name == 'production' && 'stable' || 'latest' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -31,11 +40,36 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: docker/build-push-action@v6
+      # Shipping to production pushes `main` and `production` at once: the commit's `main` run builds
+      # it, and this one waits for that run to tag its image instead of building it again.
+      - if: github.ref_name == 'production'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          runs=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow publish.yml --branch main \
+            --commit "$GITHUB_SHA" --json databaseId,status \
+            --jq '.[] | select(.status != "completed") | .databaseId')
+          for run in $runs; do
+            gh run watch "$run" --repo "$GITHUB_REPOSITORY" > /dev/null || true
+          done
+
+      # A commit already published under its sha — `main`'s image, when `production` follows it — is
+      # tagged, not rebuilt: production runs the very image `:latest` ran.
+      - id: existing
+        run: |
+          if docker buildx imagetools inspect "$IMAGE:$GITHUB_SHA" > /dev/null 2>&1; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.existing.outputs.found == 'true'
+        run: docker buildx imagetools create --tag "$IMAGE:$TAG" "$IMAGE:$GITHUB_SHA"
+
+      - if: steps.existing.outputs.found != 'true'
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           build-args: APP_VERSION=${{ steps.version.outputs.version }}
           tags: |
-            ghcr.io/codaxy/inventory-next:${{ github.ref_name == 'production' && 'stable' || 'latest' }}
-            ghcr.io/codaxy/inventory-next:${{ github.sha }}
+            ${{ env.IMAGE }}:${{ env.TAG }}
+            ${{ env.IMAGE }}:${{ github.sha }}

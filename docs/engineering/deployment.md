@@ -12,12 +12,19 @@ Codaxy's own repository: a fork or a copy elsewhere cannot push to Codaxy's regi
 `ghcr.io/codaxy/inventory-next:latest` from `main`, `:stable` from `production`, and every image also
 carries its commit's sha, so any one can be run again.
 
+**A commit is built once.** A commit already published under its sha is tagged, not rebuilt, so
+`:stable` is the very image `:latest` ran. Shipping to production pushes both branches at once: the
+`production` run waits for the commit's `main` run (`gh run watch`), then tags its image; with no
+`main` image to find — that run failed, or `production` took a commit `main` never published — it
+builds. A push delivered twice, as GitHub sometimes does, runs again behind the first (a concurrency
+group per branch and commit) and only tags.
+
 **The version is the commit's, stamped when CI builds the image** — never a commit of its own:
 `26.9.29+1222.eaea98a`, the commit's UTC date as year, month and day, then its hour and minute and
 its short sha. The date is the version proper — .NET's and SemVer's, so no part keeps a leading zero,
 which SemVer refuses; the time and the sha are build metadata, which SemVer ignores when it orders:
 the time orders a day's builds for a reader, the sha is pasted into `git show`. From the commit, not
-the build, so `main` and `production` build one commit as one version. The Dockerfile's
+the build, so a commit built for either branch carries one version. The Dockerfile's
 `APP_VERSION` argument carries it; unstamped, it is `dev`. `/api/version` answers it without a
 session, and the account menu shows it under Sign out.
 
