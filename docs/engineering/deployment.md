@@ -6,11 +6,13 @@ runs as `$APP_UID`, not root.
 
 ## Publishing
 
-**The image is published by CI, and only once the tests have passed**: the `publish` job in
-`ci.yml` needs the server and the client jobs, and runs on a push to `main` or `production` of
-Codaxy's own repository — a fork or a copy elsewhere cannot push to Codaxy's registry —
-`ghcr.io/codaxy/inventory-next:latest` from `main`, `:stable` from `production`, and every image
-also carries its commit's sha, so any one can be run again. A red build publishes nothing.
+**The image is published by CI** on a push to `main` or `production` of Codaxy's own repository —
+a fork or a copy elsewhere cannot push to Codaxy's registry — `ghcr.io/codaxy/inventory-next:latest`
+from `main`, `:stable` from `production`, and every image also carries its commit's sha, so any one
+can be run again. **`:stable` only once the tests have passed**: on `production` the `publish` job
+waits for the `tests` and `client` jobs, and a red build publishes nothing. On `main` they do not
+run — a pull request's checks or the pre-merge check have (see [testing.md](testing.md)) — and
+`:latest` is built at once.
 
 **The version is the commit's, stamped when CI builds the image** — never a commit of its own:
 `26.9.29+1222.eaea98a`, the commit's UTC date as year, month and day, then its hour and minute and

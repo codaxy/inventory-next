@@ -2,11 +2,27 @@
 
 ## The threshold
 
-**Line coverage is at least 80%, checked before a branch merges and again in CI.** A number that
-is not enforced is the same as no number. **One script computes it,
-`scripts/coverage.sh`**, and both run it: the pre-merge check (`scripts/premerge.sh`) on any branch
-touching `server/`, and CI's server job. CI alone notices too late — shipping pushes before it runs.
-A branch that cannot touch the figure skips it: it measures the server alone.
+**Line coverage is at least 80%, checked before a branch merges and again before production.** A
+number that is not enforced is the same as no number. **One script computes it,
+`scripts/coverage.sh`**, and every gate runs it: the pre-merge check (`scripts/premerge.sh`), CI's
+`tests` job on a pull request ready for review, and the same job on a push to `production`. A branch
+that cannot touch the figure skips it, locally and on a pull request: it measures the server alone.
+
+## Where the checks run
+
+**Each gate is as heavy as what it guards** (`.github/workflows/ci.yml`):
+
+- **A pull request, every push:** `fast` — formatting, the server built, the unit tests, the client
+  type-checked and built. A minute or two, draft or not.
+- **A pull request ready for review:** `tests` as well — the integration tests with the threshold,
+  when the branch touches `server/`. A draft iterates on `fast` alone; marking it ready runs them,
+  and every later push runs them again.
+- **A pull request's newer push cancels its older run**, so ten quick follow-ups cost about one run.
+- **`production`:** `tests` and the client's type check and build, before `:stable` is published —
+  what runs is never built from a red commit. No formatting: by then it is the history's concern,
+  not the application's, and a red build over whitespace would only block a release.
+- **`main`: nothing.** A merge into it went through a pull request's checks or the pre-merge check,
+  and CI after a push cannot stop it. `:latest` is built at once.
 
 What the percentage is measured over decides whether it means anything:
 
@@ -59,8 +75,8 @@ page before the image is published.
 ## Formatting
 
 CSharpier formats the server and Prettier the client, both pinned and both checked — before every
-merge by `scripts/premerge.sh` and in CI, with the same commands — so formatting is never a review
-comment. **The check is over the tree, not a record of the hook**: a hook not installed, skipped or
+merge by `scripts/premerge.sh` and on every push to a pull request, with the same commands — so
+formatting is never a review comment. **The check is over the tree, not a record of the hook**: a hook not installed, skipped or
 unstable in one pass is caught all the same, and fixed by running the formatter and committing —
 never by redoing the hook's job by hand. **A pre-commit hook applies them**, which usually makes
 the check a formality: Husky.Net, a dotnet

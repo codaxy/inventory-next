@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# The server's tests with line coverage, failing below the 80% in docs/engineering/testing.md. CI and
-# the pre-merge check both run this, so a local pass is CI's pass. Extra arguments go to `dotnet test`
-# (CI passes --no-build after its own build step).
+# The server's tests with line coverage, failing below the 80% in docs/engineering/testing.md. CI (a
+# pull request ready for review, a push to production) and the pre-merge check both run this, so a
+# local pass is CI's pass. Extra arguments go to `dotnet test` (CI passes --no-build after its own
+# build step).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 

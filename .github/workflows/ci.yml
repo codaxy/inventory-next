@@ -1,15 +1,31 @@
 name: CI
 
+# Three gates, each as heavy as what it guards (docs/engineering/testing.md):
+# - a pull request: the fast checks on every push; the server's tests too once it is ready for review;
+# - production: the tests before `:stable` is published — what runs is never built from a red commit;
+# - main: nothing — merges into it went through a pull request's checks or the pre-merge check.
 on:
   push:
+    branches: [main, production]
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+# A pull request's newer push cancels its older run: ten quick follow-ups cost about one run. A push to
+# main or production is a group of its own, so none is cancelled or replaced while queued: each
+# publishes its own image.
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 # The server build would otherwise install the pre-commit hook into the runner's checkout.
 env:
   HUSKY: 0
 
 jobs:
-  server:
+  # Every push to a pull request, draft or not: what fails fast and costs little. The formatting
+  # belongs here — it is about the change, not the application — and nowhere later.
+  fast:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,23 +34,77 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Check formatting
-        run: |
-          dotnet tool restore
-          dotnet csharpier check server
-
-      - name: Build
-        run: dotnet build server/Codaxy.Inventory.slnx --configuration Release
-
-      # The tests that serve the shell fall back to wwwroot's index.html: the built one here, as the
-      # image has it.
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
           cache-dependency-path: client/package-lock.json
 
+      - name: Check formatting
+        run: |
+          dotnet tool restore
+          dotnet csharpier check server
+          cd client && npm ci && npm run format:check
+
+      - name: Build the server
+        run: dotnet build server/Codaxy.Inventory.slnx --configuration Release
+
+      - name: Unit tests
+        run: >-
+          dotnet test server/Codaxy.Inventory.Tests.Unit --configuration Release --no-build
+
+      - name: Type-check and build the client
+        working-directory: client
+        run: |
+          npm run typecheck
+          npm run build
+
+  # The server's tests with the coverage threshold: a pull request once it is ready for review — a
+  # draft iterates on the fast checks alone — and only when it touches the server; and a push to
+  # production. The slow part, a few minutes of Testcontainers.
+  tests:
+    if: >-
+      (github.event_name == 'pull_request' && !github.event.pull_request.draft)
+      || github.ref_name == 'production'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # As the pre-merge check decides: a pull request that leaves server/ alone cannot move the
+      # figure. Production always runs them.
+      - name: Does it touch the server?
+        id: scope
+        run: |
+          if [ "${{ github.event_name }}" = pull_request ] \
+            && git diff --quiet "origin/${{ github.base_ref }}...HEAD" -- server/; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "server/ untouched: tests skipped."
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-dotnet@v4
+        if: steps.scope.outputs.run == 'true'
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Build
+        if: steps.scope.outputs.run == 'true'
+        run: dotnet build server/Codaxy.Inventory.slnx --configuration Release
+
+      # The tests that serve the shell fall back to wwwroot's index.html: the built one here, as the
+      # image has it.
+      - uses: actions/setup-node@v4
+        if: steps.scope.outputs.run == 'true'
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
       - name: Build the client into wwwroot
+        if: steps.scope.outputs.run == 'true'
         working-directory: client
         run: |
           npm ci
@@ -45,9 +115,12 @@ jobs:
       # makes them possible; there is no service container to keep in step with the fixture. The
       # script is the one the pre-merge check runs, so the two cannot disagree.
       - name: Test with the coverage threshold
+        if: steps.scope.outputs.run == 'true'
         run: scripts/coverage.sh --no-build
 
+  # Before :stable, the client must still type-check and build; its formatting no longer matters.
   client:
+    if: github.ref_name == 'production' && github.event_name == 'push'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -62,17 +135,19 @@ jobs:
           cache-dependency-path: client/package-lock.json
 
       - run: npm ci
-      - run: npm run format:check
       - run: npm run typecheck
       - run: npm run build
 
-  # The image, published only once the server and the client have passed: a push to `main` is
-  # `:latest`, to `production` `:stable`, and every one also carries its commit's sha to roll back to.
-  # Only from Codaxy's repository: a fork or a copy elsewhere cannot push to Codaxy's registry.
+  # The image: a push to `main` is `:latest`, at once; to `production` `:stable`, once the tests and
+  # the client have passed. Every one also carries its commit's sha to roll back to. On main the jobs
+  # it needs are skipped, which `!failure() && !cancelled()` lets through where a bare `needs` would
+  # skip this too. Only from Codaxy's repository: a fork or a copy elsewhere cannot push to Codaxy's
+  # registry.
   publish:
-    needs: [server, client]
+    needs: [tests, client]
     if: >-
-      github.repository_owner == 'codaxy' && github.event_name == 'push'
+      !failure() && !cancelled()
+      && github.repository_owner == 'codaxy' && github.event_name == 'push'
       && (github.ref_name == 'main' || github.ref_name == 'production')
     runs-on: ubuntu-latest
     permissions:

@@ -207,9 +207,10 @@ commit.**
 Check it before committing, not after: documentation that lands a commit later does not land, and
 neither file is worth having if it cannot be trusted.
 
-**Nothing merges to `main` before `scripts/premerge.sh` passes** — CI's checks, run locally: the
-formatting always, the coverage threshold when the branch touches `server/`. CI noticing is too
-late, since shipping pushes before it runs. A failure is unfinished work: format and commit, or add
+**Nothing merges to `main` before `scripts/premerge.sh` passes** — a pull request's checks, run
+locally: the formatting and the client's type check always, the coverage threshold when the branch
+touches `server/`. CI checks pull requests and `production`, never `main` itself, so a push to `main`
+is checked by this or by nothing. A failure is unfinished work: format and commit, or add
 the tests. Whether the pre-commit hook ran does not matter; the script checks the tree.
 
 **"Ship it" means: commit if it is not already committed, merge to `main`, then push** — the whole way
