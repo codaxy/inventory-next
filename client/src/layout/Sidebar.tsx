@@ -5,7 +5,7 @@ import { Logo } from "../components/Logo";
 import $app from "../model";
 import { AccountMenu } from "./AccountMenu";
 import { isCurrent, navigation } from "./navigation";
-import { can } from "../access";
+import { can, isPerson, myEquipment } from "../access";
 
 const closeDrawer = (_e: unknown, { store }: any) => store.set($app.ui.drawerOpen, false);
 
@@ -43,6 +43,19 @@ export const Sidebar = createFunctionalComponent(() => (
             </div>
 
             <nav class="nav-scroll flex-1 overflow-y-auto overscroll-contain lg:overscroll-auto px-2 pb-4">
+                {/* An employee's whole menu: their own equipment. A user's menu has no such item. */}
+                <Link
+                    visible={isPerson}
+                    href={myEquipment}
+                    url={$app.url}
+                    class={{
+                        "nav-link": true,
+                        "nav-link-active": expr($app.url, (url) => isCurrent(myEquipment, url)),
+                    }}
+                >
+                    <Icon name="myEquipment" class="nav-icon" />
+                    <span text="My equipment" />
+                </Link>
                 {navigation.map((section) => (
                     <cx>
                         <div

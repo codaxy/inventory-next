@@ -77,14 +77,14 @@ public static class AuthenticationSetup
         options.SlidingExpiration = true;
 
         // The API answers with status codes; only the client decides to show a sign-in screen.
-        // A cookie outlives the access it was issued for, so the user is looked up on every request:
-        // a deactivated or missing one is signed out there, not in fourteen days.
+        // A cookie outlives the access it was issued for, so who holds it is looked up on every request:
+        // a deactivated user, or a person no longer let in, is signed out there, not in fourteen days.
         options.Events.OnValidatePrincipal = async context =>
         {
             var email = context.Principal?.FindFirstValue(SignIn.EmailClaim);
             var access = context.HttpContext.RequestServices.GetRequiredService<UserAccess>();
 
-            if (email is null || await access.ForAsync(email) is null)
+            if (email is null || !await access.MaySignInAsync(email))
             {
                 context.RejectPrincipal();
                 await context.HttpContext.SignOutAsync(

@@ -41,7 +41,10 @@ export const AccountMenu = createFunctionalComponent(() => (
                     />
                     <div class="min-w-0 flex-1">
                         <div class="truncate text-[13px] font-semibold text-nav-ink" text={displayName} />
-                        <div class="truncate text-[11px] text-nav-ink-dim" text={$app.session.user.role} />
+                        <div
+                            class="truncate text-[11px] text-nav-ink-dim"
+                            text={expr($app.session.user, (u) => u?.role ?? "Employee")}
+                        />
                     </div>
                     <Icon name="accountMenu" class="account-chevron" />
                 </div>

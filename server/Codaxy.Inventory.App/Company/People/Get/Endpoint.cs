@@ -1,4 +1,5 @@
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Settings;
 
 namespace Codaxy.Inventory.App.Company.People.Get;
 
@@ -9,9 +10,10 @@ public static class Endpoint
     private static async Task<IResult> Handle(
         Guid id,
         InventoryContext context,
+        SettingStore settings,
         CancellationToken cancellationToken
     ) =>
-        await People.DetailAsync(context, id, cancellationToken) is { } person
+        await People.DetailAsync(context, settings, id, cancellationToken) is { } person
             ? Results.Ok(person)
             : Results.NotFound();
 }

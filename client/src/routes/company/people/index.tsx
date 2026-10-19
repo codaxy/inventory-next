@@ -82,6 +82,11 @@ export default createFunctionalComponent(() => {
                                 <span class="record-title record-copy">
                                     <span class="record-copy-line">
                                         <span text={m.$row.name} />
+                                        <span
+                                            class="record-flag"
+                                            visible={m.$row.noSignIn}
+                                            text="No sign-in"
+                                        />
                                         {copyButton(m.$row.name, "name")}
                                     </span>
                                 </span>

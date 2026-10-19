@@ -93,7 +93,10 @@ public sealed class AuditLogInterceptor(ICurrentUser user, TimeProvider clock)
             );
     }
 
-    /// <summary>Every property, in EF's order — the key first, then by name — changed or not.</summary>
+    /// <summary>
+    /// Every property, in EF's order — the key first, then by name — changed or not; but a column the
+    /// database computes, which only repeats the others.
+    /// </summary>
     internal static string Json(EntityEntry entry, bool original)
     {
         using var stream = new MemoryStream();
@@ -102,7 +105,11 @@ public sealed class AuditLogInterceptor(ICurrentUser user, TimeProvider clock)
         {
             writer.WriteStartObject();
 
-            foreach (var property in entry.Metadata.GetProperties())
+            foreach (
+                var property in entry
+                    .Metadata.GetProperties()
+                    .Where(p => p.GetComputedColumnSql() is null)
+            )
             {
                 var value = original
                     ? entry.Property(property.Name).OriginalValue

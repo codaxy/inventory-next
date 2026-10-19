@@ -317,9 +317,19 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<bool>("CanSignIn")
+                        .HasColumnType("boolean")
+                        .HasColumnName("can_sign_in");
+
                     b.Property<string>("Email")
                         .HasColumnType("text")
                         .HasColumnName("email");
+
+                    b.Property<string>("EmailKey")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("text")
+                        .HasColumnName("email_key")
+                        .HasComputedColumnSql("lower(trim(email))", true);
 
                     b.Property<string>("Name")
                         .HasColumnType("text")
@@ -327,6 +337,10 @@ namespace Codaxy.Inventory.App.Persistence.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_person");
+
+                    b.HasIndex("EmailKey")
+                        .IsUnique()
+                        .HasDatabaseName("ix_person_email_key");
 
                     b.ToTable("person", (string)null);
                 });

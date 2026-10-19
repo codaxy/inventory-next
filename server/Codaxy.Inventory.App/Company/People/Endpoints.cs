@@ -9,6 +9,7 @@ public static class Endpoints
         List.Endpoint.Map(people);
         Export.Endpoint.Map(people);
         Get.Endpoint.Map(people);
+        SignIn.Endpoint.Map(people);
         Holdings.Endpoint.Map(people);
         Handover.Endpoint.Map(people);
         HandoverPdf.Endpoint.Map(people);

@@ -2,6 +2,8 @@ import { createModel } from "cx/ui";
 
 export interface SignIn {
     allowed_domains: string[];
+    /** Whether employees may sign in as the person they are, to see their own equipment. */
+    people: boolean;
 }
 
 export interface Dashboard {

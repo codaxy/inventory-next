@@ -1,4 +1,5 @@
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Settings;
 using Codaxy.Inventory.App.Shared.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ public static class Endpoint
         Guid id,
         [FromBody] PersonForm form,
         InventoryContext context,
+        SettingStore settings,
         CancellationToken cancellationToken
     )
     {
@@ -29,6 +31,6 @@ public static class Endpoint
         People.Apply(person, form);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(await People.DetailAsync(context, id, cancellationToken));
+        return Results.Ok(await People.DetailAsync(context, settings, id, cancellationToken));
     }
 }

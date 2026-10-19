@@ -13,6 +13,7 @@ public static class SettingCatalogue
     public static readonly IReadOnlyList<SettingDefinition> All =
     [
         SignInSettings.AllowedDomains,
+        SignInSettings.People,
         DashboardSettings.SubscriptionsExpiredDays,
         DashboardSettings.SubscriptionsExpiringDays,
         DashboardSettings.WarrantiesEndedDays,

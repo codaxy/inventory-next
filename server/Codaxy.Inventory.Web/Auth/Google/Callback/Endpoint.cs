@@ -27,7 +27,7 @@ public static class Endpoint
         if (!decision.IsAllowed)
             return Results.Redirect("/sign-in?error=refused");
 
-        if (await access.ForAsync(email!) is null)
+        if (!await access.MaySignInAsync(email!))
             return Results.Redirect("/sign-in?error=no-access");
 
         await context.SignInAsync(email!, result.Principal.FindFirstValue(ClaimTypes.Name));

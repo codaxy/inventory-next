@@ -1,4 +1,6 @@
 import {
+    ConstructionIcon,
+    LaptopIcon,
     MailSend01Icon,
     Settings01Icon,
     SquareArrowUpRightIcon,
@@ -104,6 +106,8 @@ const uiIcons = {
     recordHistory: Clock01Icon,
     created: Add01Icon,
     send: MailSend01Icon,
+    todo: ConstructionIcon,
+    myEquipment: LaptopIcon,
     updated: PencilEdit01Icon,
     deleted: Delete02Icon,
     refresh: RefreshIcon,

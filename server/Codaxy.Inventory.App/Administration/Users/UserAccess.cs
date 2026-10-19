@@ -1,5 +1,7 @@
 using Codaxy.Inventory.App.Administration.Roles;
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Access;
+using Codaxy.Inventory.App.Shared.Settings;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codaxy.Inventory.App.Administration.Users;
@@ -28,12 +30,19 @@ public sealed record Access(
         new(userId, email, name, role.Id, role.Name, role.IsSystemAdmin, role.Grants());
 }
 
+/// <summary>An employee signed in as the person they are: no role, no permission, their own equipment.</summary>
+public sealed record PersonAccess(Guid PersonId, string Email, string Name);
+
 /// <summary>
 /// Reads someone's access from the database, every request and uncached beyond it: a deactivation or
 /// a changed role applies on the next request. Scoped, so the cookie's check and the endpoint's share
 /// one query.
 /// </summary>
-public sealed class UserAccess(InventoryContext context, ICurrentUser current)
+public sealed class UserAccess(
+    InventoryContext context,
+    ICurrentUser current,
+    SettingStore settings
+)
 {
     private readonly Dictionary<string, Access?> read = [];
 
@@ -62,5 +71,42 @@ public sealed class UserAccess(InventoryContext context, ICurrentUser current)
 
         read[email] = access;
         return access;
+    }
+
+    /// <summary>
+    /// Whether <paramref name="email"/> may hold a session: an active user, or a person who may sign in
+    /// while employees may. The one answer for a code, for Google and for the cookie on every request.
+    /// </summary>
+    public async Task<bool> MaySignInAsync(
+        string email,
+        CancellationToken cancellation = default
+    ) =>
+        await ForAsync(email, cancellation) is not null
+        || await PersonAsync(email, cancellation) is not null;
+
+    /// <summary>The signed-in person, where the session is one and not a user's.</summary>
+    public Task<PersonAccess?> CurrentPersonAsync(CancellationToken cancellation = default) =>
+        current.Email is { } email
+            ? PersonAsync(email, cancellation)
+            : Task.FromResult<PersonAccess?>(null);
+
+    /// <summary>
+    /// The person holding <paramref name="email"/> — trimmed, whatever the case, as people are kept —
+    /// where employees may sign in and this one may; none otherwise.
+    /// </summary>
+    public async Task<PersonAccess?> PersonAsync(
+        string email,
+        CancellationToken cancellation = default
+    )
+    {
+        if (!(await settings.LoadAsync(cancellation)).Get(SignInSettings.People))
+            return null;
+
+        email = AppUser.Normalize(email);
+        return await context
+            .Persons.AsNoTracking()
+            .Where(p => p.CanSignIn && p.EmailKey == email)
+            .Select(p => new PersonAccess(p.Id, p.Email.Trim(), p.Name))
+            .FirstOrDefaultAsync(cancellation);
     }
 }

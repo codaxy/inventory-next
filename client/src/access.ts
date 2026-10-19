@@ -40,5 +40,13 @@ export const can = (permission: Permission) => expr(permissions, (held) => !!hel
 /** The address is one the reader may not open: it shows as not found. */
 export const forbidden = expr($app.url, permissions, (url, held) => !mayOpen(url, held ?? []));
 
-/** Where `~/` and sign-in land: the first item the reader can see. */
-export const landing = expr(permissions, (held) => landingFor(held ?? []));
+/** Where a person signed in as an employee is: their own equipment, and nothing else. */
+export const myEquipment = "~/my-equipment";
+
+/** Whether the session is an employee's, not a user's. */
+export const isPerson = expr($app.session.user.kind, (kind) => kind === "person");
+
+/** Where `~/` and sign-in land: an employee's own equipment, else the first item the reader can see. */
+export const landing = expr($app.session.user, (user) =>
+    user?.kind === "person" ? myEquipment : landingFor(user?.permissions ?? []),
+);

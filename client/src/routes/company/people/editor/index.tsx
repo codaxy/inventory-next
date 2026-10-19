@@ -1,5 +1,5 @@
 import { createFunctionalComponent, expr, hasValue, truthy } from "cx/ui";
-import { Button, Icon, Link, LinkButton, ValidationGroup } from "cx/widgets";
+import { Button, Icon, Link, LinkButton, Switch, ValidationGroup } from "cx/widgets";
 
 import { recordTitle } from "../../../../components/documentTitle";
 import { formFields } from "../../../../components/formFields";
@@ -10,11 +10,53 @@ import { listReturn } from "../../../../listAddress";
 import $app from "../../../../model";
 import Controller from "./Controller";
 import m from "./model";
-import { canEdit } from "../../../../access";
+import { can, canEdit, permissions } from "../../../../access";
 
 const p = m.person;
 const outline = outlined(p.viewing, p.loading);
 const { editing, text } = formFields({ draft: p.draft, errors: p.errors, viewing: p.viewing }, "person");
+
+const mayOpenSettings = can("settings.manage");
+const mayNotOpenSettings = expr(permissions, (held) => !held?.includes("settings.manage"));
+
+/**
+ * Whether the person may sign in to see their own equipment: a decision about them, shown and changed
+ * as it is stored whatever the global switch says — so someone can be left out ahead of time. A plain
+ * "Yes" or "No"; under a "Yes", while employees cannot sign in at all, a note says so — a fact about
+ * now, never a promise it will apply.
+ */
+function signInField() {
+    return (
+        <cx>
+            <div class="editor-wide">
+                <div class="editor-label" text="Can sign in" />
+                <div
+                    class="editor-value"
+                    visible={p.viewing}
+                    text={expr(p.draft.canSignIn, (can) => (can === false ? "No" : "Yes"))}
+                />
+                <div visible={editing}>
+                    <Switch value={p.draft.canSignIn} text="To see the equipment assigned to them" />
+                </div>
+                <p
+                    class="editor-hint"
+                    visible={expr(p.signInOpen, p.draft.canSignIn, (open, can) => !open && can !== false)}
+                >
+                    <span text="Note: employee sign-in is turned off globally, under " />
+                    {/* A link for whoever may open the settings; for anyone else it would lead nowhere. */}
+                    <Link
+                        href="~/administration/settings"
+                        url={$app.url}
+                        visible={mayOpenSettings}
+                        text="Administration → Settings → Sign-in"
+                    />
+                    <span visible={mayNotOpenSettings} text="Administration → Settings → Sign-in" />
+                    <span text="." />
+                </p>
+            </div>
+        </cx>
+    );
+}
 
 /**
  * A person's page: their name and email, then — read-only — everything attached to them, a section
@@ -66,6 +108,7 @@ export default createFunctionalComponent(() => (
                         <div class="editor-grid">
                             {text("Name", "name", 200, { required: true })}
                             {text("Email", "email", 200, { required: true })}
+                            {signInField()}
                         </div>
                         <div class="editor-actions" visible={editing}>
                             <LinkButton

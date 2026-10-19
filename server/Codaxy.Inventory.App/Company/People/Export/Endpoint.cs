@@ -25,6 +25,9 @@ public static class Endpoint
 
         [XLColumn(Header = "Seats")]
         public int Seats { get; init; }
+
+        [XLColumn(Header = "Can Sign In")]
+        public bool CanSignIn { get; init; }
     }
 
     /// <summary>The list as a spreadsheet: the same query, every row it selects, not one page.</summary>
@@ -48,6 +51,7 @@ public static class Endpoint
                 Seats = context.Activations.Count(a =>
                     a.PersonId == p.Id && a.DeactivationDate == null
                 ),
+                CanSignIn = p.CanSignIn,
             })
             .ToListAsync(cancellationToken);
 

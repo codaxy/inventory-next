@@ -8,6 +8,8 @@ import { formatDate } from "../../../../licensing";
 export interface PersonDraft {
     name?: string | null;
     email?: string | null;
+    /** True until someone turns it off. */
+    canSignIn?: boolean;
 }
 
 export interface PersonEditorState {
@@ -22,6 +24,8 @@ export interface PersonEditorState {
     /** For a delete: what they hold, as a phrase, absent when nothing. */
     holds?: string;
     holdingsLoaded: boolean;
+    /** Whether employees may sign in at all: off, a person's own flag shows off and cannot change. */
+    signInOpen: boolean;
     loading: boolean;
     saving: boolean;
     error?: string;
@@ -40,6 +44,7 @@ export default createModel<Model>();
 export const toForm = (draft: PersonDraft) => ({
     name: (draft.name ?? "").trim(),
     email: (draft.email ?? "").trim(),
+    canSignIn: draft.canSignIn ?? true,
 });
 
 const number = (n: number | null) => (n ? `#${n}` : undefined);

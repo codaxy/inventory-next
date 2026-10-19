@@ -72,6 +72,11 @@ only with the `edit` of the page's item (`canEdit`, or `edits` on a ⋮ action),
 `…/edit` — is the not-found page; `~/` lands on the first item the reader can see. Hidden, never
 disabled: a button nobody can press says nothing about why. `screens` in `routes/index.tsx` maps every item's href to its screen.
 
+**An employee signed in as a person sees one item, "My equipment"** (`~/my-equipment`), and lands
+there as a user lands on the Dashboard; their account menu says "Employee" where a user's says their
+role. `/api/auth/me` tells the two apart (`kind`). The page is a placeholder in the to-do style —
+a warning-washed notice over the outline of a list — until the portal is built.
+
 **The Dashboard is one screen**, after Pulse's home: a lede, one card "Worth a look" holding a tile
 per rule in [domain.md](domain.md) — its count and what it counts — and beneath it the selected tile's
 rows as `holdingSections`, restyled to the card: an uppercase label with the count bold beside it,
@@ -388,7 +393,15 @@ reminder is there only once the first is on**, in view as in editing, and the fi
 second off too, each keeping its value. Editing, a number, a unit and "before" side by side; one reset
 for the whole of it. The server tidies what is typed. **The cards that can be edited come first, then
 what is only shown** — Mail, then Time zone — and Expiry alerts sits just above Mail, which is chiefly
-what sends them.
+what sends them. **Sign-in has "Employees can sign in"**, a switch, off by default. **A person's page
+has "Can sign in"**, a switch true until turned off, and a "No sign-in" flag on the people list marks
+those left out; **it shows and changes the person's own value whatever the global switch says**, so
+someone can be left out ahead of time, its value a plain "Yes" or "No", and under a "Yes", while
+employees cannot sign in, a note saying so — "Note: …", its "Administration → Settings → Sign-in" a
+link for whoever may open the settings, text for anyone else — a fact about now, never "not yet",
+which promises the switch will be turned on; under a "No" none, since it means the same either way.
+Not shown off and locked then: that read as the person being left out, and kept anyone from deciding
+in advance.
 
 **A role's permissions are a row per area**, the catalogue's order and names — Inventory, Audit log,
 Server log, Users, Roles, Settings: View and Edit ticks side by side in two fixed columns, an area with one

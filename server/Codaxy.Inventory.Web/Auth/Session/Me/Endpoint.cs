@@ -7,12 +7,20 @@ public static class Endpoint
     public static void Map(RouteGroupBuilder auth) =>
         auth.MapGet("/me", Handle).RequireAuthorization();
 
-    /// <param name="Name">The user's name as an administrator gave it, not the provider's.</param>
+    public const string UserKind = "user";
+    public const string PersonKind = "person";
+
+    /// <param name="Kind">
+    /// <see cref="UserKind"/>, someone running the application with a role, or <see cref="PersonKind"/>,
+    /// an employee signed in to see their own equipment, with no role and no permission.
+    /// </param>
+    /// <param name="Name">The name the application keeps, not the provider's.</param>
     /// <param name="Permissions">What the client shows; the server checks every request anyway.</param>
     public sealed record Response(
+        string Kind,
         string Email,
         string Name,
-        string Role,
+        string? Role,
         IReadOnlyList<string> Permissions
     );
 
@@ -20,11 +28,14 @@ public static class Endpoint
         await access.CurrentAsync() is { } user
             ? Results.Ok(
                 new Response(
+                    UserKind,
                     user.Email,
                     user.Name,
                     user.RoleName,
                     user.Permissions.Order().ToList()
                 )
             )
-            : Results.Unauthorized();
+        : await access.CurrentPersonAsync() is { } person
+            ? Results.Ok(new Response(PersonKind, person.Email, person.Name, null, []))
+        : Results.Unauthorized();
 }

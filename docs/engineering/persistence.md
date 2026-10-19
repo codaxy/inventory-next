@@ -51,15 +51,17 @@ The application allocates the id rather than letting the database default it, wh
 asset and its subtype row share one key before either is inserted.
 
 Besides the primary keys, `Asset.InventoryNumber`, a user's email, a role's name, a role's permission,
-a setting's key and an expiry alert's asset, date and stage are the only unique constraints in the
-database. Names in the codebooks and the company's records are not unique: whether two vendors may
-share one is a product question nobody has answered, so the schema does not answer it either. **Device
-types, tags, software or services, furniture types, information types and tags, virtual machines,
-cloud subscriptions, software entries, and every company record — people, clients, projects, vendors,
-manufacturers, locations — are unique by name, whatever the case** — and **people by email too**,
-since an email is what a sign-in would be matched against. The application enforces it, as a field
-error; no index backs it yet, so two saves at once can still both pass. Both sides are compared
-trimmed — older rows carry stray spaces.
+a setting's key, an expiry alert's asset, date and stage, and a person's email — by `email_key`,
+`lower(trim(email))` computed and stored by the database, since EF cannot index an expression — are
+the only unique constraints in the database. Names in the codebooks and the company's records are not
+unique: whether two vendors may share one is a product question nobody has answered, so the schema
+does not answer it either. **Device types, tags, software or services, furniture types, information
+types and tags, virtual machines, cloud subscriptions, software entries, and every company record —
+people, clients, projects, vendors, manufacturers, locations — are unique by name, whatever the case**
+— and **people by email too**, since an email is what an employee signs in by. The application
+enforces it, as a field error; for a person's email the index above holds it as well, for the names no
+index backs it yet, so two saves at once can still both pass. Both sides are compared trimmed — older
+rows carry stray spaces.
 
 ## Migrations
 
@@ -108,9 +110,10 @@ holding the entity's class name, its id, the user's email (`system` without one)
 `Update` / `Delete`, and the complete before/after property set as JSON. `AuditLog` is excluded so the
 log cannot log itself. Rows written in one `SaveChanges` share a `TransactionId`.
 
-**One format for the whole log**, which holds rows from 2022 on: indented, every
-property in EF's order — the key, then by name — changed or not; `DateOnly` as `yyyy-MM-dd`; non-ASCII
-written as it is. `AuditLogInterceptorTests` holds it to that.
+**One format for the whole log**, which holds rows from 2022 on: indented, every property in EF's
+order — the key, then by name — changed or not, but a column the database computes (`email_key`),
+which only repeats the others; `DateOnly` as `yyyy-MM-dd`; non-ASCII written as it is.
+`AuditLogInterceptorTests` holds it to that.
 
 **The user is read when the save happens**, through `ICurrentUser`, which the host implements from the
 request in progress. The interceptor is a singleton and knows nothing of HTTP; a save outside a
@@ -144,8 +147,6 @@ What the database lacks and the application works around; each is a migration of
   names it, and its volumes can then only be of that software; one without keeps volumes of any. It
   needs a nullable `SoftwareOrServiceId` on `License`; until then a license is attached to software
   only through its volumes.
-- **A person's email is unique**, by an index on `lower(trim(email))`. The application refuses a
-  duplicate, and two saves at once pass.
 - **A user is not linked to the person they are.** `app_user` and `person` both hold a name and an
   email, and nothing ties them; where it matters — an employee's own equipment, the handover sheet's
   signer — they are matched by email. A nullable `PersonId` on `AppUser` would make it a fact.

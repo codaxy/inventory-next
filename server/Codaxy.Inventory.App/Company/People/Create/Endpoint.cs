@@ -1,4 +1,5 @@
 using Codaxy.Inventory.App.Persistence;
+using Codaxy.Inventory.App.Shared.Settings;
 using Codaxy.Inventory.App.Shared.Validation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ public static class Endpoint
     private static async Task<IResult> Handle(
         [FromBody] PersonForm form,
         InventoryContext context,
+        SettingStore settings,
         CancellationToken cancellationToken
     )
     {
@@ -27,7 +29,7 @@ public static class Endpoint
 
         return Results.Created(
             $"/api/company/people/{person.Id}",
-            await People.DetailAsync(context, person.Id, cancellationToken)
+            await People.DetailAsync(context, settings, person.Id, cancellationToken)
         );
     }
 }

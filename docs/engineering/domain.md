@@ -141,7 +141,8 @@ locations, manufacturers and vendors are seeded with a starting set.
 
 **What a person holds**: the assets assigned to them — devices, furniture, licenses — the seats
 activated for them by name and those on a device they hold, the information they own and the
-projects they lead. Virtual machines, cloud subscriptions and software entries have no owner: nothing in the
+projects they lead. **A person may sign in** to see their own equipment, unless turned off for them
+— see [auth.md](auth.md). Virtual machines, cloud subscriptions and software entries have no owner: nothing in the
 schema ties one to a person. **A company record something points at is not deleted** — a person
 holding anything, a client with a project, a project with information, a vendor an asset or a
 maintenance contract names, a manufacturer a device or a software names, a location an asset or

@@ -11,6 +11,8 @@ export interface Row {
     assets?: string;
     /** "assets": the count's word, for a phone's card, which has no header. */
     assetsWord: string;
+    /** Excluded from signing in: a flag beside the name. */
+    noSignIn: boolean;
     seats?: string;
     seatsWord: string;
 }
@@ -52,4 +54,5 @@ export const toRows = (items: PersonItem[]): Row[] =>
         assetsWord: p.assets === 1 ? "asset" : "assets",
         seats: p.seats ? String(p.seats) : undefined,
         seatsWord: p.seats === 1 ? "seat" : "seats",
+        noSignIn: !p.canSignIn,
     }));

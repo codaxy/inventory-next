@@ -15,7 +15,15 @@ public static class Endpoint
 
     /// <param name="Assets">Every asset the person holds: devices, furniture, licenses.</param>
     /// <param name="Seats">Active seats assigned to the person by name.</param>
-    public sealed record Item(Guid Id, string Name, string Email, int Assets, int Seats);
+    /// <param name="CanSignIn">Off marks the few excluded from signing in: a flag on the list.</param>
+    public sealed record Item(
+        Guid Id,
+        string Name,
+        string Email,
+        int Assets,
+        int Seats,
+        bool CanSignIn
+    );
 
     private static readonly string[] Keys = ["name", "email", "assets"];
 
@@ -39,7 +47,10 @@ public static class Endpoint
                     p.Name,
                     p.Email,
                     assets.Count(a => a.PersonId == p.Id),
-                    context.Activations.Count(a => a.PersonId == p.Id && a.DeactivationDate == null)
+                    context.Activations.Count(a =>
+                        a.PersonId == p.Id && a.DeactivationDate == null
+                    ),
+                    p.CanSignIn
                 ))
                 .ToPageAsync(window, cancellationToken)
         );

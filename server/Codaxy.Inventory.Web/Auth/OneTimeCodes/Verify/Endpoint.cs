@@ -52,7 +52,7 @@ public static class Endpoint
 
         // Only now, once the address is proven: said on requesting a code, it would tell anyone who is
         // a user here.
-        if (await access.ForAsync(request.Email) is null)
+        if (!await access.MaySignInAsync(request.Email))
             return Results.Problem(
                 title: Messages.NoAccess,
                 statusCode: StatusCodes.Status403Forbidden

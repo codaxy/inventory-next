@@ -11,17 +11,23 @@ export interface PersonItem {
     assets: number;
     /** Active seats assigned to them by name. */
     seats: number;
+    /** Off marks someone excluded from signing in. */
+    canSignIn: boolean;
 }
 
 export interface PersonDetail {
     id: string;
     name: string;
     email: string;
+    canSignIn: boolean;
+    /** Whether employees may sign in at all; the page shows the flag by it. */
+    signInOpen: boolean;
 }
 
 export interface PersonForm {
     name: string;
     email: string;
+    canSignIn: boolean;
 }
 
 export type PersonSort = `${"" | "-"}${"name" | "email" | "assets"}`;
@@ -85,6 +91,9 @@ export const listPeople = (q: PersonQuery) => send<Page<PersonItem>>(`${base}/?$
 export const peopleExport = (q: Omit<PersonQuery, "page" | "pageSize">) => `${base}/export?${toQuery(q)}`;
 
 export const getPerson = (id: string) => send<PersonDetail>(`${base}/${id}`);
+
+/** Whether employees may sign in at all, for a person's form before there is a person. */
+export const getPeopleSignIn = () => send<{ open: boolean }>(`${base}/sign-in`);
 
 export const getHoldings = (id: string) => send<Holdings>(`${base}/${id}/holdings`);
 

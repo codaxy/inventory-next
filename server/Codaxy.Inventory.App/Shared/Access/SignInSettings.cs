@@ -25,6 +25,12 @@ public static partial class SignInSettings
                 .ToArray()
     );
 
+    /// <summary>
+    /// Whether employees may sign in as the person they are, to see their own equipment: the master
+    /// switch over every person's <c>CanSignIn</c>. Off by default — nothing opens until someone opens it.
+    /// </summary>
+    public static readonly SettingDefinition<bool> People = new("sign_in.people", false);
+
     /// <summary>Whether an address belongs to one of the domains, or the list is empty.</summary>
     public static bool Allows(IReadOnlyCollection<string> domains, string email)
     {

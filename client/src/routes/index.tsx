@@ -2,7 +2,7 @@ import { equal, FirstVisibleChildLayout, falsy } from "cx/ui";
 import { PureContainer, RedirectRoute, Route } from "cx/widgets";
 
 import { AppLayout } from "../layout";
-import { forbidden, landing } from "../access";
+import { forbidden, landing, myEquipment } from "../access";
 import { navigation } from "../layout/navigation";
 import $app from "../model";
 import AuditLog from "./administration/audit-log";
@@ -55,6 +55,7 @@ import SoftwareServices from "./licenses/software-services";
 import Types from "./electronic-devices/types";
 import Controller from "./Controller";
 import Dashboard from "./dashboard";
+import MyEquipment from "./my-equipment";
 import NotFound from "./not-found";
 import SignIn from "./sign-in";
 
@@ -127,6 +128,10 @@ export default (
                             );
                         }),
                     )}
+
+                    <Route route={myEquipment} url={$app.url}>
+                        <MyEquipment />
+                    </Route>
 
                     {/* Editors, after the menu's own routes: `~/electronic-devices/tags` is one of them. */}
                     <Route route="~/administration/roles/:id/edit" url={$app.url}>

@@ -234,19 +234,38 @@ function signInCard() {
     return card(
         "sign_in",
         "Sign-in",
-        "Only users added under Users sign in; these domains narrow who that can be.",
-        chips({
-            label: "Allowed domains",
-            values: s.draft.allowed_domains,
-            typed: m.settings.newDomain,
-            viewing: s.viewing,
-            error: s.errors.allowed_domains,
-            none: "Any domain",
-            noneHint: "None: any domain, for whoever is added under Users.",
-            placeholder: "example.com",
-            adding: "Domain to add",
-            removing: "Remove domain",
-        }),
+        "Users added under Users sign in, and employees if let in below; these domains narrow who that can be.",
+        <cx>
+            {chips({
+                label: "Allowed domains",
+                values: s.draft.allowed_domains,
+                typed: m.settings.newDomain,
+                viewing: s.viewing,
+                error: s.errors.allowed_domains,
+                none: "Any domain",
+                noneHint: "None: any domain, for whoever is added under Users.",
+                placeholder: "example.com",
+                adding: "Domain to add",
+                removing: "Remove domain",
+            })}
+            <div class="editor-wide">
+                <div class="editor-label" text="Employees can sign in" />
+                <div
+                    class="editor-value"
+                    visible={s.viewing}
+                    text={expr(s.draft.people, (on) =>
+                        on ? "Yes, to see the equipment assigned to them" : "No",
+                    )}
+                />
+                <div visible={falsy(s.viewing)}>
+                    <Switch value={s.draft.people} text="To see the equipment assigned to them" />
+                    <p
+                        class="editor-hint"
+                        text="As the person they are under People, by the email there; a person can be left out on their own page."
+                    />
+                </div>
+            </div>
+        </cx>,
     );
 }
 

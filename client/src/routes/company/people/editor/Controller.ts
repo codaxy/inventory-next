@@ -1,7 +1,14 @@
 import { Controller, History } from "cx/ui";
 
 import { ApiError, fieldErrors } from "../../../../api/http";
-import { createPerson, deletePerson, getHoldings, getPerson, updatePerson } from "../../../../api/people";
+import {
+    createPerson,
+    deletePerson,
+    getHoldings,
+    getPeopleSignIn,
+    getPerson,
+    updatePerson,
+} from "../../../../api/people";
 import { confirm } from "../../../../components/confirm";
 import { guardLeaving } from "../../../../leaveGuard";
 import { listReturn } from "../../../../listAddress";
@@ -46,6 +53,9 @@ export default class extends Controller {
         this.store.delete(p.holds);
         this.store.set(p.holdingsLoaded, false);
         this.load({}, id ? "" : "New person");
+        getPeopleSignIn()
+            .then((s) => this.store.set(p.signInOpen, s.open))
+            .catch(() => {});
 
         this.release?.();
         this.release = viewing ? undefined : guardLeaving(() => this.dirty());
@@ -55,7 +65,11 @@ export default class extends Controller {
         getPerson(id)
             .then((person) => {
                 if (this.store.get(p.id) !== id) return;
-                this.load({ name: person.name, email: person.email }, person.name);
+                this.store.set(p.signInOpen, person.signInOpen);
+                this.load(
+                    { name: person.name, email: person.email, canSignIn: person.canSignIn },
+                    person.name,
+                );
             })
             .catch((error) =>
                 this.store.set(
@@ -85,6 +99,7 @@ export default class extends Controller {
         const clean: PersonDraft = {};
         if (draft.name) clean.name = draft.name;
         if (draft.email) clean.email = draft.email;
+        clean.canSignIn = draft.canSignIn ?? true;
 
         this.store.set(p.draft, clean);
         this.store.set(p.title, title);

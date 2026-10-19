@@ -16,10 +16,13 @@ export type Permission =
     | "settings.manage";
 
 export interface CurrentUser {
+    /** A user runs the application with a role; a person is an employee seeing their own equipment. */
+    kind: "user" | "person";
     email: string;
-    /** As an administrator gave it, not the provider's. */
+    /** As the application keeps it, not the provider's. */
     name: string;
-    role: string;
+    /** A user's role; a person has none. */
+    role: string | null;
     permissions: Permission[];
 }
 

@@ -43,6 +43,18 @@ no `@`, once each. One place holds it so a second provider cannot arrive with it
 who is allowed. **Inside it, being an active user decides** (`UserAccess`): both providers end there
 once the address is proven.
 
+**Employees sign in as the person they are, not as a user** — no user is made for each person, which
+would be a second list of the same people to keep in step. With `SignInSettings.People` on (off by
+default, the master switch), a person whose email matches the address, trimmed and whatever the case,
+and who may sign in (`Person.CanSignIn`) gets a session of their own: "My equipment", nothing else.
+**`UserAccess.MaySignInAsync` is the one answer** — for a code, for Google, and for the cookie on
+every request, so turning either off ends a session on the next one. **A person's session holds no
+permission**: `CurrentAsync` is a user's access only, so every `/api` endpoint refuses it with no
+exception to keep. `/api/auth/me` says which kind is signed in. **`CanSignIn` is a decision about
+that person**, true for everyone until it is turned off — a leaver, a placeholder holder — and never
+derived from the setting, which would leave everyone added while it was off shut out once it is on
+for no reason anyone made.
+
 **Someone who is not a user is told so only after proving the address** — "ask an administrator" on
 verifying a code, `/sign-in?error=no-access` from Google. Requesting a code still answers `204` for
 anyone in the domain, and sends the code, so the endpoint names nobody.

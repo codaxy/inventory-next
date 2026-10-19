@@ -25,7 +25,7 @@ public class SettingsTests(SettingsApplication app) : IClassFixture<SettingsAppl
         new() { ["documents.place"] = place, ["documents.default_language"] = language };
 
     private static Dictionary<string, object> SignIn(params string[] domains) =>
-        new() { ["sign_in.allowed_domains"] = domains };
+        new() { ["sign_in.allowed_domains"] = domains, ["sign_in.people"] = false };
 
     private static async Task<Dictionary<string, string[]>> ProblemsAsync(HttpResponseMessage r)
     {
