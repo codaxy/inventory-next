@@ -61,8 +61,10 @@ jobs:
             echo "found=true" >> "$GITHUB_OUTPUT"
           fi
 
+      # The manifest copied as it is, so the tag names the same digest; `imagetools create` would wrap
+      # it in a new one. Skopeo comes with the runner and reads the login above.
       - if: steps.existing.outputs.found == 'true'
-        run: docker buildx imagetools create --tag "$IMAGE:$TAG" "$IMAGE:$GITHUB_SHA"
+        run: skopeo copy --all --preserve-digests "docker://$IMAGE:$GITHUB_SHA" "docker://$IMAGE:$TAG"
 
       - if: steps.existing.outputs.found != 'true'
         uses: docker/build-push-action@v6

@@ -13,11 +13,12 @@ Codaxy's own repository: a fork or a copy elsewhere cannot push to Codaxy's regi
 carries its commit's sha, so any one can be run again.
 
 **A commit is built once.** A commit already published under its sha is tagged, not rebuilt, so
-`:stable` is the very image `:latest` ran. Shipping to production pushes both branches at once: the
-`production` run waits for the commit's `main` run (`gh run watch`), then tags its image; with no
-`main` image to find — that run failed, or `production` took a commit `main` never published — it
-builds. A push delivered twice, as GitHub sometimes does, runs again behind the first (a concurrency
-group per branch and commit) and only tags.
+`:stable` is the very image `:latest` ran, under the same digest: the tag is a copy of the manifest
+(`skopeo copy --preserve-digests`), which fails rather than write a new one. Shipping to production
+pushes both branches at once: the `production` run waits for the commit's `main` run (`gh run
+watch`), then tags its image; with no `main` image to find — that run failed, or `production` took a
+commit `main` never published — it builds. A push delivered twice, as GitHub sometimes does, runs
+again behind the first (a concurrency group per branch and commit) and only tags.
 
 **The version is the commit's, stamped when CI builds the image** — never a commit of its own:
 `26.9.29+1222.eaea98a`, the commit's UTC date as year, month and day, then its hour and minute and
