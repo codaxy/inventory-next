@@ -21,8 +21,6 @@ export interface TypeEditorState {
     furnitureText?: string;
     /** The furniture list filtered to this type. */
     furnitureHref?: string;
-    /** The icon was picked, not guessed: a name typed later leaves it alone. */
-    iconPicked: boolean;
     /** Whether the name has focus: leaving it guesses the icon. */
     nameFocused?: boolean;
     /** Whether the icon picker's grid is open. */

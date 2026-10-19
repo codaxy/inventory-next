@@ -25,8 +25,6 @@ export interface TypeEditorState {
     /** How many devices are of the type: what keeps it from being deleted. */
     deviceCount: number;
     tagOptions: Option[];
-    /** The icon was picked, not guessed: a name typed later leaves it alone. */
-    iconPicked: boolean;
     /** Whether the name has focus: leaving it guesses the icon. */
     nameFocused?: boolean;
     /** Whether the icon picker's grid is open. */

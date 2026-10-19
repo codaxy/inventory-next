@@ -21,8 +21,7 @@ function focusLater(selector: string, frames = 10) {
  * which opens the generic one and the kind's set as a grid — glyphs alone, named for a screen reader
  * only, behaving as one radio group. Picking one, clicking outside or Escape closes it. Read-only, the
  * chosen glyph. `open` holds whether the grid shows; `onPick` is the controller's method, given the
- * key or `null` for the generic one — the editor notes the choice was made, so a later guess from the
- * name leaves it alone.
+ * key or `null` for the generic one.
  */
 export const iconPicker = (
     kind: IconKind,

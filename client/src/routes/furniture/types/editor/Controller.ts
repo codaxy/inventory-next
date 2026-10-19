@@ -23,6 +23,8 @@ export default class extends Controller {
     /** The form as loaded; what "unsaved" is measured against. */
     private saved = "";
     private release?: () => void;
+    /** The name the icon was last guessed from: leaving it unchanged guesses nothing. */
+    private guessedFrom?: string;
 
     onInit() {
         // A field's own message goes once its value changes.
@@ -57,7 +59,7 @@ export default class extends Controller {
         this.store.set(t.errors, {});
         this.store.set(t.visited, false);
         this.store.set(t.valid, true);
-        this.store.set(t.iconPicked, false);
+        this.guessedFrom = undefined;
         this.show(null, {}, id ? "" : "New type");
 
         this.release?.();
@@ -99,19 +101,22 @@ export default class extends Controller {
         this.saved = JSON.stringify(toForm(clean));
     }
 
-    /** An icon picked: kept whatever the name becomes. */
     pickIcon(key: string | null) {
         this.store.set(t.draft.icon, key);
-        this.store.set(t.iconPicked, true);
     }
 
     /**
-     * Leaving the name of a type being created, the icon it suggests, unless one was picked; a name
-     * that suggests none leaves the icon as it is. An existing type's icon changes only when picked.
+     * Leaving the name of a type being created, changed since it was last left: the icon it suggests,
+     * over one picked before — the icon is just below, so the change is seen and undone in a click. A
+     * name left unchanged guesses nothing, so tabbing through it keeps a pick; a name that suggests
+     * nothing leaves the icon as it is. An existing type's icon changes only when picked.
      */
     guessIcon() {
-        if (this.store.get(t.id) || this.store.get(t.iconPicked)) return;
-        const guess = guessIcon("furniture", this.store.get(t.draft.name));
+        if (this.store.get(t.id)) return;
+        const name = (this.store.get(t.draft.name) ?? "").trim();
+        if (name === this.guessedFrom) return;
+        this.guessedFrom = name;
+        const guess = guessIcon("furniture", name);
         if (guess !== undefined) this.store.set(t.draft.icon, guess);
     }
 
