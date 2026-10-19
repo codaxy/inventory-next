@@ -16,12 +16,17 @@ public static class Endpoint
     /// </param>
     /// <param name="Name">The name the application keeps, not the provider's.</param>
     /// <param name="Permissions">What the client shows; the server checks every request anyway.</param>
+    /// <param name="MyEquipment">
+    /// Whether "My equipment" has anything to show: always for a person; for a user, whether a person
+    /// is kept under the same email.
+    /// </param>
     public sealed record Response(
         string Kind,
         string Email,
         string Name,
         string? Role,
-        IReadOnlyList<string> Permissions
+        IReadOnlyList<string> Permissions,
+        bool MyEquipment
     );
 
     private static async Task<IResult> Handle(UserAccess access) =>
@@ -32,10 +37,11 @@ public static class Endpoint
                     user.Email,
                     user.Name,
                     user.RoleName,
-                    user.Permissions.Order().ToList()
+                    user.Permissions.Order().ToList(),
+                    await access.EquipmentHolderAsync() is not null
                 )
             )
         : await access.CurrentPersonAsync() is { } person
-            ? Results.Ok(new Response(PersonKind, person.Email, person.Name, null, []))
+            ? Results.Ok(new Response(PersonKind, person.Email, person.Name, null, [], true))
         : Results.Unauthorized();
 }

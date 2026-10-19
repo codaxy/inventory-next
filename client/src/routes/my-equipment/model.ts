@@ -55,14 +55,14 @@ export interface Panel {
     error?: string;
     kind?: ThingKind;
     icon?: IconName;
-    tone?: Tone;
+    /** "expired" for an activation or a license that has, grey as its card's icon. */
+    tone?: Tone | "expired";
     title?: string;
     subtitle?: string;
-    status?: Standing;
-    statusText?: string;
     facts: Fact[];
     contracts: string[];
-    apps: { name: string; license: string; ends?: string }[];
+    /** `expired`: grey, as its pill on the card is. */
+    apps: { name: string; license: string; ends?: string; expired: boolean }[];
 }
 
 export interface Notice {
@@ -72,7 +72,6 @@ export interface Notice {
 
 export interface Model {
     mine: {
-        loading: boolean;
         loaded: boolean;
         error?: string;
         initials?: string;

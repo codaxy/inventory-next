@@ -44,9 +44,13 @@ const secondsFormat = new Intl.DateTimeFormat("en-GB", {
     second: "2-digit",
 });
 
-export const formatDay = (date: Date) => dayFormat.format(date);
+/**
+ * "8 Sep 2023". British English abbreviates September "Sept" alone of the months; the server's dates
+ * and the emails it sends say "Sep", and one page showed both.
+ */
+export const formatDay = (date: Date) => dayFormat.format(date).replace("Sept", "Sep");
 export const formatTime = (date: Date) => timeFormat.format(date);
-export const formatDateTime = (date: Date) => `${dayFormat.format(date)}, ${secondsFormat.format(date)}`;
+export const formatDateTime = (date: Date) => `${formatDay(date)}, ${secondsFormat.format(date)}`;
 
 /** "Today", "Yesterday", or the date spelled out — a heading over a day's rows. */
 export function formatDayHeading(date: Date, now = new Date()): string {

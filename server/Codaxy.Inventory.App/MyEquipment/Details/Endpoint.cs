@@ -79,32 +79,27 @@ public static class Endpoint
         CancellationToken cancellationToken
     )
     {
-        if (await access.CurrentPersonAsync(cancellationToken) is not { } person)
+        if (await access.EquipmentHolderAsync(cancellationToken) is not { } person)
             return Results.Forbid();
         var me = person.PersonId;
         var today = Expiry.Today(clock);
         var values = await settings.LoadAsync(cancellationToken);
         var warrantyWindow = values.Get(DashboardSettings.WarrantiesEndingDays);
         var subscriptionWindow = values.Get(DashboardSettings.SubscriptionsExpiringDays);
-        // A warranty or a subscription "expires" on its date, and "expired" on it once it is past.
-        bool Past(DateOnly? date) => date < today;
-        // How it stands, as the card's pill: the expiry fact is marked with it.
-        List<Fact> Standing(List<Fact> facts, DateOnly? date, int window)
-        {
-            var status = date switch
-            {
-                null => null,
-                { } e when e < today => "ended",
-                { } e when e < today.AddDays(window) => "soon",
-                _ => "ok",
-            };
-            return
+        // When a warranty or a subscription expires — "expires" on its date, "expired" once it is past —
+        // marked with how it stands, as the card's pill: by the dashboard's window ahead. None without
+        // a date.
+        IEnumerable<Fact> Expires(string what, DateOnly? date, int window) =>
+            date is not { } e ? []
+            : e < today ? [new Fact($"{what} expired", Day(e), Standing: "ended")]
+            :
             [
-                .. facts.Select(f =>
-                    f.Label.Contains(" expire") ? f with { Standing = status } : f
+                new Fact(
+                    $"{what} expires",
+                    Day(e),
+                    Standing: e < today.AddDays(window) ? "soon" : "ok"
                 ),
             ];
-        }
 
         switch (kind)
         {
@@ -162,24 +157,11 @@ public static class Endpoint
                         ("Serial number", d.SerialNumber),
                         ("Model number", d.ModelCode)
                     ),
-                    .. Facts(
-                        ("Location", d.Location),
-                        (
-                            Past(d.WarrantyExpirationDate)
-                                ? "Warranty expired"
-                                : "Warranty expires",
-                            d.WarrantyExpirationDate is { } w ? Day(w) : null
-                        )
-                    ),
+                    .. Facts(("Location", d.Location)),
+                    .. Expires("Warranty", d.WarrantyExpirationDate, warrantyWindow),
                     .. Codes(("Warranty number", d.WarrantyNumber)),
                 ];
-                return Results.Ok(
-                    new Response(
-                        Standing(facts, d.WarrantyExpirationDate, warrantyWindow),
-                        contracts,
-                        apps
-                    )
-                );
+                return Results.Ok(new Response(facts, contracts, apps));
             }
             case "furniture":
             {
@@ -229,31 +211,26 @@ public static class Endpoint
                     ? Results.NotFound()
                     : Results.Ok(
                         new Response(
-                            Standing(
-                                [
-                                    .. Codes(
-                                        (
-                                            "Inventory number",
-                                            l.InventoryNumber is { } n ? $"#{n}" : null
-                                        )
-                                    ),
-                                    .. Facts(
-                                        ("Vendor", l.Vendor),
-                                        (
-                                            Past(l.SubscriptionExpirationDate)
-                                                ? "Subscription expired"
-                                                : "Subscription expires",
-                                            l.SubscriptionExpirationDate is { } e ? Day(e) : null
-                                        ),
-                                        (
-                                            "Renews automatically",
-                                            l.AutoRenew is { } r ? (r ? "Yes" : "No") : null
-                                        )
-                                    ),
-                                ],
-                                l.SubscriptionExpirationDate,
-                                subscriptionWindow
-                            ),
+                            [
+                                .. Codes(
+                                    (
+                                        "Inventory number",
+                                        l.InventoryNumber is { } n ? $"#{n}" : null
+                                    )
+                                ),
+                                .. Facts(("Vendor", l.Vendor)),
+                                .. Expires(
+                                    "Subscription",
+                                    l.SubscriptionExpirationDate,
+                                    subscriptionWindow
+                                ),
+                                .. Facts(
+                                    (
+                                        "Renews automatically",
+                                        l.AutoRenew is { } r ? (r ? "Yes" : "No") : null
+                                    )
+                                ),
+                            ],
                             [],
                             []
                         )
@@ -299,16 +276,11 @@ public static class Endpoint
                                 ? s.Quantity.ToString(CultureInfo.InvariantCulture)
                                 : null
                         ),
-                        ("Since", Day(s.ActivationDate)),
-                        (
-                            Past(s.Ends) ? "Subscription expired" : "Subscription expires",
-                            s.Ends is { } e ? Day(e) : null
-                        )
+                        ("Since", Day(s.ActivationDate))
                     )
                 );
-                return Results.Ok(
-                    new Response(Standing(facts, s.Ends, subscriptionWindow), [], [])
-                );
+                facts.AddRange(Expires("Subscription", s.Ends, subscriptionWindow));
+                return Results.Ok(new Response(facts, [], []));
             }
             default:
                 return Results.NotFound();

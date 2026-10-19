@@ -24,6 +24,8 @@ export interface CurrentUser {
     /** A user's role; a person has none. */
     role: string | null;
     permissions: Permission[];
+    /** Whether "My equipment" has anything to show: a person's always, a user's who is a person too. */
+    myEquipment: boolean;
 }
 
 export const getAuthProviders = () => send<AuthProviders>("/api/auth/options");

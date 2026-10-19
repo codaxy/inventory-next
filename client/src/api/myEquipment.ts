@@ -5,7 +5,6 @@ export interface EquipmentWarning {
     kind: "warranty" | "subscription";
     id: string;
     name: string;
-    number: number | null;
     date: string;
     uses: string | null;
 }

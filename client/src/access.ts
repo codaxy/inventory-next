@@ -49,6 +49,12 @@ export const isPerson = expr($app.session.user.kind, (kind) => kind === "person"
 /** Whether the session is a user's: anything but an employee's. */
 export const isUser = expr($app.session.user.kind, (kind) => kind !== "person");
 
+/**
+ * Whether the reader has equipment of their own to see: an employee, or a user who is a person too —
+ * for whom it is one more item in the menu, above the Dashboard.
+ */
+export const hasMyEquipment = expr($app.session.user.myEquipment, (has) => !!has);
+
 /** Where `~/` and sign-in land: an employee's own equipment, else the first item the reader can see. */
 export const landing = expr($app.session.user, (user) =>
     user?.kind === "person" ? myEquipment : landingFor(user?.permissions ?? []),

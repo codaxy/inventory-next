@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Codaxy.Inventory.App.Administration.Roles;
 using Codaxy.Inventory.App.Company.Locations;
 using Codaxy.Inventory.App.Company.Manufacturers;
 using Codaxy.Inventory.App.Licenses.SoftwareServices;
@@ -8,6 +9,7 @@ using Codaxy.Inventory.Tests.Integration.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Details = Codaxy.Inventory.App.MyEquipment.Details.Endpoint.Response;
+using Me = Codaxy.Inventory.Web.Auth.Session.Me.Endpoint;
 using Response = Codaxy.Inventory.App.MyEquipment.Get.Endpoint.Response;
 
 namespace Codaxy.Inventory.Tests.Integration;
@@ -29,6 +31,10 @@ public class MyEquipmentApplication : PeopleSignInApplication
     public Guid Lapsing { get; private set; }
     public Guid Lasting { get; private set; }
     public Guid OthersDevice { get; private set; }
+
+    /// <summary>A user who is a person too, turned off from signing in as one, with a device.</summary>
+    public const string Uma = "uma.both@codaxy.com";
+    public Guid UmasDevice { get; private set; }
     public Guid WrittenOff { get; private set; }
     public Guid Stale { get; private set; }
 
@@ -38,6 +44,8 @@ public class MyEquipmentApplication : PeopleSignInApplication
         await PeopleMaySignInAsync(true);
         var mia = await PersonAsync("Mia Employee", Mia);
         var other = await PersonAsync("Ole Other", "ole.other@codaxy.com");
+        var uma = await PersonAsync("Uma Both", Uma, canSignIn: false);
+        await this.UserAsync(Uma, BuiltInRoles.Admin);
 
         using var scope = Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<InventoryContext>();
@@ -46,6 +54,7 @@ public class MyEquipmentApplication : PeopleSignInApplication
         Monitor = await Device(context, "Mia's monitor", mia, Today.AddDays(200));
         Tablet = await Device(context, "Mia's tablet", mia, Today.AddDays(-1000));
         OthersDevice = await Device(context, "Ole's laptop", other, Today.AddDays(5));
+        UmasDevice = await Device(context, "Uma's laptop", uma, Today.AddDays(300));
 
         // Written off with its warranty ending in three days: nothing to warn of.
         WrittenOff = await Device(context, "Mia's old laptop", mia, Today.AddDays(3));
@@ -206,8 +215,9 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
             ["soon", null, null, null],
             mine.Software.Select(t => t.Status).OrderBy(s => s is null).ToList()
         );
-        // The one on her laptop is an activation of hers too, said where it is.
-        Assert.Contains(mine.Software, t => t.Subtitle == "On your seed laptop");
+        // The one on her laptop is an activation of hers too, said where it is: on the laptop as its card names it.
+        var laptop = mine.Devices.Single(t => t.Id == app.Laptop);
+        Assert.Contains(mine.Software, t => t.Subtitle == $"On {laptop.Subtitle ?? laptop.Title}");
     }
 
     [Fact]
@@ -265,6 +275,7 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
         );
         Assert.Equal(["Suite"], laptop.Apps.Select(a => a.Name).ToList());
         Assert.Equal("Suite", seatDetails.Facts.Single(f => f.Label == "Software").Value);
+        Assert.Null(seatDetails.Facts.Single(f => f.Label == "Since").Standing);
         // The license is named alone; its number comes apart, for the page to mute.
         Assert.EndsWith(" subscription", seatDetails.Facts.Single(f => f.Label == "License").Value);
     }
@@ -279,6 +290,37 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
                 )
             ).StatusCode
         );
+
+    [Fact]
+    public async Task A_user_who_is_a_person_too_sees_their_own_whatever_the_switches()
+    {
+        var client = await app.SignInAsync(MyEquipmentApplication.Uma);
+        await app.PeopleMaySignInAsync(false);
+        try
+        {
+            var me = await client.GetFromJsonAsync<Me.Response>("/api/auth/me");
+            var mine = (await client.GetFromJsonAsync<Response>("/api/my-equipment"))!;
+            var details = await client.GetAsync($"/api/my-equipment/items/device/{app.UmasDevice}");
+
+            Assert.Equal((Me.UserKind, true), (me!.Kind, me.MyEquipment));
+            Assert.Equal(("Uma Both", app.UmasDevice), (mine.Name, Assert.Single(mine.Devices).Id));
+            Assert.Equal(HttpStatusCode.OK, details.StatusCode);
+        }
+        finally
+        {
+            await app.PeopleMaySignInAsync(true);
+        }
+    }
+
+    [Fact]
+    public async Task A_user_who_is_no_person_is_told_there_is_nothing()
+    {
+        var client = await app.ClientAsync("equipment.admin@codaxy.com");
+
+        var me = await client.GetFromJsonAsync<Me.Response>("/api/auth/me");
+
+        Assert.False(me!.MyEquipment);
+    }
 
     [Theory]
     [InlineData("/api/my-equipment")]

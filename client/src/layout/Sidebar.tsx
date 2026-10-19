@@ -5,7 +5,7 @@ import { Logo } from "../components/Logo";
 import $app from "../model";
 import { AccountMenu } from "./AccountMenu";
 import { isCurrent, navigation } from "./navigation";
-import { can, isPerson, myEquipment } from "../access";
+import { can, hasMyEquipment, myEquipment } from "../access";
 
 const closeDrawer = (_e: unknown, { store }: any) => store.set($app.ui.drawerOpen, false);
 
@@ -43,19 +43,6 @@ export const Sidebar = createFunctionalComponent(() => (
             </div>
 
             <nav class="nav-scroll flex-1 overflow-y-auto overscroll-contain lg:overscroll-auto px-2 pb-4">
-                {/* An employee's whole menu: their own equipment. A user's menu has no such item. */}
-                <Link
-                    visible={isPerson}
-                    href={myEquipment}
-                    url={$app.url}
-                    class={{
-                        "nav-link": true,
-                        "nav-link-active": expr($app.url, (url) => isCurrent(myEquipment, url)),
-                    }}
-                >
-                    <Icon name="myEquipment" class="nav-icon" />
-                    <span text="My equipment" />
-                </Link>
                 {navigation.map((section) => (
                     <cx>
                         <div
@@ -85,6 +72,24 @@ export const Sidebar = createFunctionalComponent(() => (
                         </div>
                     </cx>
                 ))}
+
+                {/* Last, apart from the work: a user's own equipment, where they are a person too. The
+                    account menu has it as well, always in reach; this is where a menu is looked for. */}
+                <div visible={hasMyEquipment}>
+                    <div class="nav-section" text="Personal" />
+                    <Link
+                        visible={hasMyEquipment}
+                        href={myEquipment}
+                        url={$app.url}
+                        class={{
+                            "nav-link": true,
+                            "nav-link-active": expr($app.url, (url) => isCurrent(myEquipment, url)),
+                        }}
+                    >
+                        <Icon name="myEquipment" class="nav-icon" />
+                        <span text="My equipment" />
+                    </Link>
+                </div>
             </nav>
 
             <div class="nav-footer">

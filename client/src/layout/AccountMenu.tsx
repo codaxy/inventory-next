@@ -1,7 +1,14 @@
-import { createFunctionalComponent, expr, hasValue } from "cx/ui";
+import { createFunctionalComponent, expr, hasValue, History } from "cx/ui";
 import { Icon, Menu, MenuItem } from "cx/widgets";
 
+import { myEquipment } from "../access";
 import $app from "../model";
+
+const userWithEquipment = expr(
+    $app.session.user.kind,
+    $app.session.user.myEquipment,
+    (kind, has) => kind === "user" && !!has,
+);
 
 /** Initials for the avatar, from the name or, failing that, the address. */
 function initials(name: string | undefined): string {
@@ -13,7 +20,8 @@ const displayName = expr($app.session.user.name, $app.session.user.email, (name,
 
 /**
  * The signed-in person and their role, at the foot of the navigation; clicking opens a menu above it
- * that holds the address they signed in with, signing out, and beneath it the build the server runs. A cx `MenuItem` dropdown rather than a
+ * that holds the address they signed in with, their own equipment for a user who is a person too,
+ * signing out, and beneath it the build the server runs. A cx `MenuItem` dropdown rather than a
  * hand-built popover: it brings Enter, Escape, arrow keys and closing when focus leaves.
  *
  * `openOnFocus` is off so tabbing through the navigation does not pop the menu open.
@@ -47,12 +55,29 @@ export const AccountMenu = createFunctionalComponent(
                                 text={expr($app.session.user, (u) => u?.role ?? "Employee")}
                             />
                         </div>
-                        <Icon name="accountMenu" class="account-chevron" />
+                        {/* Pointing the way the menu opens: up from the sidebar's foot, down from the bar. */}
+                        <Icon
+                            name={placement === "up" ? "accountMenu" : "accountMenuDown"}
+                            class="account-chevron"
+                        />
                     </div>
 
                     <Menu putInto="dropdown">
                         {/* Not a MenuItem, as the version below. */}
                         <div class="account-email" text={$app.session.user.email} />
+                        {/* A user's own equipment, where they are a person too: theirs, so with their
+                            name rather than in the work's menu alone. An employee is on it already. */}
+                        <MenuItem
+                            class="account-action"
+                            visible={userWithEquipment}
+                            onClick={() => History.pushState({}, null, myEquipment)}
+                            autoClose
+                        >
+                            <div class="flex items-center gap-2.5">
+                                <Icon name="myEquipment" class="nav-icon" />
+                                <span text="My equipment" />
+                            </div>
+                        </MenuItem>
                         <MenuItem class="account-action account-sign-out" onClick="onSignOut" autoClose>
                             <div class="flex items-center gap-2.5">
                                 <Icon name="signOut" class="nav-icon" />

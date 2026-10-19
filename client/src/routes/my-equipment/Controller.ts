@@ -44,7 +44,6 @@ export default class extends Controller {
 
     onInit() {
         this.store.set(m.mine, {
-            loading: true,
             loaded: false,
             notices: [],
             searchable: false,
@@ -116,11 +115,9 @@ export default class extends Controller {
             this.store.set(
                 m.mine.error,
                 error instanceof ApiError && error.status === 403
-                    ? "This page lists an employee's own equipment, for whoever signs in as one."
+                    ? "Nothing is kept under your email address in the register, so there is no equipment of yours to show."
                     : "Your equipment could not be loaded.",
             );
-        } finally {
-            this.store.set(m.mine.loading, false);
         }
     }
 
@@ -192,11 +189,9 @@ export default class extends Controller {
             loading: true,
             kind: card.kind,
             icon: card.icon,
-            tone: card.tone,
+            tone: card.kind !== "device" && card.status === "ended" ? "expired" : card.tone,
             title: card.title,
             subtitle: card.subtitle,
-            status: card.status,
-            statusText: card.statusText,
         });
         // Into the panel, for a keyboard and a screen reader; Escape brings them back out.
         requestAnimationFrame(() => document.querySelector<HTMLElement>(".mine-panel-close")?.focus());
@@ -239,6 +234,7 @@ export default class extends Controller {
                     ends: a.ends
                         ? `Subscription ${a.ends < today ? "expired" : "expires"} ${formatDate(a.ends)}`
                         : undefined,
+                    expired: !!a.ends && a.ends < today,
                 })),
             );
         } catch {

@@ -15,14 +15,7 @@ namespace Codaxy.Inventory.App.MyEquipment;
 /// <param name="Kind"><c>warranty</c> or <c>subscription</c>.</param>
 /// <param name="Name">The device, or the license.</param>
 /// <param name="Uses">For a subscription behind a seat, the software it is for.</param>
-public sealed record Warning(
-    string Kind,
-    Guid Id,
-    string Name,
-    int? Number,
-    DateOnly Date,
-    string? Uses
-);
+public sealed record Warning(string Kind, Guid Id, string Name, DateOnly Date, string? Uses);
 
 /// <summary>An app on one of their devices: a seat, as a pill on the device's card.</summary>
 /// <param name="Status"><c>soon</c> or <c>ended</c>: its subscription, where it says something.</param>
@@ -101,7 +94,6 @@ internal static class Mine
                 "warranty",
                 d.AssetId,
                 d.Asset.Name,
-                d.Asset.InventoryNumber,
                 d.WarrantyExpirationDate!.Value,
                 null
             ))
@@ -133,7 +125,6 @@ internal static class Mine
                 "subscription",
                 l.AssetId,
                 l.Asset.Name,
-                l.Asset.InventoryNumber,
                 l.SubscriptionExpirationDate!.Value,
                 l.Asset.PersonId == id
                     ? null
@@ -253,14 +244,18 @@ internal static class Mine
             };
         }
 
-        // A part number ("960-001592", "90NB0000-P00160", "175W5EA#BED") or a host name ("lap-dub-ad") names nothing
-        // to a person; "ThinkPad E16 Gen2" or "Brio 105" does.
+        // A part number ("960-001592", "90NB0000-P00160", "175W5EA#BED") or a host name ("lap-dub-ad",
+        // "Des-dir-ms") names nothing to a person; "ThinkPad E16 Gen2" or "Brio 105" does.
         static bool Code(string s) =>
             !s.Contains(' ')
             && s.Any(char.IsDigit)
             && (s.Contains('-') || s.Contains('#') || s.Count(char.IsDigit) >= 6);
         static bool Host(string s) =>
-            System.Text.RegularExpressions.Regex.IsMatch(s, "^[a-z0-9]+(-[a-z0-9]+)+$");
+            System.Text.RegularExpressions.Regex.IsMatch(
+                s,
+                "^[a-z0-9]+(-[a-z0-9]+)+$",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+            );
 
         // "Lenovo ThinkPad E16 Gen2": the maker once, before the model — or before the device's own
         // name where the model is a part number and the name is not a host's; else the maker alone.
@@ -342,24 +337,21 @@ internal static class Mine
 
         // Software is what they use, named by itself; its license, and a term that runs, are the
         // panel's — a green "until" on every card drowned the one that was ending.
-        // Every activation of theirs: by name, and on a device they hold — "On your laptop", the device
-        // named by what it is, as on its card; its apps ride on that card too.
-        var deviceTypes = devices.ToDictionary(d => d.Id, d => Blank(d.Type) ?? d.Name);
+        // Every activation of theirs: by name, and on a device they hold — "On Dell Latitude 5550", the
+        // device by its make and model as its card names it (or what it is, failing those); its apps
+        // ride on that card too.
+        var deviceLabels = deviceCards.ToDictionary(d => d.Id, d => d.Subtitle ?? d.Title);
         // A seat on a device written off or sold went with it: marked as gone as the device is.
         var goneDevices = devices
             .Where(d => d.Gone is not null)
             .ToDictionary(d => d.Id, d => d.Gone!);
-        static string Lower(string s) =>
-            s.Length > 1 && char.IsUpper(s[0]) && char.IsLower(s[1])
-                ? char.ToLowerInvariant(s[0]) + s[1..]
-                : s;
         var softwareCards = seats
             .Select(s =>
             {
                 var (status, text) = Standing(s.LicenseId, s.Ends);
                 var on =
-                    s.DeviceId is { } device && deviceTypes.TryGetValue(device, out var type)
-                        ? $"On your {Lower(type)}"
+                    s.DeviceId is { } device && deviceLabels.TryGetValue(device, out var label)
+                        ? $"On {label}"
                         : null;
                 var gone =
                     s.DeviceId is { } seatDevice

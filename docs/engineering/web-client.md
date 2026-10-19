@@ -73,44 +73,59 @@ only with the `edit` of the page's item (`canEdit`, or `edits` on a ⋮ action),
 disabled: a button nobody can press says nothing about why. `screens` in `routes/index.tsx` maps every item's href to its screen.
 
 **An employee signed in as a person sees one item, "My equipment"** (`~/my-equipment`), and lands there
-as a user lands on the Dashboard; their account menu says "Employee" where a user's says their role.
-`/api/auth/me` tells the two apart (`kind`). **Their shell has no sidebar**: a bar at every width with
-the mark and their account menu, which opens downwards — a column holding one link reads as something
-missing. **The page is one page, not a menu of them**: an employee holds a handful of things, and pages
-per kind would each show two rows. **It is made for them, not for IT**: the admin lists' rows, tabs and
-pager read as a register, so it is cards. A greeting with their initials and what they hold ("3 devices
-· 1 piece of furniture · 1 license activation"); then a notice of what ends soon — a warranty or a
+as a user lands on the Dashboard; their account menu says "Employee" where a user's says their role,
+and `/api/auth/me` tells the two apart (`kind`). **Their shell has no sidebar**: a bar at every width
+with the mark and their account menu, which opens downwards — a column holding one link reads as
+something missing. **A user who is a person too** gets the same page from their account menu and from a
+last section of the menu, "Personal", under Administration — personal, so apart from the work — and
+still lands on the Dashboard.
+
+**The page is one page, not a menu of them**: an employee holds a handful of things, and pages per kind
+would each show two rows. **It is made for them, not for IT**: the admin lists' rows, tabs and pager
+read as a register, so it is cards. A greeting with their initials and what they hold ("3 devices · 1
+piece of furniture · 1 license activation"); then a notice of what expires soon — a warranty or a
 subscription of theirs, behind a seat they use too, within the dashboard's windows ahead — in plain
 sentences under a warning icon and no heading ("Needs attention" asked for an act that is seldom
-theirs), amber, several alike ending the same day one sentence ("expires", a warranty's or a
-subscription's), past three folded behind "Show more" and "Show fewer". Then a section each for
-Devices, Furniture, License activations — theirs by name and on a device they hold ("On your laptop"),
-the latter also a pill on that device's card — and Licenses you hold, where they are the license's
-assignee — mostly a holding account's, named by the software they cover where the name is a part number
-— a card per thing: **what it is, then its make and model** ("Laptop", "Lenovo ThinkPad E16 Gen2"), an
-icon of it picked from the recorded type (`thingIcon`, the furniture types matched in the office's own
-language) on its section's tint, the apps on a device as pills, and a pill for how its warranty stands
-today, a shield in it — green "Aug 2027" while covered, amber "3 Nov" when it expires within the window
-ahead, the date alone with the colour and icon saying which and the words on hover; "Warranty expired"
-in muted ink and no fill, no date, since the card does not say "warranty" and when is the details' — or
-its subscription (amber "3 Nov", "Expired"), but not while it runs: a green "until" on every software
-card drowned the one that was ending. **Not the dashboard's windows back**: a warranty that ended years
-ago is old news to IT, but to someone asking whether their laptop is covered it is the same as one
-ended last week — so the card says it whenever it expired, quietly, a fact and not an error, and the
-notice leaves it out. The server names the model by the device's own name where the model is a part
-number and the name is not a host's. Computers and phones come first; **what was written off or sold**
-— at a disposal location — comes last, pale, its pill the location's name, and warns of no warranty.
+theirs), amber, several alike expiring the same day one sentence, past three folded behind "Show more"
+and "Show fewer".
+
+**A section each** for Devices, Furniture, License activations — theirs by name and on a device they
+hold ("On Dell Latitude 5550", the device as its card names it), the latter also a pill on that
+device's card — and Licenses you hold, where they are the license's assignee: mostly a holding
+account's, named by the software they cover where the name is a part number. **A card says what it is,
+then its make and model** ("Laptop", "Lenovo ThinkPad E16 Gen2"; the server names the model by the
+device's own name where the model is a part number and the name is not a host's), its inventory number
+under an icon of it on its section's tint, the apps on a device as pills, and a pill for how its
+warranty stands today, a shield in it: green "Aug 2027" while covered, amber "3 Nov" when it expires
+within the window ahead — the date alone, the colour and icon saying which and the words on hover — and
+"Warranty expired" quiet, muted ink and no fill — a regular state, the device works on — with no date,
+since the card does not say "warranty" and when is the details'. A subscription's the same, but expired
+is grey filled ("3 Nov", "Expired"; its icon grey too): not a regular state, the software stops — but
+nothing while it runs: a green "until" on every software card drowned the one that was expiring. **Not
+the dashboard's windows back**: a warranty that expired years ago is old news to IT, but to someone
+asking whether their laptop is covered it is the same as one expired last week — so the card says it
+whenever it expired, quietly, a fact and not an error, and the notice leaves it out. Computers and
+phones come first, then by type, make and model, alike things by inventory number.
+
 **The codes stay off the cards**: a card opens a panel beside the page — over it on a phone, beneath
-the bar — headed "What to tell IT": the device's name, inventory, serial, model and warranty numbers,
-each with a copy button, its location, the apps on it with their licenses, and the maintenance
-contract's who to call; a license's vendor and term; a seat's software and license. Never a key, a
-console address, money or the classification. **Someone holding hundreds** — 375 devices in one case —
-gets the same page: a section shows twelve cards and "Show all", then "Show fewer" at its foot and in
-its heading, and above twenty things a search, which shows every match. **What was written off or sold
-is hidden** until a switch beside the search shows it ("Include things no longer in use (3)": what
-counts is the data's — a disposal location — so the label names no location; each card's pill does),
-remembered per browser: with it, a seat on such a device, and the greeting's and the sections' counts;
-it warns of nothing either way.
+the bar — headed "For the help desk" ("What to tell IT" in capitals read as "it"): the device's name,
+inventory, serial, model and warranty numbers, each with a copy button on hover, its location, the apps
+on it with their licenses, and the maintenance contract's who to call; a license's vendor and term; a
+seat's software and license, and when it began. Captions are smaller and lighter than their values, on
+the value's baseline, so the values are what reads down the column. A date is a value like the rest,
+with its card pill's colours — green while it runs, amber when it expires soon, grey once a
+subscription has expired, the fill bringing the pill's ink and weight; none for an expired warranty or
+the start — and no icon, the caption saying what it is. Never a key, a console address, money or the
+classification.
+
+**Someone holding hundreds** — 375 devices in one case — gets the same page: a section shows twelve
+cards and "Show all", then "Show fewer" at its foot and in its heading, and above twenty things a
+search, which shows every match. **What was written off or sold is hidden** until a switch beside the
+search includes it: "Include retired (3)" — "include", since the counts change with it; what counts is
+the data's, a disposal location, so the label names no location, each card's pill does, and "retired"
+covers written off and sold alike. Remembered per browser. With it, such things come last in their
+sections, pale, with a seat on such a device and the greeting's and the sections' counts; they warn of
+nothing either way.
 
 **The icons are a guess, and a known gap.** `thingIcon` matches keywords against the type's name, a
 table written by hand from the types recorded in October 2026; nothing in the data says what a type

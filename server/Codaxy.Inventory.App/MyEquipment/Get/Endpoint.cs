@@ -7,8 +7,9 @@ namespace Codaxy.Inventory.App.MyEquipment.Get;
 
 /// <summary>
 /// The signed-in employee's page, whole: their name, what needs attention, and everything of theirs
-/// by section. Answers a person's session alone, about that person: no permission stands for it,
-/// the identity does; a user, who holds no person session, is refused.
+/// by section. Answers about the session's own person (<see cref="UserAccess.EquipmentHolderAsync"/>) —
+/// a person's, or a user's who is a person too: no permission stands for it, the identity does; a user
+/// who is no person is refused.
 /// </summary>
 public static class Endpoint
 {
@@ -31,7 +32,7 @@ public static class Endpoint
         CancellationToken cancellationToken
     )
     {
-        if (await access.CurrentPersonAsync(cancellationToken) is not { } person)
+        if (await access.EquipmentHolderAsync(cancellationToken) is not { } person)
             return Results.Forbid();
 
         var today = Expiry.Today(clock);

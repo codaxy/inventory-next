@@ -126,6 +126,7 @@ const navIcons = {
 /** Everything that is not a menu item. */
 const uiIcons = {
     accountMenu: ArrowUp01Icon,
+    accountMenuDown: ArrowDown01Icon,
     moreWays: ArrowDown01Icon,
     signOut: Logout01Icon,
     previous: ArrowLeft01Icon,

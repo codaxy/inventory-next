@@ -12,7 +12,15 @@ const s = m.$section;
 const c = m.$card;
 const p = d.panel;
 
-const standing = (status: string | undefined) => `mine-standing mine-standing-${status ?? "none"}`;
+/**
+ * A pill's class by how it stands. An expired warranty is a regular state — the device works on, maybe
+ * for years — so it stays quiet, no fill; an expired subscription is not — the software stops — so it
+ * is grey.
+ */
+const standingClass = (status: string | undefined, kind: string | undefined) =>
+    status === "ended" && kind === "device" ? "lapsed" : (status ?? "none");
+const standing = (status: string | undefined, kind: string | undefined) =>
+    `mine-standing mine-standing-${standingClass(status, kind)}`;
 /**
  * A date-only pill in words, for the pointer's hover and a screen reader: "Warranty until Aug 2027",
  * "Subscription expires 3 Nov". An expired pill is words already.
@@ -105,7 +113,7 @@ export default createFunctionalComponent(() => (
                     class="mine-gone-switch"
                     visible={expr(d.goneCount, (n) => n > 0)}
                     value={d.includeGone}
-                    text={expr(d.goneCount, (n) => `Include things no longer in use (${n})`)}
+                    text={expr(d.goneCount, (n) => `Include retired (${n})`)}
                 />
             </div>
 
@@ -134,7 +142,17 @@ export default createFunctionalComponent(() => (
                                 }
                             >
                                 <span class="mine-card-side">
-                                    <span class={expr(c.tone, (t) => `mine-thing mine-thing-${t}`)}>
+                                    <span
+                                        class={expr(
+                                            c.tone,
+                                            c.kind,
+                                            c.status,
+                                            // An expired activation or license greys its icon, as
+                                            // everywhere else it shows; a device's stays its own.
+                                            (tone, kind, status) =>
+                                                `mine-thing mine-thing-${kind !== "device" && status === "ended" ? "expired" : tone}`,
+                                        )}
+                                    >
                                         <Icon name={c.icon} />
                                     </span>
                                     <span
@@ -172,7 +190,7 @@ export default createFunctionalComponent(() => (
                                         text={c.gone}
                                     />
                                     <span
-                                        class={expr(c.status, standing)}
+                                        class={expr(c.status, c.kind, standing)}
                                         visible={hasValue(c.statusText)}
                                         attrs={{
                                             title: expr(c.status, c.kind, c.statusText, standingWords),
@@ -202,7 +220,7 @@ export default createFunctionalComponent(() => (
             <p
                 class="mine-quiet"
                 visible={truthy(d.onlyGone)}
-                text="Nothing assigned to you is still in use. Turn on the switch above to see it all."
+                text="Everything assigned to you is retired. Turn on Include retired to see it."
             />
             <div class="mine-empty" visible={truthy(d.empty)}>
                 <span class="mine-thing mine-thing-device">
@@ -245,29 +263,20 @@ export default createFunctionalComponent(() => (
                 <p class="field-message" visible={hasValue(p.error)} text={p.error} />
 
                 <div class="mine-panel-part" visible={expr(p.facts, (f) => f.length > 0)}>
-                    <h3 class="mine-panel-label" text="What to tell IT" />
+                    <h3 class="mine-panel-label" text="For the help desk" />
                     <dl class="mine-facts">
                         <Repeater records={p.facts} recordAlias={m.$fact}>
                             <div class="mine-fact">
                                 <dt text={m.$fact.label} />
                                 <dd>
+                                    {/* A date as the card's pill has it, in full: one place says how it
+                                        stands and when. */}
                                     <span
-                                        visible={expr(m.$fact.standing, (st) => !st)}
+                                        class={expr(m.$fact.standing, p.kind, (st, kind) =>
+                                            st ? `mine-fact-date-${standingClass(st, kind)}` : "",
+                                        )}
                                         text={m.$fact.value}
                                     />
-                                    {/* The expiry date as the card's pill, the date in full: one
-                                        place says how it stands and when, not a pill above and the
-                                        date below. */}
-                                    <span
-                                        class={expr(
-                                            m.$fact.standing,
-                                            (st) => `${standing(st)} mine-fact-standing`,
-                                        )}
-                                        visible={hasValue(m.$fact.standing)}
-                                    >
-                                        <Icon name={expr(m.$fact.standing, p.kind, standingIcon)} />
-                                        <span text={m.$fact.value} />
-                                    </span>
                                     <span
                                         class="inventory-number"
                                         visible={hasValue(m.$fact.number)}
@@ -285,7 +294,12 @@ export default createFunctionalComponent(() => (
                 <div class="mine-panel-part" visible={expr(p.apps, (a) => a.length > 0)}>
                     <h3 class="mine-panel-label" text="Apps on it" />
                     <Repeater records={p.apps} recordAlias={m.$panelApp}>
-                        <div class="mine-panel-app">
+                        <div
+                            class={{
+                                "mine-panel-app": true,
+                                "mine-panel-app-expired": truthy(m.$panelApp.expired),
+                            }}
+                        >
                             <span class="mine-thing mine-thing-small mine-thing-software">
                                 <Icon name="thingApp" />
                             </span>

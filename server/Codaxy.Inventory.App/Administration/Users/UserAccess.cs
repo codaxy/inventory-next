@@ -91,6 +91,26 @@ public sealed class UserAccess(
             : Task.FromResult<PersonAccess?>(null);
 
     /// <summary>
+    /// Whose equipment this session sees: a person's session, its person; a user's, the person kept
+    /// under the same email, whatever that person's "Can sign in" and the switch for employees — those
+    /// decide who may sign in, and a user already has. None for a user with no person.
+    /// </summary>
+    public async Task<PersonAccess?> EquipmentHolderAsync(CancellationToken cancellation = default)
+    {
+        if (current.Email is not { } email)
+            return null;
+        if (await ForAsync(email, cancellation) is null)
+            return await PersonAsync(email, cancellation);
+
+        var key = AppUser.Normalize(email);
+        return await context
+            .Persons.AsNoTracking()
+            .Where(p => p.EmailKey == key)
+            .Select(p => new PersonAccess(p.Id, p.Email.Trim(), p.Name))
+            .FirstOrDefaultAsync(cancellation);
+    }
+
+    /// <summary>
     /// The person holding <paramref name="email"/> — trimmed, whatever the case, as people are kept —
     /// where employees may sign in and this one may; none otherwise.
     /// </summary>
