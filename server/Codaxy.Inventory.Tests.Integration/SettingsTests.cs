@@ -145,7 +145,7 @@ public class SettingsTests(SettingsApplication app) : IClassFixture<SettingsAppl
             $"{Url}/alerts",
             new Dictionary<string, object>
             {
-                ["alerts.recipients"] = new[] { "admin@codaxy.com" },
+                ["alerts.recipients"] = Array.Empty<string>(),
                 ["alerts.lead"] = new { amount = 2, unit = "months" },
             }
         );
@@ -155,7 +155,7 @@ public class SettingsTests(SettingsApplication app) : IClassFixture<SettingsAppl
         Assert.Equal(
             new Dictionary<string, (string, string)>
             {
-                ["alerts.recipients"] = ("[\"it@codaxy.com\"]", "[\"admin@codaxy.com\"]"),
+                ["alerts.recipients"] = ("[\"it@codaxy.com\"]", "[]"),
                 ["alerts.lead"] = (
                     "{\"amount\":3,\"unit\":\"weeks\"}",
                     "{\"amount\":2,\"unit\":\"months\"}"
