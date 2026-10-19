@@ -47,6 +47,11 @@ the last page's position: the shell scrolls up on cx's `pushState`, never on `re
 a list writing its own address, nor on Back, where the browser restores the reader's place.
 The outermost split is whether there is a session; everything below it can assume the answer.
 
+**The tab names the page**, `<page> · Inventory`, the page first so a narrow tab still shows it:
+what its heading says — a record's name with its number, "Edit …" while editing, its menu item's title
+until the name arrives. `documentTitle()` in `components/` sits beside the heading and sets it while
+rendered; `listHeading()` and `recordPage()` carry it, and a page built by hand adds it.
+
 **The session is resolved once, at the root.** Until it arrives the app shows neither the sign-in
 screen nor the application, which is what stops a signed-in person seeing a sign-in form for a moment
 on every load.

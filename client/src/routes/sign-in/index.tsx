@@ -1,6 +1,7 @@
 import { type Config, createFunctionalComponent, expr, falsy, truthy } from "cx/ui";
 import { Button, TextField, ValidationGroup } from "cx/widgets";
 
+import { documentTitle } from "../../components/documentTitle";
 import Controller from "./Controller";
 import m from "./model";
 
@@ -31,6 +32,7 @@ export default createFunctionalComponent(() => (
                 <div class="brand-mark" />
 
                 <h1 visible={falsy(m.signin.codeSent)} text="Sign in to Inventory" />
+                {documentTitle("Sign in")}
 
                 <h1 visible={m.signin.codeSent} text="Check your email" />
 

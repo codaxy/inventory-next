@@ -1,6 +1,7 @@
 import { createFunctionalComponent, expr, hasValue } from "cx/ui";
 import { Button, Icon, Link, LinkButton, ValidationGroup } from "cx/widgets";
 
+import { recordTitle } from "../../../../components/documentTitle";
 import { formFields } from "../../../../components/formFields";
 import { historyAction, deleteAction, moreActions } from "../../../../components/moreActions";
 import { outlined } from "../../../../components/recordPage";
@@ -32,6 +33,7 @@ export default createFunctionalComponent(() => (
                     </Link>
                     <div class="editor-heading">
                         <h1 class="page-title" text={t.title} />
+                        {recordTitle(t.title)}
                         <div class="editor-heading-actions" visible={t.viewing}>
                             <LinkButton
                                 mod="primary"

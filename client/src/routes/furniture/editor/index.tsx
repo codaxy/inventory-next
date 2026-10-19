@@ -1,6 +1,7 @@
 import { createFunctionalComponent, expr, hasValue, truthy } from "cx/ui";
 import { Button, Icon, Link, LinkButton, ValidationGroup } from "cx/widgets";
 
+import { recordTitle } from "../../../components/documentTitle";
 import { formFields } from "../../../components/formFields";
 import { inventoryNumber } from "../../../components/inventoryNumber";
 import { historyAction, deleteAction, moreActions } from "../../../components/moreActions";
@@ -37,6 +38,7 @@ export default createFunctionalComponent(() => (
                             <span text={f.title} />
                             {inventoryNumber(f.number)}
                         </h1>
+                        {recordTitle(f.title, f.number)}
                         <div class="editor-heading-actions" visible={f.viewing}>
                             <LinkButton
                                 mod="primary"

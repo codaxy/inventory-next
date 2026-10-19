@@ -4,6 +4,7 @@ import { Icon, LinkButton } from "cx/widgets";
 
 import { canEdit } from "../access";
 import { inViewerZone } from "../download";
+import { documentTitle } from "./documentTitle";
 import { downloadButton } from "./downloadButton";
 
 interface ListHeading {
@@ -31,6 +32,7 @@ export function listHeading(o: ListHeading) {
             <div class="page-header">
                 <div class="list-heading">
                     <h1 class="page-title" text={o.title} />
+                    {documentTitle(o.title)}
                     <div class="list-heading-actions">
                         {o.actions}
                         {o.exportHref &&

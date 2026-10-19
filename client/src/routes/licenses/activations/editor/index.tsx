@@ -12,6 +12,7 @@ import {
 
 import { dateValue, numberValue } from "../../../../bindings";
 import { expiryClass } from "../../../../licensing";
+import { recordTitle } from "../../../../components/documentTitle";
 import { inventoryNumber } from "../../../../components/inventoryNumber";
 import { historyAction, deleteAction, moreActions } from "../../../../components/moreActions";
 import { listReturn } from "../../../../listAddress";
@@ -102,6 +103,7 @@ export default createFunctionalComponent(() => (
                             <span text={a.title} />
                             {inventoryNumber(a.titleNumber)}
                         </h1>
+                        {recordTitle(a.title, a.titleNumber)}
                         <div class="editor-heading-actions" visible={shown}>
                             <Button
                                 mod="primary"

@@ -2,6 +2,7 @@ import { createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
 import { Icon, Link, Repeater } from "cx/widgets";
 
 import { downloadButton } from "../../../../components/downloadButton";
+import { documentTitle } from "../../../../components/documentTitle";
 import { languagePicker } from "../../../../documents/languagePicker";
 import $app from "../../../../model";
 import { sheetFit } from "../../../../sheetFit";
@@ -33,6 +34,9 @@ export default createFunctionalComponent(() => {
                         </Link>
                         <div class="editor-heading">
                             <h1 class="page-title" text="Handover sheet" />
+                            {documentTitle(
+                                expr(h.name, (n) => (n ? `Handover sheet – ${n}` : "Handover sheet")),
+                            )}
                             <div class="editor-heading-actions">
                                 {languagePicker({
                                     id: "company-people-handover-language",

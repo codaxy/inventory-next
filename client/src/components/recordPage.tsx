@@ -5,6 +5,7 @@ import { Button, Icon, Link, LinkButton, Menu, MenuItem, ValidationGroup } from 
 import { listReturn } from "../listAddress";
 import $app from "../model";
 import type { RecordState } from "../recordController";
+import { recordTitle } from "./documentTitle";
 import { holdingSections } from "./holdings";
 import { inventoryNumber } from "./inventoryNumber";
 import { historyAction, type MoreAction, deleteAction, moreActions } from "./moreActions";
@@ -124,6 +125,7 @@ export function recordPage(o: RecordPage) {
                             <span text={r.title} />
                             {inventoryNumber(r.number)}
                         </h1>
+                        {recordTitle(r.title, r.number)}
                         <div class="editor-heading-actions" visible={r.viewing}>
                             <LinkButton
                                 mod="primary"

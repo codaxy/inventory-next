@@ -2,12 +2,14 @@ import { createFunctionalComponent } from "cx/ui";
 import { Link } from "cx/widgets";
 
 import { landing } from "../../access";
+import { documentTitle } from "../../components/documentTitle";
 
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body page-narrow">
             <div class="page-top">
                 <h1 class="page-header page-title" text="Page not found" />
+                {documentTitle("Page not found")}
             </div>
             <p class="page-lede">
                 Nothing lives at this address. Check the URL, or go to{" "}

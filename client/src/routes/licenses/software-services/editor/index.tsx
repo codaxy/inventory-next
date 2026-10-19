@@ -10,6 +10,7 @@ import {
     ValidationGroup,
 } from "cx/widgets";
 
+import { recordTitle } from "../../../../components/documentTitle";
 import { inventoryNumber } from "../../../../components/inventoryNumber";
 import { historyAction, deleteAction, moreActions } from "../../../../components/moreActions";
 import { outlined } from "../../../../components/recordPage";
@@ -45,6 +46,7 @@ export default createFunctionalComponent(() => (
                     </Link>
                     <div class="editor-heading">
                         <h1 class="page-title" text={e.title} />
+                        {recordTitle(e.title)}
                         <div class="editor-heading-actions" visible={e.viewing}>
                             <LinkButton
                                 mod="primary"

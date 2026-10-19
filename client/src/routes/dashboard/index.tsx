@@ -2,6 +2,7 @@ import { type BooleanProp, createFunctionalComponent, expr, falsy, hasValue, tru
 import { Button, Repeater } from "cx/widgets";
 
 import { holdingSections } from "../../components/holdings";
+import { documentTitle } from "../../components/documentTitle";
 import Controller from "./Controller";
 import m from "./model";
 
@@ -83,6 +84,7 @@ export default createFunctionalComponent(() => (
         <div class="page-body page-narrow" controller={Controller}>
             <div class="page-top">
                 <h1 class="page-header page-title" text="Dashboard" />
+                {documentTitle("Dashboard")}
             </div>
             <p
                 class="page-lede"

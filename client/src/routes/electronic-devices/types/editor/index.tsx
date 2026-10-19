@@ -12,6 +12,7 @@ import {
     ValidationGroup,
 } from "cx/widgets";
 
+import { recordTitle } from "../../../../components/documentTitle";
 import { historyAction, deleteAction, moreActions } from "../../../../components/moreActions";
 import { outlined } from "../../../../components/recordPage";
 import { listReturn } from "../../../../listAddress";
@@ -42,6 +43,7 @@ export default createFunctionalComponent(() => (
                     </Link>
                     <div class="editor-heading">
                         <h1 class="page-title" text={t.title} />
+                        {recordTitle(t.title)}
 
                         {/* The record's own actions, beside its name; a phone shows the icons, named for readers. */}
                         <div class="editor-heading-actions" visible={t.viewing}>

@@ -3,6 +3,7 @@ import { createFunctionalComponent, expr, falsy, hasValue } from "cx/ui";
 import { Button, Icon, LookupField, Repeater, TextField, ValidationGroup } from "cx/widgets";
 
 import { mayEdit, permissions } from "../../../access";
+import { documentTitle } from "../../../components/documentTitle";
 import { formFields } from "../../../components/formFields";
 import { documentLanguages } from "../../../documents/languages";
 import { zoneLabel } from "../../../download";
@@ -239,6 +240,7 @@ export default createFunctionalComponent(() => (
         <div class="page-body page-narrow" controller={Controller}>
             <div class="page-top">
                 <h1 class="page-header page-title" text="Settings" />
+                {documentTitle("Settings")}
             </div>
             <div class="editor">
                 <div class="editor-alert" visible={hasValue(m.settings.error)}>
