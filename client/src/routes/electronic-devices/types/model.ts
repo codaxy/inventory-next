@@ -2,6 +2,8 @@ import { createModel } from "cx/ui";
 
 import type { TypeItem, TypeSort } from "../../../api/electronicDeviceTypes";
 import type { PagerState } from "../../../paging";
+import type { IconName } from "../../../layout/icons";
+import { glyphOf } from "../../../typeIcons";
 
 export interface Option {
     id: string;
@@ -11,6 +13,8 @@ export interface Option {
 export interface Row {
     id: string;
     name: string;
+    /** Its icon's glyph, beside the name. */
+    glyph: IconName;
     /** Present only where the type holds licenses: a flag, not a column of "No". */
     licenses?: string;
     description?: string;
@@ -67,6 +71,7 @@ export const toRows = (items: TypeItem[]): Row[] =>
     items.map((t) => ({
         id: t.id,
         name: t.name,
+        glyph: glyphOf("device", t.icon),
         licenses: t.holdsLicenses ? "Holds licenses" : undefined,
         // Older rows hold an emptied description as "", so blank is absent too.
         description: t.description || undefined,

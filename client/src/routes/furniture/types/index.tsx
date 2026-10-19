@@ -75,7 +75,9 @@ export default createFunctionalComponent(() => {
                                 href={expr(m.$row.id, (id) => `~/furniture/types/${id}`)}
                                 url={$app.url}
                             >
-                                <span class="record-title record-copy">
+                                <span class="record-title record-copy type-row-title">
+                                    {/* The type's icon, before its name: no column of its own. */}
+                                    <Icon name={m.$row.glyph} class="type-row-icon" />
                                     <span class="record-copy-line">
                                         <span text={m.$row.name} />
                                         {copyButton(m.$row.name, "name")}

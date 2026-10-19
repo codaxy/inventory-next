@@ -14,6 +14,7 @@ public static class TypeIcons
     [
         "laptop",
         "desktop",
+        "parts",
         "monitor",
         "dock",
         "hub",
@@ -49,7 +50,6 @@ public static class TypeIcons
 
     public static readonly IReadOnlyList<string> Furniture =
     [
-        "chair",
         "armchair",
         "sofa",
         "desk",

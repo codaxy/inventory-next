@@ -112,7 +112,7 @@ export default class extends Controller {
     guessIcon() {
         if (this.store.get(t.id) || this.store.get(t.iconPicked)) return;
         const guess = guessIcon("furniture", this.store.get(t.draft.name));
-        if (guess) this.store.set(t.draft.icon, guess);
+        if (guess !== undefined) this.store.set(t.draft.icon, guess);
     }
 
     dirty() {

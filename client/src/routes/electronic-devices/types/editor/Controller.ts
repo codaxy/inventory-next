@@ -125,7 +125,7 @@ export default class extends Controller {
     guessIcon() {
         if (this.store.get(m.type.id) || this.store.get(m.type.iconPicked)) return;
         const guess = guessIcon("device", this.store.get(m.type.draft.name));
-        if (guess) this.store.set(m.type.draft.icon, guess);
+        if (guess !== undefined) this.store.set(m.type.draft.icon, guess);
     }
 
     dirty() {

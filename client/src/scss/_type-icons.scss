@@ -107,3 +107,23 @@
     height: 20px;
     color: var(--color-ink-soft);
 }
+
+// In the type lists, the icon before the name in its cell, muted, so the name still leads the row.
+.type-row-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+
+    > .record-copy-line {
+        min-width: 0;
+    }
+}
+
+.type-row-icon {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    // Lighter than the muted text beside it: a cue, not something to read.
+    color: var(--color-line-strong);
+}

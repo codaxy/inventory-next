@@ -3,10 +3,14 @@ import { createModel } from "cx/ui";
 import type { FurnitureTypeItem, FurnitureTypeSort } from "../../../api/furnitureTypes";
 import { piecesOfFurniture } from "../../../furniture";
 import type { PagerState } from "../../../paging";
+import type { IconName } from "../../../layout/icons";
+import { glyphOf } from "../../../typeIcons";
 
 export interface Row {
     id: string;
     name: string;
+    /** Its icon's glyph, beside the name. */
+    glyph: IconName;
     description?: string;
     /** "3", absent when no furniture is of the type. */
     furniture?: string;
@@ -45,6 +49,7 @@ export const toRows = (items: FurnitureTypeItem[]): Row[] =>
     items.map((t) => ({
         id: t.id,
         name: t.name,
+        glyph: glyphOf("furniture", t.icon),
         // Older rows hold an emptied description as "", so blank is absent too.
         description: t.description || undefined,
         furniture: t.furnitureCount === 0 ? undefined : String(t.furnitureCount),

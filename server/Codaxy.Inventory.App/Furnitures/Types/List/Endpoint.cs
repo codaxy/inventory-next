@@ -12,7 +12,13 @@ public static class Endpoint
     /// <param name="Sort"><c>name</c> (default), <c>-name</c>, <c>furniture</c> or <c>-furniture</c>.</param>
     public sealed record Query(string? Q, string? Sort, int? Page, int? PageSize);
 
-    public sealed record Item(Guid Id, string Name, string? Description, int FurnitureCount);
+    public sealed record Item(
+        Guid Id,
+        string Name,
+        string? Description,
+        int FurnitureCount,
+        string? Icon
+    );
 
     private static async Task<IResult> Handle(
         [AsParameters] Query query,
@@ -67,7 +73,8 @@ public static class Endpoint
                     t.Id,
                     t.Name,
                     t.Description,
-                    furniture.Count(f => f.FurnitureTypeId == t.Id)
+                    furniture.Count(f => f.FurnitureTypeId == t.Id),
+                    t.Icon
                 ))
                 .ToPageAsync(window, cancellationToken)
         );

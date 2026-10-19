@@ -984,7 +984,7 @@ public class InventoryContextSeedData
                     {
                         Id = Guid.CreateVersion7(),
                         Name = "Computer components",
-                        Icon = "desktop",
+                        Icon = "parts",
                         Description = "",
                     },
                     new ElectronicDeviceType

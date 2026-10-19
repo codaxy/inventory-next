@@ -17,6 +17,7 @@ export interface TypeIcon {
 export const deviceIcons: TypeIcon[] = [
     { key: "laptop", label: "Laptop", glyph: "thingLaptop" },
     { key: "desktop", label: "Desktop", glyph: "thingDesktop" },
+    { key: "parts", label: "Parts", glyph: "thingParts" },
     { key: "monitor", label: "Monitor", glyph: "thingMonitor" },
     { key: "tablet", label: "Tablet", glyph: "thingTablet" },
     { key: "phone", label: "Phone", glyph: "thingPhone" },
@@ -52,7 +53,6 @@ export const deviceIcons: TypeIcon[] = [
 
 /** The icons a furniture type may carry, as `TypeIcons.Furniture` allows. */
 export const furnitureIcons: TypeIcon[] = [
-    { key: "chair", label: "Chair", glyph: "thingChair" },
     { key: "armchair", label: "Armchair", glyph: "thingArmchair" },
     { key: "sofa", label: "Sofa", glyph: "thingSofa" },
     { key: "desk", label: "Desk", glyph: "thingDesk" },
@@ -90,6 +90,7 @@ const devicePatterns: [RegExp, string][] = [
     [/laptop|notebook|prijenosn/, "laptop"],
     [/server|\brack/, "server"],
     [/drive|\bssd|\bhdd|storage|\bnas\b/, "storage"],
+    [/component|komponent|\bparts?\b|dijelov/, "parts"],
     [/desktop|computer|\bpc\b|ra[cč]unar|workstation/, "desktop"],
     [/monitor|display|screen|\btv\b|televizor|ekran/, "monitor"],
     [/dock/, "dock"],
@@ -123,7 +124,8 @@ const devicePatterns: [RegExp, string][] = [
 ];
 
 const furniturePatterns: [RegExp, string][] = [
-    [/stolica|chair/, "chair"],
+    // A chair is the generic icon; matched still, so that "stolica" is not taken for "stolić".
+    [/stolica|chair/, ""],
     [/fotelja|armchair/, "armchair"],
     [/trosjed|dvosjed|garnitura|sofa|couch|kau[cč]/, "sofa"],
     [/radni sto|desk|pisa[cć]i/, "desk"],
@@ -138,10 +140,14 @@ const furniturePatterns: [RegExp, string][] = [
     [/[cč]iviluk|coat|hanger|vje[sš]alic/, "hanger"],
 ];
 
-/** The icon a type's name suggests, or none: the picker keeps whatever it has then. */
-export function guessIcon(kind: IconKind, name: string | null | undefined): string | null {
+/**
+ * The icon a type's name suggests: a key, `null` for the generic one, or `undefined` where the name
+ * suggests nothing — the picker keeps whatever it has then.
+ */
+export function guessIcon(kind: IconKind, name: string | null | undefined): string | null | undefined {
     const text = (name ?? "").trim().toLowerCase();
-    if (!text) return null;
+    if (!text) return undefined;
     const patterns = kind === "device" ? devicePatterns : furniturePatterns;
-    return patterns.find(([pattern]) => pattern.test(text))?.[1] ?? null;
+    const found = patterns.find(([pattern]) => pattern.test(text));
+    return found ? found[1] || null : undefined;
 }

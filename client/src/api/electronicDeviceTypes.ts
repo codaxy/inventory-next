@@ -10,6 +10,7 @@ export interface TypeItem {
     /** The first three by name; `tagCount` says how many more. */
     firstTags: string[];
     deviceCount: number;
+    icon: string | null;
 }
 
 export interface TagRef {

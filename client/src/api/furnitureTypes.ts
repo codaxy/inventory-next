@@ -6,12 +6,11 @@ export interface FurnitureTypeItem {
     name: string;
     description: string | null;
     furnitureCount: number;
-}
-
-export interface FurnitureTypeDetail extends FurnitureTypeItem {
     /** An icon key of `furnitureIcons`; none, the generic one. */
     icon: string | null;
 }
+
+export interface FurnitureTypeDetail extends FurnitureTypeItem {}
 
 export interface FurnitureTypeForm {
     name: string;

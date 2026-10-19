@@ -29,7 +29,8 @@ public static class Endpoint
         string? Description,
         int TagCount,
         IReadOnlyList<string> FirstTags,
-        int DeviceCount
+        int DeviceCount,
+        string? Icon
     );
 
     /// <summary>As many tag names as a row shows before "+N".</summary>
@@ -112,7 +113,8 @@ public static class Endpoint
             t.Description,
             t.Tags.Count,
             t.Tags.Select(l => l.ElectronicDeviceTag.Name).OrderBy(n => n).Take(Shown).ToList(),
-            devices.Count(d => d.ElectronicDeviceTypeId == t.Id)
+            devices.Count(d => d.ElectronicDeviceTypeId == t.Id),
+            t.Icon
         ));
 
         return Results.Ok(await items.ToPageAsync(window, cancellationToken));
