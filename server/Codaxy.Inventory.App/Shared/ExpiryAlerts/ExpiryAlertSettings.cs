@@ -47,7 +47,7 @@ public static partial class ExpiryAlertSettings
     /// <summary>How long before the date the first notice goes out.</summary>
     public static readonly SettingDefinition<AlertLead> Lead = new(
         "alerts.lead",
-        new(2, "months"),
+        new(1, "months"),
         LeadProblem,
         Tidy
     );

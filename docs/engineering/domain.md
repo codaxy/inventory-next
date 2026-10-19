@@ -111,7 +111,7 @@ definition; the rest depend. The four windows are settings (`DashboardSettings`,
 **An email before a subscription or a warranty ends**, to the addresses set under Administration →
 Settings (`ExpiryAlertSettings`): a license with a subscription expiration date and a device with a
 warranty expiration date, **once the date is within the lead** — a setting, a number of days, weeks or
-months, two months by default — and not yet past. No record has a switch: what has such a date is
+months, one month by default — and not yet past. No record has a switch: what has such a date is
 alerted, a license with no seats in use too. **Up to two reminders may follow**, each closer to the
 date than the one before — a setting too, none by default — and every record has them alike,
 auto-renewing and disposed ones included. **Once per stage and date**: what is sent is recorded

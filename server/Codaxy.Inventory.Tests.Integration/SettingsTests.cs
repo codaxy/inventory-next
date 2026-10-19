@@ -160,7 +160,7 @@ public class SettingsTests(SettingsApplication app) : IClassFixture<SettingsAppl
                 ["alerts.recipients"] = ("[\"it@codaxy.com\"]", "[]"),
                 ["alerts.lead"] = (
                     "{\"amount\":3,\"unit\":\"weeks\"}",
-                    "{\"amount\":2,\"unit\":\"months\"}"
+                    "{\"amount\":1,\"unit\":\"months\"}"
                 ),
                 ["alerts.reminders"] = ("[{\"amount\":1,\"unit\":\"weeks\"}]", "[]"),
             },

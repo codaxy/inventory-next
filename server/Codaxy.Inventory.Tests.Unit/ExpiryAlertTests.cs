@@ -66,9 +66,9 @@ public class ExpiryAlertTests
     ) => Assert.Equal(problem, ExpiryAlertSettings.Lead.Accept(Json(new { amount, unit })).Problem);
 
     [Fact]
-    public void The_lead_is_two_months_and_nobody_receives_alerts_by_default()
+    public void The_lead_is_one_month_and_nobody_receives_alerts_by_default()
     {
-        Assert.Equal(new AlertLead(2, "months"), ExpiryAlertSettings.Lead.Default);
+        Assert.Equal(new AlertLead(1, "months"), ExpiryAlertSettings.Lead.Default);
         Assert.Empty(ExpiryAlertSettings.Recipients.Default);
     }
 
