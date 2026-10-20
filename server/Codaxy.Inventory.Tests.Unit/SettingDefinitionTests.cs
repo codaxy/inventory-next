@@ -34,7 +34,7 @@ public class SettingDefinitionTests
     [Fact]
     public void The_defaults_are_the_fallbacks() =>
         Assert.Equal(
-            (45, 15, 45, 30, "", "en"),
+            (15, 45, 15, 30, "", "en"),
             (
                 DashboardSettings.SubscriptionsExpiredDays.Default,
                 DashboardSettings.SubscriptionsExpiringDays.Default,
@@ -92,7 +92,7 @@ public class SettingDefinitionTests
     {
         var (value, problem) = DashboardSettings.SubscriptionsExpiringDays.Read(json);
 
-        Assert.Equal(15, value);
+        Assert.Equal(45, value);
         Assert.NotNull(problem);
     }
 

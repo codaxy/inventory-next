@@ -8,7 +8,7 @@ public static class DashboardSettings
     /// <summary>How far back a lapsed subscription is news; one older was dealt with, or dropped.</summary>
     public static readonly SettingDefinition<int> SubscriptionsExpiredDays = Window(
         "dashboard.subscriptions_expired_days",
-        45
+        15
     );
 
     /// <summary>
@@ -17,13 +17,13 @@ public static class DashboardSettings
     /// </summary>
     public static readonly SettingDefinition<int> SubscriptionsExpiringDays = Window(
         "dashboard.subscriptions_expiring_days",
-        15
+        45
     );
 
     /// <summary>How far back an ended warranty is news.</summary>
     public static readonly SettingDefinition<int> WarrantiesEndedDays = Window(
         "dashboard.warranties_ended_days",
-        45
+        15
     );
 
     /// <summary>How far ahead a warranty's end is shown: time to have a fault repaired under it.</summary>

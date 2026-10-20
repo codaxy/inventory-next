@@ -101,14 +101,14 @@ Each a query over what exists. Only over-allocation and seats on a disposed devi
 definition; the rest depend. The four windows are settings (`DashboardSettings`, see
 [server.md](server.md)); the values below are their defaults.
 
-- **A subscription expired recently** within the last 45 days, the day it lapsed included; one older
+- **A subscription expired recently** within the last 15 days, the day it lapsed included; one older
   has been dealt with or never will be. One with seats still in use is the more pressing: live
-  software on a lapsed license. **It is expiring** within 15 days — the dashboard's own window; the
+  software on a lapsed license. **It is expiring** within 45 days — the dashboard's own window; the
   licenses list's "expiring soon" keeps the rule above, so the dashboard links to no list for it.
 - **A volume is over-allocated** once its seats in use exceed its quantity, and **has unused seats**
   while they are fewer — unless its subscription has expired, since nothing is paid for them then.
 - **A warranty is ending** within 30 days of its date and not after it: time to have a fault
-  repaired under it. **It ended recently** within the last 45 days, as a subscription does.
+  repaired under it. **It ended recently** within the last 15 days, as a subscription does.
 - **A device is disposed of** when it sits at a location marked as a disposal location
   (`Location.IsDisposal`, ticked on the location's form): the data marks disposal only this way — an
   asset's status is never set — and a seat still active on one is freed by no one. With no location

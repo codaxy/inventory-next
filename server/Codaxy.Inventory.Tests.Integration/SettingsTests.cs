@@ -59,7 +59,7 @@ public class SettingsTests(SettingsApplication app) : IClassFixture<SettingsAppl
 
         Assert.Equal(SettingCatalogue.All.Select(d => d.Key), settings.Select(s => s.Key));
         var expired = settings.Single(s => s.Key == "dashboard.subscriptions_expired_days");
-        Assert.Equal(("dashboard", 45), (expired.Group, expired.Default.GetInt32()));
+        Assert.Equal(("dashboard", 15), (expired.Group, expired.Default.GetInt32()));
     }
 
     [Fact]
@@ -110,7 +110,7 @@ public class SettingsTests(SettingsApplication app) : IClassFixture<SettingsAppl
             problems
         );
         Assert.Equal(
-            45,
+            15,
             after.Single(s => s.Key == "dashboard.subscriptions_expired_days").Value.GetInt32()
         );
     }

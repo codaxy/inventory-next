@@ -17,8 +17,8 @@ using Response = App.Dashboard.Get.Endpoint.Response;
 
 /// <summary>
 /// One record either side of every rule the dashboard applies: a subscription lapsed with seats, one
-/// lapsed idle, one lapsed 45 days ago and one 46; one ending today, in fourteen days and in fifteen; volumes over, at and under
-/// what was bought; warranties ending in 29 and 30 days, and ended yesterday, 45 and 46 days ago; seats on a device written off
+/// lapsed idle, one lapsed 15 days ago and one 16; one ending today, in 44 days and in 45; volumes over, at and under
+/// what was bought; warranties ending in 29 and 30 days, and ended yesterday, 15 and 16 days ago; seats on a device written off
 /// and on one in use; an asset and a piece of information left incomplete.
 /// </summary>
 public class DashboardApplication : InventoryApplication
@@ -29,11 +29,11 @@ public class DashboardApplication : InventoryApplication
 
     public Guid LapsedWithSeats { get; private set; }
     public Guid LapsedIdle { get; private set; }
-    public Guid LapsedAt45 { get; private set; }
+    public Guid LapsedAt15 { get; private set; }
     public Guid LapsedLongAgo { get; private set; }
     public Guid EndsToday { get; private set; }
-    public Guid EndsIn14 { get; private set; }
-    public Guid EndsIn15 { get; private set; }
+    public Guid EndsIn44 { get; private set; }
+    public Guid EndsIn45 { get; private set; }
     public Guid Over { get; private set; }
     public Guid AtQuantity { get; private set; }
     public Guid MostFree { get; private set; }
@@ -41,7 +41,7 @@ public class DashboardApplication : InventoryApplication
     public Guid WarrantyIn29 { get; private set; }
     public Guid WarrantyIn30 { get; private set; }
     public Guid WarrantyGone { get; private set; }
-    public Guid WarrantyGoneAt45 { get; private set; }
+    public Guid WarrantyGoneAt15 { get; private set; }
     public Guid WarrantyGoneLongAgo { get; private set; }
     public Guid OnDisposed { get; private set; }
     public Guid DeactivatedOnDisposed { get; private set; }
@@ -105,14 +105,14 @@ public class DashboardApplication : InventoryApplication
         var lapsedWithSeats = await License("Lapsed with seats", 5, Today.AddDays(-1));
         await Seed.ActivationAsync(context, lapsedWithSeats.Volume);
         LapsedWithSeats = lapsedWithSeats.License;
-        LapsedIdle = (await License("Lapsed idle", 5, Today.AddDays(-30))).License;
-        LapsedAt45 = (await License("Lapsed at 45", 0, Today.AddDays(-45))).License;
-        LapsedLongAgo = (await License("Lapsed long ago", 0, Today.AddDays(-46))).License;
+        LapsedIdle = (await License("Lapsed idle", 5, Today.AddDays(-10))).License;
+        LapsedAt15 = (await License("Lapsed at 15", 0, Today.AddDays(-15))).License;
+        LapsedLongAgo = (await License("Lapsed long ago", 0, Today.AddDays(-16))).License;
 
         // No seats bought, so these say nothing about seats.
         EndsToday = (await License("Ends today", 0, Today)).License;
-        EndsIn14 = (await License("Ends in 14", 0, Today.AddDays(14))).License;
-        EndsIn15 = (await License("Ends in 15", 0, Today.AddDays(15))).License;
+        EndsIn44 = (await License("Ends in 44", 0, Today.AddDays(44))).License;
+        EndsIn45 = (await License("Ends in 45", 0, Today.AddDays(45))).License;
 
         var over = await License("Over", 2);
         await Seed.ActivationAsync(context, over.Volume, quantity: 3);
@@ -132,8 +132,8 @@ public class DashboardApplication : InventoryApplication
         WarrantyIn29 = await Device("Warranty in 29", warranty: Today.AddDays(29));
         WarrantyIn30 = await Device("Warranty in 30", warranty: Today.AddDays(30));
         WarrantyGone = await Device("Warranty gone", warranty: Today.AddDays(-1));
-        WarrantyGoneAt45 = await Device("Warranty gone at 45", warranty: Today.AddDays(-45));
-        WarrantyGoneLongAgo = await Device("Warranty gone long ago", warranty: Today.AddDays(-46));
+        WarrantyGoneAt15 = await Device("Warranty gone at 15", warranty: Today.AddDays(-15));
+        WarrantyGoneLongAgo = await Device("Warranty gone long ago", warranty: Today.AddDays(-16));
 
         var perDevice = await Seed.LicenseWithVolumeAsync(
             context,
@@ -201,11 +201,11 @@ public class DashboardTests(DashboardApplication app) : IClassFixture<DashboardA
     }
 
     [Fact]
-    public async Task A_subscription_expired_recently_from_the_day_after_its_date_to_45_days_on()
+    public async Task A_subscription_expired_recently_from_the_day_after_its_date_to_15_days_on()
     {
         var expired = (await Dashboard()).Expired.Items.Select(l => l.Id).ToList();
 
-        Assert.Equal([app.LapsedWithSeats, app.LapsedIdle, app.LapsedAt45], expired);
+        Assert.Equal([app.LapsedWithSeats, app.LapsedIdle, app.LapsedAt15], expired);
         Assert.DoesNotContain(app.LapsedLongAgo, expired);
     }
 
@@ -219,11 +219,11 @@ public class DashboardTests(DashboardApplication app) : IClassFixture<DashboardA
     }
 
     [Fact]
-    public async Task Expiring_soon_is_from_today_to_the_fourteenth_day_soonest_first()
+    public async Task Expiring_soon_is_from_today_to_the_44th_day_soonest_first()
     {
         var soon = (await Dashboard()).ExpiringSoon.Items.Select(l => l.Id).ToList();
 
-        Assert.Equal([app.EndsToday, app.EndsIn14], soon);
+        Assert.Equal([app.EndsToday, app.EndsIn44], soon);
     }
 
     [Fact]
@@ -268,11 +268,11 @@ public class DashboardTests(DashboardApplication app) : IClassFixture<DashboardA
     }
 
     [Fact]
-    public async Task A_warranty_ended_recently_from_the_day_after_to_45_days_on_latest_first()
+    public async Task A_warranty_ended_recently_from_the_day_after_to_15_days_on_latest_first()
     {
         var ended = (await Dashboard()).WarrantiesEnded.Items.Select(d => d.Id).ToList();
 
-        Assert.Equal([app.WarrantyGone, app.WarrantyGoneAt45], ended);
+        Assert.Equal([app.WarrantyGone, app.WarrantyGoneAt15], ended);
     }
 
     [Fact]
@@ -305,9 +305,9 @@ public class DashboardWindowsApplication : DashboardApplication
 
         using var scope = Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<InventoryContext>();
-        await Seed.SettingAsync(context, DashboardSettings.SubscriptionsExpiredDays, 44);
-        await Seed.SettingAsync(context, DashboardSettings.SubscriptionsExpiringDays, 14);
-        await Seed.SettingAsync(context, DashboardSettings.WarrantiesEndedDays, 44);
+        await Seed.SettingAsync(context, DashboardSettings.SubscriptionsExpiredDays, 14);
+        await Seed.SettingAsync(context, DashboardSettings.SubscriptionsExpiringDays, 44);
+        await Seed.SettingAsync(context, DashboardSettings.WarrantiesEndedDays, 14);
         await Seed.SettingAsync(context, DashboardSettings.WarrantiesEndingDays, 29);
     }
 }
@@ -329,7 +329,7 @@ public class DashboardWindowsTests(DashboardWindowsApplication app)
         Assert.Equal([app.WarrantyGone], dashboard.WarrantiesEnded.Items.Select(d => d.Id));
         Assert.Empty(dashboard.Warranties.Items);
         Assert.Equal(
-            (44, 14, 44, 29),
+            (14, 44, 14, 29),
             (
                 dashboard.SubscriptionsExpiredDays,
                 dashboard.SubscriptionsExpiringDays,
