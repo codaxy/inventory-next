@@ -3,6 +3,8 @@ using System.Net.Http.Json;
 using Codaxy.Inventory.App.Administration.Roles;
 using Codaxy.Inventory.App.Company.Locations;
 using Codaxy.Inventory.App.Company.Manufacturers;
+using Codaxy.Inventory.App.Informations.Items;
+using Codaxy.Inventory.App.Informations.Types;
 using Codaxy.Inventory.App.Licenses.SoftwareServices;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.Tests.Integration.Infrastructure;
@@ -31,6 +33,8 @@ public class MyEquipmentApplication : PeopleSignInApplication
     public Guid Lapsing { get; private set; }
     public Guid Lasting { get; private set; }
     public Guid Lapsed { get; private set; }
+    public Guid MiasRecord { get; private set; }
+    public Guid OlesRecord { get; private set; }
     public Guid OthersDevice { get; private set; }
 
     /// <summary>A user who is a person too, turned off from signing in as one, with a device.</summary>
@@ -165,6 +169,46 @@ public class MyEquipmentApplication : PeopleSignInApplication
         );
         (await context.Assets.SingleAsync(a => a.Id == held.License)).PersonId = mia;
         await context.SaveChangesAsync();
+
+        // A record she owns, kept on her laptop and at an address, its classification hers not to see;
+        // and one of Ole's.
+        var contract = new InformationType { Id = Guid.CreateVersion7(), Name = "Contract" };
+        MiasRecord = Guid.CreateVersion7();
+        OlesRecord = Guid.CreateVersion7();
+        context.AddRange(
+            contract,
+            new Information
+            {
+                Id = MiasRecord,
+                Name = "Supplier contracts",
+                InformationTypeId = contract.Id,
+                PersonId = mia,
+                Author = "Mia Employee",
+                AccessRights = "Finance only",
+            },
+            new Information
+            {
+                Id = OlesRecord,
+                Name = "Ole's notes",
+                InformationTypeId = contract.Id,
+                PersonId = other,
+            }
+        );
+        context.InformationLocations.AddRange(
+            new InformationLocation
+            {
+                Id = Guid.CreateVersion7(),
+                InformationId = MiasRecord,
+                ElectronicDeviceId = Laptop,
+            },
+            new InformationLocation
+            {
+                Id = Guid.CreateVersion7(),
+                InformationId = MiasRecord,
+                URL = "https://contracts.example.com",
+            }
+        );
+        await context.SaveChangesAsync();
     }
 
     private static async Task<Guid> Device(
@@ -281,6 +325,36 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
             )
         )!;
         Assert.Null(Assert.Single(umas.Devices).Place);
+    }
+
+    [Fact]
+    public async Task The_information_they_own_is_listed_and_opens_to_where_it_is_kept_and_nobody_else_s_does()
+    {
+        var client = await MiaAsync();
+        var record = Assert.Single((await MineAsync()).Information);
+
+        Assert.Equal(
+            (app.MiasRecord, "Supplier contracts", "Contract"),
+            (record.Id, record.Title, record.Subtitle)
+        );
+        var details = (
+            await client.GetFromJsonAsync<Details>(
+                $"/api/my-equipment/items/information/{record.Id}"
+            )
+        )!;
+        Assert.Equal(
+            ["Author", "Kept on device", "Kept at address"],
+            details.Facts.Select(f => f.Label).ToList()
+        );
+        Assert.Equal("Mia's laptop", details.Facts.Single(f => f.Label == "Kept on device").Value);
+        // Its access rights and classification are not hers to see.
+        Assert.DoesNotContain(details.Facts, f => f.Value == "Finance only");
+        Assert.Equal(
+            HttpStatusCode.NotFound,
+            (
+                await client.GetAsync($"/api/my-equipment/items/information/{app.OlesRecord}")
+            ).StatusCode
+        );
     }
 
     [Fact]

@@ -46,7 +46,7 @@ const standingWords = (
 export default createFunctionalComponent(() => (
     <cx>
         <div class="page-body mine" controller={ControllerClass}>
-            {documentTitle("My equipment")}
+            {documentTitle("My inventory")}
 
             <div class="editor-alert" visible={hasValue(d.error)}>
                 <span text={d.error} />
@@ -252,7 +252,12 @@ export default createFunctionalComponent(() => (
                 <p class="field-message" visible={hasValue(p.error)} text={p.error} />
 
                 <div class="mine-panel-part" visible={expr(p.facts, (f) => f.length > 0)}>
-                    <h3 class="mine-panel-label" text="For the help desk" />
+                    <h3
+                        class="mine-panel-label"
+                        text={expr(p.kind, (kind) =>
+                            kind === "information" ? "Details" : "For the help desk",
+                        )}
+                    />
                     <dl class="mine-facts">
                         <Repeater records={p.facts} recordAlias={m.$fact}>
                             <div class="mine-fact">

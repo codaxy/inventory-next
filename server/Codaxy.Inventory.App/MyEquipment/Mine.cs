@@ -21,7 +21,7 @@ public sealed record Warning(string Kind, Guid Id, string Name, DateOnly Date, s
 /// One thing of theirs as a card: what it is, then its make and model; the codes that name it to IT
 /// ride along for the search, not for the card.
 /// </summary>
-/// <param name="Kind"><c>device</c>, <c>furniture</c>, <c>license</c> or <c>seat</c>.</param>
+/// <param name="Kind"><c>device</c>, <c>furniture</c>, <c>license</c>, <c>seat</c> or <c>information</c>.</param>
 /// <param name="Type">The type as recorded.</param>
 /// <param name="Title">The type, or the name where there is none: "Laptop".</param>
 /// <param name="Subtitle">The make and model, or whatever names it next best: "Lenovo ThinkPad E16 Gen2".</param>
@@ -57,7 +57,8 @@ public sealed record Things(
     IReadOnlyList<Thing> Devices,
     IReadOnlyList<Thing> Furniture,
     IReadOnlyList<Thing> Software,
-    IReadOnlyList<Thing> Licenses
+    IReadOnlyList<Thing> Licenses,
+    IReadOnlyList<Thing> Information
 );
 
 /// <summary>
@@ -420,6 +421,28 @@ internal static class Mine
             .ThenBy(t => t.Number)
             .ToList();
 
-        return new Things(deviceCards, furnitureCards, softwareCards, licenseCards);
+        // The information they own: a register's entries naming them responsible, by name, its type and
+        // project beneath. Nothing of its classification — that is IT's and the audit's.
+        var informationCards = (
+            await context
+                .Informations.AsNoTracking()
+                .Where(i => i.PersonId == id)
+                .Select(i => new
+                {
+                    i.Id,
+                    i.Name,
+                    Type = i.InformationType.Name,
+                    Project = i.Project.Name,
+                })
+                .ToListAsync(cancellationToken)
+        ).Select(i => new Thing("information", i.Id, Blank(i.Type), Blank(i.Name) ?? Blank(i.Type) ?? "Information", string.Join(" · ", new[] { Blank(i.Type), Blank(i.Project) }.OfType<string>()) is { Length: > 0 } sub ? sub : null, i.Name ?? "", null, null, null, null)).OrderBy(t => t.Title).ThenBy(t => t.Id).ToList();
+
+        return new Things(
+            deviceCards,
+            furnitureCards,
+            softwareCards,
+            licenseCards,
+            informationCards
+        );
     }
 }

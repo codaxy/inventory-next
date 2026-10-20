@@ -73,7 +73,8 @@ only with the `edit` of the page's item (`canEdit`, or `edits` on a ⋮ action),
 `…/edit` — is the not-found page; `~/` lands on the first item the reader can see. Hidden, never
 disabled: a button nobody can press says nothing about why. `screens` in `routes/index.tsx` maps every item's href to its screen.
 
-**An employee signed in as a person sees one item, "My equipment"** (`~/my-equipment`), and lands there
+**An employee signed in as a person sees one item, "My inventory"** (`~/my-equipment`, named for the
+page's first scope, as are its code and API), and lands there
 as a user lands on the Dashboard; their account menu says "Employee" where a user's says their role,
 and `/api/auth/me` tells the two apart (`kind`). **Their shell has no sidebar**: a bar at every width
 with the mark and their account menu, which opens downwards — a column holding one link reads as
@@ -93,7 +94,10 @@ and "Show fewer".
 **A section each** for Devices, Furniture, License activations — theirs by name and on a device they
 hold ("On Dell Latitude 5550", the device as its card names it), the latter also listed in that
 device's details, never on its card — two places saying it, and the card was already full — and Licenses you hold, where they are the license's assignee: mostly a holding
-account's, named by the software they cover where the name is a part number. **A card says what it is,
+account's, named by the software they cover where the name is a part number — then Information you're
+responsible for, the pieces of information they own: by name, its type and project beneath, its
+details, headed "Details" — it is no help-desk matter — its author, description and where it is kept, never its classification, access
+rights or personal-data flags, which are IT's and the audit's. **A card says what it is,
 then its make and model** ("Laptop", "Lenovo ThinkPad E16 Gen2"; the server names the model by the
 device's own name where the model is a part number and the name is not a host's), **where it is**
 beneath — only while their devices and furniture are in more than one place, since the same name on
@@ -658,7 +662,7 @@ background its `-text` clears 4.5:1 on; `-mark` highlights the words a change to
 **Windows are themed in `theme.ts`**: the preset's header takes the accent colour and its footer has
 no top padding, which a coloured footer shows as buttons flush to its top edge; both are set there.
 **A modal dims and blurs the page behind it** — ink at 55% and a 3px blur, fading in over 70ms, in
-`_surfaces.scss` — My equipment's panel fading in and out over its 200ms slide, so the two move together: cx's grey wash leaves the page legible enough to compete. No theme variable covers
+`_surfaces.scss` — My inventory's panel fading in and out over its 200ms slide, so the two move together: cx's grey wash leaves the page legible enough to compete. No theme variable covers
 the backdrop.
 
 **Two layers, in this order.** `src/theme.ts` maps CxJS's theme variables onto the tokens and is

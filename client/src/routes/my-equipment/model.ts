@@ -12,7 +12,7 @@ import { formatDate } from "../../licensing";
 import { glyphOf } from "../../typeIcons";
 
 /** Each section's own tint, carried by its cards' icons. */
-export type Tone = "device" | "furniture" | "software";
+export type Tone = "device" | "furniture" | "software" | "information";
 
 export interface Card {
     key: string;
@@ -34,7 +34,7 @@ export interface Card {
 }
 
 export interface Section {
-    key: "devices" | "furniture" | "software" | "licenses";
+    key: "devices" | "furniture" | "software" | "licenses" | "information";
     title: string;
     count: number;
     cards: Card[];
@@ -124,6 +124,7 @@ export const searchFrom = 20;
 function thingIcon(t: EquipmentThing): IconName {
     if (t.kind === "license") return "thingLicense";
     if (t.kind === "seat") return "thingActivation";
+    if (t.kind === "information") return "thingInformation";
     return glyphOf(t.kind, t.icon);
 }
 
@@ -182,12 +183,13 @@ const count = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : 
  */
 export function hello(name: string, counts: Partial<Record<Section["key"], number>>) {
     const first = name.split(" ")[0] || name;
-    const { devices = 0, furniture = 0, software = 0, licenses = 0 } = counts;
+    const { devices = 0, furniture = 0, software = 0, licenses = 0, information = 0 } = counts;
     const parts = [
         devices ? count(devices, "device", "devices") : undefined,
         furniture ? count(furniture, "piece of furniture", "pieces of furniture") : undefined,
         software ? count(software, "license activation", "license activations") : undefined,
         licenses ? count(licenses, "license", "licenses") : undefined,
+        information ? count(information, "piece of information", "pieces of information") : undefined,
     ].filter(Boolean);
     return {
         initials: name

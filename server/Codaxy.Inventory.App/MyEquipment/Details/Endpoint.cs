@@ -11,7 +11,8 @@ namespace Codaxy.Inventory.App.MyEquipment.Details;
 /// <summary>
 /// One thing of the signed-in employee's, as much as they need to tell IT or a repair shop about it:
 /// the codes that name it, where it is, its warranty, who maintains it and the apps on it; a license's
-/// vendor and term; a seat's software, license and device. Never a key, a console address, money or the
+/// vendor and term; a seat's software, license and device; a piece of information's author,
+/// description and where it is kept. Never a key, a console address, money or the
 /// classification — none is theirs to see. Anything not theirs is not found.
 /// </summary>
 public static class Endpoint
@@ -278,6 +279,51 @@ public static class Endpoint
                     )
                 );
                 facts.AddRange(Expires("Subscription", s.Ends, subscriptionWindow));
+                return Results.Ok(new Response(facts, [], []));
+            }
+            case "information":
+            {
+                var i = await context
+                    .Informations.AsNoTracking()
+                    .Where(x => x.Id == id && x.PersonId == me)
+                    .Select(x => new { x.Author, x.Description })
+                    .FirstOrDefaultAsync(cancellationToken);
+                if (i is null)
+                    return Results.NotFound();
+
+                // Where it is kept, each place by what it is: one of a device, a virtual machine, a
+                // software entry, a cloud subscription, a location or a web address.
+                var places = await context
+                    .InformationLocations.AsNoTracking()
+                    .Where(l => l.InformationId == id)
+                    .Select(l => new
+                    {
+                        Device = l.ElectronicDevice.Asset.Name,
+                        DeviceNumber = (int?)l.ElectronicDevice.Asset.InventoryNumber,
+                        VirtualMachine = l.VirtualMachine.Name,
+                        Software = l.Software.Name,
+                        Cloud = l.Cloud.Name,
+                        Location = l.PhysicalLocation.Name,
+                        l.URL,
+                    })
+                    .ToListAsync(cancellationToken);
+
+                // Its type and project the card already says.
+                List<Fact> facts = Facts(("Author", i.Author), ("Description", i.Description));
+                foreach (var p in places)
+                {
+                    if (!string.IsNullOrWhiteSpace(p.Device))
+                        facts.Add(new("Kept on device", p.Device, p.DeviceNumber));
+                    facts.AddRange(
+                        Facts(
+                            ("Kept on virtual machine", p.VirtualMachine),
+                            ("Kept in software", p.Software),
+                            ("Kept in cloud subscription", p.Cloud),
+                            ("Kept at", p.Location),
+                            ("Kept at address", p.URL)
+                        )
+                    );
+                }
                 return Results.Ok(new Response(facts, [], []));
             }
             default:

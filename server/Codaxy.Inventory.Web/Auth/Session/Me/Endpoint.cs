@@ -17,7 +17,7 @@ public static class Endpoint
     /// <param name="Name">The name the application keeps, not the provider's.</param>
     /// <param name="Permissions">What the client shows; the server checks every request anyway.</param>
     /// <param name="MyEquipment">
-    /// Whether "My equipment" has anything to show: always for a person; for a user, whether a person
+    /// Whether "My inventory" has anything to show: always for a person; for a user, whether a person
     /// is kept under the same email.
     /// </param>
     public sealed record Response(

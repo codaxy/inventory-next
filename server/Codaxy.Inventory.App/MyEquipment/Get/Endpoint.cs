@@ -21,7 +21,8 @@ public static class Endpoint
         IReadOnlyList<Thing> Devices,
         IReadOnlyList<Thing> Furniture,
         IReadOnlyList<Thing> Software,
-        IReadOnlyList<Thing> Licenses
+        IReadOnlyList<Thing> Licenses,
+        IReadOnlyList<Thing> Information
     );
 
     private static async Task<IResult> Handle(
@@ -58,7 +59,8 @@ public static class Endpoint
                 things.Devices,
                 things.Furniture,
                 things.Software,
-                things.Licenses
+                things.Licenses,
+                things.Information
             )
         );
     }

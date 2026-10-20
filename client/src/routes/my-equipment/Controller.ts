@@ -102,6 +102,11 @@ export default class extends Controller {
                     title: "Licenses you hold",
                     cards: mine.licenses.map((t) => toCard(t, "software")),
                 },
+                {
+                    key: "information" as const,
+                    title: "Information you're responsible for",
+                    cards: mine.information.map((t) => toCard(t, "information")),
+                },
             ].filter((s) => s.cards.length > 0);
             const total = this.all.reduce((n, s) => n + s.cards.length, 0);
             this.store.set(

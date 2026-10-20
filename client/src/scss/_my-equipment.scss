@@ -10,6 +10,8 @@
     --mine-furniture-wash: #fbefe2;
     --mine-software: #7043c9;
     --mine-software-wash: #f1ebfc;
+    --mine-information: #0f6e66;
+    --mine-information-wash: #e3f3f1;
 }
 
 // The greeting, on a soft band of the brand's colours.
@@ -269,6 +271,11 @@
 .mine-thing-expired {
     background: var(--color-line-soft);
     color: var(--color-ink-muted);
+}
+
+.mine-thing-information {
+    background: var(--mine-information-wash);
+    color: var(--mine-information);
 }
 
 .mine-thing-software {

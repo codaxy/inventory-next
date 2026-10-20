@@ -87,7 +87,7 @@ export const Sidebar = createFunctionalComponent(() => (
                         }}
                     >
                         <Icon name="myEquipment" class="nav-icon" />
-                        <span text="My equipment" />
+                        <span text="My inventory" />
                     </Link>
                 </div>
             </nav>

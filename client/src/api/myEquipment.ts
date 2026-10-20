@@ -9,7 +9,7 @@ export interface EquipmentWarning {
     uses: string | null;
 }
 
-export type ThingKind = "device" | "furniture" | "license" | "seat";
+export type ThingKind = "device" | "furniture" | "license" | "seat" | "information";
 
 /** How a warranty or a subscription stands, where it says something. */
 export type Standing = "ok" | "soon" | "ended";
@@ -46,6 +46,8 @@ export interface MyEquipment {
     software: EquipmentThing[];
     /** Licenses held in their name: mostly a holding account's. */
     licenses: EquipmentThing[];
+    /** Information they own: a register's entries naming them responsible. */
+    information: EquipmentThing[];
 }
 
 /** The signed-in employee's page, whole; refused to anyone else. */

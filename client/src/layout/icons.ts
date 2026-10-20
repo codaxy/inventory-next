@@ -1,5 +1,6 @@
 import {
     LaptopIcon,
+    BoxIcon,
     MailSend01Icon,
     Settings01Icon,
     SquareArrowUpRightIcon,
@@ -150,7 +151,7 @@ const uiIcons = {
     recordHistory: Clock01Icon,
     created: Add01Icon,
     send: MailSend01Icon,
-    myEquipment: LaptopIcon,
+    myEquipment: BoxIcon,
     updated: PencilEdit01Icon,
     deleted: Delete02Icon,
     refresh: RefreshIcon,
@@ -222,6 +223,7 @@ const thingIcons = {
     thingHanger: HangerIcon,
     thingActivation: CheckmarkBadge01Icon,
     thingLicense: SoftwareLicenseIcon,
+    thingInformation: InformationCircleIcon,
     attention: Alert02Icon,
 } satisfies Record<string, IconData>;
 

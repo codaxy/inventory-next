@@ -46,7 +46,7 @@ once the address is proven.
 **Employees sign in as the person they are, not as a user** — no user is made for each person, which
 would be a second list of the same people to keep in step. With `SignInSettings.People` on (off by
 default, the master switch), a person whose email matches the address, trimmed and whatever the case,
-and who may sign in (`Person.CanSignIn`) gets a session of their own: "My equipment", nothing else.
+and who may sign in (`Person.CanSignIn`) gets a session of their own: "My inventory", nothing else.
 **`UserAccess.MaySignInAsync` is the one answer** — for a code, for Google, and for the cookie on every
 request, so turning either off ends a session on the next one. **A person's session holds no
 permission**: `CurrentAsync` is a user's access only, so every `/api` endpoint refuses it but one,
@@ -55,7 +55,7 @@ permission, and it is on the permission test's short list for that reason. `/api
 kind is signed in. **A user who is a person too** — the same email — signs in as the user, and sees
 their own equipment as well: `UserAccess.EquipmentHolderAsync` answers the endpoint with the person
 kept under a user's email whatever that person's `CanSignIn` and the switch, which decide who may sign
-in and a user already has; `/api/auth/me` says so (`myEquipment`), and "My equipment" is in their
+in and a user already has; `/api/auth/me` says so (`myEquipment`), and "My inventory" is in their
 account menu and in a last section of their menu, "Personal", apart from the work. A user who is no
 person is refused it and never shown it. **`CanSignIn` is a decision about that person**, true for
 everyone until it is turned off — a leaver, a placeholder holder — and never derived from the setting,

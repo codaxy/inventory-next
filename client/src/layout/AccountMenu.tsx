@@ -75,7 +75,7 @@ export const AccountMenu = createFunctionalComponent(
                         >
                             <div class="flex items-center gap-2.5">
                                 <Icon name="myEquipment" class="nav-icon" />
-                                <span text="My equipment" />
+                                <span text="My inventory" />
                             </div>
                         </MenuItem>
                         <MenuItem class="account-action account-sign-out" onClick="onSignOut" autoClose>
