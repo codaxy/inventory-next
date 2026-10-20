@@ -34,6 +34,8 @@
     <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
     <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <!-- MimeKit asks for 10.0.0, which has denial-of-service advisories; drop once it asks for more. -->
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
   </ItemGroup>
 
   <!-- Installs the pre-commit hook after restore, so a clone that builds the server has it. Runs again
