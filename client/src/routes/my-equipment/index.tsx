@@ -220,7 +220,7 @@ export default createFunctionalComponent(() => (
             </div>
 
             {/* The details beside the page, over it on a phone; the backdrop, Escape and × close it. */}
-            <div class="mine-backdrop" visible={truthy(p.open)} onClick="close" />
+            <div class={{ "mine-backdrop": true, "mine-backdrop-open": truthy(p.open) }} onClick="close" />
             <aside
                 class={{ "mine-panel": true, "mine-panel-open": truthy(p.open) }}
                 attrs={{

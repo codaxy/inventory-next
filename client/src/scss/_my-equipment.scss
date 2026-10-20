@@ -425,6 +425,23 @@
     position: fixed;
     inset: var(--shell-top, 0) 0 0;
     z-index: 60;
+    // In step with the panel, both ways: fading in over the windows' 70ms, it was dark before the
+    // panel was a third in, and gone at once while the panel slid out.
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        opacity 0.2s ease,
+        visibility 0s linear 0.2s;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.mine-backdrop-open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.2s ease;
 }
 
 // As specific as the cap it lifts (`.page-body > :not(.page-top)`), and later.
