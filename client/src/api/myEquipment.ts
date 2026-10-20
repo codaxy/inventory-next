@@ -14,14 +14,6 @@ export type ThingKind = "device" | "furniture" | "license" | "seat";
 /** How a warranty or a subscription stands, where it says something. */
 export type Standing = "ok" | "soon" | "ended";
 
-/** An app on one of their devices. */
-export interface EquipmentApp {
-    id: string;
-    name: string;
-    status: "soon" | "ended" | null;
-    statusText: string | null;
-}
-
 /** One thing of theirs, as a card: what it is, then its make and model. */
 export interface EquipmentThing {
     kind: ThingKind;
@@ -36,11 +28,12 @@ export interface EquipmentThing {
     serial: string | null;
     status: Standing | null;
     statusText: string | null;
-    apps: EquipmentApp[];
     /** Written off or sold: where it went. */
     gone: string | null;
     /** Its type's icon key; none, the generic one. */
     icon: string | null;
+    /** Where a device or a piece of furniture is, while their things are in more than one place. */
+    place: string | null;
 }
 
 export interface MyEquipment {

@@ -79,6 +79,21 @@ public class MyEquipmentApplication : PeopleSignInApplication
         context.Countries.Add(new Country { Code = "IE", Name = "Ireland" });
         context.AddRange(city, writtenOff);
         (await context.Assets.SingleAsync(a => a.Id == WrittenOff)).LocationId = writtenOff.Id;
+        // Mia's laptop at the office, her monitor at home; Uma's one thing at the office.
+        Location Place(string name) =>
+            new()
+            {
+                Id = Guid.CreateVersion7(),
+                Name = name,
+                CountryCode = "IE",
+                CityId = city.Id,
+            };
+        var office = Place("Office");
+        var home = Place("Home");
+        context.AddRange(office, home);
+        (await context.Assets.SingleAsync(a => a.Id == Laptop)).LocationId = office.Id;
+        (await context.Assets.SingleAsync(a => a.Id == Monitor)).LocationId = home.Id;
+        (await context.Assets.SingleAsync(a => a.Id == UmasDevice)).LocationId = office.Id;
         await context.SaveChangesAsync();
 
         var category = new SoftwareOrServiceCategory { Id = Guid.CreateVersion7(), Name = "App" };
@@ -206,18 +221,13 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
     }
 
     [Fact]
-    public async Task A_seat_on_their_device_rides_on_its_card_and_every_seat_is_an_activation()
+    public async Task Every_seat_is_an_activation_and_one_on_their_device_says_so()
     {
         var mine = await MineAsync();
 
+        // Every term says how it stands on the card, running or ending soon.
         Assert.Equal(
-            ["Suite"],
-            mine.Devices.Single(t => t.Id == app.Laptop).Apps.Select(a => a.Name).ToList()
-        );
-        Assert.Empty(mine.Devices.Single(t => t.Id == app.Monitor).Apps);
-        // A term that runs says nothing on the card; one ending soon does.
-        Assert.Equal(
-            ["soon", null, null, null],
+            ["soon", "ok", "ok", null],
             mine.Software.Select(t => t.Status).OrderBy(s => s is null).ToList()
         );
         // The one on her laptop is an activation of hers too, said where it is: on the laptop as its card names it.
@@ -226,14 +236,33 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
     }
 
     [Fact]
-    public async Task A_warranty_long_ended_says_so_on_its_card_and_warns_of_nothing()
+    public async Task A_warranty_long_ended_says_nothing_on_its_card_and_warns_of_nothing()
     {
         var mine = await MineAsync();
         var tablet = mine.Devices.Single(t => t.Id == app.Tablet);
 
-        Assert.Equal("ended", tablet.Status);
-        Assert.Equal("Warranty expired", tablet.StatusText);
+        Assert.Null(tablet.Status);
+        Assert.Null(tablet.StatusText);
         Assert.DoesNotContain(mine.Warnings, w => w.Id == app.Tablet);
+    }
+
+    [Fact]
+    public async Task A_card_says_where_it_is_only_while_their_things_are_in_more_than_one_place()
+    {
+        var mine = await MineAsync();
+        string? Place(Guid id) => mine.Devices.Single(t => t.Id == id).Place;
+
+        Assert.Equal(("Office", "Home"), (Place(app.Laptop), Place(app.Monitor)));
+        // Nowhere recorded, and a disposal location, are no place.
+        Assert.Null(Place(app.Tablet));
+        Assert.Null(Place(app.WrittenOff));
+
+        var umas = (
+            await (await app.SignInAsync(MyEquipmentApplication.Uma)).GetFromJsonAsync<Response>(
+                "/api/my-equipment"
+            )
+        )!;
+        Assert.Null(Assert.Single(umas.Devices).Place);
     }
 
     [Fact]

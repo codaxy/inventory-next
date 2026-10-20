@@ -91,26 +91,25 @@ theirs), amber, several alike expiring the same day one sentence, past three fol
 and "Show fewer".
 
 **A section each** for Devices, Furniture, License activations — theirs by name and on a device they
-hold ("On Dell Latitude 5550", the device as its card names it), the latter also a pill on that
-device's card — and Licenses you hold, where they are the license's assignee: mostly a holding
+hold ("On Dell Latitude 5550", the device as its card names it), the latter also listed in that
+device's details, never on its card — two places saying it, and the card was already full — and Licenses you hold, where they are the license's assignee: mostly a holding
 account's, named by the software they cover where the name is a part number. **A card says what it is,
 then its make and model** ("Laptop", "Lenovo ThinkPad E16 Gen2"; the server names the model by the
-device's own name where the model is a part number and the name is not a host's), its inventory number
-under an icon of it on its section's tint, the apps on a device as pills, and a pill for how its
-warranty stands today, a shield in it: green "Aug 2027" while covered, amber "3 Nov" when it expires
-within the window ahead — the date alone, the colour and icon saying which and the words on hover — and
-"Warranty expired" quiet, muted ink and no fill — a regular state, the device works on — with no date,
-since the card does not say "warranty" and when is the details'. A subscription's the same, but expired
-is grey filled ("3 Nov", "Expired"; its icon grey too): not a regular state, the software stops — but
-nothing while it runs: a green "until" on every software card drowned the one that was expiring. **Not
-the dashboard's windows back**: a warranty that expired years ago is old news to IT, but to someone
-asking whether their laptop is covered it is the same as one expired last week — so the card says it
-whenever it expired, quietly, a fact and not an error, and the notice leaves it out. Computers and
+device's own name where the model is a part number and the name is not a host's), **where it is**
+beneath — only while their devices and furniture are in more than one place, since the same name on
+every card says nothing, and never a disposal location — its inventory number under an icon of it
+on its section's tint, and a pill for how its
+warranty stands today: green "Aug 2027" while covered, amber "3 Nov" when it expires within the window
+ahead — the date alone, no icon, the colour saying which and the words on hover — and
+nothing once it has expired: the usual state of an older device, not news; the details give the date.
+An activation's subscription the same, green while it runs, but expired is grey filled ("Expired"; its
+icon grey too): the software stops. A license they hold shows its term only once it is ending or
+expired. The notice leaves out what has already expired. Computers and
 phones come first, then by type, make and model, alike things by inventory number.
 
 **The codes stay off the cards**: a card opens a panel beside the page — over it on a phone, beneath
 the bar — headed "For the help desk" ("What to tell IT" in capitals read as "it"): the device's name,
-inventory, serial, model and warranty numbers, its location, the apps
+inventory, serial, model and warranty numbers, its location, the license activations
 on it with their licenses, and the maintenance contract's who to call; a license's vendor and term; a
 seat's software and license, and when it began. Captions are smaller and lighter than their values, on
 the value's baseline, so the values are what reads down the column. A date is a value like the rest,
@@ -130,7 +129,7 @@ activation's) — with a seat on such a device and the greeting's and the sectio
 nothing either way.
 
 **The icons are the types' own**: a device's or a piece of furniture's is its type's (`glyphOf` in
-`typeIcons.ts`), the generic one where none was chosen; an app's and a license's are fixed. The type
+`typeIcons.ts`), the generic one where none was chosen; an activation's — the menu's — and a license's are fixed. The type
 lists show it too, muted before the name in the name's own cell rather than in a column of its own, so
 the grid keeps its columns and the name still leads the row. The type forms pick it with `iconPicker`:
 a button showing the chosen glyph, opening a grid of plain buttons, the chosen one pressed — no names

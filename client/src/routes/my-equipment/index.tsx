@@ -12,15 +12,15 @@ const s = m.$section;
 const c = m.$card;
 const p = d.panel;
 
+/** A card's pill by how it stands. A card shows no expired warranty: the usual state, not news. */
+const standing = (status: string | undefined) => `mine-standing mine-standing-${status ?? "none"}`;
 /**
- * A pill's class by how it stands. An expired warranty is a regular state — the device works on, maybe
- * for years — so it stays quiet, no fill; an expired subscription is not — the software stops — so it
- * is grey.
+ * A date in the details by how it stands. An expired warranty is a regular state — the device works
+ * on, maybe for years — so it stays quiet, no fill; an expired subscription is not — the software
+ * stops — so it is grey.
  */
-const standingClass = (status: string | undefined, kind: string | undefined) =>
-    status === "ended" && kind === "device" ? "lapsed" : (status ?? "none");
-const standing = (status: string | undefined, kind: string | undefined) =>
-    `mine-standing mine-standing-${standingClass(status, kind)}`;
+const factStanding = (status: string, kind: string | undefined) =>
+    status === "ended" && kind === "device" ? "lapsed" : status;
 /**
  * A date-only pill in words, for the pointer's hover and a screen reader: "Warranty until Aug 2027",
  * "Subscription expires 3 Nov". An expired pill is words already.
@@ -30,21 +30,6 @@ const standingWords = (status: string | undefined, kind: string | undefined, tex
     const what = kind === "device" ? "Warranty" : "Subscription";
     return `${what} ${status === "ok" ? "until" : "expires"} ${text}`;
 };
-
-/**
- * A warranty's pill carries a shield — covered, expiring, expired — so its icon says "warranty" with
- * the word; a subscription's an alert while it ends, a clock once it has.
- */
-const standingIcon = (status: string | undefined, kind: string | undefined) =>
-    kind === "device"
-        ? status === "ok"
-            ? "covered"
-            : status === "soon"
-              ? "expiring"
-              : "expired"
-        : status === "soon"
-          ? "attention"
-          : "recordHistory";
 
 /**
  * An employee's own equipment, made for them rather than for IT: a greeting, what needs attention in
@@ -167,38 +152,25 @@ export default createFunctionalComponent(() => (
                                         visible={hasValue(c.subtitle)}
                                         text={c.subtitle}
                                     />
-                                    <span class="mine-apps" visible={expr(c.apps, (a) => a.length > 0)}>
-                                        <Repeater records={c.apps} recordAlias={m.$app} keyField="key">
-                                            <span
-                                                class={expr(
-                                                    m.$app.status,
-                                                    (st) => `mine-app mine-app-${st ?? "ok"}`,
-                                                )}
-                                                text={m.$app.name}
-                                                attrs={{
-                                                    title: expr(m.$app.status, m.$app.statusText, (st, t) =>
-                                                        standingWords(st, "seat", t),
-                                                    ),
-                                                }}
-                                            />
-                                        </Repeater>
-                                    </span>
+                                    <span
+                                        class="mine-card-place"
+                                        visible={hasValue(c.place)}
+                                        text={c.place}
+                                    />
                                     <span
                                         class="mine-standing mine-standing-gone"
                                         visible={hasValue(c.gone)}
                                         text={c.gone}
                                     />
                                     <span
-                                        class={expr(c.status, c.kind, standing)}
+                                        class={expr(c.status, standing)}
                                         visible={hasValue(c.statusText)}
                                         attrs={{
                                             title: expr(c.status, c.kind, c.statusText, standingWords),
                                             "aria-label": expr(c.status, c.kind, c.statusText, standingWords),
                                         }}
-                                    >
-                                        <Icon name={expr(c.status, c.kind, standingIcon)} />
-                                        <span text={c.statusText} />
-                                    </span>
+                                        text={c.statusText}
+                                    />
                                 </span>
                             </button>
                         </Repeater>
@@ -272,7 +244,7 @@ export default createFunctionalComponent(() => (
                                         stands and when. */}
                                     <span
                                         class={expr(m.$fact.standing, p.kind, (st, kind) =>
-                                            st ? `mine-fact-date-${standingClass(st, kind)}` : "",
+                                            st ? `mine-fact-date-${factStanding(st, kind)}` : "",
                                         )}
                                         text={m.$fact.value}
                                     />
@@ -288,7 +260,7 @@ export default createFunctionalComponent(() => (
                 </div>
 
                 <div class="mine-panel-part" visible={expr(p.apps, (a) => a.length > 0)}>
-                    <h3 class="mine-panel-label" text="Apps on it" />
+                    <h3 class="mine-panel-label" text="License activations on it" />
                     <Repeater records={p.apps} recordAlias={m.$panelApp}>
                         <div
                             class={{
@@ -297,7 +269,7 @@ export default createFunctionalComponent(() => (
                             }}
                         >
                             <span class="mine-thing mine-thing-small mine-thing-software">
-                                <Icon name="thingApp" />
+                                <Icon name="thingActivation" />
                             </span>
                             <div>
                                 <p class="mine-panel-app-name" text={m.$panelApp.name} />

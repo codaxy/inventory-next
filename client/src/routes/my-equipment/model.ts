@@ -22,13 +22,13 @@ export interface Card {
     tone: Tone;
     /** "Written off", "Sold": still theirs on paper, shown last and pale. */
     gone?: string;
+    title: string;
     /** "#100631", under the icon: the number IT asks for, and what tells two alike apart. */
     number?: string;
-    title: string;
     subtitle?: string;
+    place?: string;
     status?: Standing;
     statusText?: string;
-    apps: { key: string; name: string; status?: string; statusText?: string }[];
 }
 
 export interface Section {
@@ -101,7 +101,6 @@ export interface Model {
     };
     $section: Section;
     $card: Card;
-    $app: Card["apps"][number];
     $notice: Notice;
     $fact: Fact;
     $contract: string;
@@ -119,10 +118,10 @@ export const noticesShown = 3;
 /** Above this many things, a search. */
 export const searchFrom = 20;
 
-/** A thing's icon: its type's, as an admin chose it (`typeIcons.ts`); an app's or a license's. */
+/** A thing's icon: its type's, as an admin chose it (`typeIcons.ts`); an activation's (the menu's) or a license's. */
 function thingIcon(t: EquipmentThing): IconName {
     if (t.kind === "license") return "thingLicense";
-    if (t.kind === "seat") return "thingApp";
+    if (t.kind === "seat") return "thingActivation";
     return glyphOf(t.kind, t.icon);
 }
 
@@ -151,20 +150,15 @@ export function toCard(t: EquipmentThing, tone: Tone): Searchable {
         id: t.id,
         icon: thingIcon(t),
         tone,
-        // A seat's number is its license's, not a thing of theirs.
-        number: t.kind !== "seat" && t.number ? `#${t.number}` : undefined,
         gone: t.gone ?? undefined,
         title: t.title,
+        // A seat's number is its license's, not a thing of theirs.
+        number: t.kind !== "seat" && t.number ? `#${t.number}` : undefined,
         subtitle: t.subtitle ?? undefined,
+        place: t.place ?? undefined,
         status: t.status ?? undefined,
         statusText: t.statusText ?? undefined,
-        apps: t.apps.map((a) => ({
-            key: a.id,
-            name: a.name,
-            status: a.status ?? undefined,
-            statusText: a.statusText ?? undefined,
-        })),
-        search: [t.title, t.subtitle, t.name, t.number, t.serial, ...t.apps.map((a) => a.name)]
+        search: [t.title, t.subtitle, t.place, t.name, t.number, t.serial]
             .filter(Boolean)
             .join(" ")
             .toLowerCase(),

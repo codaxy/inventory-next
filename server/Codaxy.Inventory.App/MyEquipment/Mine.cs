@@ -17,10 +17,6 @@ namespace Codaxy.Inventory.App.MyEquipment;
 /// <param name="Uses">For a subscription behind a seat, the software it is for.</param>
 public sealed record Warning(string Kind, Guid Id, string Name, DateOnly Date, string? Uses);
 
-/// <summary>An app on one of their devices: a seat, as a pill on the device's card.</summary>
-/// <param name="Status"><c>soon</c> or <c>ended</c>: its subscription, where it says something.</param>
-public sealed record App(Guid Id, string Name, string? Status, string? StatusText);
-
 /// <summary>
 /// One thing of theirs as a card: what it is, then its make and model; the codes that name it to IT
 /// ride along for the search, not for the card.
@@ -29,11 +25,12 @@ public sealed record App(Guid Id, string Name, string? Status, string? StatusTex
 /// <param name="Type">The type as recorded.</param>
 /// <param name="Title">The type, or the name where there is none: "Laptop".</param>
 /// <param name="Subtitle">The make and model, or whatever names it next best: "Lenovo ThinkPad E16 Gen2".</param>
-/// <param name="Status"><c>ok</c>, <c>soon</c> or <c>expired</c>: a warranty or a subscription, where it says something.</param>
-/// <param name="Apps">On a device, the seats on it.</param>
+/// <param name="Status"><c>ok</c>, <c>soon</c> or <c>ended</c>: a warranty or a subscription, where it says something; never an expired warranty.</param>
 /// <param name="Icon">Its type's icon, a key of <c>TypeIcons</c>; none, the generic one.</param>
 /// <param name="Gone">Where it went, written off or sold: the disposal location's name. It still
 /// counts as theirs, last and pale.</param>
+/// <param name="Place">Where a device or a piece of furniture is, only while their things are in more
+/// than one place: the same name on every card says nothing.</param>
 public sealed record Thing(
     string Kind,
     Guid Id,
@@ -45,13 +42,13 @@ public sealed record Thing(
     string? Serial,
     string? Status,
     string? StatusText,
-    IReadOnlyList<App> Apps,
     string? Gone = null,
-    string? Icon = null
+    string? Icon = null,
+    string? Place = null
 );
 
 /// <summary>
-/// Their things by section: devices with the apps on them, furniture, their license activations —
+/// Their things by section: devices, furniture, their license activations —
 /// by name and on their devices — and the licenses they hold.
 /// </summary>
 public sealed record Things(
@@ -180,6 +177,7 @@ internal static class Mine
                 Serial = a.ElectronicDevice.SerialNumber,
                 Warranty = a.ElectronicDevice.WarrantyExpirationDate,
                 Gone = a.Location != null && a.Location.IsDisposal ? a.Location.Name : null,
+                Place = a.Location != null && !a.Location.IsDisposal ? a.Location.Name : null,
             })
             .ToListAsync(cancellationToken);
         var furniture = await mine.Where(a => a.Furniture != null)
@@ -191,6 +189,7 @@ internal static class Mine
                 Type = a.Furniture.FurnitureType.Name,
                 Icon = a.Furniture.FurnitureType.Icon,
                 Gone = a.Location != null && a.Location.IsDisposal ? a.Location.Name : null,
+                Place = a.Location != null && !a.Location.IsDisposal ? a.Location.Name : null,
                 a.Furniture.Model,
             })
             .ToListAsync(cancellationToken);
@@ -232,17 +231,15 @@ internal static class Mine
         // How it stands today, whenever it ended: running, expiring soon by the dashboard's window
         // ahead, or expired — last week or years ago, the same to someone asking whether it is
         // covered; when, the details say. A date alone while it runs or is expiring: the pill's
-        // colour and icon say which, and the page's hover says it in words. Once expired, words alone:
-        // "Warranty expired" on a device, whose card does not say "warranty"; "Expired" on a
-        // subscription, whose card is the subscription.
-        (string? Status, string? Text) Standing(Guid key, DateOnly? ends, bool warranty = false)
+        // colour and icon say which, and the page's hover says it in words. Once expired, "Expired".
+        (string? Status, string? Text) Standing(Guid key, DateOnly? ends)
         {
             // A pill too wide for its card wraps before the date, never inside it ("19 / May").
             static string Whole(string date) => date.Replace(' ', '\u00A0');
             return ends switch
             {
                 null => (null, null),
-                { } e when e < today => ("ended", warranty ? "Warranty expired" : "Expired"),
+                { } e when e < today => ("ended", "Expired"),
                 _ when warned.ContainsKey(key) => ("soon", Whole(Day(ends.Value))),
                 { } e => ("ok", Whole(Month(e))),
             };
@@ -278,21 +275,14 @@ internal static class Mine
             };
         }
 
-        var appsOn = seats
-            .Where(s => s.DeviceId is not null)
-            .ToLookup(
-                s => s.DeviceId!.Value,
-                s =>
-                {
-                    var (status, text) = Standing(s.LicenseId, s.Ends);
-                    return new App(s.Id, s.Software, status == "ok" ? null : status, text);
-                }
-            );
-
         var deviceCards = devices
             .Select(d =>
             {
-                var (status, text) = Standing(d.Id, d.Warranty, warranty: true);
+                // An expired warranty is the usual state of an older device, not news: the card says
+                // nothing, the details give the date.
+                var (status, text) = Standing(d.Id, d.Warranty);
+                if (status == "ended")
+                    (status, text) = (null, null);
                 var model = MakeAndModel(d.Maker, d.Model, d.Name);
                 return new Thing(
                     "device",
@@ -305,9 +295,9 @@ internal static class Mine
                     d.Serial,
                     d.Gone is null ? status : null,
                     d.Gone is null ? text : null,
-                    [.. appsOn[d.Id].OrderBy(a => a.Name)],
                     d.Gone,
-                    d.Icon
+                    d.Icon,
+                    Blank(d.Place)
                 );
             })
             // Written off or sold last: still theirs on paper, no longer in their hands.
@@ -330,9 +320,9 @@ internal static class Mine
                 null,
                 null,
                 null,
-                [],
                 f.Gone,
-                f.Icon
+                f.Icon,
+                Blank(f.Place)
             ))
             .OrderBy(t => t.Gone is not null)
             .ThenBy(t => t.Title)
@@ -341,11 +331,24 @@ internal static class Mine
             .ThenBy(t => t.Number)
             .ToList();
 
-        // Software is what they use, named by itself; its license, and a term that runs, are the
-        // panel's — a green "until" on every card drowned the one that was ending.
+        // Their things in one place: the place goes, said by every card alike. Compared whatever the
+        // case, as names are unique.
+        if (
+            deviceCards
+                .Concat(furnitureCards)
+                .Select(t => t.Place?.ToLowerInvariant())
+                .Where(p => p is not null)
+                .Distinct()
+                .Count() < 2
+        )
+        {
+            deviceCards = [.. deviceCards.Select(t => t with { Place = null })];
+            furnitureCards = [.. furnitureCards.Select(t => t with { Place = null })];
+        }
+
+        // Software is what they use, named by itself; its license is the panel's.
         // Every activation of theirs: by name, and on a device they hold — "On Dell Latitude 5550", the
-        // device by its make and model as its card names it (or what it is, failing those); its apps
-        // ride on that card too.
+        // device by its make and model as its card names it (or what it is, failing those); the device's details list them too.
         var deviceLabels = deviceCards.ToDictionary(d => d.Id, d => d.Subtitle ?? d.Title);
         // A seat on a device written off or sold went with it: marked as gone as the device is.
         var goneDevices = devices
@@ -364,8 +367,8 @@ internal static class Mine
                     && goneDevices.TryGetValue(seatDevice, out var where)
                         ? where
                         : null;
-                // A running term says nothing; nor does any on a device that went.
-                var shown = status != "ok" && gone is null;
+                // Nothing on a device that went.
+                var shown = gone is null;
                 return new Thing(
                     "seat",
                     s.Id,
@@ -377,7 +380,6 @@ internal static class Mine
                     null,
                     shown ? status : null,
                     shown ? text : null,
-                    [],
                     gone
                 );
             })
@@ -407,8 +409,7 @@ internal static class Mine
                     l.InventoryNumber,
                     null,
                     status == "ok" ? null : status,
-                    status == "ok" ? null : text,
-                    []
+                    status == "ok" ? null : text
                 );
             })
             .OrderBy(t => t.Title)
