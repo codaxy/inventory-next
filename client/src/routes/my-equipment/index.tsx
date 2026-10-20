@@ -22,12 +22,18 @@ const standing = (status: string | undefined) => `mine-standing mine-standing-${
 const factStanding = (status: string, kind: string | undefined) =>
     status === "ended" && kind === "device" ? "lapsed" : status;
 /**
- * A date-only pill in words, for the pointer's hover and a screen reader: "Warranty until Aug 2027",
- * "Subscription expires 3 Nov". An expired pill is words already.
+ * A pill in words, for the pointer's hover and a screen reader: "Warranty until Aug 2027",
+ * "Subscription expires 3 Nov", "Subscription expired 3 Nov 2025".
  */
-const standingWords = (status: string | undefined, kind: string | undefined, text: string | undefined) => {
-    if (!text || status === "ended") return text;
+const standingWords = (
+    status: string | undefined,
+    kind: string | undefined,
+    text: string | undefined,
+    expired: string | undefined,
+) => {
+    if (!text) return text;
     const what = kind === "device" ? "Warranty" : "Subscription";
+    if (status === "ended") return expired ? `${what} expired ${expired}` : text;
     return `${what} ${status === "ok" ? "until" : "expires"} ${text}`;
 };
 
@@ -166,8 +172,20 @@ export default createFunctionalComponent(() => (
                                         class={expr(c.status, standing)}
                                         visible={hasValue(c.statusText)}
                                         attrs={{
-                                            title: expr(c.status, c.kind, c.statusText, standingWords),
-                                            "aria-label": expr(c.status, c.kind, c.statusText, standingWords),
+                                            title: expr(
+                                                c.status,
+                                                c.kind,
+                                                c.statusText,
+                                                c.expired,
+                                                standingWords,
+                                            ),
+                                            "aria-label": expr(
+                                                c.status,
+                                                c.kind,
+                                                c.statusText,
+                                                c.expired,
+                                                standingWords,
+                                            ),
                                         }}
                                         text={c.statusText}
                                     />

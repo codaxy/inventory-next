@@ -102,9 +102,8 @@ on its section's tint, and a pill for how its
 warranty stands today: green "Aug 2027" while covered, amber "3 Nov" when it expires within the window
 ahead — the date alone, no icon, the colour saying which and the words on hover — and
 nothing once it has expired: the usual state of an older device, not news; the details give the date.
-An activation's subscription the same, green while it runs, but expired is grey filled ("Expired"; its
-icon grey too): the software stops. A license they hold shows its term only once it is ending or
-expired. The notice leaves out what has already expired. Computers and
+An activation's subscription the same, green while it runs, but expired is grey filled ("Expired", the hover saying when; its
+icon grey too): the software stops; a license they hold with a subscription the same. The notice leaves out what has already expired. Computers and
 phones come first, then by type, make and model, alike things by inventory number.
 
 **The codes stay off the cards**: a card opens a panel beside the page — over it on a phone, beneath

@@ -34,6 +34,8 @@ export interface EquipmentThing {
     icon: string | null;
     /** Where a device or a piece of furniture is, while their things are in more than one place. */
     place: string | null;
+    /** When a subscription expired, for the pill's words: "3 Nov 2025". */
+    expired: string | null;
 }
 
 export interface MyEquipment {

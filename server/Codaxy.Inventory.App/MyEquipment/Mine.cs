@@ -31,6 +31,7 @@ public sealed record Warning(string Kind, Guid Id, string Name, DateOnly Date, s
 /// counts as theirs, last and pale.</param>
 /// <param name="Place">Where a device or a piece of furniture is, only while their things are in more
 /// than one place: the same name on every card says nothing.</param>
+/// <param name="Expired">When a subscription expired, for the pill's words: "3 Nov 2025".</param>
 public sealed record Thing(
     string Kind,
     Guid Id,
@@ -44,7 +45,8 @@ public sealed record Thing(
     string? StatusText,
     string? Gone = null,
     string? Icon = null,
-    string? Place = null
+    string? Place = null,
+    string? Expired = null
 );
 
 /// <summary>
@@ -230,18 +232,18 @@ internal static class Mine
 
         // How it stands today, whenever it ended: running, expiring soon by the dashboard's window
         // ahead, or expired — last week or years ago, the same to someone asking whether it is
-        // covered; when, the details say. A date alone while it runs or is expiring: the pill's
-        // colour and icon say which, and the page's hover says it in words. Once expired, "Expired".
-        (string? Status, string? Text) Standing(Guid key, DateOnly? ends)
+        // covered. A date alone while it runs or is expiring: the pill's colour says which, and the
+        // page's hover says it in words. Once expired, "Expired", and when only in the hover.
+        (string? Status, string? Text, string? Expired) Standing(Guid key, DateOnly? ends)
         {
             // A pill too wide for its card wraps before the date, never inside it ("19 / May").
             static string Whole(string date) => date.Replace(' ', '\u00A0');
             return ends switch
             {
-                null => (null, null),
-                { } e when e < today => ("ended", "Expired"),
-                _ when warned.ContainsKey(key) => ("soon", Whole(Day(ends.Value))),
-                { } e => ("ok", Whole(Month(e))),
+                null => (null, null, null),
+                { } e when e < today => ("ended", "Expired", Whole(Day(e))),
+                _ when warned.ContainsKey(key) => ("soon", Whole(Day(ends.Value)), null),
+                { } e => ("ok", Whole(Month(e)), null),
             };
         }
 
@@ -280,7 +282,7 @@ internal static class Mine
             {
                 // An expired warranty is the usual state of an older device, not news: the card says
                 // nothing, the details give the date.
-                var (status, text) = Standing(d.Id, d.Warranty);
+                var (status, text, _) = Standing(d.Id, d.Warranty);
                 if (status == "ended")
                     (status, text) = (null, null);
                 var model = MakeAndModel(d.Maker, d.Model, d.Name);
@@ -357,7 +359,7 @@ internal static class Mine
         var softwareCards = seats
             .Select(s =>
             {
-                var (status, text) = Standing(s.LicenseId, s.Ends);
+                var (status, text, expired) = Standing(s.LicenseId, s.Ends);
                 var on =
                     s.DeviceId is { } device && deviceLabels.TryGetValue(device, out var label)
                         ? $"On {label}"
@@ -380,7 +382,8 @@ internal static class Mine
                     null,
                     shown ? status : null,
                     shown ? text : null,
-                    gone
+                    gone,
+                    Expired: shown ? expired : null
                 );
             })
             .OrderBy(t => t.Gone is not null)
@@ -394,7 +397,7 @@ internal static class Mine
         var licenseCards = licenses
             .Select(l =>
             {
-                var (status, text) = Standing(l.Id, l.Ends);
+                var (status, text, expired) = Standing(l.Id, l.Ends);
                 var title = Code(l.Name) && Blank(l.Software) is { } covered ? covered : l.Name;
                 return new Thing(
                     "license",
@@ -408,8 +411,9 @@ internal static class Mine
                     l.Name,
                     l.InventoryNumber,
                     null,
-                    status == "ok" ? null : status,
-                    status == "ok" ? null : text
+                    status,
+                    text,
+                    Expired: expired
                 );
             })
             .OrderBy(t => t.Title)

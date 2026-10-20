@@ -28,6 +28,8 @@ export interface Card {
     subtitle?: string;
     place?: string;
     status?: Standing;
+    /** When a subscription expired: "3 Nov 2025". */
+    expired?: string;
     statusText?: string;
 }
 
@@ -157,6 +159,7 @@ export function toCard(t: EquipmentThing, tone: Tone): Searchable {
         subtitle: t.subtitle ?? undefined,
         place: t.place ?? undefined,
         status: t.status ?? undefined,
+        expired: t.expired ?? undefined,
         statusText: t.statusText ?? undefined,
         search: [t.title, t.subtitle, t.place, t.name, t.number, t.serial]
             .filter(Boolean)

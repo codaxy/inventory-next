@@ -30,6 +30,7 @@ public class MyEquipmentApplication : PeopleSignInApplication
     public Guid Tablet { get; private set; }
     public Guid Lapsing { get; private set; }
     public Guid Lasting { get; private set; }
+    public Guid Lapsed { get; private set; }
     public Guid OthersDevice { get; private set; }
 
     /// <summary>A user who is a person too, turned off from signing in as one, with a device.</summary>
@@ -126,6 +127,15 @@ public class MyEquipmentApplication : PeopleSignInApplication
         await Seed.ActivationAsync(context, lasting.Volume, person: mia);
         Lasting = lasting.License;
 
+        var lapsed = await Seed.LicenseWithVolumeAsync(
+            context,
+            suite.Id,
+            "Lapsed subscription",
+            expires: Today.AddDays(-30)
+        );
+        await Seed.ActivationAsync(context, lapsed.Volume, person: mia);
+        Lapsed = lapsed.License;
+
         var editor = await Seed.LicenseWithVolumeAsync(
             context,
             suite.Id,
@@ -146,8 +156,13 @@ public class MyEquipmentApplication : PeopleSignInApplication
         await Seed.ActivationAsync(context, stale.Volume, device: WrittenOff);
         Stale = stale.License;
 
-        // A license held in her name, named by a part number.
-        var held = await Seed.LicenseWithVolumeAsync(context, suite.Id, "FC-10-0090G-809");
+        // A license held in her name, named by a part number, its subscription running a year.
+        var held = await Seed.LicenseWithVolumeAsync(
+            context,
+            suite.Id,
+            "FC-10-0090G-809",
+            expires: Today.AddDays(365)
+        );
         (await context.Assets.SingleAsync(a => a.Id == held.License)).PersonId = mia;
         await context.SaveChangesAsync();
     }
@@ -186,7 +201,7 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
         Assert.Equal(4, mine.Devices.Count);
         Assert.Empty(mine.Furniture);
         Assert.Equal(
-            ["Suite", "Suite", "Suite", "Suite"],
+            ["Suite", "Suite", "Suite", "Suite", "Suite"],
             mine.Software.Select(t => t.Title).ToList()
         );
         Assert.DoesNotContain(mine.Devices, t => t.Id == app.OthersDevice);
@@ -225,11 +240,14 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
     {
         var mine = await MineAsync();
 
-        // Every term says how it stands on the card, running or ending soon.
+        // Every term says how it stands on the card, running, ending soon or expired — and when it expired.
         Assert.Equal(
-            ["soon", "ok", "ok", null],
+            ["soon", "ok", "ended", "ok", null],
             mine.Software.Select(t => t.Status).OrderBy(s => s is null).ToList()
         );
+        var lapsed = mine.Software.Single(t => t.Status == "ended");
+        Assert.Equal("Expired", lapsed.StatusText);
+        Assert.StartsWith($"{MyEquipmentApplication.Today.AddDays(-30).Day}\u00A0", lapsed.Expired);
         // The one on her laptop is an activation of hers too, said where it is: on the laptop as its card names it.
         var laptop = mine.Devices.Single(t => t.Id == app.Laptop);
         Assert.Contains(mine.Software, t => t.Subtitle == $"On {laptop.Subtitle ?? laptop.Title}");
@@ -284,6 +302,8 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
         var license = Assert.Single((await MineAsync()).Licenses);
 
         Assert.Equal(("Suite", "FC-10-0090G-809"), (license.Title, license.Name));
+        // Its subscription says how it stands, running too, as an activation's does.
+        Assert.Equal("ok", license.Status);
     }
 
     [Fact]
