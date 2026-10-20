@@ -74,8 +74,8 @@ deny list, both kept in the application. A deployment moving from one names its 
 **The code checks a permission, never a role; a role is a named set of permissions; a user holds
 one.** The catalogue is `Shared/Access/Permissions`, **coarse, as the application is used**:
 `inventory.view` and `inventory.edit` — every section and the dashboard; nobody views or edits part of
-the inventory and not the rest — then `audit_log.view`, `server_log.view`, `users.manage`,
-`roles.manage` and `settings.manage`. **A permission nothing checks is not in it.** Each names what a screen groups it
+the inventory and not the rest — then `users.manage`, `roles.manage`, `settings.manage`,
+`audit_log.view` and `server_log.view`, in the menu's order. **A permission nothing checks is not in it.** Each names what a screen groups it
 under, so a view and its edit are ticked side by side. **The audit log is apart from the inventory**:
 it holds who changed what, and deleted records whole, which seeing every record does not.
 

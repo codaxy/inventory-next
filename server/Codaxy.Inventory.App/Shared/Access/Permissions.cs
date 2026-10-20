@@ -15,17 +15,19 @@ public static class Permissions
     public const string InventoryView = "inventory.view";
     public const string InventoryEdit = "inventory.edit";
 
+    public const string UsersManage = "users.manage";
+    public const string RolesManage = "roles.manage";
+
+    /// <summary>The application's settings, which apply to everyone.</summary>
+    public const string SettingsManage = "settings.manage";
+
     /// <summary>
     /// Apart from the inventory: the log holds who changed what, and the whole of deleted records.
     /// </summary>
     public const string AuditLogView = "audit_log.view";
     public const string ServerLogView = "server_log.view";
-    public const string UsersManage = "users.manage";
-    public const string RolesManage = "roles.manage";
 
-    /// <summary>The application's settings, which apply to everyone; their screen comes next.</summary>
-    public const string SettingsManage = "settings.manage";
-
+    /// <summary>In the menu's order, which the role screen follows: the inventory, then Administration.</summary>
     public static IReadOnlyList<Permission> All { get; } =
     [
         new(InventoryView, "Inventory", "View", "Every section and the dashboard."),
@@ -35,8 +37,6 @@ public static class Permissions
             "Edit",
             "Add, change and delete anything in the inventory."
         ),
-        new(AuditLogView, "Audit log", "View", "Who changed what, and deleted records whole."),
-        new(ServerLogView, "Server log", "View", "What the server wrote, day by day."),
         new(UsersManage, "Users", "Manage", "Add users, give them roles, deactivate them."),
         new(RolesManage, "Roles", "Manage", "Define roles and what they grant."),
         new(
@@ -45,6 +45,8 @@ public static class Permissions
             "Manage",
             "Change how the application behaves for everyone."
         ),
+        new(AuditLogView, "Audit log", "View", "Who changed what, and deleted records whole."),
+        new(ServerLogView, "Server log", "View", "What the server wrote, day by day."),
     ];
 
     public static IReadOnlySet<string> Keys { get; } = All.Select(p => p.Key).ToHashSet();

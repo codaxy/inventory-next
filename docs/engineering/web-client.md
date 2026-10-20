@@ -465,8 +465,8 @@ which promises the switch will be turned on; under a "No" none, since it means t
 Not shown off and locked then: that read as the person being left out, and kept anyone from deciding
 in advance.
 
-**A role's permissions are a row per area**, the catalogue's order and names — Inventory, Audit log,
-Server log, Users, Roles, Settings: View and Edit ticks side by side in two fixed columns, an area with one
+**A role's permissions are a row per area**, the catalogue's names in the menu's order — Inventory,
+then Administration's Users, Roles, Settings, Audit log, Server log, so the two read alike: View and Edit ticks side by side in two fixed columns, an area with one
 permission — the Audit log's View, Users' Manage — under the first. Ticking Edit ticks View and locks it until Edit is cleared; a permission the
 reader does not hold cannot be ticked. In view the row says what it grants in words, "View, Edit" or a
 dash. The page loads the role only once the catalogue (`/api/administration/roles/catalogue`) is in,
