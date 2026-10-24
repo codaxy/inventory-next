@@ -73,8 +73,7 @@ only with the `edit` of the page's item (`canEdit`, or `edits` on a ⋮ action),
 `…/edit` — is the not-found page; `~/` lands on the first item the reader can see. Hidden, never
 disabled: a button nobody can press says nothing about why. `screens` in `routes/index.tsx` maps every item's href to its screen.
 
-**An employee signed in as a person sees one item, "My inventory"** (`~/my-equipment`, named for the
-page's first scope, as are its code and API), and lands there
+**An employee signed in as a person sees one item, "My inventory"** (`~/my-inventory`), and lands there
 as a user lands on the Dashboard; their account menu says "Employee" where a user's says their role,
 and `/api/auth/me` tells the two apart (`kind`). **Their shell has no sidebar**: a bar at every width
 with the mark and their account menu, which opens downwards — a column holding one link reads as

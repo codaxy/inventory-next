@@ -1,7 +1,7 @@
 import { send } from "./http";
 
 /** Something of the employee's ending soon, by the dashboard's windows ahead. */
-export interface EquipmentWarning {
+export interface InventoryWarning {
     kind: "warranty" | "subscription";
     id: string;
     name: string;
@@ -15,7 +15,7 @@ export type ThingKind = "device" | "furniture" | "license" | "seat" | "informati
 export type Standing = "ok" | "soon" | "ended";
 
 /** One thing of theirs, as a card: what it is, then its make and model. */
-export interface EquipmentThing {
+export interface InventoryThing {
     kind: ThingKind;
     id: string;
     /** The type as recorded, to pick an icon by. */
@@ -38,22 +38,22 @@ export interface EquipmentThing {
     expired: string | null;
 }
 
-export interface MyEquipment {
+export interface MyInventory {
     name: string;
-    warnings: EquipmentWarning[];
-    devices: EquipmentThing[];
-    furniture: EquipmentThing[];
-    software: EquipmentThing[];
+    warnings: InventoryWarning[];
+    devices: InventoryThing[];
+    furniture: InventoryThing[];
+    software: InventoryThing[];
     /** Licenses held in their name: mostly a holding account's. */
-    licenses: EquipmentThing[];
+    licenses: InventoryThing[];
     /** Information they own: a register's entries naming them responsible. */
-    information: EquipmentThing[];
+    information: InventoryThing[];
 }
 
 /** The signed-in employee's page, whole; refused to anyone else. */
-export const getMyEquipment = () => send<MyEquipment>("/api/my-equipment");
+export const getMyInventory = () => send<MyInventory>("/api/my-inventory");
 
-export interface EquipmentFact {
+export interface InventoryFact {
     label: string;
     value: string;
     /** The inventory number of what the value names, shown muted beside it. */
@@ -63,7 +63,7 @@ export interface EquipmentFact {
 }
 
 /** Who to call about a device: a maintenance contract on it. */
-export interface EquipmentContract {
+export interface InventoryContract {
     vendor: string;
     number: string | null;
     contact: string | null;
@@ -73,19 +73,19 @@ export interface EquipmentContract {
 }
 
 /** An app on a device, with its license. */
-export interface EquipmentDetailApp {
+export interface InventoryDetailApp {
     name: string;
     license: string;
     licenseNumber: number | null;
     ends: string | null;
 }
 
-export interface EquipmentDetails {
-    facts: EquipmentFact[];
-    contracts: EquipmentContract[];
-    apps: EquipmentDetailApp[];
+export interface InventoryDetails {
+    facts: InventoryFact[];
+    contracts: InventoryContract[];
+    apps: InventoryDetailApp[];
 }
 
 /** One thing of theirs, as much as they need to tell IT or a repair shop about it. */
-export const getMyEquipmentDetails = (kind: ThingKind, id: string) =>
-    send<EquipmentDetails>(`/api/my-equipment/items/${kind}/${id}`);
+export const getMyInventoryDetails = (kind: ThingKind, id: string) =>
+    send<InventoryDetails>(`/api/my-inventory/items/${kind}/${id}`);

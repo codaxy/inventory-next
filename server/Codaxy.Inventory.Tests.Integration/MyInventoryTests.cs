@@ -10,9 +10,9 @@ using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.Tests.Integration.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Details = Codaxy.Inventory.App.MyEquipment.Details.Endpoint.Response;
+using Details = Codaxy.Inventory.App.MyInventory.Details.Endpoint.Response;
 using Me = Codaxy.Inventory.Web.Auth.Session.Me.Endpoint;
-using Response = Codaxy.Inventory.App.MyEquipment.Get.Endpoint.Response;
+using Response = Codaxy.Inventory.App.MyInventory.Get.Endpoint.Response;
 
 namespace Codaxy.Inventory.Tests.Integration;
 
@@ -21,7 +21,7 @@ namespace Codaxy.Inventory.Tests.Integration;
 /// warranty ends past the window, a tablet whose warranty ended years ago, a seat on a subscription that lapses in five days, and a seat on one
 /// that runs a year, a license in her name, and a laptop written off; someone else with a device of their own.
 /// </summary>
-public class MyEquipmentApplication : PeopleSignInApplication
+public class MyInventoryApplication : PeopleSignInApplication
 {
     public const string Mia = "mia.employee@codaxy.com";
 
@@ -229,12 +229,12 @@ public class MyEquipmentApplication : PeopleSignInApplication
     }
 }
 
-public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEquipmentApplication>
+public class MyInventoryTests(MyInventoryApplication app) : IClassFixture<MyInventoryApplication>
 {
-    private async Task<HttpClient> MiaAsync() => await app.SignInAsync(MyEquipmentApplication.Mia);
+    private async Task<HttpClient> MiaAsync() => await app.SignInAsync(MyInventoryApplication.Mia);
 
     private async Task<Response> MineAsync() =>
-        (await (await MiaAsync()).GetFromJsonAsync<Response>("/api/my-equipment"))!;
+        (await (await MiaAsync()).GetFromJsonAsync<Response>("/api/my-inventory"))!;
 
     [Fact]
     public async Task The_page_holds_their_things_by_section_and_nobody_else_s()
@@ -291,7 +291,7 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
         );
         var lapsed = mine.Software.Single(t => t.Status == "ended");
         Assert.Equal("Expired", lapsed.StatusText);
-        Assert.StartsWith($"{MyEquipmentApplication.Today.AddDays(-30).Day}\u00A0", lapsed.Expired);
+        Assert.StartsWith($"{MyInventoryApplication.Today.AddDays(-30).Day}\u00A0", lapsed.Expired);
         // The one on her laptop is an activation of hers too, said where it is: on the laptop as its card names it.
         var laptop = mine.Devices.Single(t => t.Id == app.Laptop);
         Assert.Contains(mine.Software, t => t.Subtitle == $"On {laptop.Subtitle ?? laptop.Title}");
@@ -320,8 +320,8 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
         Assert.Null(Place(app.WrittenOff));
 
         var umas = (
-            await (await app.SignInAsync(MyEquipmentApplication.Uma)).GetFromJsonAsync<Response>(
-                "/api/my-equipment"
+            await (await app.SignInAsync(MyInventoryApplication.Uma)).GetFromJsonAsync<Response>(
+                "/api/my-inventory"
             )
         )!;
         Assert.Null(Assert.Single(umas.Devices).Place);
@@ -339,7 +339,7 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
         );
         var details = (
             await client.GetFromJsonAsync<Details>(
-                $"/api/my-equipment/items/information/{record.Id}"
+                $"/api/my-inventory/items/information/{record.Id}"
             )
         )!;
         Assert.Equal(
@@ -352,7 +352,7 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
         Assert.Equal(
             HttpStatusCode.NotFound,
             (
-                await client.GetAsync($"/api/my-equipment/items/information/{app.OlesRecord}")
+                await client.GetAsync($"/api/my-inventory/items/information/{app.OlesRecord}")
             ).StatusCode
         );
     }
@@ -386,11 +386,11 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
         var client = await MiaAsync();
 
         var laptop = (
-            await client.GetFromJsonAsync<Details>($"/api/my-equipment/items/device/{app.Laptop}")
+            await client.GetFromJsonAsync<Details>($"/api/my-inventory/items/device/{app.Laptop}")
         )!;
-        var seat = (await client.GetFromJsonAsync<Response>("/api/my-equipment"))!.Software[0];
+        var seat = (await client.GetFromJsonAsync<Response>("/api/my-inventory"))!.Software[0];
         var seatDetails = (
-            await client.GetFromJsonAsync<Details>($"/api/my-equipment/items/seat/{seat.Id}")
+            await client.GetFromJsonAsync<Details>($"/api/my-inventory/items/seat/{seat.Id}")
         )!;
 
         Assert.Equal(
@@ -411,7 +411,7 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
             HttpStatusCode.NotFound,
             (
                 await (await MiaAsync()).GetAsync(
-                    $"/api/my-equipment/items/device/{app.OthersDevice}"
+                    $"/api/my-inventory/items/device/{app.OthersDevice}"
                 )
             ).StatusCode
         );
@@ -419,15 +419,15 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
     [Fact]
     public async Task A_user_who_is_a_person_too_sees_their_own_whatever_the_switches()
     {
-        var client = await app.SignInAsync(MyEquipmentApplication.Uma);
+        var client = await app.SignInAsync(MyInventoryApplication.Uma);
         await app.PeopleMaySignInAsync(false);
         try
         {
             var me = await client.GetFromJsonAsync<Me.Response>("/api/auth/me");
-            var mine = (await client.GetFromJsonAsync<Response>("/api/my-equipment"))!;
-            var details = await client.GetAsync($"/api/my-equipment/items/device/{app.UmasDevice}");
+            var mine = (await client.GetFromJsonAsync<Response>("/api/my-inventory"))!;
+            var details = await client.GetAsync($"/api/my-inventory/items/device/{app.UmasDevice}");
 
-            Assert.Equal((Me.UserKind, true), (me!.Kind, me.MyEquipment));
+            Assert.Equal((Me.UserKind, true), (me!.Kind, me.MyInventory));
             Assert.Equal(("Uma Both", app.UmasDevice), (mine.Name, Assert.Single(mine.Devices).Id));
             Assert.Equal(HttpStatusCode.OK, details.StatusCode);
         }
@@ -444,12 +444,12 @@ public class MyEquipmentTests(MyEquipmentApplication app) : IClassFixture<MyEqui
 
         var me = await client.GetFromJsonAsync<Me.Response>("/api/auth/me");
 
-        Assert.False(me!.MyEquipment);
+        Assert.False(me!.MyInventory);
     }
 
     [Theory]
-    [InlineData("/api/my-equipment")]
-    [InlineData("/api/my-equipment/items/device/0198f3b0-0000-7000-8000-000000000000")]
+    [InlineData("/api/my-inventory")]
+    [InlineData("/api/my-inventory/items/device/0198f3b0-0000-7000-8000-000000000000")]
     public async Task A_user_is_refused_it(string path)
     {
         var client = await app.ClientAsync("equipment.admin@codaxy.com");

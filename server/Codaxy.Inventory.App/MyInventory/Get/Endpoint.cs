@@ -3,11 +3,11 @@ using Codaxy.Inventory.App.Licenses.Licenses;
 using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Settings;
 
-namespace Codaxy.Inventory.App.MyEquipment.Get;
+namespace Codaxy.Inventory.App.MyInventory.Get;
 
 /// <summary>
 /// The signed-in employee's page, whole: their name, what needs attention, and everything of theirs
-/// by section. Answers about the session's own person (<see cref="UserAccess.EquipmentHolderAsync"/>) —
+/// by section. Answers about the session's own person (<see cref="UserAccess.InventoryHolderAsync"/>) —
 /// a person's, or a user's who is a person too: no permission stands for it, the identity does; a user
 /// who is no person is refused.
 /// </summary>
@@ -33,7 +33,7 @@ public static class Endpoint
         CancellationToken cancellationToken
     )
     {
-        if (await access.EquipmentHolderAsync(cancellationToken) is not { } person)
+        if (await access.InventoryHolderAsync(cancellationToken) is not { } person)
             return Results.Forbid();
 
         var today = Expiry.Today(clock);

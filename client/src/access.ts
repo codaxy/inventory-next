@@ -40,8 +40,8 @@ export const can = (permission: Permission) => expr(permissions, (held) => !!hel
 /** The address is one the reader may not open: it shows as not found. */
 export const forbidden = expr($app.url, permissions, (url, held) => !mayOpen(url, held ?? []));
 
-/** Where a person signed in as an employee is: their own equipment, and nothing else. */
-export const myEquipment = "~/my-equipment";
+/** Where a person signed in as an employee is: their own inventory, and nothing else. */
+export const myInventory = "~/my-inventory";
 
 /** Whether the session is an employee's, not a user's. */
 export const isPerson = expr($app.session.user.kind, (kind) => kind === "person");
@@ -50,12 +50,12 @@ export const isPerson = expr($app.session.user.kind, (kind) => kind === "person"
 export const isUser = expr($app.session.user.kind, (kind) => kind !== "person");
 
 /**
- * Whether the reader has equipment of their own to see: an employee, or a user who is a person too —
+ * Whether the reader has an inventory of their own to see: an employee, or a user who is a person too —
  * for whom it is one more item in the menu, above the Dashboard.
  */
-export const hasMyEquipment = expr($app.session.user.myEquipment, (has) => !!has);
+export const hasMyInventory = expr($app.session.user.myInventory, (has) => !!has);
 
-/** Where `~/` and sign-in land: an employee's own equipment, else the first item the reader can see. */
+/** Where `~/` and sign-in land: an employee's own inventory, else the first item the reader can see. */
 export const landing = expr($app.session.user, (user) =>
-    user?.kind === "person" ? myEquipment : landingFor(user?.permissions ?? []),
+    user?.kind === "person" ? myInventory : landingFor(user?.permissions ?? []),
 );

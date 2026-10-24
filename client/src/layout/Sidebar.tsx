@@ -5,7 +5,7 @@ import { Logo } from "../components/Logo";
 import $app from "../model";
 import { AccountMenu } from "./AccountMenu";
 import { isCurrent, navigation } from "./navigation";
-import { can, hasMyEquipment, myEquipment } from "../access";
+import { can, hasMyInventory, myInventory } from "../access";
 
 const closeDrawer = (_e: unknown, { store }: any) => store.set($app.ui.drawerOpen, false);
 
@@ -73,20 +73,20 @@ export const Sidebar = createFunctionalComponent(() => (
                     </cx>
                 ))}
 
-                {/* Last, apart from the work: a user's own equipment, where they are a person too. The
+                {/* Last, apart from the work: a user's own inventory, where they are a person too. The
                     account menu has it as well, always in reach; this is where a menu is looked for. */}
-                <div visible={hasMyEquipment}>
+                <div visible={hasMyInventory}>
                     <div class="nav-section" text="Personal" />
                     <Link
-                        visible={hasMyEquipment}
-                        href={myEquipment}
+                        visible={hasMyInventory}
+                        href={myInventory}
                         url={$app.url}
                         class={{
                             "nav-link": true,
-                            "nav-link-active": expr($app.url, (url) => isCurrent(myEquipment, url)),
+                            "nav-link-active": expr($app.url, (url) => isCurrent(myInventory, url)),
                         }}
                     >
-                        <Icon name="myEquipment" class="nav-icon" />
+                        <Icon name="myInventory" class="nav-icon" />
                         <span text="My inventory" />
                     </Link>
                 </div>

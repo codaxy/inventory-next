@@ -17,7 +17,7 @@ public class Person : IIdentifiable<Guid>
     public string Email { get; set; }
 
     /// <summary>
-    /// Whether the person may sign in to see their own equipment while employees may at all — a
+    /// Whether the person may sign in to see their own inventory while employees may at all — a
     /// decision about this person, true until someone turns it off; see auth.md.
     /// </summary>
     public bool CanSignIn { get; set; } = true;

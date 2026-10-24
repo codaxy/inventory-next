@@ -253,12 +253,10 @@ function signInCard() {
                 <div
                     class="editor-value"
                     visible={s.viewing}
-                    text={expr(s.draft.people, (on) =>
-                        on ? "Yes, to see the equipment assigned to them" : "No",
-                    )}
+                    text={expr(s.draft.people, (on) => (on ? "Yes, to see their own inventory" : "No"))}
                 />
                 <div visible={falsy(s.viewing)}>
-                    <Switch value={s.draft.people} text="To see the equipment assigned to them" />
+                    <Switch value={s.draft.people} text="To see their own inventory" />
                     <p
                         class="editor-hint"
                         text="As the person they are under People, by the email there; a person can be left out on their own page."

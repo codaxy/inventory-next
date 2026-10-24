@@ -38,7 +38,7 @@ const standingWords = (
 };
 
 /**
- * An employee's own equipment, made for them rather than for IT: a greeting, what needs attention in
+ * An employee's own inventory, made for them rather than for IT: a greeting, what needs attention in
  * plain sentences, and their things as cards by section — what each is, its make and model, an icon of
  * it, and how its warranty or subscription stands. The codes IT asks for wait in a panel a card opens.
  * Someone holding hundreds gets a section's first few and "Show all", and a search.
@@ -95,7 +95,7 @@ export default createFunctionalComponent(() => (
                         value={d.q}
                         placeholder="Find something of yours…"
                         showClear
-                        inputAttrs={{ "aria-label": "Search your equipment", enterKeyHint: "search" }}
+                        inputAttrs={{ "aria-label": "Search your inventory", enterKeyHint: "search" }}
                     />
                 </div>
                 {/* Off at first: what sits at a disposal location is theirs on paper only. Said plainly, not by
@@ -213,7 +213,7 @@ export default createFunctionalComponent(() => (
             />
             <div class="mine-empty" visible={truthy(d.empty)}>
                 <span class="mine-thing mine-thing-device">
-                    <Icon name="myEquipment" />
+                    <Icon name="myInventory" />
                 </span>
                 <p class="mine-empty-title" text="Nothing is assigned to you yet." />
                 <p class="mine-quiet" text="Once IT hands you something, it shows up here." />

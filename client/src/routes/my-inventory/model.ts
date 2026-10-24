@@ -1,12 +1,12 @@
 import { createModel } from "cx/ui";
 
 import type {
-    EquipmentThing,
-    EquipmentWarning,
-    MyEquipment,
+    InventoryThing,
+    InventoryWarning,
+    MyInventory,
     Standing,
     ThingKind,
-} from "../../api/myEquipment";
+} from "../../api/myInventory";
 import type { IconName } from "../../layout/icons";
 import { formatDate } from "../../licensing";
 import { glyphOf } from "../../typeIcons";
@@ -121,7 +121,7 @@ export const noticesShown = 3;
 export const searchFrom = 20;
 
 /** A thing's icon: its type's, as an admin chose it (`typeIcons.ts`); an activation's (the menu's) or a license's. */
-function thingIcon(t: EquipmentThing): IconName {
+function thingIcon(t: InventoryThing): IconName {
     if (t.kind === "license") return "thingLicense";
     if (t.kind === "seat") return "thingActivation";
     if (t.kind === "information") return "thingInformation";
@@ -146,7 +146,7 @@ export const tileTone = (tone: Tone, kind: ThingKind, status?: string, gone?: st
 
 export type Searchable = Card & { search: string };
 
-export function toCard(t: EquipmentThing, tone: Tone): Searchable {
+export function toCard(t: InventoryThing, tone: Tone): Searchable {
     return {
         key: `${t.kind}-${t.id}`,
         kind: t.kind,
@@ -217,8 +217,8 @@ const plural = (s: string) =>
  * 3 Nov 2026.", "2 Rider subscriptions expire on 8 Feb 2027." — not the same sentence twice. What has
  * ended is no news here: its card says so.
  */
-export function notices(warnings: EquipmentWarning[], devices: EquipmentThing[]): Notice[] {
-    const grouped = new Map<string, { w: EquipmentWarning; what?: string; n: number }>();
+export function notices(warnings: InventoryWarning[], devices: InventoryThing[]): Notice[] {
+    const grouped = new Map<string, { w: InventoryWarning; what?: string; n: number }>();
     for (const w of warnings) {
         const device = w.kind === "warranty" ? devices.find((d) => d.id === w.id) : undefined;
         const what =

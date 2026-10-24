@@ -1,12 +1,12 @@
 import { createFunctionalComponent, expr, hasValue, History } from "cx/ui";
 import { Icon, Menu, MenuItem } from "cx/widgets";
 
-import { myEquipment } from "../access";
+import { myInventory } from "../access";
 import $app from "../model";
 
-const userWithEquipment = expr(
+const userWithInventory = expr(
     $app.session.user.kind,
-    $app.session.user.myEquipment,
+    $app.session.user.myInventory,
     (kind, has) => kind === "user" && !!has,
 );
 
@@ -20,7 +20,7 @@ const displayName = expr($app.session.user.name, $app.session.user.email, (name,
 
 /**
  * The signed-in person and their role, at the foot of the navigation; clicking opens a menu above it
- * that holds the address they signed in with, their own equipment for a user who is a person too,
+ * that holds the address they signed in with, their own inventory for a user who is a person too,
  * signing out, and beneath it the build the server runs. A cx `MenuItem` dropdown rather than a
  * hand-built popover: it brings Enter, Escape, arrow keys and closing when focus leaves.
  *
@@ -65,16 +65,16 @@ export const AccountMenu = createFunctionalComponent(
                     <Menu putInto="dropdown">
                         {/* Not a MenuItem, as the version below. */}
                         <div class="account-email" text={$app.session.user.email} />
-                        {/* A user's own equipment, where they are a person too: theirs, so with their
+                        {/* A user's own inventory, where they are a person too: theirs, so with their
                             name rather than in the work's menu alone. An employee is on it already. */}
                         <MenuItem
                             class="account-action"
-                            visible={userWithEquipment}
-                            onClick={() => History.pushState({}, null, myEquipment)}
+                            visible={userWithInventory}
+                            onClick={() => History.pushState({}, null, myInventory)}
                             autoClose
                         >
                             <div class="flex items-center gap-2.5">
-                                <Icon name="myEquipment" class="nav-icon" />
+                                <Icon name="myInventory" class="nav-icon" />
                                 <span text="My inventory" />
                             </div>
                         </MenuItem>

@@ -6,7 +6,7 @@ using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Settings;
 using Microsoft.EntityFrameworkCore;
 
-namespace Codaxy.Inventory.App.MyEquipment.Details;
+namespace Codaxy.Inventory.App.MyInventory.Details;
 
 /// <summary>
 /// One thing of the signed-in employee's, as much as they need to tell IT or a repair shop about it:
@@ -78,7 +78,7 @@ public static class Endpoint
         CancellationToken cancellationToken
     )
     {
-        if (await access.EquipmentHolderAsync(cancellationToken) is not { } person)
+        if (await access.InventoryHolderAsync(cancellationToken) is not { } person)
             return Results.Forbid();
         var me = person.PersonId;
         var today = Expiry.Today(clock);

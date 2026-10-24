@@ -12,11 +12,11 @@ public static class Endpoint
 
     /// <param name="Kind">
     /// <see cref="UserKind"/>, someone running the application with a role, or <see cref="PersonKind"/>,
-    /// an employee signed in to see their own equipment, with no role and no permission.
+    /// an employee signed in to see their own inventory, with no role and no permission.
     /// </param>
     /// <param name="Name">The name the application keeps, not the provider's.</param>
     /// <param name="Permissions">What the client shows; the server checks every request anyway.</param>
-    /// <param name="MyEquipment">
+    /// <param name="MyInventory">
     /// Whether "My inventory" has anything to show: always for a person; for a user, whether a person
     /// is kept under the same email.
     /// </param>
@@ -26,7 +26,7 @@ public static class Endpoint
         string Name,
         string? Role,
         IReadOnlyList<string> Permissions,
-        bool MyEquipment
+        bool MyInventory
     );
 
     private static async Task<IResult> Handle(UserAccess access) =>
@@ -38,7 +38,7 @@ public static class Endpoint
                     user.Name,
                     user.RoleName,
                     user.Permissions.Order().ToList(),
-                    await access.EquipmentHolderAsync() is not null
+                    await access.InventoryHolderAsync() is not null
                 )
             )
         : await access.CurrentPersonAsync() is { } person

@@ -151,7 +151,7 @@ const uiIcons = {
     recordHistory: Clock01Icon,
     created: Add01Icon,
     send: MailSend01Icon,
-    myEquipment: BoxIcon,
+    myInventory: BoxIcon,
     updated: PencilEdit01Icon,
     deleted: Delete02Icon,
     refresh: RefreshIcon,

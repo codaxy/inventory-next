@@ -16,7 +16,7 @@ export type Permission =
     | "settings.manage";
 
 export interface CurrentUser {
-    /** A user runs the application with a role; a person is an employee seeing their own equipment. */
+    /** A user runs the application with a role; a person is an employee seeing their own inventory. */
     kind: "user" | "person";
     email: string;
     /** As the application keeps it, not the provider's. */
@@ -25,7 +25,7 @@ export interface CurrentUser {
     role: string | null;
     permissions: Permission[];
     /** Whether "My inventory" has anything to show: a person's always, a user's who is a person too. */
-    myEquipment: boolean;
+    myInventory: boolean;
 }
 
 export const getAuthProviders = () => send<AuthProviders>("/api/auth/options");

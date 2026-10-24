@@ -30,7 +30,7 @@ public sealed record Access(
         new(userId, email, name, role.Id, role.Name, role.IsSystemAdmin, role.Grants());
 }
 
-/// <summary>An employee signed in as the person they are: no role, no permission, their own equipment.</summary>
+/// <summary>An employee signed in as the person they are: no role, no permission, their own inventory.</summary>
 public sealed record PersonAccess(Guid PersonId, string Email, string Name);
 
 /// <summary>
@@ -91,11 +91,11 @@ public sealed class UserAccess(
             : Task.FromResult<PersonAccess?>(null);
 
     /// <summary>
-    /// Whose equipment this session sees: a person's session, its person; a user's, the person kept
+    /// Whose inventory this session sees: a person's session, its person; a user's, the person kept
     /// under the same email, whatever that person's "Can sign in" and the switch for employees — those
     /// decide who may sign in, and a user already has. None for a user with no person.
     /// </summary>
-    public async Task<PersonAccess?> EquipmentHolderAsync(CancellationToken cancellation = default)
+    public async Task<PersonAccess?> InventoryHolderAsync(CancellationToken cancellation = default)
     {
         if (current.Email is not { } email)
             return null;

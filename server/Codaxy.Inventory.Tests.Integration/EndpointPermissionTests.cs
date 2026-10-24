@@ -16,8 +16,8 @@ public class EndpointPermissionTests(InventoryApplication app) : IClassFixture<I
         "api/version",
         "api/auth/",
         "api/documents/settings",
-        // An employee's own records, answered for a person's session alone: see MyEquipmentTests.
-        "api/my-equipment",
+        // An employee's own records, answered for a person's session alone: see MyInventoryTests.
+        "api/my-inventory",
         "api/{**path}",
     ];
 

@@ -1,7 +1,7 @@
 import { Controller } from "cx/ui";
 
 import { ApiError } from "../../api/http";
-import { getMyEquipment, getMyEquipmentDetails } from "../../api/myEquipment";
+import { getMyInventory, getMyInventoryDetails } from "../../api/myInventory";
 import { formatDate } from "../../licensing";
 import m, {
     type Card,
@@ -21,7 +21,7 @@ import m, {
 type Key = Section["key"];
 
 /** The switch is remembered per browser: a convenience, so a failed read or write changes nothing. */
-const goneKey = "my-equipment.include-gone";
+const goneKey = "my-inventory.include-gone";
 const remembered = () => {
     try {
         return localStorage.getItem(goneKey) === "1";
@@ -75,7 +75,7 @@ export default class extends Controller {
 
     async load() {
         try {
-            const mine = await getMyEquipment();
+            const mine = await getMyInventory();
             this.name = mine.name;
 
             this.notices = notices(mine.warnings, mine.devices);
@@ -121,8 +121,8 @@ export default class extends Controller {
             this.store.set(
                 m.mine.error,
                 error instanceof ApiError && error.status === 403
-                    ? "Nothing is kept under your email address in the register, so there is no equipment of yours to show."
-                    : "Your equipment could not be loaded.",
+                    ? "Nothing is kept under your email address in the register, so there is nothing of yours to show."
+                    : "Your inventory could not be loaded.",
             );
         }
     }
@@ -202,7 +202,7 @@ export default class extends Controller {
         // Into the panel, for a keyboard and a screen reader; Escape brings them back out.
         requestAnimationFrame(() => document.querySelector<HTMLElement>(".mine-panel-close")?.focus());
         try {
-            const details = await getMyEquipmentDetails(card.kind, card.id);
+            const details = await getMyInventoryDetails(card.kind, card.id);
             // A second card opened meanwhile owns the panel now.
             if (opening !== this.opening) return;
             this.store.set(

@@ -26,7 +26,7 @@ public static partial class SignInSettings
     );
 
     /// <summary>
-    /// Whether employees may sign in as the person they are, to see their own equipment: the master
+    /// Whether employees may sign in as the person they are, to see their own inventory: the master
     /// switch over every person's <c>CanSignIn</c>. Off by default — nothing opens until someone opens it.
     /// </summary>
     public static readonly SettingDefinition<bool> People = new("sign_in.people", false);

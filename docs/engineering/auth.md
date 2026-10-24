@@ -50,12 +50,12 @@ and who may sign in (`Person.CanSignIn`) gets a session of their own: "My invent
 **`UserAccess.MaySignInAsync` is the one answer** — for a code, for Google, and for the cookie on every
 request, so turning either off ends a session on the next one. **A person's session holds no
 permission**: `CurrentAsync` is a user's access only, so every `/api` endpoint refuses it but one,
-`/api/my-equipment`, which answers only about the session's own person — the identity stands for the
+`/api/my-inventory`, which answers only about the session's own person — the identity stands for the
 permission, and it is on the permission test's short list for that reason. `/api/auth/me` says which
 kind is signed in. **A user who is a person too** — the same email — signs in as the user, and sees
-their own equipment as well: `UserAccess.EquipmentHolderAsync` answers the endpoint with the person
+their own inventory as well: `UserAccess.InventoryHolderAsync` answers the endpoint with the person
 kept under a user's email whatever that person's `CanSignIn` and the switch, which decide who may sign
-in and a user already has; `/api/auth/me` says so (`myEquipment`), and "My inventory" is in their
+in and a user already has; `/api/auth/me` says so (`myInventory`), and "My inventory" is in their
 account menu and in a last section of their menu, "Personal", apart from the work. A user who is no
 person is refused it and never shown it. **`CanSignIn` is a decision about that person**, true for
 everyone until it is turned off — a leaver, a placeholder holder — and never derived from the setting,

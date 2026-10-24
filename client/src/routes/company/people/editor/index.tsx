@@ -20,7 +20,7 @@ const mayOpenSettings = can("settings.manage");
 const mayNotOpenSettings = expr(permissions, (held) => !held?.includes("settings.manage"));
 
 /**
- * Whether the person may sign in to see their own equipment: a decision about them, shown and changed
+ * Whether the person may sign in to see their own inventory: a decision about them, shown and changed
  * as it is stored whatever the global switch says — so someone can be left out ahead of time. A plain
  * "Yes" or "No"; under a "Yes", while employees cannot sign in at all, a note says so — a fact about
  * now, never a promise it will apply.
@@ -36,7 +36,7 @@ function signInField() {
                     text={expr(p.draft.canSignIn, (can) => (can === false ? "No" : "Yes"))}
                 />
                 <div visible={editing}>
-                    <Switch value={p.draft.canSignIn} text="To see the equipment assigned to them" />
+                    <Switch value={p.draft.canSignIn} text="To see their own inventory" />
                 </div>
                 <p
                     class="editor-hint"

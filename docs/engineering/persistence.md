@@ -148,7 +148,7 @@ What the database lacks and the application works around; each is a migration of
   needs a nullable `SoftwareOrServiceId` on `License`; until then a license is attached to software
   only through its volumes.
 - **A user is not linked to the person they are.** `app_user` and `person` both hold a name and an
-  email, and nothing ties them; where it matters — an employee's own equipment, the handover sheet's
+  email, and nothing ties them; where it matters — an employee's own inventory, the handover sheet's
   signer — they are matched by email. A nullable `PersonId` on `AppUser` would make it a fact.
 - **No index serves any predicate.** Primary keys and the unique `inventory_number` are the whole of
   the indexing, and lists filter, sort and page with sequential scans. At the present size — under a

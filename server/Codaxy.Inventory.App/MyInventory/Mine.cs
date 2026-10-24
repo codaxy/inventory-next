@@ -4,7 +4,7 @@ using Codaxy.Inventory.App.Persistence;
 using Codaxy.Inventory.App.Shared.Settings;
 using Microsoft.EntityFrameworkCore;
 
-namespace Codaxy.Inventory.App.MyEquipment;
+namespace Codaxy.Inventory.App.MyInventory;
 
 /// <summary>
 /// Something of theirs ending soon, by the dashboard's windows ahead: a device's warranty, or a
