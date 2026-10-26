@@ -198,9 +198,10 @@ into the padding with negative margins; what sticks beneath it reads its height 
 lists and logs, `page-narrow` (52rem) for a record's page, in `_shell.scss`. Header band, pinned bars
 and content share the one left-aligned column, so the search is never wider than what it searches;
 a list's columns are capped so a spare width stays in the page, not between the cells. Past the column
-the page fills the viewport's height with the primary glow and dot grid of sign-in, fading in from
+the page fills the viewport's height with a dot grid under sign-in's primary glow, fading in from
 its left: a bare canvas reads as unfinished. The server log follows the same rule — no pane is special.
-Sign-in, outside the shell, is one centred column that stops growing on a wide display. Its footer
+Sign-in, outside the shell, is one centred column that stops growing on a wide display, on the glow
+alone. Its footer
 is "Built by" and Codaxy's wordmark on the text's baseline — the letters stand at 67 of its 80, so
 it is shifted down, not centred.
 

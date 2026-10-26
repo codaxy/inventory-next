@@ -1,7 +1,7 @@
 @use "brand";
 
-// A dot grid under a primary glow in the top-left corner, washed out towards the lower right so
-// the card sits on clean ground. One element, layered top first: fade, glow, dots.
+// A primary glow in the top-left corner, washed out towards the lower right so the card sits on
+// clean ground. One element, layered top first: fade, glow.
 .sign-in-page {
     background:
         linear-gradient(
@@ -15,7 +15,6 @@
             color-mix(in srgb, var(--color-primary) 14%, transparent),
             transparent
         ),
-        radial-gradient(var(--color-dot) 1px, transparent 0) 0 0 / 22px 22px,
         var(--color-canvas);
 }
 
