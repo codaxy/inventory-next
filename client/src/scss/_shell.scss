@@ -143,33 +143,6 @@
     max-width: var(--page-width);
 }
 
-// What a wide screen leaves beside the content: a dot grid under a primary glow like sign-in's,
-// faded in from the content's edge. Behind everything; the header band's white covers its top, and
-// on a laptop there is no room for it at all.
-// The page fills the content column's height, however little is on it, or the dots stop where the
-// content does.
-.page-body {
-    position: relative;
-    isolation: isolate;
-    flex: 1 0 auto;
-
-    &::before {
-        content: "";
-        position: absolute;
-        inset: 0 0 0 calc(var(--page-pad) * 2 + var(--page-width) + 2rem);
-        z-index: -1;
-        pointer-events: none;
-        background:
-            radial-gradient(
-                circle 38rem at 0 14rem,
-                color-mix(in srgb, var(--color-primary) 10%, transparent),
-                transparent
-            ),
-            radial-gradient(var(--color-dot) 1px, transparent 0) 0 0 / 22px 22px;
-        mask-image: linear-gradient(to right, transparent, black 10rem);
-    }
-}
-
 .page-title {
     font-size: 1.5rem;
     font-weight: 700;
