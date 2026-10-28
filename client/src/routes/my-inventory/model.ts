@@ -77,7 +77,7 @@ export interface Model {
         loaded: boolean;
         error?: string;
         initials?: string;
-        /** "Hi, Abigail." */
+        /** "Hi, Abigail" */
         greeting?: string;
         /** "3 devices · 1 piece of furniture · 1 license activation" */
         summary?: string;
@@ -198,7 +198,7 @@ export function hello(name: string, counts: Partial<Record<Section["key"], numbe
             .slice(0, 2)
             .map((w) => w[0]!.toUpperCase())
             .join(""),
-        greeting: `Hi, ${first}.`,
+        greeting: `Hi, ${first}`,
         summary: parts.length ? parts.join(" · ") : undefined,
     };
 }
